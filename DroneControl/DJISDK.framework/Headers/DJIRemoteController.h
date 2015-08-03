@@ -99,14 +99,6 @@
 -(void) getRCControlModeWithResult:(void(^)(DJIRCControlMode mode, DJIError* error))block;
 
 /**
- *  Set gimbal control speed.
- *
- *  @param speed Speed to be set
- *  @param block Remote execute result.
- */
--(void) setGimbalControlSpeed:(DJIRCGimbalControlSpeed)speed withResult:(DJIExecuteResultBlock)block;
-
-/**
  *  Enter frequency pairing mode.
  *
  *  @param block Remote execute result.
@@ -154,20 +146,5 @@
  *  @param block Remote execute result.
  */
 -(void) getRCParingStateWithResult:(void(^)(DJIRCParingState state, DJIError* error))block;
-
-/**
- *  Set RC's control sensitivity
- *
- *  @param sensitivity Sensitivity to be set
- *  @param block       Remote execute result.
- */
--(void) setRCControlSensitivity:(uint8_t)sensitivity withResult:(DJIExecuteResultBlock)block;
-
-/**
- *  Set RC's control sensitivity
- *
- *  @param block Remote execute result.
- */
--(void) getRCControlSensitivityWithResult:(void(^)(uint8_t sensitivity, DJIError* error))block;
 
 @end

@@ -18,6 +18,7 @@
 #define ERR_ConnectFailed                     0x12
 #define ERR_InvalidParameter                  0x13
 #define ERR_CommandExecuteFailed              0x14
+#define ERR_VersionNotCompatible              0x15
 
 #define ERR_RCModeError                       0xD0
 #define ERR_MCModeError                       0xD1

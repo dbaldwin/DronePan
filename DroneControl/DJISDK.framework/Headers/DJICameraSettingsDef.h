@@ -754,13 +754,13 @@ typedef NS_ENUM(uint8_t, CameraMultiCaptureCount)
 typedef struct
 {
     /**
-     *  value(1 ~ 254) indicate continuous capture photo count, when the camera complete take the specified photo count, it will stop automatically
-     *  value(255) indicate the camera will constantly take photo unless user stop take photo manually
+     *  Value(1 ~ 254) indicate continuous capture photo count, when the camera complete take the specified photo count, it will stop automatically
+     *  Value(255) indicate the camera will constantly take photo unless user stop take photo manually
      */
     uint8_t contiCaptureCount;
     
     /**
-     *  time interval between two capture action. 1 ~ 65535
+     *  time interval between two capture action. value should be in range [5, 30]
      */
     uint16_t timeInterval;
 } CameraContinuousCapturePara;

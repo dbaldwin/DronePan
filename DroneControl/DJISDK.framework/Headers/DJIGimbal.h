@@ -19,15 +19,15 @@ typedef struct
     /**
      *  Pitch
      */
-    int pitch;
+    float pitch;
     /**
      *  Roll
      */
-    int roll;
+    float roll;
     /**
      *  Yaw
      */
-    int yaw;
+    float yaw;
 } DJIGimbalAttitude;
 
 /**
@@ -67,7 +67,7 @@ typedef struct
     /**
      *  The gimbal rotation angle.
      */
-    int angle;
+    float angle;
     /**
      *  The gimbal rotation type
      */

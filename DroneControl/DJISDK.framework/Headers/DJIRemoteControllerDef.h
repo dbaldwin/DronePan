@@ -35,21 +35,33 @@ typedef NS_ENUM(uint8_t, DJIRCWorkMode){
     RCWorkModeUnknown,
 };
 
+/**
+ *  RC Name
+ */
 typedef struct
 {
     char mBuffer[DJI_RC_NAME_BUFFER_SIZE];
 } DJIRCName;
 
+/**
+ *  RC Password
+ */
 typedef struct
 {
     UInt16 mPassword;
 } DJIRCPassword;
 
+/**
+ *  RC Identifier
+ */
 typedef struct
 {
     uint32_t mID;
 } DJIRCID;
 
+/**
+ *  RC Signal quality
+ */
 typedef struct
 {
     uint8_t mQuality;
@@ -86,7 +98,7 @@ typedef NS_OPTIONS(uint8_t, DJIRCControlStyle){
     /**
      *  Unknown control style
      */
-    RCControlStyleUnknown,
+    RCControlStyleUnknown = 0xFF,
 };
 
 /**
@@ -283,6 +295,9 @@ typedef struct
     uint8_t  mRemainPowerPercent;
 } DJIRCBatteryInfo;
 
+/**
+ *  RC GPS Time
+ */
 typedef struct
 {
     uint8_t  mHour;
@@ -293,6 +308,9 @@ typedef struct
     uint8_t  mDay;
 } DJIRCGpsTime;
 
+/**
+ *  RC GPS Data
+ */
 typedef struct
 {
     /**
@@ -330,19 +348,19 @@ typedef struct
 } DJIRCGPSData;
 
 /**
- *  RC's wheel will control which direction of gimbal
+ *  Define RC's wheel how to control the gimbal.
  */
 typedef NS_ENUM(uint8_t, DJIRCGimbalControlDirection){
     /**
-     *  Control pitch
+     *  Control the gimbal's pitch
      */
     RCGimbalControlDirectionPitch,
     /**
-     *  Control roll
+     *  Control the gimbal's roll
      */
     RCGimbalControlDirectionRoll,
     /**
-     *  Controll yaw
+     *  Controll the gimbal's yaw
      */
     RCGimbalControlDirectionYaw,
 };
@@ -361,11 +379,11 @@ typedef struct
      */
     BOOL mWheelButtonDown;
     /**
-     *  Wheel offset sign
+     *  Wheel offset sign(+/-), YES = +, NO = -
      */
     BOOL mWheelOffsetSign;
     /**
-     *  Wheel offset
+     *  Wheel offset value
      */
     uint8_t mWheelOffset;
 } DJIRCHardwareRightWheel;
@@ -382,17 +400,17 @@ typedef struct
 } DJIRCHardwareLeftWheel;
 
 /**
- *  Tripod state
+ *  Landing gear state
  */
-typedef NS_ENUM(uint8_t, DJIRCHardwareTripodState){
+typedef NS_ENUM(uint8_t, DJIRCHardwareLandingGearState){
     /**
-     *  Tripod ascent
+     *  Landing gear ascent
      */
-    RCHardwareTripodAscend,
+    RCHardwareLandingGearAscend,
     /**
-     *  Tripod descend
+     *  Landing gear descend
      */
-    RCHardwareTripodDescend
+    RCHardwareLandingGearDescend
 };
 
 /**
@@ -400,7 +418,7 @@ typedef NS_ENUM(uint8_t, DJIRCHardwareTripodState){
  */
 typedef struct
 {
-    DJIRCHardwareTripodState mTripodState;
+    DJIRCHardwareLandingGearState mLandingGearState;
 } DJIRCHardwareTransformButton;
 
 typedef enum

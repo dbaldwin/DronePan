@@ -8,27 +8,27 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  Provide SD card informations and status
+ *  Provide SD card general informations and status
  */
 @interface DJICameraSDCardInfo : NSObject
 
 /**
- *  Indicate some error occur while access the sd card
+ *  The SD card has error.
  */
 @property(nonatomic, readonly) BOOL hasError;
 
 /**
- *  The SD card is read only
+ *  The SD card is read only.
  */
 @property(nonatomic, readonly) BOOL readOnly;
 
 /**
- *  The SD card invalid format
+ *  The SD card's format is invalid.
  */
 @property(nonatomic, readonly) BOOL invalidFormat;
 
 /**
- *  The SD card is formated
+ *  The SD card is formated.
  */
 @property(nonatomic, readonly) BOOL isFormated;
 
@@ -38,12 +38,12 @@
 @property(nonatomic, readonly) BOOL isFormating;
 
 /**
- *  The SD card is full
+ *  The SD card is full.
  */
 @property(nonatomic, readonly) BOOL isFull;
 
 /**
- *  Whether the SD card is a valid card
+ *  Whether the SD card is a valid card.
  */
 @property(nonatomic, readonly) BOOL isValid;
 
@@ -58,12 +58,12 @@
 @property(nonatomic, readonly) int totalSize;
 
 /**
- *  Remain size of the SD card
+ *  Remain size of the SD card.
  */
 @property(nonatomic, readonly) int remainSize;
 
 /**
- *  The available count for taking photo
+ *  The available count for taking photo.
  */
 @property(nonatomic, readonly) int availableCaptureCount;
 

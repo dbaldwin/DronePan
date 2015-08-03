@@ -10,16 +10,16 @@
 #import <DJISDK/DJIFoundation.h>
 
 /**
- *  Maximum action count for each waypoint
+ *  Maximum action count for each waypoint. current supported max actions is 15.
  */
 DJI_API_EXTERN const int DJIMaxActionCount;
 /**
- *  Maximum repeat times
+ *  Maximum repeat times for waypoint action. current supported max repeat times is 15.
  */
 DJI_API_EXTERN const int DJIMaxActionRepeatTimes;
 
 /**
- *  Turn mode of drone
+ *  Turn mode of drone when adjust the aircraft's heading.
  */
 typedef NS_ENUM(NSUInteger, DJIWaypointTurnMode){
     /**
@@ -37,31 +37,31 @@ typedef NS_ENUM(NSUInteger, DJIWaypointTurnMode){
  */
 typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
     /**
-     *  No action. Stay at point
+     *  Stay at point. actionParam will be the time in millisecond for staying. [0, 20000]
      */
-    WaypointActionNone,
+    WaypointActionStay,
     /**
-     *  Start take photo
+     *  Start take photo. actionParam will ignore. action timeout 6 second.
      */
     WaypointActionStartTakePhoto,
     /**
-     *  Start record
+     *  Start record. actionParam will ignore. action timeout 6 second.
      */
     WaypointActionStartRecord,
     /**
-     *  Stop record
+     *  Stop record. actionParam will ignore. action timeout 6 second.
      */
     WaypointActionStopRecord,
     /**
-     *  Rotate aircraft's yaw [0, 360], 0 : North
+     *  Rotate the aircraft's yaw. the rotationg direction will deternminded by the waypoint's turnMode property. actionParam in range [-180, 180] degree.
      */
     WaypointActionRotateAircraft,
     /**
-     *  Rotate gimbal's yaw
+     *  Rotate the gimbal's yaw. Inspire gimbal supported, actionParam in range [-180, 180]
      */
     WaypointActionRotateGimbalYaw,
     /**
-     *  Rotate gimbal's pitch
+     *  Rotate gimbal's pitch. Inspire in range [-90, 30], Phantom3PRO/Phantom3Adv in range [-90, 0]
      */
     WaypointActionRotateGimbalPitch,
 };
@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
 @interface DJIGroundStationWaypoint : NSObject
 
 /**
- *  Waypoint coordinate (degree)
+ *  Coordinate of waypoint (degree)
  */
 @property(nonatomic) CLLocationCoordinate2D coordinate;
 
@@ -95,29 +95,21 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
 @property(nonatomic) float altitude;
 
 /**
- *  Heading of drone.
+ *  Heading of aircraft when reached to this waypoint. range in [-180, 180].
  */
 @property(nonatomic) float heading;
 
 /**
- *  Horizontal velocity (m/s)
+ *  Horizontal velocity of aircraft when reached to this waypoint, in range [0, 7] (m/s)
  */
 @property(nonatomic) float horizontalVelocity;
 
 /**
- *  Staying time at waypoint (second)
+ *  Time for aircraft staying at this waypoint (second).
+ *  
+ *  @attention Phantom 2 vision/Phantom 2 vision+ supported only.
  */
 @property(nonatomic) int stayTime;
-
-/**
- *  Yaw angle of aircraft while reach the waypoint. range in [0, 360]
- */
-@property(nonatomic) int yawAngle;
-
-/**
- *  Max time for reach the waypoint. if time out then the aircraft go to the next waypoint directly
- */
-@property(nonatomic) int maxReachTime;
 
 /**
  *  How the aircraft turn to the target direction.
@@ -125,23 +117,28 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
 @property(nonatomic) DJIWaypointTurnMode turnMode;
 
 /**
- *  Waypoint's action list. The action items will perform one by one
+ *  Waypoint's action list. The action will perform one by one while the aircraft reached to this waypoint.
  */
 @property(nonatomic, readonly) NSArray* waypointActions;
 
 /**
- *  Repeat times.
+ *  Max time for executing the all actions. if timed out and action still not completed, then the aircraft will stop actions and moving to the next waypoint. default timeout is 60 second.
+ */
+@property(nonatomic) int actionTimeout;
+
+/**
+ *  Repeat times for action. All actions completed is one times. Defaule is one times.
  */
 @property(nonatomic, assign) NSUInteger actionRepeatTimes;
 
 -(id) initWithCoordinate:(CLLocationCoordinate2D)coordinate;
 
 /**
- *  Add action for waypoint. action count should not be large than DJIMaxActionCount
+ *  Add action for waypoint. action count should not larger than DJIMaxActionCount
  *
  *  @param action Action for waypoint
  *
- *  @return Result of adding waypoint action. if waypoint action count is over DJIMaxActionCount or waypoint has existed in the action list, return NO
+ *  @return Result of adding waypoint action. if waypoint action count is over DJIMaxActionCount or waypoint has existed in the action list or waypoint action's actionParam invalid, then return NO
  */
 -(BOOL) addWaypointAction:(DJIWaypointAction*)action;
 

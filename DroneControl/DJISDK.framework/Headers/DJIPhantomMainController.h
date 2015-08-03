@@ -40,28 +40,28 @@ typedef NS_ENUM(NSInteger, DJIMCSystemMode){
  *  Set smart go home enable.
  *
  *  @param isEnable Enable for smart go home
- *  @param block  Remote execute result
+ *  @param block    Remote execute result callback.
  */
 -(void) setSmartGoHomeEnable:(BOOL)isEnable withResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Get smart go home enable.
  *
- *  @param block  Remote execute result
+ *  @param block  Remote execute result callback.
  */
 -(void) getSmartGoHomeEnable:(void(^)(BOOL isEnable, DJIError* error))block;
 
 /**
- *  Confirm go home request. use to confirm go home request while the DJIMCSmartGoHome's droneRequestGoHome is set.
+ *  Confirm go home request. use to confirm go home request while the DJIMCSmartGoHome's droneRequestGoHome property is set.
  *
- *  @param block  Remote execute result
+ *  @param block  Remote execute result callback.
  */
 -(void) confirmGoHomeReuqest:(DJIExecuteResultBlock)block;
 
 /**
- *  Ignore go home request. use to ingore go home request while the DJIMCSmartGoHome's droneRequestGoHome is set.
+ *  Ignore go home request. use to ingore go home request while the DJIMCSmartGoHome's droneRequestGoHome property is set.
  *
- *  @param block  Remote execute result
+ *  @param block  Remote execute result callback.
  */
 -(void) ignoreGoHomeReuqest:(DJIExecuteResultBlock)block;
 

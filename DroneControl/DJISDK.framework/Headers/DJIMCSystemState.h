@@ -41,93 +41,93 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerFlightMode){
     
     
     /**
-     *  Manual mode. Used in Inspire / Phantom3 Professional / M100
+     *  Manual mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeManual = 0,
+    MainControllerFlightModeManual = 0,
     /**
-     *  Attitude mode. Used in Inspire / Phantom3 Professional / M100
+     *  Attitude mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAtti = 1,
+    MainControllerFlightModeAtti = 1,
     /**
-     *  Attitude course lock mode. Used in Inspire / Phantom3 Professional / M100
+     *  Attitude course lock mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAttiCourseLock = 2,
+    MainControllerFlightModeAttiCourseLock = 2,
     /**
-     *  Attitude hover mode. Used in Inspire / Phantom3 Professional / M100
+     *  Attitude hover mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAttiHover = 3,
+    MainControllerFlightModeAttiHover = 3,
     /**
-     *  Hover mode. Used in Inspire / Phantom3 Professional / M100
+     *  Hover mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeHover = 4,
+    MainControllerFlightModeHover = 4,
     /**
-     *  Gps blake mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps blake mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSBlake = 5,
+    MainControllerFlightModeGPSBlake = 5,
     /**
-     *  Gps Attitude mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps Attitude mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSAtti = 6,
+    MainControllerFlightModeGPSAtti = 6,
     /**
-     *  Gps course lock mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps course lock mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSCourseLock = 7,
+    MainControllerFlightModeGPSCourseLock = 7,
     /**
-     *  Gps Home mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps Home mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSHomeLock = 8,
+    MainControllerFlightModeGPSHomeLock = 8,
     /**
-     *  Gps hot point mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps hot point mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSHotPoint = 9,
+    MainControllerFlightModeGPSHotPoint = 9,
     /**
-     *  Assisted takeoff mode. Used in Inspire / Phantom3 Professional / M100
+     *  Assisted takeoff mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAssistedTakeOff = 10,
+    MainControllerFlightModeAssistedTakeOff = 10,
     /**
-     *  Auto takeoff mode. Used in Inspire / Phantom3 Professional / M100
+     *  Auto takeoff mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAutoTakeOff = 11,
+    MainControllerFlightModeAutoTakeOff = 11,
     /**
-     *  Auto landing mode. Used in Inspire / Phantom3 Professional / M100
+     *  Auto landing mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAutoLanding = 12,
+    MainControllerFlightModeAutoLanding = 12,
     /**
-     *  Attitude landing mode. Used in Inspire / Phantom3 Professional / M100
+     *  Attitude landing mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAttiLanding = 13,
+    MainControllerFlightModeAttiLanding = 13,
     /**
-     *  GPS Waypoint mode. Used in Inspire / Phantom3 Professional / M100
+     *  GPS Waypoint mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSWaypoint = 14,
+    MainControllerFlightModeGPSWaypoint = 14,
     /**
-     *  Go home mode. Used in Inspire / Phantom3 Professional / M100
+     *  Go home mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGoHome = 15,
+    MainControllerFlightModeGoHome = 15,
     /**
-     *  Click go mode. Used in Inspire / Phantom3 Professional / M100
+     *  Click go mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeClickGo = 16,
+    MainControllerFlightModeClickGo = 16,
     /**
-     *  Joystick mode. Used in Inspire / Phantom3 Professional / M100
+     *  Joystick mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeJoystick = 17,
+    MainControllerFlightModeJoystick = 17,
     /**
-     *  Attitude limited mode. Used in Inspire / Phantom3 Professional / M100
+     *  Attitude limited mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeAttiLimited = 23,
+    MainControllerFlightModeAttiLimited = 23,
     /**
-     *  Gps attitude limited mode. Used in Inspire / Phantom3 Professional / M100
+     *  Gps attitude limited mode. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSAttiLimited = 24,
+    MainControllerFlightModeGPSAttiLimited = 24,
     /**
-     *  Gps Follow me. Used in Inspire / Phantom3 Professional / M100
+     *  Gps Follow me. Used in Inspire / Phantom3 Professional / Matrice100
      */
-    InspireFlightModeGPSFollowMe = 25,
+    MainControllerFlightModeGPSFollowMe = 25,
     /**
      *  Unknown
      */
-    UnknownMode = 0xFF,
+    MainControllerFlightModeUnknown= 0xFF,
 };
 
 /**
@@ -168,6 +168,40 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerNoFlyStatus){
     UnknownStatus,
 };
 
+/**
+ *  Gps Signal. used for measuring the signal quality.
+ */
+typedef NS_ENUM(uint8_t, DJIGpsSignalLevel){
+    /**
+     *  Almost no gps signal, very bad
+     */
+    GpsSignalLevel0,
+    /**
+     *  Gps signal very weak
+     */
+    GpsSignalLevel1,
+    /**
+     *  Gps signal weak, at this level, the aircraft's go home functionality still work.
+     */
+    GpsSignalLevel2,
+    /**
+     *  Gps signal good, the aricraft could hover in the air.
+     */
+    GpsSignalLevel3,
+    /**
+     *  Gps signal very good, the aircraft could record the home point.
+     */
+    GpsSignalLevel4,
+    /**
+     *  Gps signal very strong
+     */
+    GpsSignalLevel5,
+    /**
+     *  None
+     */
+    GpsSignalLevelNone,
+};
+
 @interface DJIMCSystemState : NSObject
 
 /**
@@ -201,12 +235,12 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerNoFlyStatus){
 @property(nonatomic, readonly) float velocityZ;
 
 /**
- *  Altitude of the drone, (0.1m)
+ *  Relative altitude of the drone (m), measured by barometer.
  */
 @property(nonatomic, readonly) float altitude;
 
 /**
- *  Attitude of the drone, Pitch[-180, 180], Roll[-180, 180], Yaw[-180, 180]
+ *  Attitude of the drone, Pitch[-180, 180], Roll[-180, 180], Yaw[-180, 180], 0 will be the true north
  */
 @property(nonatomic, readonly) DJIAttitude attitude;
 
@@ -245,10 +279,15 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerNoFlyStatus){
  */
 @property(nonatomic, readonly) DJIMCSmartGoHomeData* smartGoHomeData;
 
-@end
+/**
+ *  Below property will supported In Inspire/Phantom3Pro/Phantom3Advanced/Matric100
+ */
 
+/**
+ *  Gps signal level.
+ */
+@property(nonatomic, readonly) DJIGpsSignalLevel gpsSignalLevel;
 
-@interface DJIInspireMCSystemState : DJIMCSystemState
 /**
  *  If the remote controller signal lost, then failsafe.
  */
@@ -266,6 +305,10 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerNoFlyStatus){
  */
 @property(nonatomic, readonly) BOOL isUltrasonicWorking;
 /**
+ *  Height of aircraft measured by the ultrasonic, data is valid while property isUltrasonicWorking set YES
+ */
+@property(nonatomic, readonly) float ultrasonicHeight;
+/**
  *  Is vision working
  */
 @property(nonatomic, readonly) BOOL isVisionWorking;
@@ -274,9 +317,13 @@ typedef NS_ENUM(NSUInteger, DJIMainControllerNoFlyStatus){
  */
 @property(nonatomic, readonly) BOOL isMotorWorking;
 /**
- *  Is IOC working
+ *  Is IOC working, If the 'canIOCWork' property is YES and remote controller's mode swithed to 'F' then IOC working.
  */
 @property(nonatomic, readonly) BOOL isIOCWorking;
+/**
+ *  Can IOC work. If the flight mode switchable is NO, then canIOCWork is NO. Use the api setFlightModeSwitchable:withResult: to make IOC work.
+ */
+@property(nonatomic, readonly) BOOL canIOCWork;
 /**
  *  Flight mode string. ex. "P-GPS", "P-Atti"
  */

@@ -44,24 +44,6 @@ typedef NS_ENUM(NSUInteger, DJIHotPointSurroundEntryPoint){
 };
 
 /**
- *  Speed level for the aircraft while surrounding the hot point
- */
-typedef NS_ENUM(NSUInteger, DJIHotPointSurroundSpeedLevel){
-    /**
-     *  Default speed
-     */
-    SurroundSpeedDefault,
-    /**
-     *  Low speed, Not support now
-     */
-    SurroundSpeedLow,
-    /**
-     *  Fast speed, Not support now
-     */
-    SurroundSpeedFast,
-};
-
-/**
  *  Heading mode for aircraft while surrounding the hot point
  */
 typedef NS_ENUM(NSUInteger, DJIHotPointSurroundHeadingMode){
@@ -94,17 +76,21 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecutePhase){
     /**
      *  Initializing
      */
-    HotpointMissionInitialing,
+    HotpointMissionInitializing,
     /**
-     *  Executing
+     *  Moving,
      */
-    HotpointMissionExecuting,
+    HotpointMissionMoving,
+    /**
+     *  Waing, Maybe the gps level is bad, waiting gps ready.
+     */
+    HotpointMissionWaiting,
 };
 
 @interface DJIHotpointMissionStatus : DJINavigationMissionStatus
 
 /**
- *  Execute phase
+ *  Execute phase of hot point mission.
  */
 @property(nonatomic, readonly) DJIHotpointMissionExecutePhase currentPhase;
 
@@ -112,11 +98,6 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecutePhase){
  *  The current radius to the hotpoint
  */
 @property(nonatomic, readonly) float currentRadius;
-
-/**
- *  The angle, reference to the north
- */
-@property(nonatomic, readonly) float currentAngle;
 
 @end
 
@@ -137,7 +118,7 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecutePhase){
 @property(nonatomic, assign) float altitude;
 
 /**
- *  Radius in meter for surrounding. should not be larger than DJIMaxSurroundingRadius
+ *  Radius in meter for surrounding. should be in range [5, 500]
  */
 @property(nonatomic, assign) float surroundRadius;
 
@@ -145,11 +126,6 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecutePhase){
  *  Surround the hot point in clockwise
  */
 @property(nonatomic, assign) BOOL clockwise;
-
-/**
- *  Speed level
- */
-@property(nonatomic, assign) DJIHotPointSurroundSpeedLevel speedLevel;
 
 /**
  *  Entry point of the aircraft when start to surround
@@ -185,8 +161,10 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecutePhase){
  *  Set mission
  *
  *  @param mission Mission to be execute
+ *
+ *  @return Return YES while the parameters of mission is valid.
  */
--(void) setHotPointSurroundMission:(DJIHotPointSurroundMission*)mission;
+-(BOOL) setHotPointSurroundMission:(DJIHotPointSurroundMission*)mission;
 
 /**
  *  Start execute hot point surround mission. Will enter NavigationMissionHotpoint mode.

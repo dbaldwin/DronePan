@@ -12,7 +12,7 @@
 #import <DJISDK/DJIFoundation.h>
 
 @class DJIMCSystemState;
-@class DJIMCTripodState;
+@class DJIMCLandingGearState;
 @class DJIMainController;
 
 @protocol DJIMainControllerDelegate <NSObject>
@@ -20,22 +20,30 @@
 @optional
 
 /**
- *  Notify on main controller error
+ *  Main controller error callback.
  *
  */
 -(void) mainController:(DJIMainController*)mc didMainControlError:(MCError)error;
 
 /**
- *  Update main controller system state
+ *  Main controller system state update callback.
  *
  */
 -(void) mainController:(DJIMainController*)mc didUpdateSystemState:(DJIMCSystemState*)state;
 
 /**
- *  Update tripod state
+ *  Landing gear state update callback.
  *
  */
--(void) mainController:(DJIMainController*)mc didUpdateTripodState:(DJIMCTripodState*)state;
+-(void) mainController:(DJIMainController*)mc didUpdateLandingGearState:(DJIMCLandingGearState*)state;
+
+/**
+ *  Received data from external device callback. Supported on Matrice 100.
+ *
+ *  @param mc   Main controller instance.
+ *  @param data Data received from external device.
+ */
+-(void) mainController:(DJIMainController *)mc didReceivedDataFromExternalDevice:(NSData*)data;
 
 @end
 
@@ -64,85 +72,85 @@
 -(void) stopUpdateMCSystemState;
 
 /**
- *  Start Takeoff
+ *  Start Takeoff. The aircraft will hover on 1.2M after takeoff.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) startTakeoffWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Stop takeoff
+ *  Stop takeoff.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) stopTakeoffWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Start auto landing
+ *  Start auto landing.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) startLandingWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Stop auto landing
+ *  Stop auto landing.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) stopLandingWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Turn on the motor
+ *  Turn on the motor.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) turnOnMotorWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Turn off the motor
+ *  Turn off the motor.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) turnOffMotorWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Start go home
+ *  Start go home.
  *
- *  @param block Remote execute result
+ *  @param block Remote execute result callback.
  */
 -(void) startGoHomeWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Stop go home mode
+ *  Stop go home.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) stopGoHomeWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Start compass calibration
+ *  Start compass calibration.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) startCompassCalibrationWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Stop compass calibration
+ *  Stop compass calibration.
  *
- *  @param block Remote execute result.
+ *  @param block Remote execute result callback.
  */
 -(void) stopCompassCalibrationWithResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Set the fly limitation parameter.
  *
- *  @param limitParam The max height and distance parameters
- *  @param block      Remote execute result
+ *  @param limitParam The maximum height and distance that the aircraft could be fly.
+ *  @param block      Remote execute result callback
  */
 -(void) setLimitFlyWithHeight:(float)height Distance:(float)distance withResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Get the limit fly parameter. if execute success, result will be set to 'limitFlyParameter'
+ *  Get the fly limitation parameter.
  *
  *  @param block Remote execute result
  */
@@ -152,24 +160,24 @@
  *  Set a no fly zone. Not support now.
  *
  *  @param noFlyZone No fly zone parameter
- *  @param block     Remote execute result
+ *  @param block     Remote execute result callback
  */
 -(void) setNoFly:(DJINoFlyZone)noFlyZone withResult:(DJIExecuteResultBlock)block DJI_API_DEPRECATED;
 
 /**
- *  Set home point to drone. Home point is use for back home when the drone lost signal or other case.
- *  The drone use current located location as default home point while it first start and receive enough satellite( >= 6).
+ *  Set home point to drone. Home point is use for back home when the drone lost signal or other danger case.
+ *  The drone will use current located location as default home point while it first start and get enough satellite( >= 6).
  *  User should be carefully to change the home point.
  *
  *  @param homePoint Home point in degree.
- *  @param block     Remote execute result
+ *  @param block     Remote execute result callback
  */
 -(void) setHomePoint:(CLLocationCoordinate2D)homePoint withResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Get home point of drone.
  *
- *  @param block   Remote execute result. The homePoint is in degree.
+ *  @param block Remote execute result callback.
  */
 -(void) getHomePoint:(void(^)(CLLocationCoordinate2D homePoint, DJIError* error))block;
 
@@ -177,29 +185,37 @@
  *  Set go home default altitude. The default altitude is used by the drone every time while going home.
  *
  *  @param altitude  Drone altitude in meter for going home.
- *  @param block     Remote execute result
+ *  @param block     Remote execute result callback.
  */
 -(void) setGoHomeDefaultAltitude:(float)altitude withResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Get the default altitude of go home.
  *
- *  @param block  Remote execute result
+ *  @param block  Remote execute result callback.
  */
 -(void) getGoHomeDefaultAltitude:(void(^)(float altitude, DJIError* error))block;
 
 /**
  *  Set go home temporary altitude. The temporary altitude is used by the drone this time while going home.
  *
- *  @param block     Remote execute result
+ *  @param block     Remote execute result callback.
  */
 -(void) setGoHomeTemporaryAltitude:(float)tmpAltitude withResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Get go home default altitude.
  *
- *  @param block  Remote execute result
+ *  @param block  Remote execute result callback.
  */
 -(void) getGoHomeTemporaryAltitude:(void(^)(float altitude, DJIError* error))block;
+
+/**
+ *  Send data to external device. Support on Matrice 100
+ *
+ *  @param data  Data to be sent to the external device, the size of data should not larger than 100 byte.
+ *  @param block Remote execute result callback.
+ */
+-(void) sendDataToExternalDevice:(NSData*)data withResult:(DJIExecuteResultBlock)block;
 
 @end

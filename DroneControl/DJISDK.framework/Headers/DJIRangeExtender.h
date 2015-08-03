@@ -10,71 +10,102 @@
 
 #define INVALID_POWER_LEVEL -1
 
+@class DJIRangeExtender;
+
+@protocol DJIRangeExtenderDelegate <NSObject>
+
+@optional
+/**
+ *  Update power level of range extender. The update frequency is 1Hz.
+ *
+ *  @param extender   Instance of DJIRangeExtender
+ *  @param powerLevel Power level of range extender. If the connection to the range extender is borken, INVALID_POWER_LEVEL will be
+ */
+-(void) rangeExtender:(DJIRangeExtender*)extender didUpdatePowerLevel:(int)powerLevel;
+
+@end
+
 
 @interface DJIRangeExtender : DJIObject
 
 /**
+ *  Range extender power level update delegate
+ */
+@property(nonatomic, weak) id<DJIRangeExtenderDelegate> delegate;
+
+/**
+ *  Start power level update.
+ */
+-(void) startRangeExtenderPowerLevelUpdates;
+
+/**
+ *  Stop power level update.
+ */
+-(void) stopRangeExtenderPowerLevelUpdates;
+
+/**
  *  Get the power level of the range extender.
  *
- *  @return Power level between 0 - 10
+ *  @return Power level between [0, 10]. -1 is invalid power level.
  */
 -(int) getRangeExtenderPowerLevel;
 
 /**
- *  Bind mac address to the range extender current connected
+ *  Bind mac address to the range extender.
  *
- *  @param camera's mac addrese and camera's ssid
+ *  @param macAddr The target bind camera's MAC address, get frome the QR code stick on the aircraft. the input MAC address should be this format:  60:60:1f:xx:xx:xx
  *
- *  @return Retrun YES if bind success.
- *  @attention If bind success, the range extender will reboot
+ *  @return Return bind result. if YES then bind successed.
+ *
+ *  @attention If bind success, the range extender will reboot automatically.
  */
--(BOOL) bindRangeExtenderWithCameraMAC:(NSString*)macAddr cameraSSID:(NSString*)ssid;
+-(BOOL) bindRangeExtenderWithCameraMAC:(NSString*)macAddr;
 
 /**
- *  Get the binding mac address of the range extender current connected
+ *  Get the binding mac address of the range extender.
  *
- *  @return camera's mac addreess if get success.
+ *  @return Return the binding MAC address. return nil if no binding.
  */
 -(NSString*) getCurrentBindingMAC;
 
 /**
  *  Get the binding ssid
  *
- *  @return bingding camera's ssid
+ *  @return Return the binding SSID, return nil if no binding.
  */
 -(NSString*) getCurrentBindingSSID;
 
 /**
- *  get MAC Address of range extender current connected
+ *  Get MAC Address of range extender.
  *
- *  @return MAC address or nil if failed.
+ *  @return MAC address of range extender.
  */
 -(NSString*) getMacAddressOfRangeExtender;
 
 /**
- *  Get SSID of range extender current connected
+ *  Get SSID of range extender.
  *
- *  @return ssid
+ *  @return SSID of range extender.
  */
 -(NSString*) getSsidOfRangeExtender;
 
 /**
- *  Rename the extender's ssid.
+ *  Rename the range extender's ssid.
  *
- *  @param newName new ssid name of range extender, must has prefix "Phantom_"
- *  @attention if rename success, the range extender will reboot
+ *  @param newName New ssid name of range extender, must has prefix "Phantom_"
+ *  @attention If rename operation success, the range extender will reboot automatically.
  */
 -(BOOL) renameSsidOfRangeExtender:(NSString*)newSsid;
 
 /**
  *  Get wifi password
  *
- *  @return wifi password or nil
+ *  @return WIFI password or nil
  */
 -(NSString*) getRangeExtenderWiFiPassword;
 
 /**
- *  set wifi password
+ *  Set wifi password
  *
  *  @param password New wifi passwords that is made up of letters and numbers and should be 8 - 16 characters。
  *                  set nil to cancel setup password

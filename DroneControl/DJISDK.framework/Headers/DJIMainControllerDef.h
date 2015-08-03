@@ -103,31 +103,6 @@ typedef struct
     Float32 maxLimitDistance;
 } DJILimitFlyStatus;
 
-/**
- *  IOC type
- */
-typedef NS_ENUM(uint8_t, DJIMCIocType){
-    /**
-     *  IOC close
-     */
-    IOCClosed,
-    /**
-     *  IOC course locked
-     */
-    IOCCourseLock,
-    /**
-     *  IOC home point locked
-     */
-    IOCHomePointLock,
-    /**
-     *  IOC hot point surround
-     */
-    IOCHotPointSurround,
-    /**
-     *  Unknown
-     */
-    IOCTypeUnknown = 0xFF,
-};
 
 /**
  *  Main controller action for low battery incident
@@ -152,33 +127,33 @@ typedef NS_ENUM(uint8_t, DJIMCLowBatteryAction){
 };
 
 /**
- *  Tripod status
+ *  Landing gear status
  */
-typedef NS_ENUM(uint8_t, DJIMCTripodStatus){
+typedef NS_ENUM(uint8_t, DJIMCLandingGearStatus){
     /**
      *  None, Unknown status
      */
-    TripodStatusNone,
+    LandingGearStatusNone,
     /**
-     *  Tripod is folded
+     *  Landing gear is folded
      */
-    TripodFolded,
+    LandingGearFolded,
     /**
-     *  Tripod is in folding
+     *  Landing gear is in folding
      */
-    TripodFolding,
+    LandingGearFolding,
     /**
-     *  Tripod is stretched
+     *  Landing gear is stretched
      */
-    TripodStretched,
+    LandingGearStretched,
     /**
-     *  Tripod is stretching
+     *  Landing gear is stretching
      */
-    TripodStretching,
+    LandingGearStretching,
     /**
-     *  Tripod deform stoped
+     *  Landing gear deform stoped
      */
-    TripodStoped,
+    LandingGearStoped,
 };
 
 

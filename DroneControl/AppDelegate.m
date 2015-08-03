@@ -24,7 +24,7 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
     //Register App with key
-    NSString* appKey = @"0359986cf90fc83522986c52";
+    NSString* appKey = @"cd6a78663f8aaa9fdd2f5de7";
     [DJIAppManager registerApp:appKey withDelegate:self];
     
     // Google Maps key

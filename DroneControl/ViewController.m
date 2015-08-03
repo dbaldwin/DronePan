@@ -189,6 +189,19 @@
     }
 }
 
+
+-(void)takeFirstRowPhotos {
+    
+}
+
+-(void)takeSecondRowPhotos {
+    
+}
+
+-(void)takeThirdRowPhotos {
+    
+}
+
 /*
  We'll take a photo facing forward and then 11 photos at 30 degree increments after that
  */
@@ -226,7 +239,8 @@
     
     DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {YES, -600, RelativeAngle, RotationForward};
+    // 30 degree rotation - units are 2X the angle
+    DJIGimbalRotation yaw = {YES, 60, RelativeAngle, RotationForward};
     
     __weak typeof(self) weakSelf = self;
     
@@ -247,7 +261,7 @@
         // There are 4 loops of 12 photos
         loopCount = loopCount + 1;
         [self resetGimbalYaw:nil];
-        [self pitchDown];
+        [self pitchDown30];
         [weakSelf performSelector: @selector(rotateGimbalAndTakePhoto) withObject:nil afterDelay:2];
     // We're done capturing all the photos
     } else {
@@ -261,7 +275,7 @@
         loopCount = 1;
         photoCount = 0;
         
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Compete!" message:@"Your 48 photos are now ready to be stitched into a panorama. Be sure to click the Reset button below to reset your gimbal yaw. You can use the Tilt buttons to set the proper tilt before beginning your next panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Complete!" message:@"Your 48 photos are now ready to be stitched into a panorama. Be sure to click the Reset button below to reset your gimbal yaw. You can use the Tilt buttons to set the proper tilt before beginning your next panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
         
         [self resetGimbalYaw:nil];
@@ -276,25 +290,25 @@
 }
 
 -(void) mainController:(DJIMainController*)mc didUpdateSystemState:(DJIMCSystemState*)state {
-    DJIInspireMCSystemState* inspireSystemState = (DJIInspireMCSystemState*)state;
+    /*DJIInspireMCSystemState* inspireSystemState = (DJIInspireMCSystemState*)state;
     {
         _altitudeLabel.text =[NSString stringWithFormat: @"Altitude: %f m %d", inspireSystemState.altitude, loopCount];
-    }
+    }*/
 }
 
 // Rotate right 15 degrees
 - (IBAction)rotateGimbalRight:(id)sender {
     DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {YES, 300, RelativeAngle, RotationForward};
+    DJIGimbalRotation yaw = {YES, 15, RelativeAngle, RotationForward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
 // Rotate left 15 degrees
 - (IBAction)rotateGimbalLeft:(id)sender {
-    DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {YES, -300, RelativeAngle, RotationForward};
+    DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationBackward};
+    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
+    DJIGimbalRotation yaw = {YES, 15, RelativeAngle, RotationBackward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
@@ -304,24 +318,24 @@
 }
 
 // Down 30 degrees
-- (void) pitchDown {
-    DJIGimbalRotation pitch = {YES, -600, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
+- (void) pitchDown30 {
+    DJIGimbalRotation pitch = {YES, 60, RelativeAngle, RotationBackward};
+    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
+    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationBackward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
 // Down 15 degrees
 - (IBAction) pitchDown15:(id)sender {
-    DJIGimbalRotation pitch = {YES, -300, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
+    DJIGimbalRotation pitch = {YES, 15, RelativeAngle, RotationBackward};
+    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
+    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationBackward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
 // Up 30 degrees
 - (IBAction) pitchUp:(id)sender {
-    DJIGimbalRotation pitch = {YES, 300, RelativeAngle, RotationForward};
+    DJIGimbalRotation pitch = {YES, 15, RelativeAngle, RotationForward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
     DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];

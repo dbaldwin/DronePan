@@ -13,16 +13,16 @@
 @protocol DJISDCardOperation <NSObject>
 
 /**
- *  Format SD card
+ *  Format SD card.
  *
- *  @param block Remote execute result block.
+ *  @param block Remote execute result callback.
  */
 -(void) formatSDCard:(DJIExecuteResultBlock)block;
 
 /**
- *  Get SD card information and status
+ *  Get SD card information and status.
  *
- *  @param block Remote execute result block.
+ *  @param block Remote execute result callback.
  */
 -(void) getSDCardInfo:(void(^)(DJICameraSDCardInfo* sdInfo, DJIError* error))block;
 

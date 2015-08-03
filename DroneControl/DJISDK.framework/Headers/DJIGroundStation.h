@@ -124,7 +124,7 @@ typedef NS_ENUM(uint8_t, DJIWaypointMissionExecutePhase){
  *  @param pitchSpeed Pitch speed between [-1000, 1000]
  *  @attention This api is valid only after the drone is pausing.
  */
--(BOOL) setAircraftPitchSpeed:(int)pitchSpeed;
+-(BOOL) setAircraftPitchSpeed:(int)pitchSpeed DJI_API_DEPRECATED;
 
 /**
  *  Set aircraft roll rotation speed
@@ -132,7 +132,7 @@ typedef NS_ENUM(uint8_t, DJIWaypointMissionExecutePhase){
  *  @param rollSpeed Roll speed between [-1000, 1000]
  *  @attention This api is valid only after the drone is pausing.
  */
--(BOOL) setAircraftRollSpeed:(int)rollSpeed;
+-(BOOL) setAircraftRollSpeed:(int)rollSpeed DJI_API_DEPRECATED;
 
 /**
  *  Set aircraft yaw rotation speed
@@ -140,14 +140,14 @@ typedef NS_ENUM(uint8_t, DJIWaypointMissionExecutePhase){
  *  @param yawSpeed Yaw speed between [-1000, 1000]
  *  @attention This api is valid only after the drone is pausing.
  */
--(BOOL) setAircraftYawSpeed:(int)yawSpeed;
+-(BOOL) setAircraftYawSpeed:(int)yawSpeed DJI_API_DEPRECATED;
 
 /**
  *  Set aircraft throttle
  *
  *  @param throttle Throttle value [0 stop, 1 up, 2 down]
  */
--(BOOL) setAircraftThrottle:(int)throttle;
+-(BOOL) setAircraftThrottle:(int)throttle DJI_API_DEPRECATED;
 
 /**
  *  Set aricraft joystick.
@@ -156,9 +156,9 @@ typedef NS_ENUM(uint8_t, DJIWaypointMissionExecutePhase){
  *  @param roll    Roll speed between [-1000, 1000]
  *  @param yaw     Yaw speed between [-1000, 1000]
  *  @param throttle Throttle  [0 stop, 1 up, 2 down]
- *  @attention This api is valid only after the drone is pausing.
+ *  @attention This api is valid only after the drone is pausing. This api was depercated, use sendFlightControlData:withResult: instead.
  */
--(BOOL) setAircraftJoystickWithPitch:(int)pitch Roll:(int)roll Yaw:(int)yaw Throttle:(int)throttle;
+-(BOOL) setAircraftJoystickWithPitch:(int)pitch Roll:(int)roll Yaw:(int)yaw Throttle:(int)throttle DJI_API_DEPRECATED;
 
 @end
 

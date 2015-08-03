@@ -33,6 +33,10 @@ typedef NS_ENUM(NSUInteger, MediaType){
      *  M4V
      */
     MediaTypeM4V,
+    /**
+     *  DNG
+     */
+    MediaTypeDNG,
 };
 
 typedef void (^AsyncOperationHandler)(NSError* error);
@@ -78,23 +82,23 @@ typedef void (^AsyncFetchHandler)(NSData* data, BOOL* stop, NSError* error);
 @property(nonatomic, readonly) NSString* mediaURL;
 
 /**
- *  Thumbnail image
+ *  Thumbnail of this media. if nil user should call once - fetchThumbnail: to fetch the thumbnail data
  */
 @property(nonatomic, readonly) UIImage* thumbnail;
 
 -(id) initWithMediaURL:(NSString*)url;
 
 /**
- *  Fetch thumbnail from remote media
+ *  Fetch this media's thumbnail from remote album.
  *
  *  @param completion if there is no error, property "thumbnail" will be set
  */
 -(void) fetchThumbnail:(AsyncOperationHandler)completion;
 
 /**
- *  Fetch media data from remote media
+ *  Fetch media data from remote album.
  *
- *  @param handler async handler data when received data frome remote
+ *  @param handler Data callback will call when received data frome remote or some error occured
  */
 -(void) fetchMediaData:(AsyncFetchHandler)handler;
 

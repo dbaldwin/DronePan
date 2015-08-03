@@ -8,6 +8,12 @@
 #import <DJISDK/DJIGimbal.h>
 
 @interface DJIInspireGimbal : DJIGimbal
+
+/**
+ *  Set completion time for control gimbal angle action. If user use API setGimbalPitch:Roll:Yaw:withResult: to control the gimbal's angle (AbsoluteAngle)， this property will be used. the precision is 0.1s. for example, the property value is set as 2.0, then the gimbal will rotate to the target position in 2.0s
+ */
+@property(nonatomic, assign) double completionTimeForControlAngleAction;
+
 /**
  *  Start gimbal calibration
  *
@@ -41,9 +47,9 @@
 /**
  *  Control gimbal rotate
  *
- *  @param pitch Pitch rotation parameters. angel is in range [-900, 300]. (real angle x10)
- *  @param roll  Roll rotation parameters. angel is in range [-1800, +1800]. (real angle x10)
- *  @param yaw   Yaw rotation parameters. angel is in range [-1800, +1800]. (real angle x10)
+ *  @param pitch Pitch rotation parameters. Inspire is in range [-90, 30] and Phantom3 Pression is in range [-90, 0]. the input angle precision is 0.1 degree
+ *  @param roll  Roll rotation parameters. angel is in range [-180, +180]. the input angle precision is 0.1 degree
+ *  @param yaw   Yaw rotation parameters. angel is in range [-180, +180]. the input angle precision is 0.1 degree
  *  @param block Remote execute result
  */
 -(void) setGimbalPitch:(DJIGimbalRotation)pitch Roll:(DJIGimbalRotation)roll Yaw:(DJIGimbalRotation)yaw withResult:(DJIExecuteResultBlock)block;

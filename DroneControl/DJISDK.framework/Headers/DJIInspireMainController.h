@@ -9,21 +9,37 @@
 #import <DJISDK/DJIHotPointSurround.h>
 #import <DJISDK/DJIGroundStation.h>
 
-
 @interface DJIInspireMainController : DJIMainController <DJIHotPointSurround, DJIGroundStation>
-/**
- *  Open tripod protection. If opened, the tripod will drop down automatically while the drone landing
- *
- *  @param block Remote execute reult
- */
--(void) openTripodProtectionWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Close tripod protection
+ *  Main controller's firmware version.
+ *
+ */
+-(NSString*) getMainControllerVersion;
+
+/**
+ *  Start update main controller's system state
+ */
+-(void) startUpdateMCSystemState;
+
+/**
+ *  Stop update main controller's system state
+ */
+-(void) stopUpdateMCSystemState;
+
+/**
+ *  Open landing gear protection. If opened, the landing gear will drop down automatically while the drone landing
  *
  *  @param block Remote execute reult
  */
--(void) closeTripodProtectionWithResult:(DJIExecuteResultBlock)block;
+-(void) openLandingGearProtectionWithResult:(DJIExecuteResultBlock)block;
+
+/**
+ *  Close landing gear protection
+ *
+ *  @param block Remote execute reult
+ */
+-(void) closeLandingGearProtectionWithResult:(DJIExecuteResultBlock)block;
 
 /**
  *  Lock the course using current direction
@@ -55,27 +71,27 @@
 -(void) exitTransportModeWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Set IOC Mode enable
+ *  Set flight mode switchable. if switchable is YES, then the remote controller's mode switch will be available.
  *
- *  @param enable Ioc mode enable
+ *  @param switchable Flight mode switchable.
+ *  @param block      Remote execute result.
+ */
+-(void) setFlightModeSwitchable:(BOOL)switchable withResult:(DJIExecuteResultBlock)block;
+
+/**
+ *  Get flight mode switchable.
+ *
+ *  @param block Remote execute result.
+ */
+-(void) getFlightModeSwitchableWithResult:(void(^)(BOOL switchable, DJIError* error))block;
+
+/**
+ *  Set IOC working.
+ *
+ *  @param enable Is IOC working
  *  @param block  Remote execute result.
  */
--(void) setIOCModeEnable:(BOOL)enable withResult:(DJIExecuteResultBlock)block;
-
-/**
- *  Set IOC type.
- *
- *  @param type   IOC Type
- *  @param result Remote execute result.
- */
--(void) setAircraftIOCType:(DJIMCIocType)type withResult:(DJIExecuteResultBlock)result;
-
-/**
- *  Get IOC type
- *
- *  @param result Remote execute result.
- */
--(void) getAircraftIOCTypeWithResult:(void(^)(DJIMCIocType type, DJIError* error))result;
+-(void) setIOCWorking:(BOOL)enable withResult:(DJIExecuteResultBlock)block;
 
 /*
  *  Set low battery waning data, percentage of voltage in range [25, 50]. action will be performed by the aircraft while battery is reach the specific percent.
@@ -113,13 +129,6 @@
 -(void) setHomePointUsingAircraftCurrentLocationWithResult:(DJIExecuteResultBlock)result;
 
 /**
- *  Set home point use the remote controller's current location.
- *
- *  @param result Remote exeucte result.
- */
--(void) setHomePointUsingRCCurrentLocationWithResult:(DJIExecuteResultBlock)result;
-
-/**
  *  Set aircraft name. the length of aircraft name should be less than 32 characters
  *
  *  @param name   Name to be set to the aricraft.
@@ -133,5 +142,13 @@
  *  @param result Remote execute result.
  */
 -(void) getAircraftNameWithResult:(void(^)(NSString* name, DJIError* error))result;
+
+/**
+ *  Send data to external device. Only support in product Matrice100.
+ *
+ *  @param data  Data to be sent to external device, the size of data should not large then 512 byte.
+ *  @param block Remote execute result.
+ */
+-(void) sendDataToExternalDevice:(NSData*)data withResult:(DJIExecuteResultBlock)block;
 
 @end

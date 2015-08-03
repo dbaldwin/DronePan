@@ -126,11 +126,34 @@
 -(void) getSlaveControlModeWithResult:(void(^)(DJIRCControlMode mode, DJIError* error))block;
 
 /**
+ *  Set slave's joystick control the gimbal's pitch/roll/yaw speed.
+ *
+ *  @param speed Speed to be set for gimal's pitch/roll/yaw. speed value should be in range [0, 100].
+ *  @param block Remote execute result.
+ */
+-(void) setSlaveJoystickControlGimbalSpeed:(DJIRCGimbalControlSpeed)speed withResult:(DJIExecuteResultBlock)block;
+
+/**
  *  Get gimbal control speed.
  *
  *  @param block Remote execute result.
  */
--(void) getGimbalControlSpeedWithResult:(void(^)(DJIRCGimbalControlSpeed speed, DJIError* error))block;
+-(void) getSlaveJoystickControlGimbalSpeedWithResult:(void(^)(DJIRCGimbalControlSpeed speed, DJIError* error))block;
+
+/**
+ *  Set RC's wheel control the gimbal's pitch speed
+ *
+ *  @param speed Speed of control gimbal. value should be in range [0, 100]
+ *  @param block Remote execute result.
+ */
+-(void) setRCWheelControlGimbalSpeed:(uint8_t)speed withResult:(DJIExecuteResultBlock)block;
+
+/**
+ *  Get RC's wheel control gimbal's speed
+ *
+ *  @param block Remote execute result.
+ */
+-(void) getRCWheelControlGimbalSpeedWithResult:(void(^)(uint8_t speed, DJIError* error))block;
 
 /**
  *  Used by a slave to rquest the gimbal's control right.

@@ -8,66 +8,38 @@
 
 @interface DJIMCSmartGoHomeData : NSObject
 
-/*
- *  remainTimeForFlight
- *
- *  Discussion:
- *    The remain time in second for flight (include landing).
- *
+/**
+ *  The remain time in second for flight (include landing).
  */
 @property(nonatomic, readonly) NSUInteger remainTimeForFlight;
 
-/*
- *  timeForGoHome
- *
- *  Discussion:
- *    The time in second that need for going to home point from current location.
- *
+/**
+ *  The time in second that need for going to home point from current location.
  */
 @property(nonatomic, readonly) NSUInteger timeForGoHome;
 
-/*
- *  timeForLanding
- *
- *  Discussion:
- *    The time in seconds that need for landing from current height.
- *
+/**
+ *  The time in seconds that need for landing from current height.
  */
 @property(nonatomic, readonly) NSUInteger timeForLanding;
 
-/*
- *  powerPercentForGoHome
- *
- *  Discussion:
- *    The power percent that need for going to home point from current location.
- *
+/**
+ *  The power percent that need for going to home point from current location.
  */
 @property(nonatomic, readonly) NSUInteger powerPercentForGoHome;
 
-/*
- *  powerPercentForLanding
- *
- *  Discussion:
- *    The power percent that need for landing from current height.
- *
+/**
+ *  The power percent that need for landing from current height.
  */
 @property(nonatomic, readonly) NSUInteger powerPercentForLanding;
 
-/*
- *  radiusForGoHome
- *
- *  Discussion:
- *    The max radius in meter for flight. the radius is equsl to distance form home point to drone location.
- *
+/**
+ *  The max radius in meter for flight. the radius is the distance form home point to drone location.
  */
 @property(nonatomic, readonly) float radiusForGoHome;
 
-/*
- *  droneRequestGoHome
- *
- *  Discussion:
- *    The drone request for go home.
- *
+/**
+ *  The drone request for go home. User should response this request the value is YES, or the aircraft will automatically go home after 10 seconds.
  */
 @property(nonatomic, readonly) BOOL droneRequestGoHome;
 

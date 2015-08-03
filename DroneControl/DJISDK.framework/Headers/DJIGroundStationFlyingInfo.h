@@ -7,35 +7,95 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
-#import <DJISDK/DJIMainController.h>
+#import <DJISDK/DJIMainControllerDef.h>
 
-typedef NS_ENUM(NSUInteger, GroundStationControlMode)
-{
+/**
+ *  Ground station control mode
+ */
+typedef NS_ENUM(NSUInteger, GroundStationControlMode){
+    /**
+     *  Manual
+     */
     GSModeManual,
+    /**
+     *  Gps curise
+     */
     GSModeGpsCruise,
+    /**
+     *  Gps Atti
+     */
     GSModeGpsAtti,
+    /**
+     *  Attitude
+     */
     GSModeAtti,
+    /**
+     *  Waypoint
+     */
     GSModeWaypoint,
+    /**
+     *  Go Home
+     */
     GSModeGohome,
+    /**
+     *  Pause
+     */
     GSModePause,
+    /**
+     *  Landing
+     */
     GSModeLanding,
+    /**
+     *  TakeOff
+     */
     GSModeTakeOff,
+    /**
+     *  Unknown
+     */
     GSModeUnknown,
 };
 
-typedef NS_ENUM(NSUInteger, GroundStationGpsStatus)
-{
+/**
+ *  Gps status
+ */
+typedef NS_ENUM(NSUInteger, GroundStationGpsStatus){
+    /**
+     *  Gps good
+     */
     GSGpsGood,
+    /**
+     *  Gps weak
+     */
     GSGpsWeak,
+    /**
+     *  Gps bad
+     */
     GSGpsBad,
+    /**
+     *  Unknown
+     */
     GSGpsUnknown,
 };
 
-typedef NS_ENUM(NSUInteger, GroundStationDroneStatus)
-{
+/**
+ *  Drone status
+ */
+typedef NS_ENUM(NSUInteger, GroundStationDroneStatus){
+    /**
+     *  Dead stick
+     */
     GSDroneDeadStick,
+    /**
+     *  Taking off
+     */
     GSDroneTakingOff,
+    /**
+     *  In flying
+     */
     GSDroneInFlying,
+    /**
+     *  Unknown
+     */
     GSDroneUnknown,
 };
 
