@@ -28,8 +28,6 @@
 
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
 
-@property (strong, nonatomic) IBOutlet GMSMapView *testView;
-
 @property (weak, nonatomic) IBOutlet UILabel *photoCountLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *batteryRemainingLabel;

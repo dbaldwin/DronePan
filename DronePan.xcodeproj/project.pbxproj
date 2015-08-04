@@ -24,13 +24,13 @@
 		232941FF1B519F6A00125172 /* MovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F01B519F6A00125172 /* MovieGLView.m */; };
 		232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F21B519F6A00125172 /* VideoFrameExtractor.m */; };
 		232942011B519F6A00125172 /* VideoPreviewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F41B519F6A00125172 /* VideoPreviewer.m */; };
+		239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239CBA751B704BCE00734329 /* LaunchScreen.storyboard */; };
 		239F33631B544170004E01AE /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 239F33621B544170004E01AE /* Podfile */; };
 		23FA20761B4F4C1800811185 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20751B4F4C1800811185 /* main.m */; };
 		23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20781B4F4C1800811185 /* AppDelegate.m */; };
 		23FA207C1B4F4C1800811185 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA207B1B4F4C1800811185 /* ViewController.m */; };
 		23FA207F1B4F4C1800811185 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FA207D1B4F4C1800811185 /* Main.storyboard */; };
 		23FA20811B4F4C1800811185 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23FA20801B4F4C1800811185 /* Images.xcassets */; };
-		23FA20841B4F4C1800811185 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23FA20821B4F4C1800811185 /* LaunchScreen.xib */; };
 		23FA20901B4F4C1900811185 /* DroneControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA208F1B4F4C1900811185 /* DroneControlTests.m */; };
 		23FA209A1B4F50C800811185 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23FA20991B4F50C800811185 /* DJISDK.framework */; };
 /* End PBXBuildFile section */
@@ -140,6 +140,7 @@
 		232941F21B519F6A00125172 /* VideoFrameExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFrameExtractor.m; sourceTree = "<group>"; };
 		232941F31B519F6A00125172 /* VideoPreviewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPreviewer.h; sourceTree = "<group>"; };
 		232941F41B519F6A00125172 /* VideoPreviewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPreviewer.m; sourceTree = "<group>"; };
+		239CBA751B704BCE00734329 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		239F33621B544170004E01AE /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		23FA20701B4F4C1800811185 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23FA20741B4F4C1800811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -150,7 +151,6 @@
 		23FA207B1B4F4C1800811185 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		23FA207E1B4F4C1800811185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		23FA20801B4F4C1800811185 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		23FA20831B4F4C1800811185 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		23FA20891B4F4C1900811185 /* DronePanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DronePanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		23FA208E1B4F4C1900811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23FA208F1B4F4C1900811185 /* DroneControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DroneControlTests.m; sourceTree = "<group>"; };
@@ -421,8 +421,8 @@
 				23FA207B1B4F4C1800811185 /* ViewController.m */,
 				23FA207D1B4F4C1800811185 /* Main.storyboard */,
 				23FA20801B4F4C1800811185 /* Images.xcassets */,
-				23FA20821B4F4C1800811185 /* LaunchScreen.xib */,
 				23FA20731B4F4C1800811185 /* Supporting Files */,
+				239CBA751B704BCE00734329 /* LaunchScreen.storyboard */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -556,7 +556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23FA207F1B4F4C1800811185 /* Main.storyboard in Resources */,
-				23FA20841B4F4C1800811185 /* LaunchScreen.xib in Resources */,
+				239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */,
 				239F33631B544170004E01AE /* Podfile in Resources */,
 				23FA20811B4F4C1800811185 /* Images.xcassets in Resources */,
 			);
@@ -644,14 +644,6 @@
 				23FA207E1B4F4C1800811185 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		23FA20821B4F4C1800811185 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				23FA20831B4F4C1800811185 /* Base */,
-			);
-			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

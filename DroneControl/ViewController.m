@@ -44,43 +44,14 @@
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:-33.868
                                                             longitude:151.2086
                                                                  zoom:12];
-    self.testView.camera = camera;
-    self.testView.mapType = kGMSTypeHybrid;
-    self.testView.settings.compassButton = YES;
-    self.testView.settings.myLocationButton = YES;
-    self.testView.delegate = self;
-    
-    // Listen to the myLocation property of GMSMapView.
-    [self.testView addObserver:self
-               forKeyPath:@"myLocation"
-                  options:NSKeyValueObservingOptionNew
-                  context:NULL];
-    
-    // Ask for My Location data after the map has already been added to the UI.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.testView.myLocationEnabled = YES;
-    });
     
     self.progressView.progress = 0;
     panoInProgress = NO;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context {
-    // Just update the first time
-    if (!firstLocationUpdate_) {
-        firstLocationUpdate_ = YES;
-        CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
-        self.testView.camera = [GMSCameraPosition cameraWithTarget:location.coordinate
-                                                         zoom:14];
-    }
-}
 
 -(void) dealloc
 {
-    [self.testView removeObserver:self forKeyPath:@"myLocation" context:NULL];
     [_drone destroy];
 }
 
@@ -108,6 +79,7 @@
 {
     [super viewWillDisappear:animated];
     [_drone disconnectToDrone];
+    [_drone destroy];
     [[VideoPreviewer instance] setView:nil];
 }
 

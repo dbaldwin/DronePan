@@ -45,14 +45,6 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rZt-Pf-jlZ" customClass="GMSMapView">
-                                <rect key="frame" x="400" y="0.0" width="200" height="200"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="prk-7u-Db9"/>
-                                    <constraint firstAttribute="height" constant="200" id="ycW-vj-5Bb"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97z-qf-Rkv">
                                 <rect key="frame" x="-50" y="450" width="150" height="150"/>
                                 <color key="backgroundColor" red="0.60000002379999995" green="0.60000002379999995" blue="0.60000002379999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -186,7 +178,6 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="aZu-bj-rsR" secondAttribute="bottom" id="2Y7-ox-9kb"/>
                             <constraint firstItem="d3i-j9-bcE" firstAttribute="leading" secondItem="UgT-Oh-jHC" secondAttribute="trailing" constant="150" id="56e-9C-nrk"/>
                             <constraint firstItem="FkW-Eu-NQ3" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="5nU-KZ-xSl"/>
-                            <constraint firstItem="rZt-Pf-jlZ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="7c0-pS-3K8"/>
                             <constraint firstItem="d3i-j9-bcE" firstAttribute="leading" secondItem="UgT-Oh-jHC" secondAttribute="trailing" id="A8z-7k-pap"/>
                             <constraint firstItem="bKT-Er-BGF" firstAttribute="leading" secondItem="UgT-Oh-jHC" secondAttribute="trailing" id="Gh3-5s-PiU"/>
                             <constraint firstItem="aZu-bj-rsR" firstAttribute="leading" secondItem="VgZ-Aw-6fx" secondAttribute="trailing" constant="150" id="GjF-HE-2Sm"/>
@@ -211,7 +202,6 @@
                             <constraint firstItem="d3i-j9-bcE" firstAttribute="leading" secondItem="bKT-Er-BGF" secondAttribute="trailing" constant="-117" id="fpF-tI-Ltg"/>
                             <constraint firstItem="UgT-Oh-jHC" firstAttribute="leading" secondItem="JrG-Ae-bbA" secondAttribute="trailing" id="hMw-rR-tBt"/>
                             <constraint firstItem="FkW-Eu-NQ3" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="l9l-rM-mOy"/>
-                            <constraint firstAttribute="trailing" secondItem="rZt-Pf-jlZ" secondAttribute="trailing" id="qFf-9P-ipO"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="bKT-Er-BGF" secondAttribute="bottom" id="rfH-Y5-DWS"/>
                             <constraint firstItem="Rs8-H4-aNZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="x2j-Qq-Zss"/>
                             <constraint firstItem="VgZ-Aw-6fx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="-90" id="y47-A1-gJo"/>
@@ -240,7 +230,6 @@
                         <outlet property="photoCountLabel" destination="QGG-79-QvB" id="n7W-SL-Yrh"/>
                         <outlet property="progressView" destination="Rs8-H4-aNZ" id="HUT-eT-4HG"/>
                         <outlet property="startButton" destination="JrG-Ae-bbA" id="x2l-sT-2mV"/>
-                        <outlet property="testView" destination="rZt-Pf-jlZ" id="YZB-Y0-Hfn"/>
                         <outlet property="videoPreviewView" destination="FkW-Eu-NQ3" id="X1h-Hq-Qnl"/>
                     </connections>
                 </viewController>
