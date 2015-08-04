@@ -40,11 +40,6 @@
     //Start video data decode thread
     [[VideoPreviewer instance] start];
     
-    // Setup the google map view
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:-33.868
-                                                            longitude:151.2086
-                                                                 zoom:12];
-    
     self.progressView.progress = 0;
     panoInProgress = NO;
 }
@@ -175,7 +170,7 @@
 }
 
 /*
- We'll take a photo facing forward and then 11 photos at 30 degree increments after that
+ We'll take a photo facing forward and then 12 photos at 30 degree increments after that
  */
 
 - (void)rotateGimbalAndTakePhoto {
@@ -316,6 +311,12 @@
 // Hide the status bar
 -(BOOL)prefersStatusBarHidden{
     return YES;
+}
+
+#pragma mark - DJIGimbalDelegate
+-(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState*)gimbalState {
+    self.yawLabel.text = [NSString stringWithFormat:@"Yaw: %0.1f", gimbalState.attitude.yaw];
+    self.pitchLabel.text = [NSString stringWithFormat:@"Pitch: %0.1f", gimbalState.attitude.pitch];
 }
 
 #pragma mark - DJICameraDelegate

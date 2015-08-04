@@ -27,19 +27,16 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
-
 @property (weak, nonatomic) IBOutlet UILabel *photoCountLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *batteryRemainingLabel;
-
 @property (weak, nonatomic) IBOutlet UILabel *altitudeLabel;
-
 @property (weak, nonatomic) IBOutlet UIProgressView *progressView;
-
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
+@property (weak, nonatomic) IBOutlet UILabel *yawLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pitchLabel;
 
 - (void) connectToDrone;
-- (void)pitchDown;
+- (void)pitchDown30;
 - (void)rotateGimbalAndTakePhoto;
 
 - (IBAction)setWorkModeAndBeginPano;
