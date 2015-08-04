@@ -54,8 +54,8 @@
         [vc connectToDrone];
     }
     
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"App Registration" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
+    /*UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"App Registration" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];*/
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

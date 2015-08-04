@@ -17,7 +17,6 @@
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
     DJIInspireCamera *_camera;
-    //GMSMapView *_mapView;
     int photoCount;
     int loopCount;
     float totalProgress;
@@ -34,8 +33,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
 @property (weak, nonatomic) IBOutlet UILabel *yawLabel;
 @property (weak, nonatomic) IBOutlet UILabel *pitchLabel;
+@property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 
-- (void) connectToDrone;
+- (void)connectToDrone;
 - (void)pitchDown30;
 - (void)rotateGimbalAndTakePhoto;
 

@@ -86,19 +86,19 @@
 -(void) droneOnConnectionStatusChanged:(DJIConnectionStatus)status
 {
     if (status == ConnectionSuccessed) {
-        NSLog(@"Connection Success");
+        self.connectionStatusLabel.text = @"Connected";
     }
     else if(status == ConnectionStartConnect)
     {
-        NSLog(@"Start Reconnect");
+        self.connectionStatusLabel.text = @"Reconnect";
     }
     else if(status == ConnectionBroken)
     {
-        NSLog(@"Connection Broken");
+        self.connectionStatusLabel.text = @"Broken";
     }
     else if (status == ConnectionFailed)
     {
-        NSLog(@"Connection Failed");
+        self.connectionStatusLabel.text = @"Disconnected";
     }
 }
 
