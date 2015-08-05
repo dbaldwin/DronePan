@@ -88,17 +88,13 @@
     if (status == ConnectionSuccessed) {
         self.connectionStatusLabel.text = @"Connected";
     }
-    else if(status == ConnectionStartConnect)
-    {
-        self.connectionStatusLabel.text = @"Reconnect";
-    }
     else if(status == ConnectionBroken)
     {
-        self.connectionStatusLabel.text = @"Broken";
+        self.connectionStatusLabel.text = @"Disconnected";
     }
     else if (status == ConnectionFailed)
     {
-        self.connectionStatusLabel.text = @"Disconnected";
+        self.connectionStatusLabel.text = @"Failed";
     }
 }
 
@@ -228,7 +224,7 @@
         // There are 4 loops of 12 photos
         loopCount = loopCount + 1;
         [self resetGimbalYaw:nil];
-        [self pitchDown30];
+        [self pitchDown:nil];
         [weakSelf performSelector: @selector(rotateGimbalAndTakePhoto) withObject:nil afterDelay:2];
     // We're done capturing all the photos
     } else {
@@ -246,6 +242,8 @@
         [alertView show];
         
         [self resetGimbalYaw:nil];
+        
+        [self resetGimbalPitch];
     }
     
     // Update battery status
@@ -267,7 +265,7 @@
 - (IBAction)rotateGimbalRight:(id)sender {
     DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {YES, 15, RelativeAngle, RotationForward};
+    DJIGimbalRotation yaw = {YES, 30, RelativeAngle, RotationForward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
@@ -275,7 +273,7 @@
 - (IBAction)rotateGimbalLeft:(id)sender {
     DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationBackward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
-    DJIGimbalRotation yaw = {YES, 15, RelativeAngle, RotationBackward};
+    DJIGimbalRotation yaw = {YES, 30, RelativeAngle, RotationBackward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
@@ -285,16 +283,8 @@
 }
 
 // Down 30 degrees
-- (void) pitchDown30 {
+- (IBAction)pitchDown:(id)sender {
     DJIGimbalRotation pitch = {YES, 60, RelativeAngle, RotationBackward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationBackward};
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
-}
-
-// Down 15 degrees
-- (IBAction) pitchDown15:(id)sender {
-    DJIGimbalRotation pitch = {YES, 15, RelativeAngle, RotationBackward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
     DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationBackward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
@@ -302,7 +292,14 @@
 
 // Up 30 degrees
 - (IBAction) pitchUp:(id)sender {
-    DJIGimbalRotation pitch = {YES, 15, RelativeAngle, RotationForward};
+    DJIGimbalRotation pitch = {YES, 30, RelativeAngle, RotationForward};
+    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
+    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
+    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
+}
+
+-(void) resetGimbalPitch {
+    DJIGimbalRotation pitch = {YES, 180, RelativeAngle, RotationForward};
     DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
     DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
     [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];

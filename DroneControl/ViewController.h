@@ -36,15 +36,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 
 - (void)connectToDrone;
-- (void)pitchDown30;
 - (void)rotateGimbalAndTakePhoto;
 
 - (IBAction)setWorkModeAndBeginPano;
 - (IBAction)rotateGimbalRight:(id)sender;
 - (IBAction)rotateGimbalLeft:(id)sender;
 - (IBAction)resetGimbalYaw:(id)sender;
-- (IBAction)pitchDown15:(id)sender;
 - (IBAction)pitchUp:(id)sender;
+- (IBAction)pitchDown:(id)sender;
 
 @end
 

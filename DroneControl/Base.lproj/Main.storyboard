@@ -121,7 +121,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pitchDown15:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ilm-3H-9mn"/>
+                                    <action selector="pitchDown:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uvo-Va-qsO"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JrG-Ae-bbA">
@@ -284,6 +284,7 @@
                     <connections>
                         <outlet property="altitudeLabel" destination="Mvr-aq-g8Q" id="fh7-5X-w2k"/>
                         <outlet property="batteryRemainingLabel" destination="mEW-gK-QsV" id="N56-es-cxn"/>
+                        <outlet property="connectionStatusLabel" destination="Uqi-eX-VsC" id="gHB-vy-PiH"/>
                         <outlet property="photoCountLabel" destination="QGG-79-QvB" id="n7W-SL-Yrh"/>
                         <outlet property="pitchLabel" destination="TlB-iX-wg3" id="iwX-hP-3bo"/>
                         <outlet property="progressView" destination="Rs8-H4-aNZ" id="HUT-eT-4HG"/>
