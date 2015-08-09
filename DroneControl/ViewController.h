@@ -23,6 +23,12 @@
     int totalPhotoCount;
     BOOL panoInProgress;
     DJIInspireMainController* mInspireMainController;
+    
+    NSArray *yawAngles;
+    int firstLoopCount;
+    int secondLoopCount;
+    int thirdLoopCount;
+    NSTimer* _readBatteryInfoTimer;
 }
 
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
@@ -36,14 +42,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 
 - (void)connectToDrone;
-- (void)rotateGimbalAndTakePhoto;
-
-- (IBAction)setWorkModeAndBeginPano;
 - (IBAction)rotateGimbalRight:(id)sender;
 - (IBAction)rotateGimbalLeft:(id)sender;
 - (IBAction)resetGimbalYaw:(id)sender;
 - (IBAction)pitchUp:(id)sender;
 - (IBAction)pitchDown:(id)sender;
+- (IBAction)startPano:(id)sender;
 
 @end
 
