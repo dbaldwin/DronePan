@@ -40,6 +40,9 @@
     //Start video data decode thread
     [[VideoPreviewer instance] start];
     
+    // Increase progress view height
+    [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
+    
     self.progressView.progress = 0;
     panoInProgress = NO;
     firstLoopCount = secondLoopCount = thirdLoopCount = 0;
@@ -124,8 +127,8 @@
         
         panoInProgress = YES;
         
-        [self.startButton setTitle:@"Stop" forState:UIControlStateNormal];
-        [self.startButton setBackgroundColor:[UIColor redColor]];
+        // Change start icon to a stop icon
+        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop Icon"] forState:UIControlStateNormal];
         
         totalProgress = 0;
         self.progressView.progress = 0;
@@ -275,9 +278,6 @@
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    // Check to see if user canceled pano
-    [self continueWithPano];
-    
     // First photo forward and down
     [self rotateGimbal:-90.0 withYaw:0.0];
     
@@ -305,14 +305,12 @@
     panoInProgress = NO;
     
     // Change the button status back to start
-    [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-    [self.startButton setBackgroundColor:[UIColor colorWithRed:13/255.0f green:112/255.0f blue:49/255.0f alpha:1.0f]];
+    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
     
     self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 20/20"];
     
-    self.progressView.progress = 1.0;
+    self.progressView.progress = 0;
     loopCount = 1;
-    photoCount = 0;
     
     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Complete!" message:@"Your 20 photos are now ready to be stitched into a panorama. You may click the Start button again to capture another panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
@@ -347,8 +345,7 @@
         [alertView show];
         
         // Change the stop button back to a start button
-        [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-        [self.startButton setBackgroundColor:[UIColor colorWithRed:13/255.0f green:112/255.0f blue:49/255.0f alpha:1.0f]];
+        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
         
         // Reset the yaw
         [self resetGimbalYaw:nil];
@@ -363,104 +360,22 @@
         
         // Reset progress indicator
         self.progressView.progress = 0;
-        totalProgress = 0;
+        totalPhotoCount = totalProgress = 0;
         
         return NO;
     // Continue with the pano
     } else {
         // Update the counts and progress
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", (int)totalProgress];
+        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
         self.progressView.progress = totalProgress/20.0;
         totalProgress = totalProgress + 1.0;
+        totalPhotoCount = totalPhotoCount + 1;
         
         
         return YES;
     }
 }
 
-/*
- We'll take a photo facing forward and then 12 photos at 30 degree increments after that
- */
-/*
-- (void)rotateGimbalAndTakePhoto {
-    
-    // The pano has been stopped so display message, reset gimbal and vars, then return
-    if(panoInProgress == NO) {
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/48"];
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal yaw reset. Please adjust your pitch with your left scroll wheel and click start to begin a new panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-        
-        // Change the stop button back to a start button
-        [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-        [self.startButton setBackgroundColor:[UIColor colorWithRed:13/255.0f green:112/255.0f blue:49/255.0f alpha:1.0f]];
-        
-        self.progressView.progress = 0;
-        
-        [self resetGimbalYaw:nil];
-        
-        return;
-    }
-    
-    // Take the photo
-    [self takePhoto:nil];
-    
-    sleep(2);
-    
-    photoCount = photoCount + 1;
-    totalPhotoCount = totalPhotoCount + 1;
-    totalProgress = totalProgress + 1.0;
-    self.progressView.progress = totalProgress/50.0;
-    
-    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/48", totalPhotoCount];
-    
-    DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    // 30 degree rotation - units are 2X the angle
-    DJIGimbalRotation yaw = {YES, 60, RelativeAngle, RotationForward};
-    
-    __weak typeof(self) weakSelf = self;
-    
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:^(DJIError *error) {
-        if (error.errorCode != ERR_Successed) {
-            NSLog(@"Error: %@", error.errorDescription);
-        }
-    }];
-    
-    // Only do this 12 times
-    if(photoCount <= 11) {
-        [weakSelf performSelector: @selector(rotateGimbalAndTakePhoto) withObject:nil afterDelay:2];
-        
-    // Reset gimbal and pitch down 30 degrees then start over
-    } else if (loopCount <= 3) {
-        // This is used so we start the loop over when we take 12 photos
-        photoCount = 0;
-        // There are 4 loops of 12 photos
-        loopCount = loopCount + 1;
-        [self resetGimbalYaw:nil];
-        [self pitchDown:nil];
-        [weakSelf performSelector: @selector(rotateGimbalAndTakePhoto) withObject:nil afterDelay:2];
-    // We're done capturing all the photos
-    } else {
-        panoInProgress = NO;
-        [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-        [self.startButton setBackgroundColor:[UIColor colorWithRed:13/255.0f green:112/255.0f blue:49/255.0f alpha:1.0f]];
-        
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 48/48"];
-        
-        self.progressView.progress = 1.0;
-        loopCount = 1;
-        photoCount = 0;
-        
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Complete!" message:@"Your 48 photos are now ready to be stitched into a panorama. Be sure to click the Reset button below to reset your gimbal yaw. You can use the Tilt buttons to set the proper tilt before beginning your next panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-        
-        [self resetGimbalYaw:nil];
-        
-        [self resetGimbalPitch];
-    }
-    
-}
-*/
 -(void) startBatteryUpdate
 {
     if (_readBatteryInfoTimer == nil) {
@@ -485,41 +400,9 @@
     }
 }
 
-// Rotate right 15 degrees
-- (IBAction)rotateGimbalRight:(id)sender {
-    DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {YES, 30, RelativeAngle, RotationForward};
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
-}
-
-// Rotate left 15 degrees
-- (IBAction)rotateGimbalLeft:(id)sender {
-    DJIGimbalRotation pitch = {YES, 0, RelativeAngle, RotationBackward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
-    DJIGimbalRotation yaw = {YES, 30, RelativeAngle, RotationBackward};
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
-}
-
 // Reset the gimbal yaw
 - (IBAction)resetGimbalYaw:(id)sender {
     [_gimbal resetGimbalWithResult: nil];
-}
-
-// Down 30 degrees
-- (IBAction)pitchDown:(id)sender {
-    DJIGimbalRotation pitch = {YES, 30, RelativeAngle, RotationBackward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationBackward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationBackward};
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
-}
-
-// Up 30 degrees
-- (IBAction) pitchUp:(id)sender {
-    DJIGimbalRotation pitch = {YES, 30, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
 }
 
 -(void) resetGimbalPitch {
@@ -546,8 +429,8 @@
 
 #pragma mark - DJIGimbalDelegate
 -(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState*)gimbalState {
-    self.yawLabel.text = [NSString stringWithFormat:@"Yaw: %0.1f", gimbalState.attitude.yaw];
-    self.pitchLabel.text = [NSString stringWithFormat:@"Pitch: %0.1f", gimbalState.attitude.pitch];
+    self.yawLabel.text = [NSString stringWithFormat:@"Yaw: %d", (int)gimbalState.attitude.yaw];
+    self.pitchLabel.text = [NSString stringWithFormat:@"Pitch: %d", (int)gimbalState.attitude.pitch];
 }
 
 #pragma mark - DJICameraDelegate

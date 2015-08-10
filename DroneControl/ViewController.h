@@ -17,7 +17,6 @@
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
     DJIInspireCamera *_camera;
-    int photoCount;
     int loopCount;
     float totalProgress;
     int totalPhotoCount;
@@ -42,11 +41,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 
 - (void)connectToDrone;
-- (IBAction)rotateGimbalRight:(id)sender;
-- (IBAction)rotateGimbalLeft:(id)sender;
 - (IBAction)resetGimbalYaw:(id)sender;
-- (IBAction)pitchUp:(id)sender;
-- (IBAction)pitchDown:(id)sender;
 - (IBAction)startPano:(id)sender;
 
 @end
