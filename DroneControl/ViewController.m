@@ -55,6 +55,14 @@
                     [NSNumber numberWithFloat:240.0f],
                     [NSNumber numberWithFloat:300.0f],
                     nil];
+    
+    // Temp test for widths of status indicators
+    /*self.photoCountLabel.text = @"Photo: 20/20";
+    self.batteryRemainingLabel.text = @"Battery: 100%";
+    self.altitudeLabel.text = @"Alt: 200m";
+    self.yawLabel.text = @"Yaw: 180";
+    self.pitchLabel.text = @"Pitch: -90";*/
+    
 }
 
 
@@ -80,12 +88,14 @@
 -(void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [_drone connectToDrone];
+    [_drone.mainController startUpdateMCSystemState];
     [[VideoPreviewer instance] setView:self.videoPreviewView];
 }
 
 -(void) viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [_drone.mainController stopUpdateMCSystemState];
     [_drone disconnectToDrone];
     [_drone destroy];
     [[VideoPreviewer instance] setView:nil];
@@ -421,9 +431,7 @@
 -(void) mainController:(DJIMainController*)mc didUpdateSystemState:(DJIMCSystemState*)state {
     DJIMCSystemState* inspireSystemState = (DJIMCSystemState*)state;
     {
-        //self.altitudeLabel.text =[NSString stringWithFormat: @"Altitude: %f m %d", inspireSystemState.altitude, loopCount];
-        // Let's try using the attitude info to see if we can get it to populate
-        self.altitudeLabel.text = [NSString stringWithFormat: @"%f", inspireSystemState.attitude.pitch];
+        self.altitudeLabel.text =[NSString stringWithFormat: @"Alt: %dm", (int)inspireSystemState.altitude];
     }
 }
 
@@ -449,12 +457,14 @@
     if (systemState.isUSBMode) {
         [_camera setCamerMode:CameraCameraMode withResultBlock:Nil];
     }
-    if (_drone.droneType == DJIDrone_Inspire) {
+    // This may not be necessary
+    // See here: http://forum.dji.com/thread-12861-1-1.html
+    /*if (_drone.droneType == DJIDrone_Inspire) {
         if (systemState.workMode != CameraWorkModeCapture) {
             DJIInspireCamera* inspireCamera = (DJIInspireCamera*)_camera;
             [inspireCamera setCameraWorkMode:CameraWorkModeCapture withResult:nil];
         }
-    }
+    }*/
 }
 
 @end
