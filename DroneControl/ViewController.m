@@ -82,6 +82,12 @@
             UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:myerror delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alertView show];
         }
+        
+        // Update the photo count
+        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
+        // Update the progress indicator
+        self.progressView.progress = totalPhotoCount/20.0;
+        totalPhotoCount = totalPhotoCount + 1;
     }];
 }
 
@@ -142,7 +148,7 @@
         
         totalProgress = 0;
         self.progressView.progress = 0;
-        totalPhotoCount = 0;
+        totalPhotoCount = 1;
         
         // Now let's set the gimbal to the starting location yaw = 0 pitch = 30
         [self resetGimbalYaw:nil];
@@ -317,7 +323,7 @@
     // Change the button status back to start
     [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
     
-    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 20/20"];
+    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
     
     self.progressView.progress = 0;
     loopCount = 1;
@@ -375,13 +381,6 @@
         return NO;
     // Continue with the pano
     } else {
-        // Update the counts and progress
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
-        self.progressView.progress = totalProgress/20.0;
-        totalProgress = totalProgress + 1.0;
-        totalPhotoCount = totalPhotoCount + 1;
-        
-        
         return YES;
     }
 }
