@@ -316,14 +316,12 @@ typedef NS_ENUM(uint8_t, DJIGpsSignalLevel){
  *  Is motor working
  */
 @property(nonatomic, readonly) BOOL isMotorWorking;
+
 /**
- *  Is IOC working, If the 'canIOCWork' property is YES and remote controller's mode swithed to 'F' then IOC working.
+ *  Whether or not the multiple flight mode opened;
  */
-@property(nonatomic, readonly) BOOL isIOCWorking;
-/**
- *  Can IOC work. If the flight mode switchable is NO, then canIOCWork is NO. Use the api setFlightModeSwitchable:withResult: to make IOC work.
- */
-@property(nonatomic, readonly) BOOL canIOCWork;
+@property(nonatomic, readonly) BOOL isMultipleFlightModeOpen;
+
 /**
  *  Flight mode string. ex. "P-GPS", "P-Atti"
  */

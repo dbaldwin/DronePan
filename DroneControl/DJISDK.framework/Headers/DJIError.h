@@ -20,15 +20,38 @@
 #define ERR_CommandExecuteFailed              0x14
 #define ERR_VersionNotCompatible              0x15
 
+#define ERR_TooCloseToHomePoint               0xA0
+#define ERR_FollowTargetTooFar                0xB0
+#define ERR_FollowGPSLost                     0xB1
+#define ERR_FollowGimbalPitch                 0xB2
+
 #define ERR_RCModeError                       0xD0
 #define ERR_MCModeError                       0xD1
-#define ERR_NoMission                         0xD2
-#define ERR_MissionParameterError             0xD3
-#define ERR_MissionAcrossLimitFlyArea         0xD5
+#define ERR_IOCWorking                        0xD2
+#define ERR_MissionNotInit                    0xD3
+#define ERR_MissionNotExist                   0xD4
+#define ERR_MissionConflict                   0xD5
 #define ERR_MissionEstimateTimeTooLong        0xD6
-#define ERR_ExecutingHighPriorityMission      0xD7
-#define ERR_GPSSignalWeak                     0xD8
+#define ERR_HighPriorityMissionExecuting      0xD7
+#define ERR_GpsSignalWeak                     0xD8
 #define ERR_LowBattery                        0xD9
+#define ERR_AircraftNotInTheAir               0xDA
+#define ERR_MissionParamInvalid               0xDB
+#define ERR_MissionConditionNotSatisfied      0xDC
+#define ERR_MissionAcrossNoFlyZone            0xDD
+#define ERR_HomePointNotRecorded              0xDE
+#define ERR_AircraftInNoFlyZone               0xDF
+
+#define ERR_AltitudeTooHigh                   0xC0
+#define ERR_AltitudeTooLow                    0xC1
+#define ERR_MissionRadiusInvalid              0xC2
+#define ERR_MissionSpeedTooLarge              0xC3
+#define ERR_MissionEntryPointInvalid          0xC4
+#define ERR_MissionHeadingModeInvalid         0xC5
+#define ERR_MissionResumeFailed               0xC6
+#define ERR_MissionRadiusOverLimited          0xC7
+#define ERR_NavigationNotSupport              0xC8
+#define ERR_MissionTooFar                     0xC9
 
 #define ERR_NotSupportedCommand               0xE0
 #define ERR_Timeout                           0xE1
@@ -49,23 +72,6 @@
 #define ERR_NetworkAbortByApp                 0x101
 #define ERR_NetworkAbortByServer              0x102
 
-
-@class DJIError;
-
-extern DJIError *DJIErrorFor(NSUInteger errorCode);
-
-typedef NS_ENUM(NSUInteger, DJIErrorCode){
-    DJIErrorCode_None = 0x00,
-    
-    DJIErrorCode_Timeout = 0xf0,
-    DJIErrorCode_Failed = 0xf1,
-    DJIErrorCode_NotSupport = 0xf2,
-    DJIErrorCode_InvalidParameter = 0xf3,
-};
-
-/**
- *  Error Class.Subclasses need to define the error code corresponding to the description.
- */
 @interface DJIError : NSObject
 {
     NSUInteger _code;

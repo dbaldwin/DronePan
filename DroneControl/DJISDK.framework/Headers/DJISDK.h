@@ -53,12 +53,16 @@
 #import <DJISDK/DJIMCSmartGoHome.h>
 
 //Navigation
-#import <DJISDK/DJINavigation.h>
-#import <DJISDK/DJIHotPointSurround.h>
 #import <DJISDK/DJIGroundStation.h>
 #import <DJISDK/DJIGroundStationFlyingInfo.h>
 #import <DJISDK/DJIGroundStationTask.h>
 #import <DJISDK/DJIGroundStationWaypoint.h>
+#import <DJISDK/DJINavigation.h>
+#import <DJISDK/DJIFlightControl.h>
+#import <DJISDK/DJIHotPointMission.h>
+#import <DJISDK/DJIWaypointMission.h>
+#import <DJISDK/DJIFollowMeMission.h>
+#import <DJISDK/DJIIOCMission.h>
 
 //Range Extender
 #import <DJISDK/DJIRangeExtender.h>

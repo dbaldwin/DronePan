@@ -100,7 +100,7 @@
 -(void) setCameraExposureMode:(CameraExposureMode)mode withResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Get camera's exposure mode setting
+ *  Get camera's exposure mode
  *
  *  @param block Remote execute result callback.
  */

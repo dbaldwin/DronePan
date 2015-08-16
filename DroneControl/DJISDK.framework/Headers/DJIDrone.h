@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, DJIDroneType){
      */
     DJIDrone_Phantom,
     /**
-     *  Type for product Inspire / Matric 100
+     *  Type for product Inspire / Matrice 100
      */
     DJIDrone_Inspire,
     /**

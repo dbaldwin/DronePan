@@ -15,6 +15,8 @@
 @class DJIMCLandingGearState;
 @class DJIMainController;
 
+@protocol DJINavigation;
+
 @protocol DJIMainControllerDelegate <NSObject>
 
 @optional
@@ -54,6 +56,11 @@
  *  Manin controller delegate
  */
 @property(nonatomic, weak) id<DJIMainControllerDelegate> mcDelegate;
+
+/**
+ *  The navigation manager
+ */
+@property(nonatomic, readonly) NSObject<DJINavigation>* navigationManager;
 
 /**
  *  Main controller's firmware version.
@@ -155,14 +162,6 @@
  *  @param block Remote execute result
  */
 -(void) getLimitFlyWithResultBlock:(void(^)(DJILimitFlyStatus limitStatus, DJIError*))block;
-
-/**
- *  Set a no fly zone. Not support now.
- *
- *  @param noFlyZone No fly zone parameter
- *  @param block     Remote execute result callback
- */
--(void) setNoFly:(DJINoFlyZone)noFlyZone withResult:(DJIExecuteResultBlock)block DJI_API_DEPRECATED;
 
 /**
  *  Set home point to drone. Home point is use for back home when the drone lost signal or other danger case.

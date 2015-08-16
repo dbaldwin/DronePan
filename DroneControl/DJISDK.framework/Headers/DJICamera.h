@@ -16,7 +16,7 @@
 @class DJICameraSystemState;
 @class DJICameraPlaybackState;
 
-typedef void (^DJIFileDownloadPreparingBlock)(NSString* fileName, NSUInteger fileSize, BOOL* skip);
+typedef void (^DJIFileDownloadPreparingBlock)(NSString* fileName, DJIDownloadFileType fileType, NSUInteger fileSize, BOOL* skip);
 typedef void (^DJIFileDownloadingBlock)(NSData* data, NSError* error);
 typedef void (^DJIFileDownloadCompletionBlock)();
 
