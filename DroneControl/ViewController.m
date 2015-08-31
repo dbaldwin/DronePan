@@ -369,6 +369,9 @@
             dispatch_after(delay, dispatch_get_main_queue(), ^(void){
                 [weakSelf rotateGimbal:pitch withYaw:yaw];
             });
+        // If we finish the fourth loop or if a user cancels before the pano is done
+        } else if(panoInProgress == NO) {
+            [weakSelf finishPanoAndReset];
         // Gimbal successfull rotate so we'll delay 2s and then take the photo
         } else {
             
@@ -403,10 +406,7 @@
             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
             // Take the photo
             dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-                if(panoInProgress == NO) {
-                    [self finishPanoAndReset];
-                    return;
-                } else if(firstLoopCount != 0)
+                if(firstLoopCount != 0)
                     [self takeFirstRowPhotos];
                 else if(secondLoopCount != 0)
                     [self takeSecondRowPhotos];
@@ -431,6 +431,9 @@
     // User canceled the pano - reset a bunch of vars
     if(panoInProgress == NO) {
         
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal reset. You may start a new panorama by clicking the Start button." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+        
         [self finishPanoAndReset];
         
         return NO;
@@ -443,8 +446,6 @@
 -(void) finishPanoAndReset {
     
     self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal reset. You may start a new panorama by clicking the Start button." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
     
     // Change the stop button back to a start button
     [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
