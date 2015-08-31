@@ -17,16 +17,15 @@
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
     DJIInspireCamera *_camera;
-    int loopCount;
     float totalProgress;
     int totalPhotoCount;
     BOOL panoInProgress;
     DJIInspireMainController* mInspireMainController;
     
-    NSArray *yawAngles;
     int firstLoopCount;
     int secondLoopCount;
     int thirdLoopCount;
+    int fourthLoopCount;
     NSTimer* _readBatteryInfoTimer;
 }
 

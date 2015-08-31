@@ -118,6 +118,16 @@
                                     <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="poN-IR-IsC"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xe1-m5-HO7">
+                                <rect key="frame" x="277" y="285" width="46" height="30"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="gks-mY-M8Q" kind="presentation" modalPresentationStyle="pageSheet" id="I6s-av-ewj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -168,6 +178,52 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="320" y="200"/>
+        </scene>
+        <!--Terms View Controller-->
+        <scene sceneID="kGj-mm-enz">
+            <objects>
+                <viewController id="gks-mY-M8Q" customClass="TermsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7rf-df-Whi"/>
+                        <viewControllerLayoutGuide type="bottom" id="g0t-eg-Shg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="td3-uZ-7d2">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ult-oC-65U">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a8E-fZ-TMW">
+                                <rect key="frame" x="277" y="461" width="40" height="30"/>
+                                <state key="normal" title="I Agree">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismissTerms:" destination="gks-mY-M8Q" eventType="touchUpInside" id="ta0-we-khY"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ult-oC-65U" firstAttribute="top" secondItem="td3-uZ-7d2" secondAttribute="top" id="JkD-TO-asl"/>
+                            <constraint firstAttribute="bottom" secondItem="a8E-fZ-TMW" secondAttribute="bottom" constant="5" id="RTh-sL-mXP"/>
+                            <constraint firstAttribute="centerX" secondItem="a8E-fZ-TMW" secondAttribute="centerX" id="SRJ-YE-VD8"/>
+                            <constraint firstItem="g0t-eg-Shg" firstAttribute="top" secondItem="ult-oC-65U" secondAttribute="bottom" constant="40" id="bcv-cd-6AK"/>
+                            <constraint firstItem="ult-oC-65U" firstAttribute="leading" secondItem="td3-uZ-7d2" secondAttribute="leading" id="jD5-2y-jKs"/>
+                            <constraint firstAttribute="trailing" secondItem="ult-oC-65U" secondAttribute="trailing" id="oBw-qw-y4f"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="agree" destination="a8E-fZ-TMW" id="wmL-YP-fvw"/>
+                        <outlet property="webView" destination="ult-oC-65U" id="zzq-Oe-RkL"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="csg-3c-MGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="320" y="-476"/>
         </scene>
     </scenes>
     <resources>

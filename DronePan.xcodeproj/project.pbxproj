@@ -24,8 +24,11 @@
 		232941FF1B519F6A00125172 /* MovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F01B519F6A00125172 /* MovieGLView.m */; };
 		232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F21B519F6A00125172 /* VideoFrameExtractor.m */; };
 		232942011B519F6A00125172 /* VideoPreviewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F41B519F6A00125172 /* VideoPreviewer.m */; };
+		235BC83F1B93CAF300B508DB /* dronepan_terms.html in Resources */ = {isa = PBXBuildFile; fileRef = 235BC83E1B93CAF300B508DB /* dronepan_terms.html */; };
+		238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 238036621B8B6EC3005FD38B /* TermsViewController.m */; };
 		239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239CBA751B704BCE00734329 /* LaunchScreen.storyboard */; };
 		239F33631B544170004E01AE /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 239F33621B544170004E01AE /* Podfile */; };
+		23DE2E001B8C204E002AFCDF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */; };
 		23FA20761B4F4C1800811185 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20751B4F4C1800811185 /* main.m */; };
 		23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20781B4F4C1800811185 /* AppDelegate.m */; };
 		23FA207C1B4F4C1800811185 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA207B1B4F4C1800811185 /* ViewController.m */; };
@@ -140,8 +143,13 @@
 		232941F21B519F6A00125172 /* VideoFrameExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFrameExtractor.m; sourceTree = "<group>"; };
 		232941F31B519F6A00125172 /* VideoPreviewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPreviewer.h; sourceTree = "<group>"; };
 		232941F41B519F6A00125172 /* VideoPreviewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPreviewer.m; sourceTree = "<group>"; };
+		235BC83E1B93CAF300B508DB /* dronepan_terms.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = dronepan_terms.html; sourceTree = "<group>"; };
+		238036611B8B6EC3005FD38B /* TermsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsViewController.h; sourceTree = "<group>"; };
+		238036621B8B6EC3005FD38B /* TermsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsViewController.m; sourceTree = "<group>"; };
 		239CBA751B704BCE00734329 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		239F33621B544170004E01AE /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		23DE2DFE1B8C204E002AFCDF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		23FA20701B4F4C1800811185 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		23FA20741B4F4C1800811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23FA20751B4F4C1800811185 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -414,6 +422,7 @@
 		23FA20721B4F4C1800811185 /* DronePan */ = {
 			isa = PBXGroup;
 			children = (
+				235BC83E1B93CAF300B508DB /* dronepan_terms.html */,
 				2329418D1B519F6A00125172 /* VideoPreviewer */,
 				23FA20771B4F4C1800811185 /* AppDelegate.h */,
 				23FA20781B4F4C1800811185 /* AppDelegate.m */,
@@ -423,6 +432,10 @@
 				23FA20801B4F4C1800811185 /* Images.xcassets */,
 				23FA20731B4F4C1800811185 /* Supporting Files */,
 				239CBA751B704BCE00734329 /* LaunchScreen.storyboard */,
+				238036611B8B6EC3005FD38B /* TermsViewController.h */,
+				238036621B8B6EC3005FD38B /* TermsViewController.m */,
+				23DE2DFE1B8C204E002AFCDF /* MBProgressHUD.h */,
+				23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -556,6 +569,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23FA207F1B4F4C1800811185 /* Main.storyboard in Resources */,
+				235BC83F1B93CAF300B508DB /* dronepan_terms.html in Resources */,
 				239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */,
 				239F33631B544170004E01AE /* Podfile in Resources */,
 				23FA20811B4F4C1800811185 /* Images.xcassets in Resources */,
@@ -611,7 +625,9 @@
 			files = (
 				232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */,
 				232941FF1B519F6A00125172 /* MovieGLView.m in Sources */,
+				238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */,
 				23FA207C1B4F4C1800811185 /* ViewController.m in Sources */,
+				23DE2E001B8C204E002AFCDF /* MBProgressHUD.m in Sources */,
 				23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */,
 				23FA20761B4F4C1800811185 /* main.m in Sources */,
 				232941F51B519F6A00125172 /* DJILinkQueues.m in Sources */,

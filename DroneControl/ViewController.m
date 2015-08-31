@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "VideoPreviewer.h"
+#import "MBProgressHUD.h"
 #import <DJISDK/DJISDK.h>
 #import <GoogleMaps/GoogleMaps.h>
 
@@ -36,7 +37,6 @@
     mInspireMainController = (DJIInspireMainController*)_drone.mainController;
     mInspireMainController.mcDelegate = self;
     
-    
     //Start video data decode thread
     [[VideoPreviewer instance] start];
     
@@ -45,16 +45,7 @@
     
     self.progressView.progress = 0;
     panoInProgress = NO;
-    firstLoopCount = secondLoopCount = thirdLoopCount = 0;
-    
-    yawAngles = [[NSArray alloc] initWithObjects:
-                    [NSNumber numberWithFloat:0.0f],
-                    [NSNumber numberWithFloat:60.0f],
-                    [NSNumber numberWithFloat:120.0f],
-                    [NSNumber numberWithFloat:180.0f],
-                    [NSNumber numberWithFloat:240.0f],
-                    [NSNumber numberWithFloat:300.0f],
-                    nil];
+    firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
     
     // Temp test for widths of status indicators
     /*self.photoCountLabel.text = @"Photo: 20/20";
@@ -73,22 +64,6 @@
 
 -(void) connectToDrone {
     [_drone connectToDrone];
-}
-
-- (IBAction)takePhoto:(id)sender {
-    [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
-        if (error.errorCode != ERR_Successed) {
-            NSString* myerror = [NSString stringWithFormat: @"Code: %lu", (unsigned long)error.errorCode];
-            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:myerror delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertView show];
-        }
-        
-        // Update the photo count
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
-        // Update the progress indicator
-        self.progressView.progress = totalPhotoCount/20.0;
-        totalPhotoCount = totalPhotoCount + 1;
-    }];
 }
 
 -(void) viewWillAppear:(BOOL)animated {
@@ -129,17 +104,20 @@
     }
 }
 
-// Confirm that the user wants to stop the pano
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch(buttonIndex) {
-        case 1:
-            panoInProgress = NO;
-            break;
-    }
+- (void)displayToast:(NSString *)message {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.color = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = message;
+    hud.margin = 10.f;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hide:YES afterDelay:3];
 }
 
 - (IBAction)startPano:(id)sender {
     if(panoInProgress == NO) {
+        
+        [self displayToast:@"Starting Panorama"];
         
         panoInProgress = YES;
         
@@ -153,20 +131,18 @@
         // Now let's set the gimbal to the starting location yaw = 0 pitch = 30
         [self resetGimbalYaw:nil];
         
-        sleep(3);
-        
-        // Set the camera work mode
-        __weak typeof(self) weakSelf = self;
-        
-        [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
-            if (error.errorCode != ERR_Successed) {
-                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Error setting camera work mode to capture" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alertView show];
-            } else {
-                [weakSelf takeFirstRowPhotos];
-            }
-        }];
-        
+        // Sleep for 3 seconds without blocking UI so we can display notification and set camera mode
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            __weak typeof(self) weakSelf = self;
+            [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
+                if (error.errorCode != ERR_Successed) {
+                    [weakSelf displayToast: @"Error setting camera work mode to capture"];
+                } else {
+                    [weakSelf takeFirstRowPhotos];
+                }
+            }];
+        });
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm"
                                                         message:@"Are you sure you want to stop this panorama?"
@@ -177,45 +153,45 @@
     }
 }
 
+// Confirm that the user wants to stop the pano
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch(buttonIndex) {
+        case 1:
+            panoInProgress = NO;
+            [self displayToast:@"Stopping panorama, please stand by..."];
+            break;
+    }
+}
 
-// Pitch straight ahead and take 6 photos
-// Yaw take photo at
-// 0 degrees
-// 60 degrees
-// 120 degrees
-// 180 degrees
-// 240 degrees
-// 300 degrees
 -(void)takeFirstRowPhotos {
     
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
     if(firstLoopCount <=5 ) {
-        // Rotate the gimbal to the proper location
-        [self rotateGimbal:0.0 withYaw:[[yawAngles objectAtIndex: firstLoopCount] floatValue]];
         
-        //NSLog(@"Loop %d, rotating gimbal to pitch: %f, yaw: %f", firstLoopCount, 0.0, [[yawAngles objectAtIndex: firstLoopCount] floatValue]);
-        
-        sleep(2);
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
-        [self takePhoto:nil];
-        
-        sleep(2);
-        
-        firstLoopCount = firstLoopCount + 1;
-        
-        [self performSelectorInBackground:@selector(takeFirstRowPhotos) withObject:nil];
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self rotateGimbal:0.0 withYaw: (firstLoopCount*60.0)];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            firstLoopCount = firstLoopCount + 1;
+        });
+
     } else {
         firstLoopCount = 0;
         
         [self resetGimbalYaw:nil];
         
-        sleep(3);
+        // Let's give 3 seconds for gimbal to reset before starting next row
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
         
-        [self takeSecondRowPhotos];
-        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self takeSecondRowPhotos];
+        });
     }
     
 }
@@ -227,29 +203,30 @@
     if(![self continueWithPano]) return;
     
     if(secondLoopCount <=5 ) {
-        // Rotate the gimbal to the proper location
-        [self rotateGimbal:-30.0 withYaw:[[yawAngles objectAtIndex: secondLoopCount] floatValue]];
         
-        //NSLog(@"Loop %d, rotating gimbal to pitch: %f, yaw: %f", secondLoopCount, 0.0, [[yawAngles objectAtIndex: secondLoopCount] floatValue]);
-        
-        sleep(2);
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
-        [self takePhoto:nil];
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self rotateGimbal:-30.0 withYaw: (secondLoopCount*60.0)];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            secondLoopCount = secondLoopCount + 1;
+        });
         
-        sleep(2);
-        
-        secondLoopCount = secondLoopCount + 1;
-        
-        [self performSelectorInBackground:@selector(takeSecondRowPhotos) withObject:nil];
     } else {
+        
         secondLoopCount = 0;
         
         [self resetGimbalYaw:nil];
         
-        sleep(3);
+        // Let's give 3 seconds for gimbal to reset before starting next row
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
         
-        [self takeThirdRowPhotos];
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self takeThirdRowPhotos];
+        });
         
     }
 }
@@ -261,29 +238,30 @@
     if(![self continueWithPano]) return;
     
     if(thirdLoopCount <=5 ) {
-        // Rotate the gimbal to the proper location
-        [self rotateGimbal:-60.0 withYaw:[[yawAngles objectAtIndex: thirdLoopCount] floatValue]];
         
-        //NSLog(@"Loop %d, rotating gimbal to pitch: %f, yaw: %f", secondLoopCount, 0.0, [[yawAngles objectAtIndex: secondLoopCount] floatValue]);
-        
-        sleep(2);
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
-        [self takePhoto:nil];
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self rotateGimbal:-60.0 withYaw: (thirdLoopCount*60.0)];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            thirdLoopCount = thirdLoopCount + 1;
+        });
         
-        sleep(2);
-        
-        thirdLoopCount = thirdLoopCount + 1;
-        
-        [self performSelectorInBackground:@selector(takeThirdRowPhotos) withObject:nil];
     } else {
+        
         thirdLoopCount = 0;
         
         [self resetGimbalYaw:nil];
         
-        sleep(3);
+        // Let's give 3 seconds for gimbal to reset before starting next row
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
         
-        [self takeFourthRowPhotos];
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self takeFourthRowPhotos];
+        });
         
     }
 }
@@ -294,43 +272,38 @@
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    // First photo forward and down
-    [self rotateGimbal:-90.0 withYaw:0.0];
-    
-    sleep(2);
-    
-    // Take the photo
-    [self takePhoto:nil];
-    
-    sleep(2);
-    
-    // Second photo backward and down
-    [self rotateGimbal:-90.0 withYaw:180.0];
-    
-    sleep(2);
-    
-    // Take the photo
-    [self takePhoto:nil];
-    
-    sleep(2);
-    
-    // Send the gimbal back to its starting position
-    [self rotateGimbal:0 withYaw:0];
-    
-    // Reset the pano flag
-    panoInProgress = NO;
-    
-    // Change the button status back to start
-    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
-    
-    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
-    
-    self.progressView.progress = 0;
-    loopCount = 1;
-    
-    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Complete!" message:@"Your 20 photos are now ready to be stitched into a panorama. You may click the Start button again to capture another panorama." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alertView show];
-    
+    if(fourthLoopCount <= 1) {
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self rotateGimbal:-90.0 withYaw: (fourthLoopCount*180)];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            fourthLoopCount = fourthLoopCount + 1;
+        });
+        
+    } else {
+        
+        fourthLoopCount = 0;
+        
+        // Reset the pano flag
+        panoInProgress = NO;
+        
+        // Send the gimbal back to its starting position
+        [self rotateGimbal:0 withYaw:0];
+        
+        // Change the button status back to start
+        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
+        
+        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
+        
+        self.progressView.progress = 0;
+        
+        [self displayToast:@"Panorama Complete!"];
+        
+    }
 }
 
 -(void)rotateGimbal:(float)pitch withYaw:(float)yaw  {
@@ -347,8 +320,74 @@
     yawRotation.direction = RotationForward;
     yawRotation.enable = YES;
     
+    __weak typeof(self) weakSelf = self;
+
     [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
-        //ShowResult(@"Set Gimbal Angle:%@", error.errorDescription);
+        // Gimbal rotation failed so we'll try again
+        if(error.errorCode != ERR_Successed) {
+            NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+            [weakSelf displayToast:myerror];
+            
+            // Delay two seconds and try to rotate the gimbal again
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                [weakSelf rotateGimbal:pitch withYaw:yaw];
+            });
+        // Gimbal successfull rotate so we'll delay 2s and then take the photo
+        } else {
+            
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            
+            // Take the photo
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                [weakSelf takePhoto:nil];
+            });
+        }
+    }];
+}
+
+- (IBAction)takePhoto:(id)sender {
+    [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+        // Failed to get the photo
+        if (error.errorCode != ERR_Successed) {
+
+            NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
+            [self displayToast:myerror];
+            
+            // There was an error trying to take the photo so we'll retry after 2 s
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            
+            // Take the photo
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                [self takePhoto:nil];
+            });
+            
+        // Success
+        } else {
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+            // Take the photo
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                if(panoInProgress == NO) {
+                    [self finishPanoAndReset];
+                    return;
+                } else if(firstLoopCount != 0)
+                    [self takeFirstRowPhotos];
+                else if(secondLoopCount != 0)
+                    [self takeSecondRowPhotos];
+                else if(thirdLoopCount != 0)
+                    [self takeThirdRowPhotos];
+                else if(fourthLoopCount != 0)
+                    [self takeFourthRowPhotos];
+            });
+            
+            // Update the photo count
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
+            // Update the progress indicator
+            self.progressView.progress = totalPhotoCount/20.0;
+            totalPhotoCount = totalPhotoCount + 1;
+            
+        }
     }];
 }
 
@@ -356,33 +395,55 @@
 -(BOOL) continueWithPano {
     // User canceled the pano - reset a bunch of vars
     if(panoInProgress == NO) {
-        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal reset. You may start a new panorama by clicking the Start button." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
         
-        // Change the stop button back to a start button
-        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
-        
-        // Reset the yaw
-        [self resetGimbalYaw:nil];
-        
-        sleep(2);
-        
-        // Reset the pitch
-        [self rotateGimbal:0.0 withYaw:0.0];
-        
-        // Rest loop vars
-        firstLoopCount = secondLoopCount = thirdLoopCount = 0;
-        
-        // Reset progress indicator
-        self.progressView.progress = 0;
-        totalPhotoCount = totalProgress = 0;
+        [self finishPanoAndReset];
         
         return NO;
     // Continue with the pano
     } else {
         return YES;
     }
+}
+
+-(void) finishPanoAndReset {
+    
+    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal reset. You may start a new panorama by clicking the Start button." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+    
+    // Change the stop button back to a start button
+    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
+    
+    // Reset the yaw
+    [self resetGimbalYaw:nil];
+    
+    // Reset the gimbal pitch
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+        // TODO: had to put all this code here for the time being otherwise calling rotateGimbal would result in an infinite
+        // loop when panoInProgress = NO
+        DJIGimbalRotationDirection pitchDir = RotationBackward;
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.angle = 0;
+        pitchRotation.angleType = AbsoluteAngle;
+        pitchRotation.direction = pitchDir;
+        pitchRotation.enable = YES;
+        
+        yawRotation.angle = 0;
+        yawRotation.angleType = AbsoluteAngle;
+        yawRotation.direction = RotationForward;
+        yawRotation.enable = YES;
+        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+        }];
+    });
+    
+    // Reset loop vars
+    firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
+    
+    // Reset progress indicator
+    self.progressView.progress = 0;
+    totalPhotoCount = totalProgress = 0;
 }
 
 -(void) startBatteryUpdate
