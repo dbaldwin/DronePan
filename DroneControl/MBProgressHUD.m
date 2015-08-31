@@ -203,7 +203,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
         [self setupLabels];
         [self updateIndicators];
         [self registerForKVO];
-        [self registerForNotifications];
+        //[self registerForNotifications];
     }
     return self;
 }
@@ -218,7 +218,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 }
 
 - (void)dealloc {
-    [self unregisterFromNotifications];
+    //[self unregisterFromNotifications];
     [self unregisterFromKVO];
 #if !__has_feature(objc_arc)
     [color release];
@@ -713,7 +713,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
 }
 
 #pragma mark - Notifications
-
+/*
 - (void)registerForNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     
@@ -725,7 +725,7 @@ static const CGFloat kDetailsLabelFontSize = 12.f;
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 }
-
+*/
 - (void)statusBarOrientationDidChange:(NSNotification *)notification {
     UIView *superview = self.superview;
     if (!superview) {
