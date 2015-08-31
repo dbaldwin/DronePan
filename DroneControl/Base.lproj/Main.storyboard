@@ -118,16 +118,6 @@
                                     <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="poN-IR-IsC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xe1-m5-HO7">
-                                <rect key="frame" x="277" y="285" width="46" height="30"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="gks-mY-M8Q" kind="presentation" modalPresentationStyle="pageSheet" id="I6s-av-ewj"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -183,7 +173,7 @@
         <!--Terms View Controller-->
         <scene sceneID="kGj-mm-enz">
             <objects>
-                <viewController id="gks-mY-M8Q" customClass="TermsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Terms" id="gks-mY-M8Q" customClass="TermsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7rf-df-Whi"/>
                         <viewControllerLayoutGuide type="bottom" id="g0t-eg-Shg"/>

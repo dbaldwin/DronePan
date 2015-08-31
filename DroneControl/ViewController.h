@@ -40,7 +40,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 
 - (void)connectToDrone;
-- (IBAction)resetGimbalYaw:(id)sender;
 - (IBAction)startPano:(id)sender;
 
 @end

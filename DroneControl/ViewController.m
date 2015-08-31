@@ -57,6 +57,36 @@
 }
 
 
+// TODO: improve this because it sees 1.0.4 the same as 1.0.5 since it's casting both to float as 1.0
+-(void) checkFirstRun {
+    // First run popup Terms and Conditions
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    
+    // Check for existence of version on first run
+    if (![userDefaults valueForKey:@"version"] ) {
+        // First version so show the terms
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UIViewController *terms = [storyboard instantiateViewControllerWithIdentifier:@"Terms"];
+        terms.modalPresentationStyle = UIModalPresentationPageSheet;
+        [self presentViewController:terms animated:YES completion:nil];
+        
+        // Adding version number to NSUserDefaults for first version
+        [userDefaults setFloat:[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] forKey:@"version"];
+    }
+    
+    // Check for updated version
+   /* if ([[NSUserDefaults standardUserDefaults] floatForKey:@"version"] == [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue]) {
+        // Same version so do nothing
+    } else {
+        // New version so show the terms
+        
+        // Update version number to NSUserDefaults for other versions
+        [userDefaults setFloat:[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] floatValue] forKey:@"version"];
+    }*/
+}
+
+
 -(void) dealloc
 {
     [_drone destroy];
@@ -71,6 +101,11 @@
     [_drone connectToDrone];
     [_drone.mainController startUpdateMCSystemState];
     [[VideoPreviewer instance] setView:self.videoPreviewView];
+}
+
+-(void) viewDidAppear:(BOOL)animated {
+    // Check to see if this is the first run of the current version
+    [self checkFirstRun];
 }
 
 -(void) viewWillDisappear:(BOOL)animated
@@ -526,5 +561,18 @@
         }
     }*/
 }
+
+/*
+ [_camera getCameraISO:^(CameraISOType iso, DJIError *error) {
+ if (error.errorCode == ERR_Successed) {
+ int index = (int)iso;
+ }
+ else
+
+ {
+ 
+ }
+ }];
+ */
 
 @end
