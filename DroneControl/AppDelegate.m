@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <DJISDK/DJISDK.h>
 #import "ViewController.h"
-@import GoogleMaps;
 
 @interface AppDelegate ()
 
@@ -28,7 +27,7 @@
     [DJIAppManager registerApp:appKey withDelegate:self];
     
     // Google Maps key
-    [GMSServices provideAPIKey:@"AIzaSyBoogFhIGflomT1WiR167fpybZIaax9-iU"];
+    //[GMSServices provideAPIKey:@"AIzaSyBoogFhIGflomT1WiR167fpybZIaax9-iU"];
 
     
     
