@@ -24,6 +24,8 @@
 		232941FF1B519F6A00125172 /* MovieGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F01B519F6A00125172 /* MovieGLView.m */; };
 		232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F21B519F6A00125172 /* VideoFrameExtractor.m */; };
 		232942011B519F6A00125172 /* VideoPreviewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 232941F41B519F6A00125172 /* VideoPreviewer.m */; };
+		2351C16C1B9DBEE4005D8263 /* PhantomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2351C16B1B9DBEE4005D8263 /* PhantomViewController.m */; };
+		2351C16F1B9DC419005D8263 /* DroneSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2351C16E1B9DC419005D8263 /* DroneSelectionViewController.m */; };
 		235BC83F1B93CAF300B508DB /* dronepan_terms.html in Resources */ = {isa = PBXBuildFile; fileRef = 235BC83E1B93CAF300B508DB /* dronepan_terms.html */; };
 		238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 238036621B8B6EC3005FD38B /* TermsViewController.m */; };
 		239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239CBA751B704BCE00734329 /* LaunchScreen.storyboard */; };
@@ -143,6 +145,10 @@
 		232941F21B519F6A00125172 /* VideoFrameExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoFrameExtractor.m; sourceTree = "<group>"; };
 		232941F31B519F6A00125172 /* VideoPreviewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPreviewer.h; sourceTree = "<group>"; };
 		232941F41B519F6A00125172 /* VideoPreviewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPreviewer.m; sourceTree = "<group>"; };
+		2351C16A1B9DBEE4005D8263 /* PhantomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhantomViewController.h; sourceTree = "<group>"; };
+		2351C16B1B9DBEE4005D8263 /* PhantomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhantomViewController.m; sourceTree = "<group>"; };
+		2351C16D1B9DC419005D8263 /* DroneSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DroneSelectionViewController.h; sourceTree = "<group>"; };
+		2351C16E1B9DC419005D8263 /* DroneSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DroneSelectionViewController.m; sourceTree = "<group>"; };
 		235BC83E1B93CAF300B508DB /* dronepan_terms.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = dronepan_terms.html; sourceTree = "<group>"; };
 		238036611B8B6EC3005FD38B /* TermsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsViewController.h; sourceTree = "<group>"; };
 		238036621B8B6EC3005FD38B /* TermsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsViewController.m; sourceTree = "<group>"; };
@@ -436,6 +442,10 @@
 				238036621B8B6EC3005FD38B /* TermsViewController.m */,
 				23DE2DFE1B8C204E002AFCDF /* MBProgressHUD.h */,
 				23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */,
+				2351C16A1B9DBEE4005D8263 /* PhantomViewController.h */,
+				2351C16B1B9DBEE4005D8263 /* PhantomViewController.m */,
+				2351C16D1B9DC419005D8263 /* DroneSelectionViewController.h */,
+				2351C16E1B9DC419005D8263 /* DroneSelectionViewController.m */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -626,7 +636,9 @@
 				232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */,
 				232941FF1B519F6A00125172 /* MovieGLView.m in Sources */,
 				238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */,
+				2351C16F1B9DC419005D8263 /* DroneSelectionViewController.m in Sources */,
 				23FA207C1B4F4C1800811185 /* ViewController.m in Sources */,
+				2351C16C1B9DBEE4005D8263 /* PhantomViewController.m in Sources */,
 				23DE2E001B8C204E002AFCDF /* MBProgressHUD.m in Sources */,
 				23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */,
 				23FA20761B4F4C1800811185 /* main.m in Sources */,

@@ -2,7 +2,9 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -115,7 +117,7 @@
                                     <color key="titleColor" red="0.98431372549999996" green="0.97254901959999995" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="poN-IR-IsC"/>
+                                    <action selector="captureMethod:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qnz-M8-jU7"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -215,8 +217,74 @@
             </objects>
             <point key="canvasLocation" x="320" y="-476"/>
         </scene>
+        <!--Drone Selection View Controller-->
+        <scene sceneID="B9c-8s-0yD">
+            <objects>
+                <viewController storyboardIdentifier="WhichDrone" id="CHU-5s-WwI" customClass="DroneSelectionViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WwT-3t-IQ1"/>
+                        <viewControllerLayoutGuide type="bottom" id="umJ-5p-Osg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xh1-JY-Hfn">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gFd-wZ-OKw">
+                                <rect key="frame" x="-75" y="200" width="350" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="gFd-wZ-OKw" secondAttribute="height" multiplier="7:4" id="5S5-pz-uD3"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="inspire1">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="i1Selected:" destination="CHU-5s-WwI" eventType="touchUpInside" id="4zs-wZ-eaY"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Select Your Aircraft" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PYJ-4c-B7C">
+                                <rect key="frame" x="86" y="28" width="428" height="64"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="45"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GPN-s6-oZ0">
+                                <rect key="frame" x="325" y="200" width="350" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="GPN-s6-oZ0" secondAttribute="height" multiplier="7:4" id="fHO-on-zgH"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="phantom3">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="p3Selected:" destination="CHU-5s-WwI" eventType="touchUpInside" id="idQ-3e-6Ga"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="PYJ-4c-B7C" secondAttribute="centerX" id="AJh-6t-TDO"/>
+                            <constraint firstItem="PYJ-4c-B7C" firstAttribute="top" secondItem="gFd-wZ-OKw" secondAttribute="top" constant="-100" id="Ekr-6W-t67"/>
+                            <constraint firstAttribute="centerY" secondItem="gFd-wZ-OKw" secondAttribute="centerY" id="IT1-xq-Z0b"/>
+                            <constraint firstAttribute="width" secondItem="GPN-s6-oZ0" secondAttribute="width" multiplier="4" id="KOE-J8-3wH"/>
+                            <constraint firstAttribute="width" secondItem="gFd-wZ-OKw" secondAttribute="width" multiplier="3" id="MPz-lX-mTv"/>
+                            <constraint firstAttribute="centerX" secondItem="GPN-s6-oZ0" secondAttribute="centerX" constant="-175" id="Sxr-35-fJU"/>
+                            <constraint firstAttribute="centerY" secondItem="GPN-s6-oZ0" secondAttribute="centerY" id="e7W-7b-G1G"/>
+                            <constraint firstAttribute="centerX" secondItem="gFd-wZ-OKw" secondAttribute="centerX" constant="175" id="fmQ-qm-5Rd"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="i1Button" destination="gFd-wZ-OKw" id="SeI-OX-C3J"/>
+                        <outlet property="p3Button" destination="GPN-s6-oZ0" id="tMK-oh-4R3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="X6n-cU-7mg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1027" y="-476"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Start Icon" width="128" height="128"/>
+        <image name="inspire1" width="520" height="331"/>
+        <image name="phantom3" width="500" height="271"/>
     </resources>
 </document>

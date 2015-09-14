@@ -35,6 +35,11 @@
 
 - (IBAction)dismissTerms:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+    
+    // Send the event to the parent
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TermsDismissed"
+                                                        object:nil
+                                                      userInfo:nil];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -12,7 +12,7 @@
 
 @import GoogleMaps;
 
-@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate>
+@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
 {
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
@@ -26,6 +26,8 @@
     int secondLoopCount;
     int thirdLoopCount;
     int fourthLoopCount;
+    int droneType;
+    int captureMethod;
     NSTimer* _readBatteryInfoTimer;
 }
 
@@ -38,9 +40,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *yawLabel;
 @property (weak, nonatomic) IBOutlet UILabel *pitchLabel;
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
+@property (weak, nonatomic) NSObject<DJINavigation>* navigation;
+@property (atomic) double droneAltitude;
 
 - (void)connectToDrone;
-- (IBAction)startPano:(id)sender;
+- (IBAction)captureMethod:(id)sender;
 
 @end
 
