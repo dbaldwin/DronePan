@@ -223,7 +223,6 @@
                 if (error.errorCode != ERR_Successed) {
                     [weakSelf displayToast: @"Error setting camera work mode to capture"];
                     [weakSelf finishPanoAndReset];
-                    panoInProgress = NO;
                 } else {
                     if(captureMethod == 1) // Yaw aircraft
                         [weakSelf enterNavigationMode];
@@ -269,7 +268,6 @@
             NSString* myerror = [NSString stringWithFormat: @"Error entering navigation mode. Please place your mode switch in the F position. Code: %lu", (unsigned long)error.errorCode];
             [self displayToast: myerror];
             [self finishPanoAndReset];
-            panoInProgress = NO;
         } else {
             if(droneType == 1) {
                 [self rotateInspireAndTakePhotos];
@@ -286,7 +284,6 @@
     if(self.droneAltitude < 5.0f) {
         [self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
         [self finishPanoAndReset];
-        panoInProgress = NO;
         return;
     }
     
@@ -350,7 +347,6 @@
     if(self.droneAltitude < 5.0f) {
         [self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
         [self finishPanoAndReset];
-        panoInProgress = NO;
         return;
     }
     
@@ -541,7 +537,7 @@
             fourthLoopCount = fourthLoopCount + 1;
         });
         
-    } else {
+    } else { // This is the end of the pano with gimbal rotation
         
         fourthLoopCount = 0;
         
@@ -771,6 +767,8 @@
     // Reset progress indicator
     self.progressView.progress = 0;
     totalPhotoCount = totalProgress = 0;
+    
+    panoInProgress = NO;
 }
 
 -(void) startBatteryUpdate
