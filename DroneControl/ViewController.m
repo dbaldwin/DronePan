@@ -138,7 +138,6 @@
 
 -(void) dealloc
 {
-    [_drone destroy];
     // Remove notification listeners
     [[NSNotificationCenter defaultCenter] removeObserver: self];
 }
@@ -152,7 +151,6 @@
     [super viewWillDisappear:animated];
     [_drone.mainController stopUpdateMCSystemState];
     [_drone disconnectToDrone];
-    [_drone destroy];
     [[VideoPreviewer instance] setView:nil];
     [self stopBatteryUpdate];
 }
@@ -164,7 +162,7 @@
 
 -(void) droneOnConnectionStatusChanged:(DJIConnectionStatus)status
 {
-    if (status == ConnectionSuccessed) {
+    if (status == ConnectionSucceeded) {
         self.connectionStatusLabel.text = @"Connected";
         [self startBatteryUpdate];
     }
@@ -224,7 +222,7 @@
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
             __weak typeof(self) weakSelf = self;
             [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
-                if (error.errorCode != ERR_Successed) {
+                if (error.errorCode != ERR_Succeeded) {
                     [weakSelf displayToast: @"Error setting camera work mode to capture"];
                     [weakSelf finishPanoAndReset];
                 } else {
@@ -269,7 +267,7 @@
 
 -(void)enterNavigationMode {
     [self.navigation enterNavigationModeWithResult:^(DJIError *error) {
-        if(error.errorCode != ERR_Successed) {
+        if(error.errorCode != ERR_Succeeded) {
             NSString* myerror = [NSString stringWithFormat: @"Error entering navigation mode. Please place your mode switch in the F position. Code: %lu", (unsigned long)error.errorCode];
             [self displayToast: myerror];
             [self finishPanoAndReset];
@@ -648,7 +646,7 @@
 
     [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
         // Gimbal rotation failed so we'll try again
-        if(error.errorCode != ERR_Successed) {
+        if(error.errorCode != ERR_Succeeded) {
             NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
             [weakSelf displayToast:myerror];
             
@@ -690,7 +688,7 @@
      __weak typeof(self) weakSelf = self;
      
      [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
-         if(error.errorCode != ERR_Successed) {
+         if(error.errorCode != ERR_Succeeded) {
              NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
              [weakSelf displayToast:myerror];
              
@@ -708,7 +706,7 @@
 - (void)takePhoto {
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         // Failed to get the photo
-        if (error.errorCode != ERR_Successed) {
+        if (error.errorCode != ERR_Succeeded) {
 
             NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
             [self displayToast:myerror];
@@ -751,7 +749,7 @@
 - (void)takePhoto2 {
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         // Failed to get the photo
-        if (error.errorCode != ERR_Successed) {
+        if (error.errorCode != ERR_Succeeded) {
             
             NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
             [self displayToast:myerror];
@@ -855,7 +853,7 @@
 -(void) batteryTimer:(id)timer {
     // Update battery status
     [_drone.smartBattery updateBatteryInfo:^(DJIError *error) {
-        if (error.errorCode == ERR_Successed) {
+        if (error.errorCode == ERR_Succeeded) {
             _batteryRemainingLabel.text = [NSString stringWithFormat: @"Battery: %ld%%", (long)_drone.smartBattery.remainPowerPercent];
         }
     }];
