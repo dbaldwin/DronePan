@@ -96,6 +96,13 @@ typedef struct
 @property(nonatomic, weak) id<DJIImageTransmitterDelegate> delegate;
 
 /**
+ *  Get version of ImageTransmitter
+ *
+ *  @param result Remote execute result callback.
+ */
+-(void) getVersionWithResult:(void(^)(NSString* version, DJIError* error))result;
+
+/**
  *  Start update channel power data.
  *
  *  @param block Remote execute result.

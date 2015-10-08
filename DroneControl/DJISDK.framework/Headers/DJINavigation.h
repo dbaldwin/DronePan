@@ -59,10 +59,17 @@ typedef NS_ENUM(uint8_t, DJINavigationMissionType)
 @property(nonatomic, readonly) BOOL isRunning;
 
 /**
- *  Whether or not the mission is valid for execution. If this property
+ *  Whether or not the mission's parameters is valid for execution. If this property
  *  returns NO, then the attempt to startMission will have failed.
+ *
+ *  @attention The result of 'isValid' just show whether the mission's local parameters is valid. not for all execution condition.
  */
 @property(nonatomic, readonly) BOOL isValid;
+
+/**
+ *  Show failure reason for checking parameters of mission. Value will be set after calling 'isValid'.
+ */
+@property(nonatomic, readonly) NSString* failureReason;
 
 /**
  *  Returns the navigation mission type.
@@ -122,7 +129,15 @@ typedef NS_ENUM(uint8_t, DJINavigationMissionType)
 
 @protocol DJINavigation <NSObject>
 
+/**
+ *  Navigation delegate
+ */
 @property(nonatomic, weak) id<DJINavigationDelegate> delegate;
+
+/**
+ *  Whether or not the aircraft already in navigation mode.
+ */
+@property(nonatomic, readonly) BOOL isNavigationMode;
 
 /**
  *  Flight control.
@@ -156,8 +171,6 @@ typedef NS_ENUM(uint8_t, DJINavigationMissionType)
  *  switch back and forth between the 'F' mode and another mode to enable navigation control.
  *
  *  @param result Remote execute result callback.
- *
- *  @attention All navigation missions of type DJINavigationMissionType will work in navigation mode.
  */
 -(void) enterNavigationModeWithResult:(DJIExecuteResultBlock)result;
 

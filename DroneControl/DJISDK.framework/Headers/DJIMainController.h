@@ -16,6 +16,8 @@
 @class DJIMainController;
 
 @protocol DJINavigation;
+@protocol DJIFlightLimitation;
+@protocol DJICompass;
 
 @protocol DJIMainControllerDelegate <NSObject>
 
@@ -58,15 +60,39 @@
 @property(nonatomic, weak) id<DJIMainControllerDelegate> mcDelegate;
 
 /**
+ *  Compass of aircraft.
+ */
+@property(nonatomic, readonly) NSObject<DJICompass>* compass;
+
+/**
  *  The navigation manager
  */
 @property(nonatomic, readonly) NSObject<DJINavigation>* navigationManager;
 
 /**
+ *  The flight limitation
+ */
+@property(nonatomic, readonly) NSObject<DJIFlightLimitation>* flightLimitation;
+
+/**
  *  Main controller's firmware version.
  *
  */
--(NSString*) getMainControllerVersion;
+-(NSString*) getMainControllerVersion DJI_API_DEPRECATED;
+
+/**
+ *  Get main controller's firmware version
+ *
+ *  @param block Remote execute result callback.
+ */
+-(void) getVersionWithResult:(void(^)(NSString* version, DJIError* error))block;
+
+/**
+ *  Get main controller's serial number
+ *
+ *  @param block Remote execute result callback
+ */
+-(void) getSerialNumberWithResult:(void(^)(NSString* sn, DJIError* error))block;
 
 /**
  *  Start update main controller's system state
@@ -135,21 +161,21 @@
 -(void) stopGoHomeWithResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Start compass calibration.
+ *  Start compass calibration. API deprecated. please use - startCalibrationWithResult: in 'DJICompass' instead.
  *
  *  @param block Remote execute result callback.
  */
--(void) startCompassCalibrationWithResult:(DJIExecuteResultBlock)block;
+-(void) startCompassCalibrationWithResult:(DJIExecuteResultBlock)block DJI_API_DEPRECATED;
 
 /**
- *  Stop compass calibration.
+ *  Stop compass calibration. API deprecated. please use - stopCalibrationWithResult: in 'DJICompass' instead.
  *
  *  @param block Remote execute result callback.
  */
--(void) stopCompassCalibrationWithResult:(DJIExecuteResultBlock)block;
+-(void) stopCompassCalibrationWithResult:(DJIExecuteResultBlock)block DJI_API_DEPRECATED;
 
 /**
- *  Set the fly limitation parameter.
+ *  Set the fly limitation parameter. Phantom 2 Vision support only.
  *
  *  @param limitParam The maximum height and distance that the aircraft could be fly.
  *  @param block      Remote execute result callback
@@ -157,7 +183,7 @@
 -(void) setLimitFlyWithHeight:(float)height Distance:(float)distance withResult:(DJIExecuteResultBlock)block;
 
 /**
- *  Get the fly limitation parameter.
+ *  Get the fly limitation parameter. Phantom 2 Vision support only.
  *
  *  @param block Remote execute result
  */

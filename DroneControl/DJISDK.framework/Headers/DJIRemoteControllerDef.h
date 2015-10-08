@@ -257,9 +257,9 @@ typedef NS_ENUM(uint8_t, DJIRCParingState){
  */
 typedef NS_ENUM(uint8_t, DJIRCJoinMasterResult){
     /**
-     *  Join master successed
+     *  Join master Succeeded
      */
-    RCJoinMasterSuccessed,
+    RCJoinMasterSucceeded,
     /**
      *  Join master failed for the password error
      */

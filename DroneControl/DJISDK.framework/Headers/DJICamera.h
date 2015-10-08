@@ -65,7 +65,14 @@ typedef void (^DJIFileDownloadCompletionBlock)();
  *
  *  @return Return the firmware version of the camera. return nil if get failed.
  */
--(NSString*) getCameraVersion;
+-(NSString*) getCameraVersion DJI_API_DEPRECATED;
+
+/**
+ *  Get the camera's firmware version
+ *
+ *  @param block Remote execute result callback.
+ */
+-(void) getVersionWithResult:(void(^)(NSString* version, DJIError* error))block;
 
 /**
  *  Take photo with mode, if the capture mode is CameraMultiCapture or CameraContinousCapture, you should call stopTakePhotoWithResult to stop photoing. User should check the SD caard state before call this api.
@@ -119,7 +126,7 @@ typedef void (^DJIFileDownloadCompletionBlock)();
  *
  *  @param videoQuality Video quality to be set
  *  @param block        The remote execute result callback.
- *  @attention If the parameters was configured successed, the remote video module will restart
+ *  @attention If the parameters was configured Succeeded, the remote video module will restart
  */
 -(void) setVideoQuality:(VideoQuality)videoQuality withResultBlock:(DJIExecuteResultBlock)block;
 
@@ -277,12 +284,13 @@ typedef void (^DJIFileDownloadCompletionBlock)();
 /**
  *  Sync local time to camera. the camera should had synced time from device while doing take photo or record action, or the camera will return "Time Not Sync" error
  *
+ *  @note Phantom 2 Vision supported.
  *  @param block The remote execute result callback.
  */
 -(void) syncTime:(DJIExecuteResultBlock)block;
 
 /**
- *  Set the camera's GPS parameter. The gps parameter will write into meta data of photo or video file.
+ *  Set the camera's GPS parameter. The gps parameter will write into meta data of photo or video file. Supported in Phantom 2 Vision/Phantom 2 Vision+.
  *
  *  @param gps   GPS
  *  @param block The remote execute result callback.
@@ -290,7 +298,7 @@ typedef void (^DJIFileDownloadCompletionBlock)();
 -(void) setCameraGps:(CLLocationCoordinate2D)gps withResultBlock:(DJIExecuteResultBlock)block;
 
 /**
- *  Get the camera's GPS
+ *  Get the camera's GPS.Supported in Phantom 2 Vision/Phantom 2 Vision+.
  *
  *  @param block The remote execute result callback.
  */

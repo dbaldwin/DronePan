@@ -15,7 +15,7 @@
  *
  *  @return Return the firmware version of the camera.
  */
--(NSString*) getCameraVersion;
+-(NSString*) getCameraVersion DJI_API_DEPRECATED;
 
 /**
  *  Take photo with mode, if the capture mode is CameraMultiCapture or CameraContinousCapture, user should call stopTakePhotoWithResult to stop photoing if needed. User should check the SD card state before calling this API.
@@ -267,6 +267,7 @@
 /**
  *  Set camera's AEB continue capture parameters
  *
+ *  @note The CameraAEBParam's continueCaptureCount just support 3 or 5 right now. and 'exposureOffset' not support right now.
  *  @param aebParam AEB capture parameters set to camera
  *  @param result   Remote execute result callback.
  */

@@ -16,6 +16,10 @@
  */
 typedef NS_ENUM(uint8_t, DJIFollowMeHeadingMode){
     /**
+     *  Aircraft's heading will be controlled by the remote controller.
+     */
+    DJIFollowMeHeadingControlledByRemoteController,
+    /**
      *  Aircraft's heading will be towards the coordinate it needs 
      *  to follow. When the mission is first initialized, the heading 
      *  will be towards the initial coordinate (userCoordinate) and 
@@ -23,10 +27,6 @@ typedef NS_ENUM(uint8_t, DJIFollowMeHeadingMode){
      *  userCoordinate's value is updated to.
      */
     DJIFollowMeHeadingTowardsFollowPosition,
-    /**
-     *  Aircraft's heading will be controlled by the remote controller.
-     */
-    DJIFollowMeHeadingControlledByRemoteController,
 };
 
 /**
@@ -65,7 +65,7 @@ typedef NS_ENUM(uint8_t, DJIFollowMeMissionExecuteState){
 /**
  *  Returns the error that occured in executing the follow me mission, if interruped
  *  unexpectedly. This will show the user why the follow me mission stopped unexpectedly. 
- *  If error.errorCode returns ERR_Successed, then there was no error. 
+ *  If error.errorCode returns ERR_Succeeded, then there was no error. 
  */
 @property(nonatomic, readonly) DJIError* error;
 

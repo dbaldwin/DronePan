@@ -77,9 +77,9 @@ typedef NS_ENUM(uint8_t, CameraMediaFileDeleteStatus){
      */
     MediaFileDeleting,
     /**
-     *  Delete successed
+     *  Delete Succeeded
      */
-    MediaFileDeleteSuccessed,
+    MediaFileDeleteSucceeded,
 };
 
 @interface DJICameraPlaybackState : NSObject

@@ -6,7 +6,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define ERR_Successed                         0x00
+#define ERR_Succeeded                         0x00
 
 #define ERR_NotSupport                        0x01
 #define ERR_NotActivation                     0x02
@@ -72,6 +72,23 @@
 #define ERR_NetworkAbortByApp                 0x101
 #define ERR_NetworkAbortByServer              0x102
 
+
+@class DJIError;
+
+extern DJIError *DJIErrorFor(NSUInteger errorCode);
+
+typedef NS_ENUM(NSUInteger, DJIErrorCode){
+    DJIErrorCode_None = 0x00,
+    
+    DJIErrorCode_Timeout = 0xf0,
+    DJIErrorCode_Failed = 0xf1,
+    DJIErrorCode_NotSupport = 0xf2,
+    DJIErrorCode_InvalidParameter = 0xf3,
+};
+
+/**
+ *  Error Class.Subclasses need to define the error code corresponding to the description.
+ */
 @interface DJIError : NSObject
 {
     NSUInteger _code;
@@ -90,6 +107,8 @@
 + (instancetype)errorWithErrorCode:(NSUInteger)errorCode;
 
 - (id)initWithErrorCode:(NSUInteger)errCode;
+
+-(void) setErrorDescription:(NSString *)errorDescription;
 
 @end
 

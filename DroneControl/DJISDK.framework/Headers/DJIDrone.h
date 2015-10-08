@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <DJISDK/DJIFoundation.h>
 
 @class DJICamera;
 @class DJIMainController;
@@ -17,6 +18,41 @@
 @class DJIMediaManager;
 @class DJIError;
 @protocol DJIDroneDelegate;
+
+/**
+ *  Device name for camera
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceCamera;
+
+/**
+ *  Device name for gimbal
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceGimbal;
+
+/**
+ *  Device name for battery
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceBattery;
+
+/**
+ *  Device name for main controller
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceMainController;
+
+/**
+ *  Device name for remote controller
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceRemoteController;
+
+/**
+ *  Device name for image transmitter
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceImageTransmitter;
+
+/**
+ *  Device name for range extender
+ */
+DJI_API_EXTERN NSString* const kDJIDeviceRangeExtender;
 
 /**
  *  Drone type
@@ -47,19 +83,19 @@ typedef NS_ENUM(NSInteger, DJIDroneType){
 typedef NS_ENUM(NSUInteger, DJIConnectionStatus)
 {
     /**
-     *  Start reconnect: Broken -> Reconnect -> Successed/Failed
+     *  Start reconnect: Broken -> Reconnect -> Succeeded/Failed
      */
     ConnectionStartConnect,
     /**
-     *  Reconnect successed: Reconnect -> Successed -> Broken
+     *  Reconnect Succeeded: Reconnect -> Succeeded -> Broken
      */
-    ConnectionSuccessed,
+    ConnectionSucceeded,
     /**
      *  Reconnect Failed: Reconnect -> Failed -> Reconnect
      */
     ConnectionFailed,
     /**
-     *  Connection broken: Successed -> Broken -> Reconnect
+     *  Connection broken: Succeeded -> Broken -> Reconnect
      */
     ConnectionBroken,
 };
@@ -73,6 +109,11 @@ typedef NS_ENUM(NSUInteger, DJIConnectionStatus)
  *  Drone delegate
  */
 @property(nonatomic, weak) id<DJIDroneDelegate> delegate;
+
+/**
+ *  Whether or not the app is connected to the drone. Actually, for the Inpsire/Phantom 3 PRO/Phantom 3 Advanced this property just indicate the connection status to the remote controller. 
+ */
+@property(nonatomic, readonly) BOOL isConnected;
 
 /**
  *  Drone type
@@ -133,7 +174,7 @@ typedef NS_ENUM(NSUInteger, DJIConnectionStatus)
 /**
  *  Destroy the drone object, user should call this interface to release all objects.
  */
--(void) destroy;
+-(void) destroy DJI_API_DEPRECATED;
 
 @end
 

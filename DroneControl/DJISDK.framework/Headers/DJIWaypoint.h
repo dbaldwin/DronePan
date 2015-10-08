@@ -116,7 +116,7 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
  *  Altitude of the aircraft in meters when it reaches the waypoint. The altitude of the
  *  aircarft is relative to the ground. Setting this value will take the aircraft to the
  *  altitude relative to the ground (the altitude at which it initially took off). 
- *  The value of this property must be in the range of [-200, 1000] meters and should not be
+ *  The value of this property must be in the range of [-200, 500] meters and should not be
  *  larger then the aircraft's max limited height.
  */
 @property(nonatomic, assign) float altitude;
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
 /**
  *  Corner radius of the waypoint. When the flight path mode is DJIWaypointMissionFlightPathCurved
  *  the flight path as the aircraft reaches a waypoint will be a rounded corner. The value of 
- *  this property must be in the range of [0.2, 1000] meters.
+ *  this property must be in the range of [0.2, 1000] meters, and should smaller than the minimum distance(three dimensions) to the previous and the next waypoint.
  */
 @property(nonatomic, assign) float cornerRadius;
 
@@ -191,5 +191,14 @@ typedef NS_ENUM(NSUInteger, DJIWaypointActionType){
  *  @return Whether or not the waypoint action has been removed from the waypoint.
  */
 -(BOOL) removeAction:(DJIWaypointAction*)action;
+
+/**
+ *  Remove a waypoint action by index.
+ *
+ *  @param index Waypoint action to be removed at index.
+ *
+ *  @return Whether or not the waypoint action has been removed from the waypoint.
+ */
+-(BOOL) removeActionAtIndex:(int)index;
 
 @end

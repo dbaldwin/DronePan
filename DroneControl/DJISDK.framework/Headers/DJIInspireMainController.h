@@ -49,7 +49,7 @@
  *  @param enable Dynamic home point enable
  *  @param block  Remote execute result.
  */
--(void) setDynamicHomePointEnable:(BOOL)enable withResult:(DJIExecuteResultBlock)block;
+-(void) setDynamicHomePointEnable:(BOOL)enable withResult:(DJIExecuteResultBlock)block DJI_API_DEPRECATED;
 
 /**
  *  Enter transport mode. if receive ERR_CommandExecuteFailed error, that maybe the gimbal is not dismount or the ground is not flattening.

@@ -55,7 +55,7 @@
  *
  *  @param macAddr The target bind camera's MAC address, get frome the QR code stick on the aircraft. the input MAC address should be this format:  60:60:1f:xx:xx:xx
  *
- *  @return Return bind result. if YES then bind successed.
+ *  @return Return bind result. if YES then bind Succeeded.
  *
  *  @attention If bind success, the range extender will reboot automatically.
  */

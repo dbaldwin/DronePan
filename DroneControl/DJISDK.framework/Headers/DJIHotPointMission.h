@@ -99,7 +99,7 @@ typedef NS_ENUM(NSUInteger, DJIHotPointHeadingMode){
  */
 typedef NS_ENUM(uint8_t, DJIHotpointMissionExecuteState){
     /**
-     *  The mission is currently being initialized.
+     *  The mission is currently being initialized. the initializing state will happen after the hot mission is started and flying to the entry point.
      */
     DJIHotpointMissionExecuteStateInitializing,
     /**
@@ -107,11 +107,9 @@ typedef NS_ENUM(uint8_t, DJIHotpointMissionExecuteState){
      */
     DJIHotpointMissionExecuteStateMoving,
     /**
-     *  The mission is currently waiting to continue. For example,
-     *  if the GPS quality is poor or the connection is broken, the
-     *  aircraft will continue to wait.
+     *  The mission is currently pausing.
      */
-    DJIHotpointMissionExecuteStateWaiting,
+    DJIHotpointMissionExecuteStatePausing,
 };
 
 @interface DJIHotpointMissionStatus : DJINavigationMissionStatus

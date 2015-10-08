@@ -141,12 +141,17 @@ typedef NS_ENUM(uint8_t, DJIGimbalWorkMode){
 /**
  *  The gimbal's have been reseted.
  */
-@property(nonatomic, readonly) BOOL isAttitudeReseted;
+@property(nonatomic, readonly) BOOL isAttitudeReset;
 
 /**
  *  The gimbal is in calibrating
  */
 @property(nonatomic, readonly) BOOL isCalibrating;
+
+/**
+ *  Whether or nor the calibration is succeeded. Value is valid while 'isCalibrating' changed from YES to NO.
+ */
+@property(nonatomic, readonly) BOOL isCalibrationSueeeeded;
 
 /**
  *  Pitch reaches max
@@ -170,7 +175,7 @@ typedef NS_ENUM(uint8_t, DJIGimbalWorkMode){
  *  GimbalAttitudeResult
  *
  *  Discussion:
- *    Typedef of block to be invoked when the remote attitude data get successed.
+ *    Typedef of block to be invoked when the remote attitude data get Succeeded.
  */
 typedef void (^GimbalAttitudeResultBlock)(DJIGimbalAttitude attitude);
 
@@ -218,6 +223,13 @@ typedef void (^GimbalAttitudeResultBlock)(DJIGimbalAttitude attitude);
  *  @return gimbal capacity, return nil if connection failured.
  */
 -(DJIGimbalCapacity*) getGimbalCapacity;
+
+/**
+ *  Get gimbal's firmware version
+ *
+ *  @param block Remote execute result callback.
+ */
+-(void) getVersionWithResult:(void(^)(NSString* version, DJIError* error))block;
 
 /*
  *  Starts gimbal attitude updates with no handler. To receive the latest attitude data

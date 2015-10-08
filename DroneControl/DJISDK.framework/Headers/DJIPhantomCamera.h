@@ -65,7 +65,7 @@
  *
  *  @param videoQuality Video quality to be set
  *  @param block        The remote execute result callback.
- *  @attention If the parameters was configured successed, the remote video module will restart
+ *  @attention If the parameters was configured Succeeded, the remote video module will restart
  */
 -(void) setVideoQuality:(VideoQuality)videoQuality withResultBlock:(DJIExecuteResultBlock)block;
 
@@ -316,7 +316,7 @@
 -(void) getCameraPhotoNamePrefix:(void (^)(NSString* prefix, DJIError* error))block;
 
 /**
- *  Set the camera's photo name prefix. The new name prefix must have only four fixed characters, and the  prefix should be comprised of character 'A' - 'Z' and '_'.
+ *  Set the camera's photo name prefix. The new name prefix must have only four fixed characters, and the  prefix should be comprised of character 'A' - 'Z' and '_'. for example "DJI_".
  *
  *  @param prefix New photo name prefix.
  *  @param block  The remote execute result block

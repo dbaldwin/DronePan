@@ -105,7 +105,14 @@
 @property(nonatomic) NSInteger numberOfDischarge;
 
 /**
- *  Update battery's information once, if successed, the property value of battery will be update.
+ *  Get battery's firmware version
+ *
+ *  @param block Remote execute result callback.
+ */
+-(void) getVersionWithResult:(void(^)(NSString* version, DJIError* error))block;
+
+/**
+ *  Update battery's information once, if Succeeded, the property value of battery will be update.
  *
  *  @param block Remote exeucte result
  */

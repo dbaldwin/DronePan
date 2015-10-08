@@ -181,13 +181,13 @@ typedef NS_ENUM(NSUInteger, DJIWaypointMissionFlightPathMode)
 /**
  *  Max flight speed for a waypoint mission. The maxFlightSpeed value will be
  *  the result of the autoFlightSpeed value plus the max controlled speed by remote controller,
- *  the maxFlightSpeed should be in range [2, 10]m/s.
+ *  the maxFlightSpeed should be in range [2, 15]m/s.
  */
 @property(nonatomic, assign) float maxFlightSpeed;
 
 /**
  *  The automatically flight speed for a waypoint mission. The autoFlightSpeed's absolute value
- *  should be smaller than the maxFlightSpeed value.the autoFlightSpeed should be in range [-10, 10]m/s.
+ *  should be smaller than the maxFlightSpeed value.the autoFlightSpeed should be in range [-15, 15]m/s.
  */
 @property(nonatomic, assign) float autoFlightSpeed;
 
@@ -207,7 +207,7 @@ typedef NS_ENUM(NSUInteger, DJIWaypointMissionFlightPathMode)
 @property(nonatomic, assign) DJIWaypointMissionFlightPathMode flightPathMode;
 
 /**
- *  Add a waypoint to the waypoint mission. The maximum number of waypoints should not larger then DJIWaypointMissionMaximumWaypointCount. and DJIWaypointMissionMinimumWaypointCount at least.
+ *  Add a waypoint to the waypoint mission. The maximum number of waypoints should not larger then DJIWaypointMissionMaximumWaypointCount. and DJIWaypointMissionMinimumWaypointCount at least. The distance(three dimensions) between adjacent two waypoints should be in range (2, 2000) meters.
  *
  *  @param Waypoint to be added to the waypoint mission.
  */

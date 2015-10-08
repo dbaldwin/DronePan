@@ -280,7 +280,7 @@ typedef NS_ENUM(uint8_t, DJIGpsSignalLevel){
 @property(nonatomic, readonly) DJIMCSmartGoHomeData* smartGoHomeData;
 
 /**
- *  Below property will supported In Inspire/Phantom3Pro/Phantom3Advanced/Matric100
+ *  Below property will supported In Inspire/Phantom3Pro/Phantom3Advanced
  */
 
 /**
@@ -299,7 +299,7 @@ typedef NS_ENUM(uint8_t, DJIGpsSignalLevel){
 /**
  *  Is compass error
  */
-@property(nonatomic, readonly) BOOL isCompassError;
+@property(nonatomic, readonly) BOOL isCompassError DJI_API_DEPRECATED;
 /**
  *  Is ultrasonic working
  */

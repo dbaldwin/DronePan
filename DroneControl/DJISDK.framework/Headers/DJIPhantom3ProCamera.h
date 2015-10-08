@@ -250,6 +250,7 @@
 /**
  *  Set camera's AEB continue capture parameters
  *
+ *  @note The CameraAEBParam's continueCaptureCount just support 3 or 5 right now. and 'exposureOffset' not support right now.
  *  @param aebParam AEB capture parameters set to camera
  *  @param result   Remote execute result callback.
  */
@@ -276,6 +277,25 @@
  *  @param result Remote execute result callback.
  */
 -(void) getCameraAELockWithResult:(void(^)(BOOL isLocked, DJIError* error))result;
+
+@end
+
+@interface DJIPhantom3ProCamera (Media)
+
+/**
+ *  Fetch media list from remote album. The camera's work mode should be set as CameraWorkModePlayback or CameraWorkModeDownload before call this api.
+ *
+ *  @param block Remote execute result. Objects in mediaList is kind of class DJIMedia.
+ */
+-(void) fetchMediaListWithResultBlock:(void (^)(NSArray* mediaList, NSError* error))block;
+
+/**
+ *  Delete media from remote album. The camera's work mode should be set as CameraWorkModePlayback or CameraWorkModeDownload before call this api.
+ *
+ *  @param medias Medias to be delete.
+ *  @param block  Remote execute result, 'failureDeletes' will contain medias which failured delete.
+ */
+-(void) deleteMedias:(NSArray*)medias withResult:(void(^)(NSArray* failureDeletes, DJIError* error))block;
 
 @end
 

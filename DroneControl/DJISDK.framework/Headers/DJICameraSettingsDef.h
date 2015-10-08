@@ -189,6 +189,10 @@ typedef NS_ENUM(uint8_t, CameraWorkMode){
      */
     CameraWorkModeDownload                  = 0x03,
     /**
+     *  New download mode for Inspire 1/Phantom3 Professional. In this mode, user could use the api 'fetchMediaList:' to download media files.
+     */
+    CameraWorkModeDownload2                 = 0x04,
+    /**
      *  Unknown
      */
     CameraWorkModeUnknown                   = 0xFF

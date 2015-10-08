@@ -26,6 +26,8 @@ typedef NS_ENUM(uint8_t, DJIIOCType){
      *  For example, if the aircraft is extremely far out from the home point, 
      *  using the remote controller to move the aircraft backwards will 
      *  move the aircraft towards home instead of backwards.
+     *
+     *  @note To start a home lock mission successfully, the aircraft should have recorded a home point and the distance of aircraft to the home point should be at least five meters.
      */
     DJIIOCTypeHomeLock = 2,
     /**
@@ -53,7 +55,7 @@ typedef NS_ENUM(uint8_t, DJIIOCType){
 
 /**
  *  Returns the error that occured in executing the IOC mission. This will show the user 
- *  why the IOC mission stopped unexpectedly. If error.errorCode returns ERR_Successed,
+ *  why the IOC mission stopped unexpectedly. If error.errorCode returns ERR_Succeeded,
  *  then there was no error.
  */
 @property(nonatomic, readonly) DJIError* error;

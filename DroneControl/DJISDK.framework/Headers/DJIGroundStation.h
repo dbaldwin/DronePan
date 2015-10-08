@@ -135,7 +135,7 @@ typedef NS_ENUM(NSInteger, GSActionType)
 typedef NS_ENUM(NSInteger, GSExecuteStatus)
 {
     GSExecStatusBegan,
-    GSExecStatusSuccessed,
+    GSExecStatusSucceeded,
     GSExecStatusFailed,
 };
 

@@ -6,9 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <time.h>
 
 @class UIImage;
+
 /**
  *  Media type
  */
@@ -42,14 +42,7 @@ typedef NS_ENUM(NSUInteger, MediaType){
 typedef void (^AsyncOperationHandler)(NSError* error);
 typedef void (^AsyncFetchHandler)(NSData* data, BOOL* stop, NSError* error);
 
-@class DJIMediaContext;
-
 @interface DJIMedia : NSObject
-{
-    DJIMediaContext* _mediaContext;
-}
-
-@property(nonatomic, readonly) DJIMediaContext* mediaContext;
 
 /**
  *  The media file name
@@ -101,6 +94,13 @@ typedef void (^AsyncFetchHandler)(NSData* data, BOOL* stop, NSError* error);
  *  @param handler Data callback will call when received data frome remote or some error occured
  */
 -(void) fetchMediaData:(AsyncFetchHandler)handler;
+
+/**
+ *  Fetch media's preview image(960 x 540). the mediaType of this media object should be 'MediaTypeJPG'
+ *
+ *  @param result Remote execute result callback.
+ */
+-(void) fetchPreviewImageWithResult:(void(^)(UIImage* image, NSError* error))result;
 
 @end
 

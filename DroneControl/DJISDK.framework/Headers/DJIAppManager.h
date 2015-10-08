@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <DJISDK/DJIFoundation.h>
+#import <DJISDK/DJIDrone.h>
 
 //Error code for regist App
 #define RegisterSuccess                   0
@@ -67,14 +68,29 @@
  */
 -(void) appManagerDidRegisterWithError:(int)errorCode;
 
+@optional
+/**
+ *  The connected drone changed callback. If the app regist succeed, the app will start to detect the connected drone automatically and the delegate will be call when detected a new connected drone. The auto detection supported for Inspire1/Phantom 3 PRO/ Phantom 3 Advanced
+ *
+ *  @param newDrone The new drone object that connected
+ */
+-(void) appManagerDidConnectedDroneChanged:(DJIDrone*)newDrone;
+
 @end
 
 @interface DJIAppManager : NSObject
 
 /**
+ *  Get the connected drone.
+ *
+ *  @return Connected drone object in currently.
+ */
++(DJIDrone*) connectedDrone;
+
+/**
  *  Regist app. User should call once while the app first used and should connect to the internet at the first time registration.
  *
- *  @param appKey   App key, apply from dji's developer website.
+ *  @param appKey   App key that applied from dji's developer website.
  *  @param delegate Regist result callback
  */
 +(void) registerApp:(NSString*)appKey withDelegate:(id<DJIAppManagerDelegate>)delegate;

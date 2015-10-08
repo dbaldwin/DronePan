@@ -44,6 +44,7 @@
 //Main Controller
 #import <DJISDK/DJIMainController.h>
 #import <DJISDK/DJIMainControllerDef.h>
+#import <DJISDK/DJIFlightLimitation.h>
 #import <DJISDK/DJIPhantomMainController.h>
 #import <DJISDK/DJIInspireMainController.h>
 #import <DJISDK/DJIPhantom3ProMainController.h>
@@ -51,6 +52,7 @@
 #import <DJISDK/DJIMCSystemState.h>
 #import <DJISDK/DJIMCLandingGearState.h>
 #import <DJISDK/DJIMCSmartGoHome.h>
+#import <DJISDK/DJICompass.h>
 
 //Navigation
 #import <DJISDK/DJIGroundStation.h>
@@ -76,3 +78,5 @@
 #import <DJISDK/DJIInspireRemoteController.h>
 #import <DJISDK/DJIPhantom3ProRemoteController.h>
 #import <DJISDK/DJIPhantom3AdvancedRemoteController.h>
+
+#import <DJISDK/DJIFirmwareManager.h>

@@ -54,6 +54,13 @@
 @property(nonatomic, weak) id<DJIRemoteControllerDelegate> delegate;
 
 /**
+ *  Get remote controller's firmware version.
+ *
+ *  @param block Remote execute result callback.
+ */
+-(void)getVersionWithResult:(void(^)(NSString* version, DJIError* error))block;
+
+/**
  *  Set RC Name
  *
  *  @param name  RC name to be set
