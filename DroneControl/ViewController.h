@@ -22,6 +22,8 @@
     BOOL panoInProgress;
     DJIInspireMainController* mInspireMainController;
     
+    int currentLoop;
+    int yawLoopCount;
     int firstLoopCount;
     int secondLoopCount;
     int thirdLoopCount;

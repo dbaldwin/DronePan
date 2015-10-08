@@ -10,7 +10,6 @@
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
 #import <DJISDK/DJISDK.h>
-#import <GoogleMaps/GoogleMaps.h>
 
 #define stopPanoTag 100
 #define captureMethodTag 200
@@ -38,6 +37,8 @@
     self.progressView.progress = 0;
     panoInProgress = NO;
     firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
+    currentLoop = 1;
+    yawLoopCount = 0;
     
     // By default we'll use the yaw aircraft capture method
     captureMethod = 1;
@@ -215,6 +216,9 @@
         // Now let's set the gimbal to the starting location yaw = 0 pitch = 30
         [self resetGimbalYaw:nil];
         
+#if (TARGET_IPHONE_SIMULATOR)
+        [self rotatePhantomAndTakePhotos];
+#else
         // Sleep for 3 seconds without blocking UI so we can display notification and set camera mode
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
@@ -231,6 +235,7 @@
                 }
             }];
         });
+#endif
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm"
                                                         message:@"Are you sure you want to stop this panorama?"
@@ -280,7 +285,7 @@
 
 
 -(void)rotateInspireAndTakePhotos {
-    
+
     if(self.droneAltitude < 5.0f) {
         [self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
         [self finishPanoAndReset];
@@ -299,47 +304,60 @@
         
         [timer invalidate];
         
-        for(int i = 1;i <= 26; i++){
-            
-            // Check to see if the user canceled the pano
-            if(![self continueWithPano]) break;
-            
-            // Need to fix this because of the necessary retry logic for when a photo is missed
-            [self takePhoto2];
-            
-            sleep(3);
-            
-            // Yaw the aircraft - 90 represents 60 degrees
-            [self yawDrone: 90];
-            
-            sleep(3);
-            
-            // End of first loop - pitch gimbal to 0
-            if(i==6) {
-                [self rotateGimbal2:0 withYaw:0];
-                sleep(3);
-                // End of second loop - pitch gimbal to -30
-            } else if(i == 12) {
-                [self rotateGimbal2:-30 withYaw:0];
-                sleep(3);
-                // End of third loop - pitch gimbal to - 60
-            } else if(i == 18) {
-                [self rotateGimbal2:-60 withYaw:0];
-                sleep(3);
-                // End of fourth loop
-            } else if(i == 24) {
-                [self rotateGimbal2:-90 withYaw:0];
-                sleep(3);
-            } else if(i == 26) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
-                    [self finishPanoAndReset];
-                });
-            }
-            
-        } // End loop
+        [self doInspireLoop];
         
     });
+}
+
+// There will be 26 photos
+-(void)doInspireLoop {
+    
+    // Check to see if user canceled pano
+    if(![self continueWithPano]) return;
+    
+    if(yawLoopCount <= 5) {
+        
+        // Panorama is complete
+        if(currentLoop == 5 && yawLoopCount == 2) {
+            [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+            [self finishPanoAndReset];
+            return;
+        }
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);
+        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self takePhoto2];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            yawLoopCount = yawLoopCount + 1;
+        });
+    } else { // Loop done increment and move to the next loop
+        
+        yawLoopCount = 0;
+        currentLoop = currentLoop + 1;
+        
+        // Need to pitch gimbal here
+        // TODO: implement gimbal pitch based on loop
+        if(currentLoop == 2) {
+            [self rotateGimbal2:0 withYaw:0];
+        } else if(currentLoop == 3) {
+            [self rotateGimbal2:-30 withYaw:0];
+        } else if(currentLoop == 4) {
+            [self rotateGimbal2:-60 withYaw:0];
+        } else if(currentLoop == 5) {
+            [self rotateGimbal2:-60 withYaw:0];
+        }
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            // Done with loop so let's start the next
+            [self doInspireLoop];
+        });
+    }
 }
 
 -(void) rotatePhantomAndTakePhotos {
@@ -362,49 +380,102 @@
         
         [timer invalidate];
         
-        for(int i = 1;i <= 20; i++){
-            
-            // Check to see if the user canceled the pano
-            if(![self continueWithPano]) break;
-            
-            // Need to fix this because of the necessary retry logic for when a photo is missed
-            [self takePhoto2];
-            
-            sleep(3);
-            
-            // Yaw the aircraft - 90 represents 60 degrees
-            [self yawDrone: 90];
-            
-            sleep(3);
-            
-            if(i==6) {
-                [self rotateGimbal2:-30 withYaw:0];
-                sleep(3);
-            } else if(i == 12) {
-                [self rotateGimbal2:-60 withYaw:0];
-                sleep(3);
-            } else if(i == 18) {
-                [self rotateGimbal2:-90 withYaw:0];
-                sleep(3);
-            } else if(i == 20) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
-                    [self finishPanoAndReset];
-                });
-            }
-            
-        } // End loop
+        [self doPhantomLoop];
         
     });
 }
 
+// There will be 20 photos
+// Loop 1 = 1-6
+// Loop 2 = 7-12
+// Loop 3 = 13-18
+// Loop 4 = 19-20
+-(void)doPhantomLoop {
+    
+    // Check to see if user canceled pano
+    if(![self continueWithPano]) return;
+    
+    if(yawLoopCount <= 5) {
+        
+        // Panorama is complete
+        if(currentLoop == 4 && yawLoopCount == 2) {
+            [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+            [self finishPanoAndReset];
+            return;
+        }
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);
+        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            [self takePhoto2];
+            
+            // Incrementing in here because the dispatch call is asynchronous
+            yawLoopCount = yawLoopCount + 1;
+        });
+    } else { // Loop done increment and move to the next loop
+        
+        yawLoopCount = 0;
+        currentLoop = currentLoop + 1;
+        
+        // Need to pitch gimbal here
+        // TODO: implement gimbal pitch based on loop
+        if(currentLoop == 2) {
+            [self rotateGimbal2:-30 withYaw:0];
+        } else if(currentLoop == 3) {
+            [self rotateGimbal2:-60 withYaw:0];
+        } else if(currentLoop == 4) {
+            [self rotateGimbal2:-90 withYaw:0];
+        }
+        
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+        
+        // Take the photo
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            // Done with loop so let's start the next
+            [self doPhantomLoop];
+        });
+    }
+}
+
+
 -(void)yawDrone:(float)yaw {
+    
     DJIFlightControlData ctrlData;
     ctrlData.mPitch = 0;
     ctrlData.mRoll = 0;
     ctrlData.mThrottle = 0;
     ctrlData.mYaw = yaw;
-    [self.navigation.flightControl sendFlightControlData:ctrlData withResult:nil];
+    
+    // THIS CALLBACK DOES NOT WORK!!!!
+    // Yaw drone and if successful proceed to take the photo
+    [self.navigation.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        
+        // TODO: There is no callback happening here so let's ignore this for now and revisit
+        /*[self displayToast:@"We are here"];
+        if(error.errorCode != ERR_Successed) {
+            NSString* myerror = [NSString stringWithFormat: @"Yaw aircraft error code: %lu", (unsigned long)error.errorCode];
+            [self displayToast: myerror];
+        } else {
+            [self displayToast:@"Yaw success now take photo"];
+            // We set the delay to 3 seconds in this case because the gimbal will slowly follow the aircraft when yawing
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+            
+            // Take the photo
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                [self takePhoto2];
+            });
+        }
+         */
+    }];
+    
+    
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+    
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+        [self doPhantomLoop];
+    });
+    
 }
 
 - (void)warmingUp {
@@ -676,7 +747,7 @@
 }
 
 
-// Used when yawing the aircraft
+// Used when yawing the aircraft - both P3 and I1
 - (void)takePhoto2 {
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         // Failed to get the photo
@@ -696,17 +767,20 @@
             // Success
         } else {
             
-            // Update the photo count
-            if(droneType == 1) {
-                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/26", totalPhotoCount];
-                self.progressView.progress = totalPhotoCount/26.0;
-            } else if(droneType == 2) {
-                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
-                self.progressView.progress = totalPhotoCount/20.0;
-            }
+            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
             
-            totalPhotoCount = totalPhotoCount + 1;
-            
+            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                if(droneType == 1) {
+                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/26", totalPhotoCount];
+                    self.progressView.progress = totalPhotoCount/26.0;
+                    [self doInspireLoop];
+                } else if(droneType == 2) {
+                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
+                    self.progressView.progress = totalPhotoCount/20.0;
+                    [self yawDrone: 90];
+                }
+                totalPhotoCount = totalPhotoCount + 1;
+            });
         }
     }];
 }
