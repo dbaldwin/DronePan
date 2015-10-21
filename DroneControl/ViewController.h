@@ -24,6 +24,7 @@
     
     int currentLoop;
     int yawLoopCount;
+    int columnLoopCount;
     int firstLoopCount;
     int secondLoopCount;
     int thirdLoopCount;
