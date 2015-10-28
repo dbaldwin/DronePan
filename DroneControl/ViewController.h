@@ -31,6 +31,9 @@
     int fourthLoopCount;
     int droneType;
     int captureMethod;
+    
+    int yawAngle;
+    int numColumns;
     NSTimer* _readBatteryInfoTimer;
 }
 
@@ -45,6 +48,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 @property (weak, nonatomic) NSObject<DJINavigation>* navigation;
 @property (atomic) double droneAltitude;
+@property (weak, nonatomic) IBOutlet UIButton *yawAngleButton;
 
 - (void)connectToDrone;
 - (IBAction)captureMethod:(id)sender;

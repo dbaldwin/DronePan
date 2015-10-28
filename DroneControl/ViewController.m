@@ -13,6 +13,12 @@
 
 #define stopPanoTag 100
 #define captureMethodTag 200
+#define yawAngleTag 300
+
+// Yaw angles
+// 30 12 rotations
+// 45 8 rotations
+// 60 6 rotations
 
 @interface ViewController () {
 }
@@ -40,6 +46,10 @@
     yawLoopCount = 0;
     columnLoopCount = 0;
     
+    // Variables for yaw angle
+    yawAngle = 60; // 60 is our default yaw angle
+    numColumns = 6; // We take 6 columns or 6 rotations of photos by default
+    
     // By default we'll use the yaw aircraft capture method
     captureMethod = 1;
     
@@ -55,6 +65,28 @@
 -(void) viewDidAppear:(BOOL)animated {
     // Check to see if this is the first run of the current version
     [self checkFirstRun];
+}
+
+- (IBAction)setYawAngle:(id)sender {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Yaw Angle" //or strTitle
+                                                    message:@"Choose your desired yaw angle" //or pass message parameter
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel" otherButtonTitles:nil];
+    
+    if(droneType == 1) { // Inspire 1
+        [alertView addButtonWithTitle:@"30° (49 photos)"];
+        [alertView addButtonWithTitle:@"45° (33 photos)"];
+        [alertView addButtonWithTitle:@"60° (25 photos)"];
+    } else if (droneType == 2) { // Phantom 3
+        [alertView addButtonWithTitle:@"30° (37 photos)"];
+        [alertView addButtonWithTitle:@"45° (25 photos)"];
+        [alertView addButtonWithTitle:@"60° (19 photos)"];
+    }
+    
+    alertView.tag = yawAngleTag;
+    
+    [alertView show];
+    
 }
 
 // TODO: improve this because it sees 1.0.4 the same as 1.0.5 since it's casting both to float as 1.0
@@ -103,9 +135,10 @@
     NSDictionary* userInfo = notification.userInfo;
     
     if([userInfo[@"drone"] isEqual:@"i1"]) {
-        self.photoCountLabel.text = @"Photo: 0/26";
+        self.photoCountLabel.text = @"Photo: 0/25"; // Default photo count at 60 degrees for I1
         droneType = 1;
     } else {
+        self.photoCountLabel.text = @"Photo: 0/19"; // Default photo count at 60 degrees for P3
         droneType = 2;
     }
     
@@ -253,7 +286,6 @@
             [self displayToast:@"Stopping panorama, please stand by..."];
         }
     } else if(alertView.tag == captureMethodTag) {
-        // TODO: figure out how to branch the two approaches below
         // Index 1 = yaw aircraft, index 2 = yaw gimbal
         if(buttonIndex == 1) {
             captureMethod = 1;
@@ -262,6 +294,37 @@
             captureMethod = 2;
             [self startPano];
         }
+    } else if(alertView.tag == yawAngleTag) {
+        if(buttonIndex == 1) {
+            yawAngle = 30;
+            numColumns = 12;
+            
+            if(droneType == 1)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/49"];
+            else if(droneType == 2)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/37"];
+            
+        } else if(buttonIndex == 2) {
+            yawAngle = 45;
+            numColumns = 8;
+            
+            if(droneType == 1)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/33"];
+            else if(droneType == 2)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
+            
+        } else if(buttonIndex == 3) {
+            yawAngle = 60;
+            numColumns = 6;
+            
+            if(droneType == 1)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
+            else if(droneType == 2)
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/19"];
+        }
+        
+        // Update the yaw button text
+        [self.yawAngleButton setTitle:[NSString stringWithFormat: @"Angle: %i°", yawAngle] forState:UIControlStateNormal];
     }
 }
 
@@ -295,9 +358,6 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        // Reset gimbal to straight forward
-        //[self rotateGimbal2:0 withYaw:0];
-        
         sleep(2);
         
         [timer invalidate];
@@ -313,7 +373,8 @@
     if(![self continueWithPano]) return;
     
     // Last loop
-    if(currentLoop == 8) {
+    // 8th or 10th or 14th column based on yaw angle
+    if(currentLoop == (numColumns+2)) {
         currentLoop = 0;
         columnLoopCount = 0;
         
@@ -321,10 +382,11 @@
         [self finishPanoAndReset];
         return;
         
-        // 2nd to last loop where we take the nadir shot
-    } else if(currentLoop == 7) {
+    // 2nd to last loop where we take the nadir shot
+    // 7th or 9th or 13th column based on yaw
+    } else if(currentLoop == (numColumns+1)) {
         
-        currentLoop = 8;
+        currentLoop = numColumns+2;
         [self rotateGimbal2: -90 withYaw:0];
         
     } else if(columnLoopCount <= 3) {
@@ -342,7 +404,7 @@
         
         columnLoopCount = columnLoopCount + 1;
         
-        // Current column is done so let's yaw and move to the next
+    // Current column is done so let's yaw and move to the next
     } else if (columnLoopCount == 4) {
         columnLoopCount = 0;
         currentLoop = currentLoop + 1;
@@ -559,13 +621,13 @@
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    if(firstLoopCount <=5 ) {
+    if(firstLoopCount <= (numColumns - 1)) {
         
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-            [self rotateGimbal:0.0 withYaw: (firstLoopCount*60.0)];
+            [self rotateGimbal:0.0 withYaw: (firstLoopCount*yawAngle)];
             
             // Incrementing in here because the dispatch call is asynchronous
             firstLoopCount = firstLoopCount + 1;
@@ -593,13 +655,13 @@
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    if(secondLoopCount <=5 ) {
+    if(secondLoopCount <= (numColumns-1)) {
         
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-            [self rotateGimbal:-30.0 withYaw: (secondLoopCount*60.0)];
+            [self rotateGimbal:-30.0 withYaw: (secondLoopCount*yawAngle)];
             
             // Incrementing in here because the dispatch call is asynchronous
             secondLoopCount = secondLoopCount + 1;
@@ -628,13 +690,13 @@
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    if(thirdLoopCount <=5 ) {
+    if(thirdLoopCount <= (numColumns-1)) {
         
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
         // Take the photo
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-            [self rotateGimbal:-60.0 withYaw: (thirdLoopCount*60.0)];
+            [self rotateGimbal:-60.0 withYaw: (thirdLoopCount*yawAngle)];
             
             // Incrementing in here because the dispatch call is asynchronous
             thirdLoopCount = thirdLoopCount + 1;
@@ -657,13 +719,14 @@
     }
 }
 
-// Pitch all the way down and take 2 photos - one at 0 and one at 180
+// Changing this to only take 1 nadir
 -(void)takeFourthRowPhotos {
     
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
     
-    if(fourthLoopCount <= 1) {
+    // Changing this so it should only take 1 photo now
+    if(fourthLoopCount < 1) {
         
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
         
@@ -778,7 +841,7 @@
      }];
  }
 
-// Used when rotating gimbal
+// Used when rotating gimbal - I1 only
 - (void)takePhoto {
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         // Failed to get the photo
@@ -811,9 +874,17 @@
             });
             
             // Update the photo count
-            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/20", totalPhotoCount];
-            // Update the progress indicator
-            self.progressView.progress = totalPhotoCount/20.0;
+            if(yawAngle == 30) {
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
+                self.progressView.progress = totalPhotoCount/49.0;
+            } else if(yawAngle == 45) {
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
+                self.progressView.progress = totalPhotoCount/33.0;
+            } else if(yawAngle == 60) {
+                self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+                self.progressView.progress = totalPhotoCount/25.0;
+            }
+            
             totalPhotoCount = totalPhotoCount + 1;
             
         }
