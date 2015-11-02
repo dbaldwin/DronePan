@@ -772,7 +772,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Users/db/_dev/DronePan/DroneControl/VideoPreviewer/ffmpeg/include,
+					./DroneControl/VideoPreviewer/ffmpeg/include,
 				);
 				INFOPLIST_FILE = DroneControl/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -799,7 +799,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Users/db/_dev/DronePan/DroneControl/VideoPreviewer/ffmpeg/include,
+					./DroneControl/VideoPreviewer/ffmpeg/include,
 				);
 				INFOPLIST_FILE = DroneControl/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
