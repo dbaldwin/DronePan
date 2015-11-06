@@ -70,7 +70,7 @@
     //int i=[UIApplication sharedApplication].keyWindow.rootViewController.view;
     
     //[self checkFirstRun];
-    
+       
     [DroneCommandCenter initialize:DJIDrone_Inspire];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onDroneConnected)
@@ -84,8 +84,39 @@
 -(void) onDroneConnected{
     
     [Utils displayToastOnApp:@"Inspire 1 Drone Connected"];
+    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
+    NSArray *yaw=@[@60,@120,@180,@240,@300];
     
-    [Utils displayToastOnApp:@"Resetting Gimble"];
+    for (NSNumber *nPitch in pitch) {
+
+        [Utils displayToastOnApp:@"Resetting Gimble"];
+        [DroneCommandCenter resetGimbalYaw];
+        [DroneCommandCenter setCameraPitch:[nPitch floatValue]];
+        [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+        
+        sleep(1);
+        
+        [DroneCommandCenter takeASnap];
+        
+        sleep(5);
+        
+        if([nPitch integerValue]!=-90){
+        for(NSNumber *nYaw in yaw){
+        
+            [DroneCommandCenter setCameraYaw:[nYaw floatValue]];
+            
+            [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+            
+            sleep(1);
+            
+            [DroneCommandCenter takeASnap];
+            
+            sleep(5);
+          }
+        }
+    }
+   /* [Utils displayToastOnApp:@"Resetting Gimble"];
+    
     [DroneCommandCenter resetGimbalYaw];
     [Utils displayToastOnApp:@"Gimble Reset Complete!"];
     sleep(1);
@@ -94,7 +125,7 @@
     
     sleep(5);
     
-    [DroneCommandCenter setCameraPosition:0.0f yaw:60.00];
+    [DroneCommandCenter setCameraYaw:60.00];
     [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
     sleep(1);
     
@@ -275,10 +306,6 @@
     
     sleep(1);
     
-    [DroneCommandCenter takeASnap];
-    
-    sleep(5);
-    
     [DroneCommandCenter setCameraPitch:30.0f];
     
     sleep(1);
@@ -330,7 +357,7 @@
     
     [DroneCommandCenter takeASnap];
     
-    sleep(5);
+    sleep(5);*/
 
     
     

@@ -14,7 +14,7 @@
 
 + (void)displayToast:(UIView *)view message:(NSString *)message;
 
-+ (void)displayToastOnApp:(NSSTring *)message;
++ (void)displayToastOnApp:(NSString *)message;
 
 +(NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs;
 
