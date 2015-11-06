@@ -25,6 +25,7 @@ enum _NoteType{
     CmdCenter_DroneChanged=0,
     CmdCenter_DroneNotConnected,
     CmdCenter_DroneConnected,
+    CmdCenter_DroneTypeUnknown,
     CmdCenter_CmdExecInProgress,
     CmdCenter_CmdSuccess,
     CmdCenter_CmdFailed,

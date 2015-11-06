@@ -42,6 +42,7 @@
 		B8517CD51BEC381E00575531 /* UIDashbrdControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8517CD41BEC381E00575531 /* UIDashbrdControl.swift */; };
 		B8517CD71BEC3C0A00575531 /* UIDashbrdControl.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8517CD61BEC3C0A00575531 /* UIDashbrdControl.xib */; };
 		B8517CDA1BEC5DE000575531 /* DroneCommandCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = B8517CD91BEC5DE000575531 /* DroneCommandCenter.m */; };
+		B8517CDE1BEC7C8500575531 /* DroneDelegateHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B8517CDD1BEC7C8500575531 /* DroneDelegateHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +185,8 @@
 		B8517CD81BEC5DE000575531 /* DroneCommandCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DroneCommandCenter.h; sourceTree = "<group>"; };
 		B8517CD91BEC5DE000575531 /* DroneCommandCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DroneCommandCenter.m; sourceTree = "<group>"; };
 		B8517CDB1BEC615B00575531 /* global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
+		B8517CDC1BEC7C8500575531 /* DroneDelegateHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DroneDelegateHandler.h; sourceTree = "<group>"; };
+		B8517CDD1BEC7C8500575531 /* DroneDelegateHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DroneDelegateHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -466,6 +469,8 @@
 				B8517CD81BEC5DE000575531 /* DroneCommandCenter.h */,
 				B8517CD91BEC5DE000575531 /* DroneCommandCenter.m */,
 				B8517CDB1BEC615B00575531 /* global.h */,
+				B8517CDC1BEC7C8500575531 /* DroneDelegateHandler.h */,
+				B8517CDD1BEC7C8500575531 /* DroneDelegateHandler.m */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -666,6 +671,7 @@
 				23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */,
 				B8517CD51BEC381E00575531 /* UIDashbrdControl.swift in Sources */,
 				B8517CDA1BEC5DE000575531 /* DroneCommandCenter.m in Sources */,
+				B8517CDE1BEC7C8500575531 /* DroneDelegateHandler.m in Sources */,
 				23FA20761B4F4C1800811185 /* main.m in Sources */,
 				232941F51B519F6A00125172 /* DJILinkQueues.m in Sources */,
 				232942011B519F6A00125172 /* VideoPreviewer.m in Sources */,

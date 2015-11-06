@@ -19,4 +19,36 @@
     hud.removeFromSuperViewOnHide = YES;
     [hud hide:YES afterDelay:5];
 }
+
++ (NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs {
+    NSMutableDictionary *ret = [lhs mutableCopy];
+    [ret addEntriesFromDictionary:rhs];
+    return ret;
+}
+
++(void) sendNotification:(NSString*)messageFrom dictionary:(NSDictionary*)dictionary{
+    [[NSNotificationCenter defaultCenter] postNotificationName:messageFrom
+                                                        object:nil
+                                                      userInfo:dictionary];
+}
+
++(void) sendNotificationWithNoteType:(NSString*)messageFrom noteType:(NoteType)noteType{
+    
+    NSDictionary* msgInfo = @{@"NoteType":@(noteType)};
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:messageFrom
+                                                        object:nil
+                                                      userInfo:msgInfo];
+}
+
++(void) sendNotificationWithAdditionalInfo:(NSString*)messageFrom noteType:(NoteType)noteType additionalInfo:(NSDictionary*) dictionary{
+    
+    NSDictionary* msgInfo = @{@"NoteType":@(noteType)};
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:messageFrom
+                                                        object:nil
+                                                      userInfo:[Utils mergeDictionaries:msgInfo rhs:dictionary]];
+}
+
 @end

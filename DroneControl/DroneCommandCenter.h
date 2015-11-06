@@ -11,16 +11,19 @@
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
 #import "global.h"
+#import "DroneDelegateHandler.h"
+#import "Utils.h"
 
 static DJIDrone *_drone;
 static DJIInspireGimbal *_gimbal;
 static DJIInspireCamera *_camera;
 static DJIInspireMainController* mInspireMainController;
-static DJIDroneType droneType=DJIDrone_Unknown;
+static DJIDroneType droneType;
+static DroneDelegateHandler *droneDelegateHandler;
+
 
 @interface DroneCommandCenter : NSObject{
     
-   
 }
 +(void) initialize:(DJIDroneType)droneType;
 +(void) changeDroneType:(DJIDroneType)droneType;
