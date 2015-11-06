@@ -67,9 +67,274 @@
 
 -(void) viewDidAppear:(BOOL)animated {
     // Check to see if this is the first run of the current version
-    [self checkFirstRun];
+    //int i=[UIApplication sharedApplication].keyWindow.rootViewController.view;
+    
+    //[self checkFirstRun];
+    
+    [DroneCommandCenter initialize:DJIDrone_Inspire];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onDroneConnected)
+                                                 name:NotificationDroneConnected
+                                               object:nil];
+
+    
+    
 }
 
+-(void) onDroneConnected{
+    
+    [Utils displayToastOnApp:@"Inspire 1 Drone Connected"];
+    
+    [Utils displayToastOnApp:@"Resetting Gimble"];
+    [DroneCommandCenter resetGimbalYaw];
+    [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+    sleep(1);
+
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:60.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+
+    [DroneCommandCenter setCameraPosition:0.0f yaw:120.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+   
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:180.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+
+    sleep(5);
+   
+    [DroneCommandCenter setCameraPosition:0.0f yaw:240.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:300.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(5);
+    
+    [DroneCommandCenter resetGimbalYaw];
+
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPitch:-30.0f];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:60.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:120.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:180.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:240.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:300.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter resetGimbalYaw];
+
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPitch:-60.0f];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:60.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:120.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:180.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:240.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:300.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPitch:-90.0f];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter resetGimbalYaw];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPitch:30.0f];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:60.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:120.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:180.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:240.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+    
+    [DroneCommandCenter setCameraPosition:0.0f yaw:300.00];
+    [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+    
+    sleep(1);
+    
+    [DroneCommandCenter takeASnap];
+    
+    sleep(5);
+
+    
+    
+}
 - (IBAction)setYawAngle:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Yaw Angle" //or strTitle
                                                     message:@"Choose your desired yaw angle" //or pass message parameter

@@ -14,7 +14,9 @@
 
 + (void)displayToast:(UIView *)view message:(NSString *)message;
 
-+ (NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs;
++ (void)displayToastOnApp:(NSSTring *)message;
+
++(NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs;
 
 +(void) sendNotification:(NSString*)messageFrom dictionary:(NSDictionary*)dictionary;
 

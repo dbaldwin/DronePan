@@ -11,7 +11,10 @@
 
 // Command Center
 
-
+/*enum DroneType{
+    Inspire1,
+    Phantom3
+};*/
 
 enum _CommandResponseStatus{
     failure,
@@ -22,14 +25,17 @@ enum _CommandResponseStatus{
 typedef enum _CommandResponseStatus CommandResponseStatus;
 
 enum _NoteType{
-    CmdCenter_DroneChanged=0,
-    CmdCenter_DroneNotConnected,
-    CmdCenter_DroneConnected,
-    CmdCenter_DroneTypeUnknown,
-    CmdCenter_CmdExecInProgress,
-    CmdCenter_CmdSuccess,
-    CmdCenter_CmdFailed,
-    CmdCenter_CmdError
+    CmdCenterDroneChanged=0,
+    CmdCenterDroneNotConnected,
+    CmdCenterDroneConnected,
+    CmdCenterDroneConnectionFailed,
+    CmdCenterDroneTypeUnknown,
+    CmdCenterCmdExecInProgress,
+    CmdCenterCmdSuccess,
+    CmdCenterCmdFailed,
+    CmdCenterCmdError,
+    CmdCenterGimbalRotationFailed,//Temporary Constants
+    CmdCenterGimbalRotationSuccess// Should be removed
 };
 
 typedef enum _NoteType NoteType;
@@ -50,5 +56,18 @@ enum _DroneDirectionType{
 
 typedef enum _DroneDirectionType DroneDirection;
 
+enum _YawModeType{
+    
+    Gimbal=0,
+    Aircraft
+};
+
+typedef enum _YawModeType YawMode;
+
+
+FOUNDATION_EXPORT NSString *const NotificationCmdCenter;
+FOUNDATION_EXPORT NSString *const NotificationPitchAndYaw;
+FOUNDATION_EXPORT NSString *const NotificationAltitude;
+FOUNDATION_EXPORT NSString *const NotificationDroneConnected;
 
 #endif /* global_h */

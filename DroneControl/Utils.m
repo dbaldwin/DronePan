@@ -19,7 +19,9 @@
     hud.removeFromSuperViewOnHide = YES;
     [hud hide:YES afterDelay:5];
 }
-
++(void)displayToastOnApp:(NSString *)message{
+    [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:message];
+}
 + (NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs {
     NSMutableDictionary *ret = [lhs mutableCopy];
     [ret addEntriesFromDictionary:rhs];

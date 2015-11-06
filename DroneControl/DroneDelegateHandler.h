@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
+#import "Utils.h"
 
 @interface DroneDelegateHandler : NSObject<DJIDroneDelegate,DJIGimbalDelegate,DJICameraDelegate,DJIMainControllerDelegate,DJINavigationDelegate>
 
