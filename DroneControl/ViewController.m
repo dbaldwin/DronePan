@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
+#import "utils.h"
+#import "DroneCommandCenter.h"
 #import <DJISDK/DJISDK.h>
 
 #define stopPanoTag 100
@@ -36,6 +38,7 @@
      self.altitudeLabel.text = @"Alt: 200m";
      self.yawLabel.text = @"Yaw: 180";
      self.pitchLabel.text = @"Pitch: -90";*/
+    [DroneCommandCenter changeDroneType:DJIDrone_Inspire];
     
     [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
@@ -209,15 +212,7 @@
     }
 }
 
-- (void)displayToast:(NSString *)message {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.color = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = message;
-    hud.margin = 10.f;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:5];
-}
+
 
 
 - (IBAction)captureMethod:(id)sender {
@@ -233,8 +228,8 @@
 -(void) startPano {
     if(panoInProgress == NO) {
         
-        [self displayToast:@"Starting Panorama"];
-        
+        //[self displayToast:@"Starting Panorama"];
+        [Utils displayToast:self.view message:@"Starting Panorama"];
         panoInProgress = YES;
         
         // Change start icon to a stop icon
@@ -283,7 +278,8 @@
     if(alertView.tag == stopPanoTag) {
         if(buttonIndex == 1) {
             panoInProgress = NO;
-            [self displayToast:@"Stopping panorama, please stand by..."];
+            //[self displayToast:@"Stopping panorama, please stand by..."];
+            [Utils displayToast:self.view message:@"Stopping panorama, please stand by..."];
         }
     } else if(alertView.tag == captureMethodTag) {
         // Index 1 = yaw aircraft, index 2 = yaw gimbal
@@ -332,7 +328,8 @@
     [self.navigation enterNavigationModeWithResult:^(DJIError *error) {
         if(error.errorCode != ERR_Succeeded) {
             NSString* myerror = [NSString stringWithFormat: @"Error entering navigation mode. Please place your mode switch in the F position. Code: %lu", (unsigned long)error.errorCode];
-            [self displayToast: myerror];
+            //[self displayToast: myerror];
+            [Utils displayToast:self.view message:myerror];
             [self finishPanoAndReset];
         } else {
             if(droneType == 1) {
@@ -348,7 +345,8 @@
 -(void)rotateInspireAndTakePhotos {
 
     if(self.droneAltitude < 5.0f) {
-        [self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
+        //[self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
+        [Utils displayToast:self.view message:@"Please increase altitude to > 5m to begin your panorama"];
         [self finishPanoAndReset];
         return;
     }
@@ -378,7 +376,8 @@
         currentLoop = 0;
         columnLoopCount = 0;
         
-        [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+        //[self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+        [Utils displayToast:self.view message:@"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
         [self finishPanoAndReset];
         return;
         
@@ -421,7 +420,8 @@
 -(void) rotatePhantomAndTakePhotos {
     
     if(self.droneAltitude < 5.0f) {
-        [self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
+        //[self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
+        [Utils displayToast:self.view message:@"Please increase altitude to > 5m to begin your panorama"];
         [self finishPanoAndReset];
         return;
     }
@@ -458,7 +458,8 @@
         currentLoop = 0;
         columnLoopCount = 0;
         
-        [self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+        //[self displayToast: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+        [Utils displayToast:self.view message: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
         [self finishPanoAndReset];
         return;
         
@@ -755,7 +756,7 @@
         
         self.progressView.progress = 0;
         
-        [self displayToast:@"Panorama Complete!"];
+        [Utils displayToast:self.view message:@"Panorama Complete!"];
         
     }
 }
@@ -779,8 +780,12 @@
     [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
         // Gimbal rotation failed so we'll try again
         if(error.errorCode != ERR_Succeeded) {
+            
             NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
-            [weakSelf displayToast:myerror];
+            
+            //[weakSelf displayToast:myerror];
+            
+            [Utils displayToast:weakSelf.view message:myerror];
             
             // Delay two seconds and try to rotate the gimbal again
             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -822,7 +827,9 @@
      [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
          if(error.errorCode != ERR_Succeeded) {
              NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
-             [weakSelf displayToast:myerror];
+             //[weakSelf displayToast:myerror];
+             
+             [Utils displayToast:weakSelf.view message:myerror];
              
              // Delay two seconds and try to rotate the gimbal again
              dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -848,7 +855,9 @@
         if (error.errorCode != ERR_Succeeded) {
 
             NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
-            [self displayToast:myerror];
+            //[self displayToast:myerror];
+            
+             [Utils displayToast:self.view message:myerror];
             
             // There was an error trying to take the photo so we'll retry after 2 s
             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
@@ -899,7 +908,9 @@
         if (error.errorCode != ERR_Succeeded) {
             
             NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
-            [self displayToast:myerror];
+            //[self displayToast:myerror];
+            
+            [Utils displayToast:self.view message:myerror];
             
             // There was an error trying to take the photo so we'll retry after 2 s
             dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
