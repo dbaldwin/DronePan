@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
-#import "DronePan-Swift.h"
+#import "global.h"
+
 
 @import GoogleMaps;
 
@@ -17,6 +18,7 @@
 
 @interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
 {
+    
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
     DJIInspireCamera *_camera;
@@ -33,14 +35,16 @@
     int thirdLoopCount;
     int fourthLoopCount;
     int droneType;
-    int captureMethod;
     
     int yawAngle;
     int numColumns;
     NSTimer* _readBatteryInfoTimer;
     
-}
+    CaptureMode captureMethod;
 
+    
+}
+@property (assign, nonatomic) DJIDroneType droneType;
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
 @property (weak, nonatomic) IBOutlet UILabel *photoCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *batteryRemainingLabel;

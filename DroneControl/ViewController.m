@@ -10,7 +10,6 @@
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
 #import "utils.h"
-#import "DroneCommandCenter.h"
 #import <DJISDK/DJISDK.h>
 
 #define stopPanoTag 100
@@ -61,10 +60,6 @@
     // By default we'll use the yaw aircraft capture method
     captureMethod = 1;
     
-    [self runDeviceTest];
-   
-    
-   
 }
 
 -(void) viewWillAppear:(BOOL)animated {
@@ -78,109 +73,35 @@
 -(void) viewDidAppear:(BOOL)animated {
     // Check to see if this is the first run of the current version
     
-   // [self checkFirstRun];
-    
-    
-    //[Utils displayToast:self.view message:@"Module 1 Test Initiated"];
-    
-    //[self runModuleTest1];
-    
-    //[Utils displayToast:self.view message:@"Device Test Initiated"];
-    
-    
-    
-    
-}
-
--(void) runModuleTest1{
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(notificationReceived)
-                                                 name:NotificationDroneConnected
-                                               object:nil];
-    
-    
-     [Utils sendNotificationWithNoteType:NotificationDroneConnected noteType:CmdCenterDroneConnected];
-}
-
--(void) notificationReceived{
-    
-    [Utils displayToastOnApp:@"Received Notification"];
-}
-
--(void) runDeviceTest{
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onDroneConnected)
-                                                 name:NotificationDroneConnected
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(processCmdCenterUpdates:)
-                                                 name:NotificationCmdCenter
-                                               object:nil];
-
-    
-    
-    //[DroneCommandCenter initialize:DJIDrone_Inspire];
-
-    
-}
-
--(void) processCmdCenterUpdates:(NSNotification *) notice{
-    
-    NSDictionary  *userInfo=notice.userInfo;
-    
-    NSLog(@"%@",notice.name);
-    
-    if(userInfo!=nil)
-    {
-    
-        NSLog(@"%@", [userInfo objectForKey:@"NoteType"]);
-    
-    }
-}
-
-
--(void) onDroneConnected{
-    
-    [Utils displayToastOnApp:@"Inspire 1 Drone Connected"];
-    
-    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
-    NSArray *yaw=@[@60,@120,@180,@240,@300];
-    
-    for (NSNumber *nPitch in pitch) {
-
-        [Utils displayToastOnApp:@"Resetting Gimble"];
-        [DroneCommandCenter resetGimbalYaw];
-        [DroneCommandCenter setCameraPitch:[nPitch floatValue]];
-        [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+    [self checkFirstRun];
         
-        sleep(1);
-        
-        [DroneCommandCenter takeASnap];
-        
-        sleep(5);
-        
-        if([nPitch integerValue]!=-90){
-        for(NSNumber *nYaw in yaw){
-        
-            [DroneCommandCenter setCameraYaw:[nYaw floatValue]];
-            
-            [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
-            
-            sleep(1);
-            
-            [DroneCommandCenter takeASnap];
-            
-            sleep(5);
-          }
-        }
-    }
-    
 }
+
+/* View Functions */
+
+-(void) dealloc
+{
+    // Remove notification listeners
+    [[NSNotificationCenter defaultCenter] removeObserver: self];
+}
+
+-(void) viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [_drone.mainController stopUpdateMCSystemState];
+    [_drone disconnectToDrone];
+    [[VideoPreviewer instance] setView:nil];
+    [self stopBatteryUpdate];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+/*User Input Screens*/
+
 - (IBAction)setYawAngle:(id)sender {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Yaw Angle" //or strTitle
                                                     message:@"Choose your desired yaw angle" //or pass message parameter
@@ -261,79 +182,19 @@
     [[NSNotificationCenter defaultCenter] removeObserver:@"DroneSelected"];
 }
 
--(void)initDrone {
-    _drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
-    _drone.delegate = self;
-    
-    _gimbal = (DJIInspireGimbal*)_drone.gimbal;
-    _gimbal.delegate = self;
-    
-    _camera = (DJIInspireCamera*)_drone.camera;
-    _camera.delegate = self;
-    
-    mInspireMainController = (DJIInspireMainController*)_drone.mainController;
-    mInspireMainController.mcDelegate = self;
-    
-    //Start video data decode thread
-    [[VideoPreviewer instance] start];
-    
-    // For joystick API
-    self.navigation = _drone.mainController.navigationManager;
-    self.navigation.delegate = self;
-}
-
-
--(void) dealloc
-{
-    // Remove notification listeners
-    [[NSNotificationCenter defaultCenter] removeObserver: self];
-}
-
--(void) connectToDrone {
-    [_drone connectToDrone];
-}
-
--(void) viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [_drone.mainController stopUpdateMCSystemState];
-    [_drone disconnectToDrone];
-    [[VideoPreviewer instance] setView:nil];
-    [self stopBatteryUpdate];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
--(void) droneOnConnectionStatusChanged:(DJIConnectionStatus)status
-{
-    if (status == ConnectionSucceeded) {
-        self.connectionStatusLabel.text = @"Connected";
-        [self startBatteryUpdate];
-    }
-    else if(status == ConnectionBroken)
-    {
-        self.connectionStatusLabel.text = @"Disconnected";
-    }
-    else if (status == ConnectionFailed)
-    {
-        self.connectionStatusLabel.text = @"Failed";
-    }
-}
-
-
-
-
 - (IBAction)captureMethod:(id)sender {
     if(droneType == 1 && panoInProgress == NO) { // Inspire 1
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Inspire 1 Capture Method" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Yaw Aircraft", @"Yaw Gimbal", nil];
         alert.tag = captureMethodTag;
         [alert show];
     } else { // P3 or even I1 if the I1 pano is in progress
-        [self startPano];
+        //[self startPano];
+        [self startNewPano];
     }
+}
+
+-(void) startNewPano{
+    
 }
 
 -(void) startPano {
@@ -399,6 +260,7 @@
             [self startPano];
         } else if(buttonIndex == 2) {
             captureMethod = 2;
+            
             [self startPano];
         }
     } else if(alertView.tag == yawAngleTag) {
@@ -434,6 +296,271 @@
         [self.yawAngleButton setTitle:[NSString stringWithFormat: @"Angle: %i°", yawAngle] forState:UIControlStateNormal];
     }
 }
+
+/* End of User Screens */
+
+
+
+
+/*Drone Functions */
+
+
+-(void)initDrone {
+    _drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
+    _drone.delegate = self;
+    
+    _gimbal = (DJIInspireGimbal*)_drone.gimbal;
+    _gimbal.delegate = self;
+    
+    _camera = (DJIInspireCamera*)_drone.camera;
+    _camera.delegate = self;
+    
+    mInspireMainController = (DJIInspireMainController*)_drone.mainController;
+    mInspireMainController.mcDelegate = self;
+    
+    //Start video data decode thread
+    [[VideoPreviewer instance] start];
+    
+    // For joystick API
+    self.navigation = _drone.mainController.navigationManager;
+    self.navigation.delegate = self;
+}
+
+-(void) connectToDrone {
+    [_drone connectToDrone];
+}
+
+
+-(void) droneOnConnectionStatusChanged:(DJIConnectionStatus)status
+{
+    if (status == ConnectionSucceeded) {
+        self.connectionStatusLabel.text = @"Connected";
+        [self startBatteryUpdate];
+    }
+    else if(status == ConnectionBroken)
+    {
+        self.connectionStatusLabel.text = @"Disconnected";
+    }
+    else if (status == ConnectionFailed)
+    {
+        self.connectionStatusLabel.text = @"Failed";
+    }
+}
+
+-(void)resetGimbalYaw{
+    
+    [_gimbal resetGimbalWithResult: nil];
+}
+
+-(CommandResponseStatus) setCameraPitch:(float)pitch {
+    DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
+    
+    DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+    
+    pitchRotation.angle = pitch;
+    
+    pitchRotation.angleType = AbsoluteAngle;
+    
+    pitchRotation.direction = pitchDir;
+    
+    pitchRotation.enable = YES;
+    
+    [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        
+        if(error.errorCode != ERR_Succeeded) {
+            
+            NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+            
+            NSLog(@"%@",myerror);
+            
+            [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+            
+            
+        }else{
+            
+            [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+            
+            [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
+            
+        }
+    }];
+    
+    return success;
+}
+
+-(CommandResponseStatus) setCameraPosition:(float)pitch yaw:(float) yaw{
+    
+    if(captureMethod==Gimbal)
+    {
+        DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
+        
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        
+        pitchRotation.angle = pitch;
+        
+        pitchRotation.angleType = AbsoluteAngle;
+        
+        pitchRotation.direction = pitchDir;
+        
+        pitchRotation.enable = YES;
+        
+        
+        yawRotation.angle = yaw;
+        
+        yawRotation.angleType = AbsoluteAngle;
+        
+        yawRotation.direction = RotationForward;
+        
+        yawRotation.enable = YES;
+        
+        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+            if(error.errorCode != ERR_Succeeded) {
+                
+                NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                
+                NSLog(@"%@",myerror);
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+                
+                
+            }else{
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                
+                [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
+                
+            }
+        }];
+    }
+    
+    if(captureMethod==Aircraft)
+    {
+        DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
+        
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        
+        pitchRotation.angle = pitch;
+        
+        pitchRotation.angleType = AbsoluteAngle;
+        
+        pitchRotation.direction = pitchDir;
+        
+        pitchRotation.enable = YES;
+        
+        yawRotation.enable=NO;
+        
+        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+            if(error.errorCode != ERR_Succeeded) {
+                
+                NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                
+                NSLog(@"%@",myerror);
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+                
+                
+            }else{
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                
+                [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
+                
+            }
+        }];
+        
+        
+        DJIFlightControlData ctrlData;
+        ctrlData.mPitch = 0;
+        ctrlData.mRoll = 0;
+        ctrlData.mThrottle = 0;
+        ctrlData.mYaw = yaw;
+        
+        [_drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+            NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
+        }];
+
+}
+    
+    
+    return success;
+}
+
+
+-(CommandResponseStatus) setCameraYaw:(float) yaw{
+    
+    if(captureMethod==Gimbal)
+    {
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.enable = NO;
+        
+        
+        yawRotation.angle = yaw;
+        
+        yawRotation.angleType = AbsoluteAngle;
+        
+        yawRotation.direction = RotationForward;
+        
+        yawRotation.enable = YES;
+        
+        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+            if(error.errorCode != ERR_Succeeded) {
+                
+                NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                
+                NSLog(@"%@",myerror);
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+                
+                
+            }else{
+                
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                
+                [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
+                
+            }
+        }];
+    }
+    
+    if(captureMethod==Aircraft)
+    {//90 Relative Works so just keep sending 90
+        
+        DJIFlightControlData ctrlData;
+        ctrlData.mPitch = 0;
+        ctrlData.mRoll = 0;
+        ctrlData.mThrottle = 0;
+        ctrlData.mYaw = yaw;
+        
+        [_drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+            NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
+        }];
+        
+        NSLog(@"Aircraft Command Sent");
+    }
+    
+    
+    return success;
+}
+
+-(void) takeASnap{
+    
+    [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+        
+        if (error.errorCode != ERR_Succeeded) {
+            
+            NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
+            [Utils displayToastOnApp:myerror];
+            
+        }else{
+            [Utils displayToastOnApp:@"Clicked!"];
+        }
+    }];
+    
+}
+
 
 -(void)enterNavigationMode {
     [self.navigation enterNavigationModeWithResult:^(DJIError *error) {
@@ -1216,5 +1343,94 @@
         self.isMissionStarted = NO;
     }*/
 }
+/*-(void) runModuleTest1{
+ 
+ 
+ [[NSNotificationCenter defaultCenter] addObserver:self
+ selector:@selector(notificationReceived)
+ name:NotificationDroneConnected
+ object:nil];
+ 
+ 
+ [Utils sendNotificationWithNoteType:NotificationDroneConnected noteType:CmdCenterDroneConnected];
+ }
+ 
+ -(void) notificationReceived{
+ 
+ [Utils displayToastOnApp:@"Received Notification"];
+ }
+ 
+ -(void) runDeviceTest{
+ 
+ 
+ [[NSNotificationCenter defaultCenter] addObserver:self
+ selector:@selector(onDroneConnected)
+ name:NotificationDroneConnected
+ object:nil];
+ 
+ [[NSNotificationCenter defaultCenter] addObserver:self
+ selector:@selector(processCmdCenterUpdates:)
+ name:NotificationCmdCenter
+ object:nil];
+ 
+ 
+ 
+ //[DroneCommandCenter initialize:DJIDrone_Inspire];
+ 
+ 
+ }
+ 
+ -(void) processCmdCenterUpdates:(NSNotification *) notice{
+ 
+ NSDictionary  *userInfo=notice.userInfo;
+ 
+ NSLog(@"%@",notice.name);
+ 
+ if(userInfo!=nil)
+ {
+ 
+ NSLog(@"%@", [userInfo objectForKey:@"NoteType"]);
+ 
+ }
+ }
+ 
+ 
+ -(void) onDroneConnected{
+ 
+ [Utils displayToastOnApp:@"Inspire 1 Drone Connected"];
+ 
+ NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
+ NSArray *yaw=@[@60,@120,@180,@240,@300];
+ 
+ for (NSNumber *nPitch in pitch) {
+ 
+ [Utils displayToastOnApp:@"Resetting Gimble"];
+ [DroneCommandCenter resetGimbalYaw];
+ [DroneCommandCenter setCameraPitch:[nPitch floatValue]];
+ [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+ 
+ sleep(1);
+ 
+ [DroneCommandCenter takeASnap];
+ 
+ sleep(5);
+ 
+ if([nPitch integerValue]!=-90){
+ for(NSNumber *nYaw in yaw){
+ 
+ [DroneCommandCenter setCameraYaw:[nYaw floatValue]];
+ 
+ [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+ 
+ sleep(1);
+ 
+ [DroneCommandCenter takeASnap];
+ 
+ sleep(5);
+ }
+ }
+ }
+ 
+ }*/
 
 @end

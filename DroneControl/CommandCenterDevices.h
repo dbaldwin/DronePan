@@ -13,7 +13,7 @@
 #import "DroneDelegateHandler.h"
 
 
-@interface CommandCenterData : NSObject{
+@interface CommandCenterDevices : NSObject{
 
    /* DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;

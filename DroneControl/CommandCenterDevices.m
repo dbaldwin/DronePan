@@ -6,9 +6,9 @@
 //  Copyright © 2015 Unmanned Airlines, LLC. All rights reserved.
 //
 
-#import "CommandCenterData.h"
+#import "CommandCenterDevices.h"
 
-@implementation CommandCenterData
+@implementation CommandCenterDevices
 - (id) init
 {
     self = [super init];

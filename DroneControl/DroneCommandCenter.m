@@ -20,8 +20,8 @@
 
 +(void) initialize:(DJIDroneType)droneType{
     
-    data=[[CommandCenterData alloc]init];
-    data.droneDelegateHandler=[[DroneDelegateHandler alloc] init];
+    devices=[[CommandCenterDevices alloc]init];
+    devices.droneDelegateHandler=[[DroneDelegateHandler alloc] init];
     
     /*DJIDrone *drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
     
@@ -34,35 +34,35 @@
         
         case DJIDrone_Inspire:
         {
-            data.drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
+            devices.drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
             break;
         }
             
         case DJIDrone_Phantom:
         {
-            data.drone=[[DJIDrone alloc] initWithType: DJIDrone_Phantom];
+            devices.drone=[[DJIDrone alloc] initWithType: DJIDrone_Phantom];
             break;
         }
         default:{ break;}//Throw Exception
     }
     
-    if(data.drone==nil){
+    if(devices.drone==nil){
         
         [DroneCommandCenter sendNotificationWithNoteType:CmdCenterDroneTypeUnknown];
         
         return;
     }
     
-    data.drone.delegate = data.droneDelegateHandler;
+    devices.drone.delegate = devices.droneDelegateHandler;
     
-    data.gimbal = (DJIInspireGimbal*)data.drone.gimbal;
-    data.gimbal.delegate = data.droneDelegateHandler;
+    devices.gimbal = (DJIInspireGimbal*)devices.drone.gimbal;
+    devices.gimbal.delegate = devices.droneDelegateHandler;
     
-    data.camera = (DJIInspireCamera*)data.drone.camera;
-    data.camera.delegate = data.droneDelegateHandler;
+    devices.camera = (DJIInspireCamera*)devices.drone.camera;
+    devices.camera.delegate = devices.droneDelegateHandler;
     
-    data.mMainController = (DJIInspireMainController*)data.drone.mainController;
-    data.mMainController.mcDelegate = data.droneDelegateHandler;
+    devices.mMainController = (DJIInspireMainController*)devices.drone.mainController;
+    devices.mMainController.mcDelegate = devices.droneDelegateHandler;
     
     [DroneCommandCenter connectToDrone];
 }
@@ -81,7 +81,7 @@
     
     _Bool hasG=false;
     
-    switch(data.droneType)
+    switch(devices.droneType)
     {
         case DJIDrone_Inspire:
             hasG=true;
@@ -98,13 +98,10 @@
 }
 
 +(void) connectToDrone {
-    [data.drone connectToDrone];
+    [devices.drone connectToDrone];
 }
 
-+(void)resetGimbalYaw{
-    
-    [data.gimbal resetGimbalWithResult: nil];
-}
+
 
 +(CommandResponseStatus) setDirection:(DroneDirection)direction{
     
@@ -125,6 +122,10 @@
     return success;
 }
 
++(void)resetGimbalYaw{
+    
+    [devices.gimbal resetGimbalWithResult: nil];
+}
 +(CommandResponseStatus) setCameraPitch:(float)pitch {
     DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
     
@@ -138,7 +139,7 @@
     
     pitchRotation.enable = YES;
     
-    [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+    [devices.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
         
         if(error.errorCode != ERR_Succeeded) {
             
@@ -162,7 +163,7 @@
 }
 +(CommandResponseStatus) setCameraPosition:(float)pitch yaw:(float) yaw{
     
-    if(data.yawMode==Gimbal)
+    if(devices.yawMode==Gimbal)
     {
         DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
         
@@ -185,7 +186,7 @@
         
         yawRotation.enable = YES;
         
-        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [devices.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                 
@@ -206,7 +207,7 @@
         }];
     }
     
-    if(data.yawMode==Aircraft)
+    if(devices.yawMode==Aircraft)
     {
         DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
         
@@ -222,7 +223,7 @@
         
         yawRotation.enable=NO;
         
-        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [devices.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                 
@@ -249,7 +250,7 @@
         ctrlData.mThrottle = 0;
         ctrlData.mYaw = yaw;
         
-        [data.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        [devices.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
             NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
         }];
         
@@ -264,7 +265,7 @@
 
 +(CommandResponseStatus) setCameraYaw:(float) yaw{
 
-    if(data.yawMode==Gimbal)
+    if(devices.yawMode==Gimbal)
     {
         DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
         pitchRotation.enable = NO;
@@ -278,7 +279,7 @@
         
         yawRotation.enable = YES;
         
-        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [devices.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                     
@@ -299,17 +300,16 @@
         }];
     }
     
-    if(data.yawMode==Aircraft)
+    if(devices.yawMode==Aircraft)
     {//90 Relative Works so just keep sending 90
         
         DJIFlightControlData ctrlData;
-        
         ctrlData.mPitch = 0;
         ctrlData.mRoll = 0;
         ctrlData.mThrottle = 0;
         ctrlData.mYaw = yaw;
         
-        [data.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        [devices.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
             NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
         }];
         
@@ -322,7 +322,7 @@
 
 +(void) takeASnap{
     
-    [data.camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+    [devices.camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         
         if (error.errorCode != ERR_Succeeded) {
             

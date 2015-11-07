@@ -65,6 +65,15 @@ enum _YawModeType{
 typedef enum _YawModeType YawMode;
 
 
+enum _CaptureModeType{
+    
+    YawAircraft=1,
+    YawGimbal=2
+};
+
+typedef enum _CaptureModeType CaptureMode;
+
+
 FOUNDATION_EXPORT NSString *const NotificationCmdCenter;
 FOUNDATION_EXPORT NSString *const NotificationPitchAndYaw;//Gimball
 FOUNDATION_EXPORT NSString *const NotificationAltitude;

@@ -12,7 +12,7 @@
 #import <DJISDK/DJIMainControllerDef.h>
 #import "global.h"
 #import "DroneDelegateHandler.h"
-#import "CommandCenterData.h"
+#import "CommandCenterDevices.h"
 #import "Utils.h"
 
 /*static DJIDrone *_drone=nil;
@@ -23,7 +23,7 @@
  static DroneDelegateHandler *droneDelegateHandler;
  static YawMode yawMode;*/
 
-static CommandCenterData *data;
+static CommandCenterDevices *devices;
 
 @interface DroneCommandCenter : NSObject  {
 
