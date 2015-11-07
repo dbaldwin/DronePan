@@ -195,6 +195,85 @@
 
 -(void) startNewPano{
     
+    if(panoInProgress == NO) {
+        
+        //[self displayToast:@"Starting Panorama"];
+        [Utils displayToast:self.view message:@"Starting Panorama"];
+        panoInProgress = YES;
+        
+        // Change start icon to a stop icon
+        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop Icon"] forState:UIControlStateNormal];
+        
+        totalProgress = 0;
+        self.progressView.progress = 0;
+        totalPhotoCount = 1;
+        
+        captureMethod=YawGimbal;
+        
+    [Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
+    
+    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
+    NSArray *yaw=@[@60,@120,@180,@240,@300];
+    
+    for (NSNumber *nPitch in pitch) {
+        if(panoINProgress)
+        {
+        
+            [Utils displayToastOnApp:@"Resetting Gimble"];
+        
+            [self resetGimbalYaw];
+        
+            [self setCameraPitch:[nPitch floatValue]];
+        
+            [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+        
+        
+            sleep(1);
+        
+        
+            [self takeASnap];
+        
+        
+            sleep(5);
+        
+            if(panoINProgress)
+            {
+            
+                if([nPitch integerValue]!=-90){
+            
+                    for(NSNumber *nYaw in yaw){
+                    
+                        [self setCameraYaw:[nYaw floatValue]];
+                
+                        [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
+                    
+                        sleep(1);
+                    
+                        [self takeASnap];
+                
+                        sleep(5);
+                    }
+            
+                }
+            }else{
+                break;
+            }
+            
+        }else{
+            break;
+        }
+    }
+        
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm"
+                                                        message:@"Are you sure you want to stop this panorama?"
+                                                       delegate:self
+                                              cancelButtonTitle:@"No"
+                                              otherButtonTitles:@"Yes", nil];
+        alert.tag = stopPanoTag;
+        [alert show];
+
+    }
 }
 
 -(void) startPano {
@@ -257,11 +336,13 @@
         // Index 1 = yaw aircraft, index 2 = yaw gimbal
         if(buttonIndex == 1) {
             captureMethod = 1;
-            [self startPano];
+            //[self startPano];
+            [self startNewPano];
         } else if(buttonIndex == 2) {
             captureMethod = 2;
             
-            [self startPano];
+            //[self startPano];
+            [self startNewPano];
         }
     } else if(alertView.tag == yawAngleTag) {
         if(buttonIndex == 1) {
