@@ -9,5 +9,11 @@
 #import "CommandCenterData.h"
 
 @implementation CommandCenterData
+- (id) init
+{
+    self = [super init];
+    
+    return self;
+}
 
 @end
