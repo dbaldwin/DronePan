@@ -209,7 +209,21 @@
         self.progressView.progress = 0;
         totalPhotoCount = 1;
         
-       // captureMethod=YawGimbal;
+        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+            __weak typeof(self) weakSelf = self;
+            [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
+                if (error.errorCode != ERR_Succeeded) {
+                    [Utils displayToast:weakSelf.view message:@"Error setting camera work mode to capture"];
+                    [weakSelf finishPanoAndReset];
+                } else {
+                    if(captureMethod == 1) // Yaw aircraft
+                        [weakSelf enterNavigationMode];
+                    else if(captureMethod == 2) // Yaw gimbal
+                        [weakSelf takeFirstRowPhotos];
+                }
+            }];
+        });
         
     [Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
     
@@ -242,14 +256,10 @@
             [Utils displayToastOnApp:@"Gimble Reset Complete!"];
         
         
-            sleep(1);
-        
-        
             [self takeASnap];
         
         
-            sleep(5);
-        
+           
             if(panoInProgress)
             {
             
@@ -257,16 +267,17 @@
             
                     for(NSNumber *nYaw in yaw){
                     
+                        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
+                        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                            //__weak typeof(self) weakSelf = self;
+
                         [self setCameraYaw:[nYaw floatValue]];
-                
-                        [Utils displayToastOnApp:@"Gimble Rotate to 60 Degree Complete!"];
-                    
-                        sleep(1);
-                    
+                        
+                        });
+                        
                         [self takeASnap];
                 
-                        sleep(5);
-                    }
+                }
             
                 }
             }else{
@@ -641,7 +652,11 @@
 }
 
 -(void) takeASnap{
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
     
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+        __weak typeof(self) weakSelf = self;
+
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         
         if (error.errorCode != ERR_Succeeded) {
@@ -653,7 +668,7 @@
             [Utils displayToastOnApp:@"Clicked!"];
         }
     }];
-    
+    });
 }
 
 
