@@ -40,6 +40,8 @@
 		23FA209A1B4F50C800811185 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23FA20991B4F50C800811185 /* DJISDK.framework */; };
 		B835E1341BEBAC3400ECF4B5 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = B835E1331BEBAC3400ECF4B5 /* Utils.m */; };
 		B83B24BC1BED11270085DABA /* global.m in Sources */ = {isa = PBXBuildFile; fileRef = B83B24BB1BED11270085DABA /* global.m */; };
+		B84CC8C51BEE725800F7657A /* CraftCommandCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84CC8C41BEE725800F7657A /* CraftCommandCenter.swift */; };
+		B84CC8C91BEE81B300F7657A /* CommandCenterData.m in Sources */ = {isa = PBXBuildFile; fileRef = B84CC8C81BEE81B300F7657A /* CommandCenterData.m */; };
 		B8517CD51BEC381E00575531 /* UIDashbrdControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8517CD41BEC381E00575531 /* UIDashbrdControl.swift */; };
 		B8517CD71BEC3C0A00575531 /* UIDashbrdControl.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8517CD61BEC3C0A00575531 /* UIDashbrdControl.xib */; };
 		B8517CDA1BEC5DE000575531 /* DroneCommandCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = B8517CD91BEC5DE000575531 /* DroneCommandCenter.m */; };
@@ -181,6 +183,9 @@
 		B835E1321BEBAC3400ECF4B5 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		B835E1331BEBAC3400ECF4B5 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		B83B24BB1BED11270085DABA /* global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = global.m; sourceTree = "<group>"; };
+		B84CC8C41BEE725800F7657A /* CraftCommandCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CraftCommandCenter.swift; sourceTree = "<group>"; };
+		B84CC8C71BEE81B300F7657A /* CommandCenterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandCenterData.h; sourceTree = "<group>"; };
+		B84CC8C81BEE81B300F7657A /* CommandCenterData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandCenterData.m; sourceTree = "<group>"; };
 		B8517CD31BEC367200575531 /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8517CD41BEC381E00575531 /* UIDashbrdControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIDashbrdControl.swift; sourceTree = "<group>"; };
 		B8517CD61BEC3C0A00575531 /* UIDashbrdControl.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UIDashbrdControl.xib; path = ../UIDashbrdControl.xib; sourceTree = "<group>"; };
@@ -474,6 +479,9 @@
 				B83B24BB1BED11270085DABA /* global.m */,
 				B8517CDC1BEC7C8500575531 /* DroneDelegateHandler.h */,
 				B8517CDD1BEC7C8500575531 /* DroneDelegateHandler.m */,
+				B84CC8C41BEE725800F7657A /* CraftCommandCenter.swift */,
+				B84CC8C71BEE81B300F7657A /* CommandCenterData.h */,
+				B84CC8C81BEE81B300F7657A /* CommandCenterData.m */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -669,6 +677,7 @@
 				B835E1341BEBAC3400ECF4B5 /* Utils.m in Sources */,
 				B83B24BC1BED11270085DABA /* global.m in Sources */,
 				2351C16F1B9DC419005D8263 /* DroneSelectionViewController.m in Sources */,
+				B84CC8C91BEE81B300F7657A /* CommandCenterData.m in Sources */,
 				23FA207C1B4F4C1800811185 /* ViewController.m in Sources */,
 				2351C16C1B9DBEE4005D8263 /* PhantomViewController.m in Sources */,
 				23DE2E001B8C204E002AFCDF /* MBProgressHUD.m in Sources */,
@@ -679,6 +688,7 @@
 				23FA20761B4F4C1800811185 /* main.m in Sources */,
 				232941F51B519F6A00125172 /* DJILinkQueues.m in Sources */,
 				232942011B519F6A00125172 /* VideoPreviewer.m in Sources */,
+				B84CC8C51BEE725800F7657A /* CraftCommandCenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

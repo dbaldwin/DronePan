@@ -124,8 +124,9 @@
 
     
     
-    [DroneCommandCenter initialize:DJIDrone_Inspire];
+    //[DroneCommandCenter initialize:DJIDrone_Inspire];
 
+    
 }
 
 -(void) processCmdCenterUpdates:(NSNotification *) notice{

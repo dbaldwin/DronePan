@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
+#import "DronePan-Swift.h"
 
 @import GoogleMaps;
+
+
 
 @interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
 {
@@ -35,6 +38,7 @@
     int yawAngle;
     int numColumns;
     NSTimer* _readBatteryInfoTimer;
+    
 }
 
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;

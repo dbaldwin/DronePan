@@ -10,4 +10,7 @@
 #define DronePan_Bridging_Header_h
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
+#import "DroneDelegateHandler.h"
+#import "global.h"
+
 #endif /* DronePan_Bridging_Header_h */

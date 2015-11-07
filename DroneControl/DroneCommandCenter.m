@@ -20,7 +20,8 @@
 
 +(void) initialize:(DJIDroneType)droneType{
     
-    droneDelegateHandler=[[DroneDelegateHandler alloc] init];
+    data=[[CommandCenterData alloc]init];
+    data.droneDelegateHandler=[[DroneDelegateHandler alloc] init];
     
     /*DJIDrone *drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
     
@@ -33,35 +34,35 @@
         
         case DJIDrone_Inspire:
         {
-            _drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
+            data.drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
             break;
         }
             
         case DJIDrone_Phantom:
         {
-            _drone=[[DJIDrone alloc] initWithType: DJIDrone_Phantom];
+            data.drone=[[DJIDrone alloc] initWithType: DJIDrone_Phantom];
             break;
         }
-        default:{break;}
+        default:{ break;}//Throw Exception
     }
-
-    if(_drone==nil){
+    
+    if(data.drone==nil){
         
         [DroneCommandCenter sendNotificationWithNoteType:CmdCenterDroneTypeUnknown];
         
         return;
     }
     
-    _drone.delegate = droneDelegateHandler;
+    data.drone.delegate = data.droneDelegateHandler;
     
-    _gimbal = (DJIInspireGimbal*)_drone.gimbal;
-    _gimbal.delegate = droneDelegateHandler;
+    data.gimbal = (DJIInspireGimbal*)data.drone.gimbal;
+    data.gimbal.delegate = data.droneDelegateHandler;
     
-    _camera = (DJIInspireCamera*)_drone.camera;
-    _camera.delegate = droneDelegateHandler;
+    data.camera = (DJIInspireCamera*)data.drone.camera;
+    data.camera.delegate = data.droneDelegateHandler;
     
-    mInspireMainController = (DJIInspireMainController*)_drone.mainController;
-    mInspireMainController.mcDelegate = droneDelegateHandler;
+    data.mMainController = (DJIInspireMainController*)data.drone.mainController;
+    data.mMainController.mcDelegate = data.droneDelegateHandler;
     
     [DroneCommandCenter connectToDrone];
 }
@@ -80,7 +81,7 @@
     
     _Bool hasG=false;
     
-    switch(droneType)
+    switch(data.droneType)
     {
         case DJIDrone_Inspire:
             hasG=true;
@@ -97,12 +98,12 @@
 }
 
 +(void) connectToDrone {
-    [_drone connectToDrone];
+    [data.drone connectToDrone];
 }
 
 +(void)resetGimbalYaw{
     
-    [_gimbal resetGimbalWithResult: nil];
+    [data.gimbal resetGimbalWithResult: nil];
 }
 
 +(CommandResponseStatus) setDirection:(DroneDirection)direction{
@@ -137,7 +138,7 @@
     
     pitchRotation.enable = YES;
     
-    [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+    [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
         
         if(error.errorCode != ERR_Succeeded) {
             
@@ -161,7 +162,7 @@
 }
 +(CommandResponseStatus) setCameraPosition:(float)pitch yaw:(float) yaw{
     
-    if(yawMode==Gimbal)
+    if(data.yawMode==Gimbal)
     {
         DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
         
@@ -184,7 +185,7 @@
         
         yawRotation.enable = YES;
         
-        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                 
@@ -205,7 +206,7 @@
         }];
     }
     
-    if(yawMode==Aircraft)
+    if(data.yawMode==Aircraft)
     {
         DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
         
@@ -221,7 +222,7 @@
         
         yawRotation.enable=NO;
         
-        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                 
@@ -248,7 +249,7 @@
         ctrlData.mThrottle = 0;
         ctrlData.mYaw = yaw;
         
-        [_drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        [data.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
             NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
         }];
         
@@ -263,7 +264,7 @@
 
 +(CommandResponseStatus) setCameraYaw:(float) yaw{
 
-    if(yawMode==Gimbal)
+    if(data.yawMode==Gimbal)
     {
         DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
         pitchRotation.enable = NO;
@@ -277,7 +278,7 @@
         
         yawRotation.enable = YES;
         
-        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        [data.gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
             if(error.errorCode != ERR_Succeeded) {
                     
@@ -298,7 +299,7 @@
         }];
     }
     
-    if(yawMode==Aircraft)
+    if(data.yawMode==Aircraft)
     {//90 Relative Works so just keep sending 90
         
         DJIFlightControlData ctrlData;
@@ -308,7 +309,7 @@
         ctrlData.mThrottle = 0;
         ctrlData.mYaw = yaw;
         
-        [_drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        [data.drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
             NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
         }];
         
@@ -321,7 +322,7 @@
 
 +(void) takeASnap{
     
-    [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+    [data.camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         
         if (error.errorCode != ERR_Succeeded) {
             
