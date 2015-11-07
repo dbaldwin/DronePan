@@ -20,6 +20,7 @@
 
 +(void) initialize:(DJIDroneType)droneType{
     
+    droneDelegateHandler=[[DroneDelegateHandler alloc] init];
     
     DJIDrone *drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
     
