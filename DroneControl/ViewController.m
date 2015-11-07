@@ -39,6 +39,7 @@
      self.pitchLabel.text = @"Pitch: -90";*/
     
     
+    
     [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
     self.progressView.progress = 0;
@@ -208,15 +209,28 @@
         self.progressView.progress = 0;
         totalPhotoCount = 1;
         
-        captureMethod=YawGimbal;
+       // captureMethod=YawGimbal;
         
     [Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
     
     NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
-    NSArray *yaw=@[@60,@120,@180,@240,@300];
+        
+    NSArray *gimYaw=@[@60,@120,@180,@240,@300];
     
+    NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
+        
+    NSMutableArray *yaw;
+        
+    if(captureMethod==YawAircraft)
+     {
+       yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
+     }else if(captureMethod==YawGimbal)
+     {
+       yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
+     }
+        
     for (NSNumber *nPitch in pitch) {
-        if(panoINProgress)
+        if(panoInProgress)
         {
         
             [Utils displayToastOnApp:@"Resetting Gimble"];
@@ -236,7 +250,7 @@
         
             sleep(5);
         
-            if(panoINProgress)
+            if(panoInProgress)
             {
             
                 if([nPitch integerValue]!=-90){
