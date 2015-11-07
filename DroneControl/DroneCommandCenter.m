@@ -19,10 +19,17 @@
 }
 
 +(void) initialize:(DJIDroneType)droneType{
-   
-   
     
-    switch(droneType){
+    
+    DJIDrone *drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
+    
+    drone.delegate = droneDelegateHandler;
+    
+    [drone connectToDrone];
+    
+    //_drone = [[DJIDrone alloc] initWithType: DJIDrone_Inspire];
+    
+    /*switch(droneType){
         
         case DJIDrone_Inspire:
         {
@@ -56,7 +63,8 @@
     mInspireMainController = (DJIInspireMainController*)_drone.mainController;
     mInspireMainController.mcDelegate = droneDelegateHandler;
     
-   
+    [DroneCommandCenter connectToDrone];*/
+    
    
 }
 
