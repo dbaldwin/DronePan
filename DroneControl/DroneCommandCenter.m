@@ -20,12 +20,7 @@
 
 +(void) initialize:(DJIDroneType)droneType{
    
-    if(_drone==nil){
-        
-        [DroneCommandCenter sendNotificationWithNoteType:CmdCenterDroneTypeUnknown];
-        
-        return;
-    }
+   
     
     switch(droneType){
         
@@ -43,6 +38,12 @@
         default:{break;}
     }
 
+    if(_drone==nil){
+        
+        [DroneCommandCenter sendNotificationWithNoteType:CmdCenterDroneTypeUnknown];
+        
+        return;
+    }
     
     _drone.delegate = droneDelegateHandler;
     
