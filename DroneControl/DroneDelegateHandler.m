@@ -9,45 +9,74 @@
 #import "DroneDelegateHandler.h"
 
 @implementation DroneDelegateHandler
+
 - (id) init
 {
     self = [super init];
 
     return self;
 }
+
 -(void) droneOnConnectionStatusChanged:(DJIConnectionStatus)status{
+    
     NSLog(@"Drone Connection Status Changed");
+    
+    //[Utils displayToastOnApp:@"Connection Status Changed"];
+    
     switch(status){
+            
         case ConnectionSucceeded:{
+            
             NSLog(@"Connection Succeeded");
+            
             [Utils sendNotificationWithNoteType:NotificationDroneConnected noteType:CmdCenterDroneConnected];
+        
             break;
         }
+        
         case ConnectionBroken:{
+            
+            NSLog(@"Connection Broken");
+            
             [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterDroneNotConnected];
+            
             break;
         }
+        
         case ConnectionFailed:{
+            
+            NSLog(@"Connection Failed");
+            
             [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterDroneConnectionFailed];
+            
             break;
         }
-        case ConnectionStartConnect:{
-            break;
-        }
+        
+        case ConnectionStartConnect:
+       
         default:break;
             
     }
 }
+
 -(void) gimbalController:(DJIGimbal *)controller didGimbalError:(DJIGimbalError)error{
+  
     NSLog(@"Gimbal Error");
+
 }
--(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState *)gimbalState{
+
+-(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState *)
+
+    gimbalState{
     
     NSLog(@"Update Gimbal State");
     
     NSLog(@"Is Calibrating %@",@(gimbalState.isCalibrating));
+    
     NSLog(@"Is Pitch Reach Max %@",@(gimbalState.isPitchReachMax));
+    
     NSLog(@"Is Roll Reach Max %@",@(gimbalState.isRollReachMax));
+    
     NSLog(@"Is Yaw Reach Max %@",@(gimbalState.isYawReachMax));
     
     

@@ -66,8 +66,10 @@ typedef enum _YawModeType YawMode;
 
 
 FOUNDATION_EXPORT NSString *const NotificationCmdCenter;
-FOUNDATION_EXPORT NSString *const NotificationPitchAndYaw;
+FOUNDATION_EXPORT NSString *const NotificationPitchAndYaw;//Gimball
 FOUNDATION_EXPORT NSString *const NotificationAltitude;
 FOUNDATION_EXPORT NSString *const NotificationDroneConnected;
+
+
 
 #endif /* global_h */
