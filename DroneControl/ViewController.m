@@ -194,35 +194,48 @@
     }
 }
 
+-(CommandResponseStatus) setCameraWorkModeToCapture{
+
+    __block CommandResponseStatus status=failure;
+    
+    [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
+        if (error.errorCode == ERR_Succeeded) {
+            status=success;
+        }
+    }];
+    
+    if(status==failure){
+    
+        [Utils displayToast:self.view message:@"Error setting camera work mode to capture"];
+    }
+    
+    return status;
+}
+
 -(void) startNewPano{
     
     if(panoInProgress == NO) {
         
-        //[self displayToast:@"Starting Panorama"];
         [Utils displayToast:self.view message:@"Starting Panorama"];
+     
         panoInProgress = YES;
         
         // Change start icon to a stop icon
         [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop Icon"] forState:UIControlStateNormal];
         
         totalProgress = 0;
+        
         self.progressView.progress = 0;
+        
         totalPhotoCount = 1;
+       
+        if([self setCameraWorkModeToCapture]==success){
+            [self doPano];
+        }
         
-        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
-        
-        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-            __weak typeof(self) weakSelf = self;
-            [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
-                if (error.errorCode != ERR_Succeeded) {
-                    [Utils displayToast:weakSelf.view message:@"Error setting camera work mode to capture"];
-                }
-                else{
-                    [weakSelf doPano];
-                }
-            }];
-        });
-    }else{
+    }
+    else
+    {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm"
                                                         message:@"Are you sure you want to stop this panorama?"
                                                        delegate:self
@@ -236,68 +249,35 @@
 }
 
 -(void) doPano{
-        __weak typeof(self) weakSelf = self;
-        //[Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
-        
-        NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
-        
-        NSArray *gimYaw=@[@60,@120,@180,@240,@300];
-        
-        NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
-        
-        NSMutableArray *yaw;
-        
-        if(captureMethod==YawAircraft)
-        {
-            yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
-        }else if(captureMethod==YawGimbal)
-        {
-            yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
-        }
-        
-        for (NSNumber *nPitch in pitch) {
-            if(panoInProgress)
-            {
-                
-                [Utils displayToastOnApp:@"Resetting Gimble"];
-                
-                [weakSelf resetGimbalYaw];
-                
-                [weakSelf setCameraPitch:[nPitch floatValue]];
-                
-                [Utils displayToastOnApp:@"Gimble Reset Complete!"];
-                
-                [weakSelf takeASnap];
-      
-                if(panoInProgress)
-                {
-                    
-                    if([nPitch integerValue]!=-90){
-                        
-                        for(NSNumber *nYaw in yaw){
-                            
-                            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
-                            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-                                
-                                [weakSelf setCameraYaw:[nYaw floatValue]];
-                                
-                                [weakSelf takeASnap];
-                            });
-                        }
-                        
-                    }
-                }else{
-                    break;
-                }
-                
-            }else{
-                break;
-            }
-        }
     
-    [weakSelf finishPanoAndReset];
+    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
     
+    NSArray *gimYaw=@[@60,@120,@180,@240,@300];
+    
+    NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
+    
+    NSMutableArray *yaw;
+    
+    if(captureMethod==YawAircraft)
+    {
+        yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
+    }else if(captureMethod==YawGimbal)
+    {
+        yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
     }
+    
+    droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+    dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([[yaw objectAtIndex:0] floatValue],_drone,_gimbal,droneCmdsQueue,3.0,captureMethod,1);});
+    
+    dispatch_sync(dispatch_get_main_queue(),^(void){});
+            
+    });
+    
+}
+
 
 -(void) startPano {
     if(panoInProgress == NO) {
@@ -456,6 +436,68 @@
     [_gimbal resetGimbalWithResult: nil];
 }
 
+                   
+static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,float,CaptureMode,NSUInteger)=^(float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,float preDelay,CaptureMode captureMethod,NSUInteger cmdSeqNo){
+    
+    NSLog(@"Camera set Yaw %lu",(unsigned long)cmdSeqNo);
+    
+    dispatch_sync(queue,^(void){
+        
+        sleep(preDelay);
+        if(captureMethod==Gimbal)
+        {
+            DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+            pitchRotation.enable = NO;
+            
+            
+            yawRotation.angle = degreeYaw;
+            
+            yawRotation.angleType = AbsoluteAngle;
+            
+            yawRotation.direction = RotationForward;
+            
+            yawRotation.enable = YES;
+            
+            [gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+                
+                if(error.errorCode != ERR_Succeeded) {
+                    
+                    NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                    
+                    NSLog(@"%@",myerror);
+                    
+                    [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+                    
+                    
+                }else{
+                    NSLog(@"Gimbal command success");
+                    [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                    
+                }
+            }];
+        }
+        
+        if(captureMethod==Aircraft)
+        {//90 Relative Works so just keep sending 90
+            
+            DJIFlightControlData ctrlData;
+            ctrlData.mPitch = 0;
+            ctrlData.mRoll = 0;
+            ctrlData.mThrottle = 0;
+            ctrlData.mYaw = degreeYaw;
+            
+            [drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+                NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
+            }];
+            
+            NSLog(@"Aircraft Command Sent");
+        }
+        
+        
+
+    });
+}
+
 -(CommandResponseStatus) setCameraPitch:(float)pitch {
     DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
     
@@ -592,7 +634,7 @@
 }
 
 
--(CommandResponseStatus) setCameraYaw:(float) yaw{
+-(CommandResponseStatus) setCameraYaw:(float) yaw captureMethod:(CaptureMode)captureMethod{
     
     if(captureMethod==Gimbal)
     {
@@ -620,10 +662,8 @@
                 
                 
             }else{
-                
+                 NSLog(@"Gimbal command success");
                 [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
-                
-                [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
                 
             }
         }];
@@ -650,10 +690,10 @@
 }
 
 -(void) takeASnap{
-    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+    //dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
     
-    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-        __weak typeof(self) weakSelf = self;
+    //dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+     //   __weak typeof(self) weakSelf = self;
 
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
         
@@ -666,7 +706,7 @@
             [Utils displayToastOnApp:@"Clicked!"];
         }
     }];
-    });
+    //});
 }
 
 

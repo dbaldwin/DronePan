@@ -41,7 +41,8 @@
     NSTimer* _readBatteryInfoTimer;
     
     CaptureMode captureMethod;
-
+    
+    dispatch_queue_t droneCmdsQueue;
     
 }
 //@property (assign, nonatomic) DJIDroneType droneType;
