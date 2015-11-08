@@ -284,7 +284,7 @@
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         //
             // I was not sure about how many snaps @ 90 degrees 
-            // If it is one single shot then uncomment the line below and corresponding else statements
+            // If snaps to be taken only for zero degrees yaw @-90 then uncomment the line below and corresponding else statements
             
             //if([nPitch integerValue]!=-90){
                 
@@ -311,7 +311,7 @@
                     }
                 }
             
-            //uncomment the following lines if it is a single snap @ -90
+            //uncomment the following lines snaps for only zero degree Yaw @ -90
             /*}
              else{
                 dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
