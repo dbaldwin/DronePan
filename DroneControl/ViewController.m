@@ -283,24 +283,47 @@
         
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         //
-            for(NSNumber *nYaw in yaw){
-                
-                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([nYaw floatValue],_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
-                
-                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
-                //dispatch_sync(dispatch_get_main_queue(),^(void){[];});
-                
-            }
+            // I was not sure about how many snaps @ 90 degrees 
+            // If it is one single shot then uncomment the line below and corresponding else statements
             
+            //if([nPitch integerValue]!=-90){
+                
+                for(NSNumber *nYaw in yaw){
+                
+                
+                    dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                    dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                    dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([nYaw floatValue],_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+                
+                    dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+                
+                    //dispatch_sync(dispatch_get_main_queue(),^(void){[];});
+               
+                    if(!panoInProgress){
+                        break;
+                    }
+                }
+            
+            //uncomment the following lines if it is a single snap @ -90
+            /*}
+             else{
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+
+            }*/
     
         }
     
