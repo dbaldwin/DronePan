@@ -269,14 +269,42 @@
     droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
-    dispatch_sync(droneCmdsQueue,^{});//resetGimbal and setPitch
         
-    dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([[yaw objectAtIndex:0] floatValue],_drone,_gimbal,droneCmdsQueue,3.0,captureMethod,1);});
-    
+        __block int nC=0;
         
+        for (NSNumber *nPitch in pitch) {
+        //resetGimbal
+        dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        //setPitch
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,[nPitch floatValue]);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        //
+            for(NSNumber *nYaw in yaw){
+                
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
+                dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([nYaw floatValue],_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+                
+                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+                //dispatch_sync(dispatch_get_main_queue(),^(void){[];});
+                
+            }
+            
     
-    dispatch_sync(dispatch_get_main_queue(),^(void){});
+        }
+    
+        dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
             
     });
     
@@ -440,14 +468,79 @@
     [_gimbal resetGimbalWithResult: nil];
 }
 
+static void (^gcdDelay)(unsigned int)=^(unsigned int delay){
+
+    sleep(delay);
+  
+};
+static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
+    
+    [camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+    
+        if (error.errorCode != ERR_Succeeded) {
+            
+            NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
+            
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                [Utils displayToastOnApp:myerror];
+            });
+            
+        }else{
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                [Utils displayToastOnApp:@"Clicked!"];
+            });
+        }
+    }];
+};
+
+static void(^gcdSetPitch)(DJIInspireGimbal*,float)=^(DJIInspireGimbal *gimbal,float pitch){
+    
+    DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
+    
+    DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+    
+    pitchRotation.angle = pitch;
+    
+    pitchRotation.angleType = AbsoluteAngle;
+    
+    pitchRotation.direction = pitchDir;
+    
+    pitchRotation.enable = YES;
+    
+    [gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        
+        if(error.errorCode != ERR_Succeeded) {
+            
+            NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+            
+            NSLog(@"%@",myerror);
+            
+            [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+            
+            
+        }else{
+            
+            [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+            
+           // [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
+            
+        }
+    }];
+
+};
+static void(^gcdResetGimbalYaw)(DJIInspireGimbal*)=^(DJIInspireGimbal *gimbal){
+    
+    [gimbal resetGimbalWithResult: nil];
+};
                    
-static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,float,CaptureMode,NSUInteger)=^(float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,float preDelay,CaptureMode captureMethod,NSUInteger cmdSeqNo){
+static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode,NSUInteger)=^(float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod,NSUInteger cmdSeqNo){
     
     NSLog(@"Camera set Yaw %lu",(unsigned long)cmdSeqNo);
     
     dispatch_sync(queue,^(void){
         
-        sleep(preDelay);
+       
+        
         if(captureMethod==Gimbal)
         {
             DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
