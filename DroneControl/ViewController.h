@@ -61,6 +61,7 @@
 
 - (void)connectToDrone;
 - (IBAction)captureMethod:(id)sender;
+-(void) stopBatteryUpdate;
 
 @end
 

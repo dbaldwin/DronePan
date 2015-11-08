@@ -270,7 +270,11 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
+    dispatch_sync(droneCmdsQueue,^{});//resetGimbal and setPitch
+        
     dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([[yaw objectAtIndex:0] floatValue],_drone,_gimbal,droneCmdsQueue,3.0,captureMethod,1);});
+    
+        
     
     dispatch_sync(dispatch_get_main_queue(),^(void){});
             
@@ -496,7 +500,7 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
         
 
     });
-}
+};
 
 -(CommandResponseStatus) setCameraPitch:(float)pitch {
     DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
