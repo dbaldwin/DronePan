@@ -44,7 +44,7 @@
 
     
 }
-@property (assign, nonatomic) DJIDroneType droneType;
+//@property (assign, nonatomic) DJIDroneType droneType;
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
 @property (weak, nonatomic) IBOutlet UILabel *photoCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *batteryRemainingLabel;

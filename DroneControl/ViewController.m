@@ -210,85 +210,18 @@
         totalPhotoCount = 1;
         
         dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+        
         dispatch_after(delay, dispatch_get_main_queue(), ^(void){
             __weak typeof(self) weakSelf = self;
             [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
                 if (error.errorCode != ERR_Succeeded) {
                     [Utils displayToast:weakSelf.view message:@"Error setting camera work mode to capture"];
-                    [weakSelf finishPanoAndReset];
-                } else {
-                    if(captureMethod == 1) // Yaw aircraft
-                        [weakSelf enterNavigationMode];
-                    else if(captureMethod == 2) // Yaw gimbal
-                        [weakSelf takeFirstRowPhotos];
+                }
+                else{
+                    [weakSelf doPano];
                 }
             }];
         });
-        
-    [Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
-    
-    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
-        
-    NSArray *gimYaw=@[@60,@120,@180,@240,@300];
-    
-    NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
-        
-    NSMutableArray *yaw;
-        
-    if(captureMethod==YawAircraft)
-     {
-       yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
-     }else if(captureMethod==YawGimbal)
-     {
-       yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
-     }
-        
-    for (NSNumber *nPitch in pitch) {
-        if(panoInProgress)
-        {
-        
-            [Utils displayToastOnApp:@"Resetting Gimble"];
-        
-            [self resetGimbalYaw];
-        
-            [self setCameraPitch:[nPitch floatValue]];
-        
-            [Utils displayToastOnApp:@"Gimble Reset Complete!"];
-        
-        
-            [self takeASnap];
-        
-        
-           
-            if(panoInProgress)
-            {
-            
-                if([nPitch integerValue]!=-90){
-            
-                    for(NSNumber *nYaw in yaw){
-                    
-                        dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
-                        dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-                            //__weak typeof(self) weakSelf = self;
-
-                        [self setCameraYaw:[nYaw floatValue]];
-                        
-                        });
-                        
-                        [self takeASnap];
-                
-                }
-            
-                }
-            }else{
-                break;
-            }
-            
-        }else{
-            break;
-        }
-    }
-        
     }else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Confirm"
                                                         message:@"Are you sure you want to stop this panorama?"
@@ -297,9 +230,74 @@
                                               otherButtonTitles:@"Yes", nil];
         alert.tag = stopPanoTag;
         [alert show];
-
+        
     }
+
 }
+
+-(void) doPano{
+        __weak typeof(self) weakSelf = self;
+        //[Utils displayToastOnApp:@"Starting New Pano with Gimble 60 Degrees"];
+        
+        NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
+        
+        NSArray *gimYaw=@[@60,@120,@180,@240,@300];
+        
+        NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
+        
+        NSMutableArray *yaw;
+        
+        if(captureMethod==YawAircraft)
+        {
+            yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
+        }else if(captureMethod==YawGimbal)
+        {
+            yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
+        }
+        
+        for (NSNumber *nPitch in pitch) {
+            if(panoInProgress)
+            {
+                
+                [Utils displayToastOnApp:@"Resetting Gimble"];
+                
+                [weakSelf resetGimbalYaw];
+                
+                [weakSelf setCameraPitch:[nPitch floatValue]];
+                
+                [Utils displayToastOnApp:@"Gimble Reset Complete!"];
+                
+                [weakSelf takeASnap];
+      
+                if(panoInProgress)
+                {
+                    
+                    if([nPitch integerValue]!=-90){
+                        
+                        for(NSNumber *nYaw in yaw){
+                            
+                            dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC);
+                            dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+                                
+                                [weakSelf setCameraYaw:[nYaw floatValue]];
+                                
+                                [weakSelf takeASnap];
+                            });
+                        }
+                        
+                    }
+                }else{
+                    break;
+                }
+                
+            }else{
+                break;
+            }
+        }
+    
+    [weakSelf finishPanoAndReset];
+    
+    }
 
 -(void) startPano {
     if(panoInProgress == NO) {
