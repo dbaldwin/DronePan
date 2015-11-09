@@ -278,22 +278,68 @@
 
 }
 
+
 -(void) doPano{
+    
+    
     
     NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
     
-    NSArray *gimYaw=@[@60,@120,@180,@240,@300];
+    NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
+   
+    NSArray *aircraftYaw30=@[@45,@45,@45,@45,@45,@45,@45,@45,@45,@45,@45];// What is the value needs to be specified for 30 Degree rotation The estimated value is 45
     
-    NSArray *aircraftYaw=@[@90,@90,@90,@90,@90];
+    NSArray *gimYaw45=@[@45,@90,@135,@180,@225,@270,@315];
+ 
+    NSArray *aircraftYaw45=@[@67.5,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5];// What is the value needs to be specified for 45 Degree rotation The estimated value is 67.5
+    
+    NSArray *gimYaw60=@[@60,@120,@180,@240,@300];
+    
+    NSArray *aircraftYaw60=@[@90,@90,@90,@90,@90];
+    
     
     NSMutableArray *yaw;
     
-    if(captureMethod==YawAircraft)
-    {
-        yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw];
-    }else if(captureMethod==YawGimbal)
-    {
-        yaw=[[NSMutableArray alloc] initWithArray:gimYaw];
+    switch(yawAngle){
+        
+        case 30:{
+            if(captureMethod==YawAircraft)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw30];
+                
+            }else if(captureMethod==YawGimbal)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:gimYaw30];
+            }
+            break;
+        }
+       
+        case 45:{
+            if(captureMethod==YawAircraft)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw45];
+                
+            }else if(captureMethod==YawGimbal)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:gimYaw45];
+            }
+            break;
+        }
+      
+        case 60:
+        default:{
+            if(captureMethod==YawAircraft)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:aircraftYaw60];
+                
+            }else if(captureMethod==YawGimbal)
+            {
+                yaw=[[NSMutableArray alloc] initWithArray:gimYaw60];
+            }
+            break;
+        }
+
+            
     }
     
     droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
@@ -334,7 +380,23 @@
                 
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
-                    //dispatch_sync(dispatch_get_main_queue(),^(void){[];});
+                    /*dispatch_sync(dispatch_get_main_queue(),^(void){
+                
+                    if(yawAngle == 30) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/49.0;
+                    } else if(yawAngle == 45) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/33.0;
+                    } else if(yawAngle == 60) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/25.0;
+                    }
+                    
+                    totalPhotoCount = totalPhotoCount + 1;
+
+                
+                });*/
                
                     if(!panoInProgress){
                         break;
