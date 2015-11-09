@@ -197,18 +197,26 @@
 -(CommandResponseStatus) setCameraWorkModeToCapture{
 
     __block CommandResponseStatus status=failure;
+    dispatch_sync(dispatch_get_main_queue(),^(void){
+   
+        [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
+        
+            if (error.errorCode == ERR_Succeeded) {
+            
+                status=success;
+        
+            }
     
-    [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
-        if (error.errorCode == ERR_Succeeded) {
-            status=success;
+        }];
+    
+    
+        if(status==failure){
+    
+        
+            [Utils displayToast:self.view message:@"Error setting camera work mode to capture"];
+    
         }
-    }];
-    
-    if(status==failure){
-    
-        [Utils displayToast:self.view message:@"Error setting camera work mode to capture"];
-    }
-    
+    });
     return status;
 }
 
