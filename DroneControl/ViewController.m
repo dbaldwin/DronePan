@@ -197,7 +197,8 @@
 -(CommandResponseStatus) setCameraWorkModeToCapture{
 
     __block CommandResponseStatus status=failure;
-    dispatch_sync(dispatch_get_main_queue(),^(void){
+    
+    runOnMainQueueWithoutDeadlocking(^{
    
         [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
         
@@ -1708,5 +1709,19 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
  }
  
  }*/
+
+//Utility Functions
+
+void runOnMainQueueWithoutDeadlocking(void (^block)(void))
+{
+    if ([NSThread isMainThread])
+    {
+        block();
+    }
+    else
+    {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+}
 
 @end
