@@ -27,7 +27,19 @@
 @end
 
 @implementation ViewController
-
+- (id) init
+{
+    self = [super init];
+    if (!self) return nil;
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(cameraModeSet)
+                                                 name:@"CameraModeSet"
+                                               object:nil];
+    
+    return self;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -194,33 +206,50 @@
     }
 }
 
--(CommandResponseStatus) setCameraWorkModeToCapture{
+-(void) setCameraWorkModeToCapture{
 
-    __block CommandResponseStatus status=failure;
+    //__block CommandResponseStatus status=failure;
     
-    runOnMainQueueWithoutDeadlocking(^{
-   
+    //dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    
+    //runOnMainQueueWithoutDeadlocking(^{
+    
+    __weak typeof(self) weakSelf = self;
+
         [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
-        
-            if (error.errorCode == ERR_Succeeded) {
+                    if (error.errorCode == ERR_Succeeded) {
             
-                status=success;
+                //status=success;
+                [[NSNotificationCenter defaultCenter]
+                 postNotificationName:@"CameraModeSet"
+                 object:nil];
         
+            }else{
+                [Utils displayToast:weakSelf.view message:@"Error setting camera work mode to capture"];
             }
     
         }];
     
-    
-        if(status==failure){
-    
+      // dispatch_semaphore_signal(sem);
         
-            [Utils displayToast:self.view message:@"Error setting camera work mode to capture"];
+        
+        
+    //});
     
-        }
-    });
-    return status;
+    //dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+    
+    //if(status==failure){
+        
+        
+        //[Utils displayToast:self.view message:@"Error setting camera work mode to capture"];
+        
+    //}
+    
+    //return status;
 }
-
+-(void) cameraModeSet{
+    [self doPano];
+}
 -(void) startNewPano{
     
     if(panoInProgress == NO) {
@@ -238,9 +267,10 @@
         
         totalPhotoCount = 1;
        
-        if([self setCameraWorkModeToCapture]==success){
+        /*if([self setCameraWorkModeToCapture]==success){
             [self doPano];
-        }
+        }*/
+        [self setCameraWorkModeToCapture];
         
     }
     else
