@@ -27,19 +27,6 @@
 @end
 
 @implementation ViewController
-- (id) init
-{
-    self = [super init];
-    if (!self) return nil;
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(cameraModeSet)
-                                                 name:@"CameraModeSet"
-                                               object:nil];
-    
-    return self;
-}
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -73,6 +60,10 @@
     // By default we'll use the yaw aircraft capture method
     captureMethod = 1;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(cameraModeSet)
+                                                 name:@"CameraModeSet"
+                                               object:nil];
 }
 
 -(void) viewWillAppear:(BOOL)animated {
