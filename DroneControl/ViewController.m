@@ -287,7 +287,7 @@
     
     
     
-    NSArray *pitch=@[@-30,@0,@-60,@-90,@30];
+    NSArray *pitch=@[@+30,@0,@-60,@-90,@30];
     
     NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
    
@@ -358,60 +358,14 @@
         
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         
-        //setPitch
-        //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,[nPitch floatValue]);});
-        
         __block float nDegreePitch=[nPitch floatValue];
-    
             
         dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
-        //dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(60,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
-
-        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         
-            dispatch_sync(droneCmdsQueue,^{
-            
-                DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
-                //pitchRotation.enable = NO;
-                
-                
-                yawRotation.angle = 60;
-                
-                yawRotation.angleType = AbsoluteAngle;
-                
-                yawRotation.direction = RotationForward;
-                
-                yawRotation.enable = YES;
-                
-                [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
-                    
-                    if(error.errorCode != ERR_Succeeded) {
-                        
-                        NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
-                        
-                        NSLog(@"%@",myerror);
-                        
-                        NSDictionary *dict=@{@"errorInfo":myerror};
-                        
-                        [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed additionalInfo:dict];
-                        
-                        
-                    }else{
-                        NSLog(@"Gimbal command success");
-                        [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
-                        
-                    }
-                }];
-
-            });
-       // dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(120,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
-        
-        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
-        //
-            // I was not sure about how many snaps @ 90 degrees 
+            // I was not sure about how many snaps @ 90 degrees
             // If snaps to be taken only for zero degrees yaw @-90 then uncomment the line below and corresponding else statements
             
             //if([nPitch integerValue]!=-90){
@@ -428,7 +382,9 @@
                     dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
                 
-                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw([nYaw floatValue],_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+                    __block float nDegreeYaw=[nYaw floatValue];
+                    
+                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
                 
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
@@ -762,6 +718,94 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
         
 
     });
+};
+static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod){
+    
+    if(captureMethod==Gimbal)
+    {
+        DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.angle = degreePitch;
+        pitchRotation.angleType = AbsoluteAngle;
+        pitchRotation.direction = pitchDir;
+        pitchRotation.enable = YES;
+
+        yawRotation.angle = degreeYaw;
+        yawRotation.angleType = AbsoluteAngle;
+        yawRotation.direction = RotationForward;
+        yawRotation.enable = YES;
+
+
+        [gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+        
+        if(error.errorCode != ERR_Succeeded) {
+            
+            NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+            
+            NSLog(@"%@",myerror);
+            
+            NSDictionary *dict=@{@"errorInfo":myerror};
+            
+            [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed additionalInfo:dict];
+            
+            
+        }else{
+            NSLog(@"Gimbal command success");
+            [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+            
+        }
+    }];
+    }
+    
+    if(captureMethod==Aircraft){
+        
+        DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.angle = degreePitch;
+        pitchRotation.angleType = AbsoluteAngle;
+        pitchRotation.direction = pitchDir;
+        pitchRotation.enable = YES;
+        
+        
+        [gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+            if(error.errorCode != ERR_Succeeded) {
+                
+                NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                
+                NSLog(@"%@",myerror);
+                
+                NSDictionary *dict=@{@"errorInfo":myerror};
+                
+                [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed additionalInfo:dict];
+                
+                
+            }else{
+                NSLog(@"Gimbal command success");
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                
+            }
+        }];
+
+    }
+
+    if(captureMethod==Aircraft)
+
+    {//90 Relative Works so just keep sending 90
+    
+    DJIFlightControlData ctrlData;
+    ctrlData.mPitch = 0;
+    ctrlData.mRoll = 0;
+    ctrlData.mThrottle = 0;
+    ctrlData.mYaw = degreeYaw;
+    
+    [drone.mainController.navigationManager.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
+        NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
+    }];
+    
+    NSLog(@"Aircraft Command Sent");
+    }
+
 };
 
 -(void) processCmdCenterNotifications:(NSNotification*)notification{
