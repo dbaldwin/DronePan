@@ -375,7 +375,7 @@
             dispatch_sync(droneCmdsQueue,^{
             
                 DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
-                pitchRotation.enable = NO;
+                //pitchRotation.enable = NO;
                 
                 
                 yawRotation.angle = 60;
