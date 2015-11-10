@@ -37,7 +37,7 @@
      self.yawLabel.text = @"Yaw: 180";
      self.pitchLabel.text = @"Pitch: -90";*/
     
-    
+  
     
     [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
@@ -63,6 +63,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(cameraModeSet)
                                                  name:@"CameraModeSet"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(processCmdCenterNotifications:)
+                                                 name:NotificationCmdCenter
                                                object:nil];
 }
 
@@ -283,7 +287,7 @@
     
     
     
-    NSArray *pitch=@[@0, @-30,@-60,@-90,@30];
+    NSArray *pitch=@[@0,@-30,@-60,@-90,@30];
     
     NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
    
@@ -678,7 +682,9 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
                     
                     NSLog(@"%@",myerror);
                     
-                    [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed];
+                    NSDictionary *dict=@{@"errorInfo":myerror};
+                    
+                    [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed additionalInfo:dict];
                     
                     
                 }else{
@@ -710,7 +716,22 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
     });
 };
 
--(CommandResponseStatus) setCameraPitch:(float)pitch {
+-(void) processCmdCenterNotifications:(NSNotification*)notification{
+    
+    NSDictionary* userInfo=notification.userInfo;
+    NSInteger noteType=[[userInfo objectForKey:@"NoteType"] integerValue];
+    
+    if(noteType==CmdCenterGimbalRotationFailed){
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+    }else if(noteType==CmdCenterGimbalRotationSuccess){
+        [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
+    }
+    
+            
+    
+}
+
+/*-(CommandResponseStatus) setCameraPitch:(float)pitch {
     DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
     
     DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
@@ -920,7 +941,7 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
     }];
     //});
 }
-
+*/
 
 -(void)enterNavigationMode {
     [self.navigation enterNavigationModeWithResult:^(DJIError *error) {

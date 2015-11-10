@@ -23,9 +23,9 @@
     [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:message];
 }
 + (NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs {
-    NSMutableDictionary *ret = [lhs mutableCopy];
+    NSMutableDictionary *ret = [NSMutableDictionary dictionaryWithDictionary:lhs];//[lhs mutableCopy];
     [ret addEntriesFromDictionary:rhs];
-    return ret;
+    return (NSDictionary *) [ret mutableCopy];
 }
 
 +(void) sendNotification:(NSString*)messageFrom dictionary:(NSDictionary*)dictionary{
