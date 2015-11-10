@@ -287,7 +287,7 @@
     
     
     
-    NSArray *pitch=@[@0,@-30,@-60,@-90,@30];
+    NSArray *pitch=@[@-30,@0,@-60,@-90,@30];
     
     NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
    
@@ -359,7 +359,17 @@
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         
         //setPitch
-        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,[nPitch floatValue]);});
+        //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,[nPitch floatValue]);});
+          
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,-30);});
+            
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(60,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(120,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
         
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         //
