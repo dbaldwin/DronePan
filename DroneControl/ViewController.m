@@ -360,8 +360,11 @@
         
         //setPitch
         //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,[nPitch floatValue]);});
-          
-        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,-30);});
+        
+        __block float nDegreePitch=[nPitch floatValue];
+    
+            
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
@@ -404,7 +407,7 @@
                 }];
 
             });
-        dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(120,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+       // dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(120,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
         
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         //
