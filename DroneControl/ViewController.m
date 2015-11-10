@@ -365,10 +365,45 @@
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
-        dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(60,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
+        //dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(60,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
 
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         
+            dispatch_sync(droneCmdsQueue,^{
+            
+                DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+                pitchRotation.enable = NO;
+                
+                
+                yawRotation.angle = 60;
+                
+                yawRotation.angleType = AbsoluteAngle;
+                
+                yawRotation.direction = RotationForward;
+                
+                yawRotation.enable = YES;
+                
+                [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+                    
+                    if(error.errorCode != ERR_Succeeded) {
+                        
+                        NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                        
+                        NSLog(@"%@",myerror);
+                        
+                        NSDictionary *dict=@{@"errorInfo":myerror};
+                        
+                        [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalRotationFailed additionalInfo:dict];
+                        
+                        
+                    }else{
+                        NSLog(@"Gimbal command success");
+                        [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
+                        
+                    }
+                }];
+
+            });
         dispatch_sync(droneCmdsQueue,^{gcdSetCameraYaw(120,_drone,_gimbal,droneCmdsQueue,captureMethod,nC++);});
         
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
