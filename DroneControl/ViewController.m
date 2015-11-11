@@ -242,7 +242,7 @@
     //return status;
 }
 -(void) cameraModeSet{
-    [self doPano];
+    [self doPano1];
 }
 -(void) startNewPano{
     
@@ -280,7 +280,75 @@
     }
 
 }
+-(void) doPano1{
+    droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        dispatch_sync(droneCmdsQueue,^{
+       
+            //resetGimbal
+        dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
+            
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            
+        __block float nDegreePitch=-30.00;
+            
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+            
+            //dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+            
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            
+        dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        nDegreePitch=-60.00;
+        
+       // __block float nDegreeYaw=-30.00;
+        
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
 
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+
+        
+        nDegreePitch=-90.00;
+        
+        // __block float nDegreeYaw=-30.00;
+        
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+            
+        nDegreePitch=+30.00;
+        
+        // __block float nDegreeYaw=-30.00;
+        
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+
+        
+        
+        dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
+        });
+    });
+}
+//  dispatch_sync(droneCmdsQueue, ^{gcdSetCameraYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod,1);});dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
 
 -(void) doPano{
     
@@ -651,14 +719,11 @@ static void(^gcdResetGimbalYaw)(DJIInspireGimbal*)=^(DJIInspireGimbal *gimbal){
     [gimbal resetGimbalWithResult: nil];
 };
                    
-static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode,NSUInteger)=^(float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod,NSUInteger cmdSeqNo){
+static void (^gcdSetCameraYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode,NSUInteger)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod,NSUInteger cmdSeqNo){
     
     NSLog(@"Camera set Yaw %lu",(unsigned long)cmdSeqNo);
     
-    dispatch_sync(queue,^(void){
-        
-       
-        
+    
         if(captureMethod==Gimbal)
         {
             DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
@@ -709,10 +774,6 @@ static void (^gcdSetCameraYaw)(float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_
             
             NSLog(@"Aircraft Command Sent");
         }
-        
-        
-
-    });
 };
 static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod){
     
