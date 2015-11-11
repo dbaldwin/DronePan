@@ -36,8 +36,7 @@
      self.altitudeLabel.text = @"Alt: 200m";
      self.yawLabel.text = @"Yaw: 180";
      self.pitchLabel.text = @"Pitch: -90";*/
-    
-  
+   
     
     [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
@@ -287,7 +286,7 @@
     
     
     
-    NSArray *pitch=@[@+30,@0,@-60,@-90,@30];
+    NSArray *pitch=@[@0,@-30,@-60,@-90,@30];
     
     NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
    
