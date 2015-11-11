@@ -361,6 +361,8 @@
             
         dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
+        //dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+            
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
         
