@@ -359,9 +359,9 @@
         
         __block float nDegreePitch=[nPitch floatValue];
             
-        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+        //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
-        //dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
@@ -373,14 +373,8 @@
                 
                 for(NSNumber *nYaw in yaw){
                 
-                
                     dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                    dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                    dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+         
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
                 
                     __block float nDegreeYaw=[nYaw floatValue];
