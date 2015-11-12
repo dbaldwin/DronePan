@@ -35,7 +35,11 @@ enum _NoteType{
     CmdCenterCmdFailed,
     CmdCenterCmdError,
     CmdCenterGimbalRotationFailed,//Temporary Constants
-    CmdCenterGimbalRotationSuccess// Should be removed
+    CmdCenterGimbalRotationSuccess,// Should be removed
+    CmdCenterGimbalPitchRotationFailed,
+    CmdCenterGimbalPitchRotationSuccess,
+    CmdCenterGimbalPitchYawRotationFailed,
+    CmdCenterGimbalPitchYawRotationSuccess
 };
 
 typedef enum _NoteType NoteType;
@@ -50,7 +54,7 @@ enum _DroneDirectionType{
     DroneDirectionNorthWest,
     DroneDirectionNorthEast,
     DroneDirectionSouthEast,
-    DroneDirectionSouthWest,
+    DroneDirectionSouthWest
     
 };
 

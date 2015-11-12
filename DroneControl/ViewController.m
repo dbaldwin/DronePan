@@ -833,7 +833,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,Capt
                 
                 
             }else{
-                NSLog(@"Gimbal command success");
+                
                 [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
                 
             }
@@ -867,13 +867,21 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,Capt
     
     if(noteType==CmdCenterGimbalRotationFailed){
         [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }else if(noteType==CmdCenterGimbalRotationSuccess){
+    }else if(noteType==CmdCenterGimbalPitchRotationFailed){
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+    }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"Pitch"]];
+    }else if(noteType==CmdCenterGimbalPitchYawRotationSuccess){
+        
+        NSMutableString *mesg=[userInfo objectForKey:@"Pitch"];
+        [mesg appendString:(NSString*) [userInfo objectForKey:@"Yaw"]];
+        [Utils displayToastOnApp:mesg];
+    }
+    else if(noteType==CmdCenterGimbalRotationSuccess){
         [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
     }
-    
-            
-    
 }
+
 
 /*-(CommandResponseStatus) setCameraPitch:(float)pitch {
     DJIGimbalRotationDirection pitchDir = pitch > 0 ? RotationForward : RotationBackward;
