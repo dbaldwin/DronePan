@@ -528,7 +528,7 @@
             __weak typeof(self) weakSelf = self;
             [_camera setCameraWorkMode:CameraWorkModeCapture withResult:^(DJIError *error) {
                 if (error.errorCode != ERR_Succeeded) {
-                    [weakSelf displayToast: @"Error setting camera work mode to capture"];
+                    //[weakSelf displayToast: @"Error setting camera work mode to capture"];
                     [weakSelf finishPanoAndReset];
                 } else {
                     if(captureMethod == 1) // Yaw aircraft
@@ -782,7 +782,7 @@ static void (^gcdSetCameraYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_
 };
 static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,CaptureMode)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,CaptureMode captureMethod){
     
-    if(captureMethod==Gimbal)
+    if(captureMethod==YawGimbal)
     {
         DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
         DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
