@@ -67,7 +67,11 @@
                                              selector:@selector(processCmdCenterNotifications:)
                                                  name:NotificationCmdCenter
                                                object:nil];
+    
+   // [self runTest];
+    
 }
+
 
 -(void) viewWillAppear:(BOOL)animated {
    
@@ -285,7 +289,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        dispatch_sync(droneCmdsQueue,^{
+       
        
             //resetGimbal
         dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
@@ -346,7 +350,6 @@
         
         dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
         });
-    });
 }
 //  dispatch_sync(droneCmdsQueue, ^{gcdSetCameraYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod,1);});dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
 
