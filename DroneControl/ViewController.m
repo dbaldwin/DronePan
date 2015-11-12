@@ -292,15 +292,17 @@
        
        
             //resetGimbal
+         __block float nDegreeYaw=-30.00;
+        
         dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
         __block float nDegreePitch=-30.00;
             
-        dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+        //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
-            //dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
