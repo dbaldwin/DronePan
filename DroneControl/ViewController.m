@@ -246,7 +246,7 @@
     //return status;
 }
 -(void) cameraModeSet{
-    [self doPano1];
+    [self doPano];
 }
 -(void) startNewPano{
     
@@ -442,7 +442,7 @@
             // I was not sure about how many snaps @ 90 degrees
             // If snaps to be taken only for zero degrees yaw @-90 then uncomment the line below and corresponding else statements
             
-            //if([nPitch integerValue]!=-90){
+            if([nPitch integerValue]!=-90){
                 
                 for(NSNumber *nYaw in yaw){
                 
@@ -478,20 +478,11 @@
                         break;
                     }
                 }
-            
             //uncomment the following lines snaps for only zero degree Yaw @ -90
-            /*}
-             else{
+            } else{
                 dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
-                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-
-            }*/
+            }
     
         }
     
