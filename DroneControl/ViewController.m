@@ -289,10 +289,10 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-       
+        captureMethod=YawGimbal;
        
             //resetGimbal
-         __block float nDegreeYaw=-30.00;
+         __block float nDegreeYaw=90.00;
         
         dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
             
@@ -302,7 +302,7 @@
             
         //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
-        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,captureMethod);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
@@ -434,7 +434,7 @@
             
         //dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
             
-        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+        dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_drone,_gimbal,captureMethod);});
             
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
@@ -452,7 +452,7 @@
                 
                     __block float nDegreeYaw=[nYaw floatValue];
                     
-                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,droneCmdsQueue,captureMethod);});
+                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_drone,_gimbal,captureMethod);});
                 
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
@@ -780,7 +780,7 @@ static void (^gcdSetCameraYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_
             NSLog(@"Aircraft Command Sent");
         }
 };
-static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,dispatch_queue_t,CaptureMode)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,dispatch_queue_t queue,CaptureMode captureMethod){
+static void (^gcdSetCameraPitchYaw)(float,float,DJIDrone*,DJIInspireGimbal*,CaptureMode)=^(float degreePitch,float degreeYaw,DJIDrone *drone,DJIInspireGimbal *gimbal,CaptureMode captureMethod){
     
     if(captureMethod==Gimbal)
     {
