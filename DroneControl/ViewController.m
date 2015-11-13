@@ -278,15 +278,16 @@
 
 
 -(void) doPano{
+    NSArray *pitchGimbalYaw=@[@0,@-30,@-60,@-90];
     
-    NSArray *pitch=@[@0,@-30,@-60,@-90,@30];
+    NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@-90,@30];
     
     NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
-   
+    
     NSArray *aircraftYaw30=@[@45,@45,@45,@45,@45,@45,@45,@45,@45,@45,@45];
     
     NSArray *gimYaw45=@[@45,@90,@135,@180,@225,@270,@315];
- 
+    
     NSArray *aircraftYaw45=@[@67.5,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5];
     
     NSArray *gimYaw60=@[@60,@120,@180,@240,@300];
@@ -295,6 +296,22 @@
     
     
     NSMutableArray *yaw;
+    NSMutableArray *pitch;
+    
+    if(captureMethod==YawAircraft)
+    {
+        pitch=[[NSMutableArray alloc] initWithArray:pitchAircraftYaw];
+        
+        if(droneType==2)
+        {
+            [pitch removeObjectAtIndex:4];
+        }
+        
+    }else if(captureMethod==YawGimbal){
+        pitch=[[NSMutableArray alloc] initWithArray:pitchGimbalYaw];
+    }
+    
+    
     
     switch(yawAngle){
         
@@ -373,9 +390,9 @@
                 
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
                 
-                    dispatch_sync(dispatch_get_main_queue(),^(void){
+                   /* dispatch_sync(dispatch_get_main_queue(),^(void){
                 
-                    if(yawAngle == 30) {
+                   if(yawAngle == 30) {
                         self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
                         self.progressView.progress = totalPhotoCount/49.0;
                     } else if(yawAngle == 45) {
@@ -388,7 +405,7 @@
                     
                     totalPhotoCount = totalPhotoCount + 1;
 
-                    });
+                    });*/
                
                 
                     if(!panoInProgress){
