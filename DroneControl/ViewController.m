@@ -238,8 +238,35 @@
 }
 
 
--(void) cameraModeSet{
-    [self doPano2];
+-(void) cameraModeSet {
+    
+    NSTimer *timer =  [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(warmingUp) userInfo:nil repeats:YES];
+    [timer fire];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sleep(3);
+        [timer invalidate];
+        DJIFlightControlData ctrlData;
+        ctrlData.mPitch = 0;
+        ctrlData.mRoll = 0;
+        ctrlData.mThrottle = 0;
+        ctrlData.mYaw = 90;
+        
+        for(int i = 0;i < 3; i++){
+            [self.navigation.flightControl sendFlightControlData:ctrlData withResult:nil];//rotate the drone
+            sleep(2);
+            
+            [_camera startTakePhoto:CameraSingleCapture withResult:nil];
+            sleep(2);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Capture Photos" message:@"Capture finished" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+        });
+    });
+
+    //[self doPano2];
 }
 
 -(void) startNewPano{
@@ -276,6 +303,7 @@
 
 }
 -(void) doPano2{
+    
  
  droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
  
@@ -311,7 +339,7 @@
  
  dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
  
- nDegreeYaw=90.00;
+ /*nDegreeYaw=90.00;
  
  
  dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
@@ -341,7 +369,7 @@
      
  dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
      
- dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});*/
  
      
  dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
@@ -674,7 +702,7 @@ static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
             
         }else{
             dispatch_async(dispatch_get_main_queue(), ^(void){
-                [Utils displayToastOnApp:@"Clicked!"];
+                //[Utils displayToastOnApp:@"Clicked!"];
             });
         }
     }];
@@ -761,7 +789,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     }];
     }
     
-    if(captureMethod==Aircraft){
+    if(captureMethod==YawAircraft){
         
         DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
         DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
@@ -793,7 +821,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 
     }
 
-    if(captureMethod==Aircraft)
+    if(captureMethod==YawAircraft)
 
     {//90 Relative Works so just keep sending 90
     
