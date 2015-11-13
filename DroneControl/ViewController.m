@@ -389,26 +389,7 @@
                     dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
          
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
                     
-                   
-                   /* dispatch_sync(dispatch_get_main_queue(),^(void){
-                
-                   if(yawAngle == 30) {
-                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
-                        self.progressView.progress = totalPhotoCount/49.0;
-                    } else if(yawAngle == 45) {
-                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
-                        self.progressView.progress = totalPhotoCount/33.0;
-                    } else if(yawAngle == 60) {
-                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
-                        self.progressView.progress = totalPhotoCount/25.0;
-                    }
-                    
-                    totalPhotoCount = totalPhotoCount + 1;
-
-                    });*/
-               
                 
                     if(!panoInProgress){
                         break;
@@ -430,6 +411,22 @@
     });
     
 }
+/* dispatch_sync(dispatch_get_main_queue(),^(void){
+ 
+ if(yawAngle == 30) {
+ self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
+ self.progressView.progress = totalPhotoCount/49.0;
+ } else if(yawAngle == 45) {
+ self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
+ self.progressView.progress = totalPhotoCount/33.0;
+ } else if(yawAngle == 60) {
+ self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+ self.progressView.progress = totalPhotoCount/25.0;
+ }
+ 
+ totalPhotoCount = totalPhotoCount + 1;
+ 
+ });*/
 
 
 -(void) startPano {
