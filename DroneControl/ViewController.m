@@ -750,19 +750,19 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     NSInteger noteType=[[userInfo objectForKey:@"NoteType"] integerValue];
     
     if(noteType==CmdCenterGimbalRotationFailed){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
     }else if(noteType==CmdCenterGimbalPitchRotationFailed){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
     }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"Pitch"]];
+      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"Pitch"]];
     }else if(noteType==CmdCenterGimbalPitchYawRotationSuccess){
         
-        NSMutableString *mesg=[userInfo objectForKey:@"Pitch"];
-        [mesg appendString:(NSString*) [userInfo objectForKey:@"Yaw"]];
-        [Utils displayToastOnApp:mesg];
+       // NSMutableString *mesg=[userInfo objectForKey:@"Pitch"];
+       // [mesg appendString:(NSString*) [userInfo objectForKey:@"Yaw"]];
+       // [Utils displayToastOnApp:mesg];
     }
     else if(noteType==CmdCenterGimbalRotationSuccess){
-        [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
+       // [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
     }
 }
 
