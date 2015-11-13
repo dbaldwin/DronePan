@@ -38,9 +38,9 @@
      self.pitchLabel.text = @"Pitch: -90";*/
    
     
-    [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
+   [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
-    self.progressView.progress = 0;
+   self.progressView.progress = 0;
     
     panoInProgress = NO;
     
@@ -239,7 +239,7 @@
 
 
 -(void) cameraModeSet{
-    [self doPano];
+    [self doPano2];
 }
 
 -(void) startNewPano{
@@ -275,6 +275,80 @@
     }
 
 }
+-(void) doPano2{
+ 
+ droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
+ 
+ dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+ 
+ captureMethod=YawAircraft;
+ 
+ //resetGimbal
+ __block float nDegreeYaw=0.00;
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ __block float nDegreePitch=-30.00;
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ nDegreeYaw=90.00;
+ 
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+     
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ nDegreeYaw=90.00;
+ 
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ 
+ nDegreeYaw=90.00;
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+ 
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+ nDegreeYaw=90.00;
+     
+ dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+     
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+     
+ dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+     
+ dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+ 
+     
+ dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
+ 
+ });
+    
+ }
 
 
 -(void) doPano{
@@ -392,9 +466,7 @@
                      if(!panoInProgress){
                          break;
                      }
-                 
-                }//end of for
-                 
+                }
              }
          
             if(!panoInProgress){
