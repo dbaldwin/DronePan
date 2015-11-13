@@ -413,6 +413,11 @@
                 
                     }
                 }//end of for
+                  if(!panoInProgress){
+                      dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+                      dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                  }
+                 
             }else{
                 dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
