@@ -282,17 +282,17 @@
     
     NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@-90,@30];
     
-    NSArray *gimYaw30=@[@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
+    NSArray *gimYaw30=@[@0,@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
     
-    NSArray *aircraftYaw30=@[@45,@45,@45,@45,@45,@45,@45,@45,@45,@45,@45];
+    NSArray *aircraftYaw30=@[@0,@45,@45,@45,@45,@45,@45,@45,@45,@45,@45,@45];
     
-    NSArray *gimYaw45=@[@45,@90,@135,@180,@225,@270,@315];
+    NSArray *gimYaw45=@[@0,@45,@90,@135,@180,@225,@270,@315];
     
-    NSArray *aircraftYaw45=@[@67.5,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5];
+    NSArray *aircraftYaw45=@[@0,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5];
     
-    NSArray *gimYaw60=@[@60,@120,@180,@240,@300];
+    NSArray *gimYaw60=@[@0,@60,@120,@180,@240,@300];
     
-    NSArray *aircraftYaw60=@[@90,@90,@90,@90,@90];
+    NSArray *aircraftYaw60=@[@0,@90,@90,@90,@90,@90];
     
     
     NSMutableArray *yaw;
@@ -370,26 +370,28 @@
             __block float nDegreePitch=[nPitch floatValue];
             
         
-            dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_gimbal,self.navigation,captureMethod);});
+         //   dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,0,_gimbal,self.navigation,captureMethod);});
             
         
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+         //   dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             
         
              if([nPitch integerValue]!=-90){
                 
                 for(NSNumber *nYaw in yaw){
                 
+                    __block float nDegreeYaw=[nYaw floatValue];
+                    
+                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+                    
+                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                
                     dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
          
                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
                 
-                    __block float nDegreeYaw=[nYaw floatValue];
                     
-                    dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
-                
-                    dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                
+                   
                    /* dispatch_sync(dispatch_get_main_queue(),^(void){
                 
                    if(yawAngle == 30) {
@@ -413,16 +415,14 @@
                 
                     }
                 }//end of for
-                  if(!panoInProgress){
-                      dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-                      dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
-                  }
+                 
                  
             }else{
                 dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
             }
-    
+            
+           
         }
     
         dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
