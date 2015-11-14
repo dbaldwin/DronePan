@@ -83,6 +83,8 @@ FOUNDATION_EXPORT NSString *const NotificationCmdCenter;
 FOUNDATION_EXPORT NSString *const NotificationPitchAndYaw;//Gimball
 FOUNDATION_EXPORT NSString *const NotificationAltitude;
 FOUNDATION_EXPORT NSString *const NotificationDroneConnected;
+FOUNDATION_EXPORT NSString *const NotificationNavigationModeSet;
+FOUNDATION_EXPORT NSString *const NotificationCameraModeSet;
 
 
 

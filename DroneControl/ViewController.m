@@ -61,14 +61,17 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(cameraModeSet)
-                                                 name:@"CameraModeSet"
+                                                 name:NotificationCameraModeSet
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(processCmdCenterNotifications:)
                                                  name:NotificationCmdCenter
                                                object:nil];
     
-   // [self runTest];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(navigationModeSet)
+                                                 name:NotificationNavigationModeSet
+                                               object:nil];
     
 }
 
@@ -134,6 +137,7 @@
     [alertView show];
     
 }
+
 
 // TODO: improve this because it sees 1.0.4 the same as 1.0.5 since it's casting both to float as 1.0
 -(void) checkFirstRun {
@@ -219,7 +223,7 @@
             
                 //status=success;
                 [[NSNotificationCenter defaultCenter]
-                 postNotificationName:@"CameraModeSet"
+                 postNotificationName:NotificationCameraModeSet
                  object:nil];
         
             }else{
@@ -236,7 +240,23 @@
     //}
     //return status;
 }
+-(void) setNavigationMode{
+    [self.navigation enterNavigationModeWithResult:^(DJIError *error) {
+        if(error.errorCode != ERR_Succeeded) {
+            NSString* myerror = [NSString stringWithFormat: @"Error entering navigation mode. Please place your mode switch in the F position. Code: %lu", (unsigned long)error.errorCode];
+            //[self displayToast: myerror];
+            [Utils displayToast:self.view message:myerror];
+        }else{
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:NotificationNavigationModeSet
+             object:nil];
+        }
+    }];
+}
 
+-(void) navigationModeSet{
+    [self setCameraWorkModeToCapture];
+}
 
 -(void) cameraModeSet{
     [self doPano2];
@@ -259,7 +279,15 @@
         
         totalPhotoCount = 1;
        
-        [self setCameraWorkModeToCapture];
+        
+        if((droneType==1 && YawAircraft) || (droneType==2))
+        {
+            [self setNavigationMode];
+            
+        }else{
+            
+            [self setCameraWorkModeToCapture];
+        }
         
     }
     else
@@ -276,12 +304,14 @@
 
 }
 -(void) doPano2{
- 
+
+  
+
  droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
  
  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
  
- captureMethod=YawAircraft;
+ 
  
  //resetGimbal
  __block float nDegreeYaw=0.00;
@@ -352,6 +382,7 @@
 
 
 -(void) doPano{
+    
     NSArray *pitchGimbalYaw=@[@0,@-30,@-60,@-90];
     
     NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@-90,@30];

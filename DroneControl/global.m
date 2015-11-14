@@ -13,3 +13,5 @@ NSString *const NotificationCmdCenter=@"DroneCommandCenter";
 NSString *const NotificationPitchAndYaw=@"GimbalPosition";
 NSString *const NotificationAltitude=@"Altitude";
 NSString *const NotificationDroneConnected=@"DroneConnected";
+NSString *const NotificationCameraModeSet=@"CameraModeSet";
+NSString *const NotificationNavigationModeSet=@"NavigationModeSet";
