@@ -709,8 +709,6 @@ static void(^gcdSetPitch)(DJIInspireGimbal*,float)=^(DJIInspireGimbal *gimbal,fl
             
             [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterGimbalRotationSuccess];
             
-           // [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:@"Gimbal Rotation Success"];
-            
         }
     }];
 
@@ -761,7 +759,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     }];
     }
     
-    if(captureMethod==Aircraft){
+    if(captureMethod==YawAircraft){
         
         DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
         DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
@@ -793,7 +791,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 
     }
 
-    if(captureMethod==Aircraft)
+    if(captureMethod==YawAircraft)
 
     {//90 Relative Works so just keep sending 90
     
