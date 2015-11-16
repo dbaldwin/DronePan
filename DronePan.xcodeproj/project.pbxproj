@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B1E51D215824A18EEBB575A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 482F8E44E082BB2BDB316C0B /* libPods.a */; };
 		232941771B51960100125172 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 232941761B51960100125172 /* libstdc++.6.0.9.dylib */; };
 		232941791B51961200125172 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 232941781B51961200125172 /* libz.dylib */; };
 		2329417B1B51971000125172 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2329417A1B51971000125172 /* libiconv.dylib */; };
@@ -29,7 +28,6 @@
 		235BC83F1B93CAF300B508DB /* dronepan_terms.html in Resources */ = {isa = PBXBuildFile; fileRef = 235BC83E1B93CAF300B508DB /* dronepan_terms.html */; };
 		238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 238036621B8B6EC3005FD38B /* TermsViewController.m */; };
 		239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239CBA751B704BCE00734329 /* LaunchScreen.storyboard */; };
-		239F33631B544170004E01AE /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 239F33621B544170004E01AE /* Podfile */; };
 		23DE2E001B8C204E002AFCDF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */; };
 		23FA20761B4F4C1800811185 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20751B4F4C1800811185 /* main.m */; };
 		23FA20791B4F4C1800811185 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA20781B4F4C1800811185 /* AppDelegate.m */; };
@@ -153,7 +151,6 @@
 		238036611B8B6EC3005FD38B /* TermsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsViewController.h; sourceTree = "<group>"; };
 		238036621B8B6EC3005FD38B /* TermsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsViewController.m; sourceTree = "<group>"; };
 		239CBA751B704BCE00734329 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		239F33621B544170004E01AE /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		23DE2DFE1B8C204E002AFCDF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		23DE2DFF1B8C204E002AFCDF /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		23FA20701B4F4C1800811185 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,9 +166,6 @@
 		23FA208E1B4F4C1900811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23FA208F1B4F4C1900811185 /* DroneControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DroneControlTests.m; sourceTree = "<group>"; };
 		23FA20991B4F50C800811185 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DroneControl/DJISDK.framework; sourceTree = "<group>"; };
-		2487BED378A9078AE632C2B1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		42BE304D09F57E9461785615 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		482F8E44E082BB2BDB316C0B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,7 +186,6 @@
 				232941FE1B519F6A00125172 /* libswscale.a in Frameworks */,
 				232941F71B519F6A00125172 /* libavdevice.a in Frameworks */,
 				23FA209A1B4F50C800811185 /* DJISDK.framework in Frameworks */,
-				1B1E51D215824A18EEBB575A /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,7 +396,6 @@
 		23FA20671B4F4C1800811185 = {
 			isa = PBXGroup;
 			children = (
-				239F33621B544170004E01AE /* Podfile */,
 				2329417A1B51971000125172 /* libiconv.dylib */,
 				232941781B51961200125172 /* libz.dylib */,
 				232941761B51960100125172 /* libstdc++.6.0.9.dylib */,
@@ -411,7 +403,6 @@
 				23FA20721B4F4C1800811185 /* DronePan */,
 				23FA208C1B4F4C1900811185 /* DronePanTests */,
 				23FA20711B4F4C1800811185 /* Products */,
-				98127AE91E2B2F1B626824E1 /* Pods */,
 				4EA4892CFEBB482A3B4999B8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -481,18 +472,8 @@
 		4EA4892CFEBB482A3B4999B8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				482F8E44E082BB2BDB316C0B /* libPods.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		98127AE91E2B2F1B626824E1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				42BE304D09F57E9461785615 /* Pods.debug.xcconfig */,
-				2487BED378A9078AE632C2B1 /* Pods.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -502,11 +483,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 23FA20931B4F4C1900811185 /* Build configuration list for PBXNativeTarget "DronePan" */;
 			buildPhases = (
-				6A1E8C6351B2E9E0A10CD817 /* Check Pods Manifest.lock */,
 				23FA206C1B4F4C1800811185 /* Sources */,
 				23FA206D1B4F4C1800811185 /* Frameworks */,
 				23FA206E1B4F4C1800811185 /* Resources */,
-				25D3F78E893C5705FC213E5D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -581,7 +560,6 @@
 				23FA207F1B4F4C1800811185 /* Main.storyboard in Resources */,
 				235BC83F1B93CAF300B508DB /* dronepan_terms.html in Resources */,
 				239CBA761B704BCE00734329 /* LaunchScreen.storyboard in Resources */,
-				239F33631B544170004E01AE /* Podfile in Resources */,
 				23FA20811B4F4C1800811185 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -594,39 +572,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		25D3F78E893C5705FC213E5D /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		6A1E8C6351B2E9E0A10CD817 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		23FA206C1B4F4C1800811185 /* Sources */ = {
@@ -761,10 +706,10 @@
 		};
 		23FA20941B4F4C1900811185 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 42BE304D09F57E9461785615 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DroneControl",
@@ -788,10 +733,10 @@
 		};
 		23FA20951B4F4C1900811185 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2487BED378A9078AE632C2B1 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DroneControl",

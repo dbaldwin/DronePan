@@ -10,9 +10,7 @@
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
 
-@import GoogleMaps;
-
-@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
+@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
 {
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
