@@ -36,7 +36,8 @@
      self.altitudeLabel.text = @"Alt: 200m";
      self.yawLabel.text = @"Yaw: 180";
      self.pitchLabel.text = @"Pitch: -90";*/
-   
+    
+    
     
    [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
@@ -88,6 +89,7 @@
     // Check to see if this is the first run of the current version
     
     [self checkFirstRun];
+    //[self doPano2];
         
 }
 
@@ -258,12 +260,38 @@
     [self setCameraWorkModeToCapture];
 }
 
+
 -(void) cameraModeSet{
-    [self doPano2];
+    
+    timer=  [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(warmingUp) userInfo:nil repeats:YES];
+    [timer fire];
+    warmUpCounter=0;
+}
+
+
+-(void) warmingupAircraft{
+    
+    DJIFlightControlData noActionData;
+    noActionData.mPitch = 0;
+    noActionData.mRoll = 0;
+    noActionData.mThrottle = 0;
+    noActionData.mYaw = 0;
+    
+    [_navigation.flightControl sendFlightControlData:noActionData withResult:nil];
+    
+    if(warmUpCounter>30)
+    {
+        [timer invalidate];
+        warmUpCounter=0;
+        [self doPano];
+    }else{
+        warmUpCounter++;
+    }
+    
 }
 
 -(void) startNewPano{
-    
+        
     if(panoInProgress == NO) {
         
         [Utils displayToast:self.view message:@"Starting Panorama"];
@@ -282,6 +310,13 @@
         
         if((droneType==1 && YawAircraft) || (droneType==2))
         {
+            if(self.droneAltitude < 5.0f) {
+                //[self displayToast: @"Please increase altitude to > 5m to begin your panorama"];
+                [Utils displayToast:self.view message:@"Please increase altitude to > 5m to begin your panorama"];
+                [self finishPanoAndReset];
+                return;
+            }
+
             [self setNavigationMode];
             
         }else{
@@ -305,8 +340,7 @@
 }
 -(void) doPano2{
 
-  
-
+    
  droneCmdsQueue=dispatch_queue_create("com.YourAppName.DroneCmdsQue",DISPATCH_QUEUE_SERIAL);
  
  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -372,7 +406,7 @@
  dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
      
  dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
- 
+     
      
  dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
  

@@ -43,6 +43,8 @@
     CaptureMode captureMethod;
     
     dispatch_queue_t droneCmdsQueue;
+    NSTimer *timer;
+    int warmUpCounter;
     
 }
 //@property (assign, nonatomic) DJIDroneType droneType;
