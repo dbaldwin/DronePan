@@ -503,7 +503,7 @@
             dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
         
         
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
         
         
             __block float nDegreePitch=[nPitch floatValue];
@@ -515,10 +515,11 @@
                  dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
        
              }else{
-              
+                 __block float nDegreeYaw;
+                 
                  for(NSNumber *nYaw in yaw){
                 
-                    __block float nDegreeYaw=[nYaw floatValue];
+                    nDegreeYaw=[nYaw floatValue];
                     
                     dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
                     
@@ -531,7 +532,13 @@
                      if(!panoInProgress){
                          break;
                      }
-                }
+                 }
+                 
+                 if(captureMethod==YawAircraft)
+                 {
+                     dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+                     dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+                 }
              }
          
             if(!panoInProgress){
