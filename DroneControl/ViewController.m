@@ -263,7 +263,7 @@
 
 -(void) cameraModeSet{
     
-    timer=  [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(warmingUp) userInfo:nil repeats:YES];
+    timer=  [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(warmingupAircraft) userInfo:nil repeats:YES];
     [timer fire];
     warmUpCounter=0;
 }
