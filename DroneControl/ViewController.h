@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <DJISDK/DJISDK.h>
 #import <DJISDK/DJIMainControllerDef.h>
+#import "global.h"
 
-@import GoogleMaps;
 
-@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, GMSMapViewDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
+@interface ViewController : UIViewController<DJIDroneDelegate, DJIGimbalDelegate, DJICameraDelegate, DJIMainControllerDelegate, DJINavigationDelegate>
 {
+    
     DJIDrone *_drone;
     DJIInspireGimbal *_gimbal;
     DJIInspireCamera *_camera;
@@ -30,13 +31,17 @@
     int thirdLoopCount;
     int fourthLoopCount;
     int droneType;
-    int captureMethod;
     
     int yawAngle;
     int numColumns;
     NSTimer* _readBatteryInfoTimer;
+    
+    CaptureMode captureMethod;
+    
+    dispatch_queue_t droneCmdsQueue;
+    
 }
-
+//@property (assign, nonatomic) DJIDroneType droneType;
 @property (nonatomic, retain) IBOutlet UIView *videoPreviewView;
 @property (weak, nonatomic) IBOutlet UILabel *photoCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *batteryRemainingLabel;
@@ -52,6 +57,7 @@
 
 - (void)connectToDrone;
 - (IBAction)captureMethod:(id)sender;
+-(void) stopBatteryUpdate;
 
 @end
 
