@@ -699,6 +699,7 @@ static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
     while(!snapOperationComplete){
         
         [[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate:loopUntil];
+        loopUntil = [NSDate dateWithTimeIntervalSinceNow:0.5];
     }
 };
 
