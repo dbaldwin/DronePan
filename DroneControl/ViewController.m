@@ -941,38 +941,6 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 
     //dispatch_async(dispatch_get_main_queue(), ^(void){
         
-    
-    
-   /*
-    
-    #vmcomments : switch is a better programming construct
-    
-    if(noteType==CmdCenterGimbalRotationFailed){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }else if(noteType==CmdCenterGimbalPitchRotationFailed){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }else if(noteType==CmdCenterGimbalPitchYawRotationFailed){
-        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }else if(noteType==CmdCenterGimbalPitchYawRotationSuccess){
-        
-       NSNumber *nDegreePitch=[userInfo  objectForKey:@"Pitch"];
-       NSNumber *nDegreeYaw=[userInfo objectForKey:@"Yaw"];
-        
-       NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",nDegreePitch,nDegreeYaw];
-       [Utils displayToastOnApp:mesg];
-    }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
-        [Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
-    }
-    else if(noteType==CmdCenterGimbalRotationSuccess){
-        [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
-    }else if(noteType==CmdCenterAircraftYawRotationSuccess){
-        [Utils displayToastOnApp:@"Aircraft Rotation succesful"];
-    }else if(noteType==CmdCenterSnapTaken){
-        [Utils displayToastOnApp:@"Clicked!"];
-    }else if(noteType==CmdCenterSnapFailed){
-         [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }*/
-   
     switch(noteType){
   
         case CmdCenterGimbalRotationFailed:
@@ -1010,6 +978,23 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
             
             //# photocount can be updated here
             
+            dispatch_async(dispatch_get_main_queue(),^(void){
+                
+                if(yawAngle == 30) {
+                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
+                    self.progressView.progress = totalPhotoCount/49.0;
+                } else if(yawAngle == 45) {
+                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
+                    self.progressView.progress = totalPhotoCount/33.0;
+                } else if(yawAngle == 60) {
+                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+                    self.progressView.progress = totalPhotoCount/25.0;
+                }
+                
+                totalPhotoCount++;
+                
+            });
+            
             break;
         }
         default:{break;}
@@ -1020,6 +1005,210 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 
 }
 
+
+-(void) finishPanoAndReset {
+    
+    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
+    
+    // Change the stop button back to a start button
+    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
+    
+    // Reset the yaw
+    [self resetGimbalYaw:nil];
+    
+    // Reset the gimbal pitch
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
+    
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+        // TODO: had to put all this code here for the time being otherwise calling rotateGimbal would result in an infinite
+        // loop when panoInProgress = NO
+        
+        //#vmcomments Now we can use our static gcd functions
+        
+        DJIGimbalRotationDirection pitchDir = RotationBackward;
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.angle = 0;
+        pitchRotation.angleType = AbsoluteAngle;
+        pitchRotation.direction = pitchDir;
+        pitchRotation.enable = YES;
+        
+        yawRotation.angle = 0;
+        yawRotation.angleType = AbsoluteAngle;
+        yawRotation.direction = RotationForward;
+        yawRotation.enable = YES;
+        
+        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+        }];
+    });
+    
+    // Reset loop vars #unused
+    //firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
+    
+    // Reset progress indicator
+    self.progressView.progress = 0;
+    
+    totalPhotoCount = totalProgress = 0;
+    
+    panoInProgress = NO;
+}
+
+-(void) startBatteryUpdate
+{
+    if (_readBatteryInfoTimer == nil) {
+        
+        _readBatteryInfoTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(batteryTimer:) userInfo:nil repeats:YES];
+        
+    }
+}
+
+-(void) batteryTimer:(id)timer {
+    // Update battery status
+    [_drone.smartBattery updateBatteryInfo:^(DJIError *error) {
+        
+        if (error.errorCode == ERR_Succeeded) {
+            
+            _batteryRemainingLabel.text = [NSString stringWithFormat: @"Battery: %ld%%", (long)_drone.smartBattery.remainPowerPercent];
+        }
+        
+    }];
+}
+
+-(void) stopBatteryUpdate
+{
+    if (_readBatteryInfoTimer) {
+        
+        [_readBatteryInfoTimer invalidate];
+        
+        _readBatteryInfoTimer = nil;
+    }
+}
+
+// Reset the gimbal yaw
+- (IBAction)resetGimbalYaw:(id)sender {
+    
+    [_gimbal resetGimbalWithResult: nil];
+}
+
+-(void) resetGimbalPitch {
+    
+    DJIGimbalRotation pitch = {YES, 180, RelativeAngle, RotationForward};
+    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
+    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
+    
+    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
+}
+
+// Hide the status bar
+-(BOOL)prefersStatusBarHidden{
+    return YES;
+}
+
+#pragma mark - DJIMainControllerDelegate
+-(void) mainController:(DJIMainController*)mc didUpdateSystemState:(DJIMCSystemState*)state {
+    
+    DJIMCSystemState* inspireSystemState = (DJIMCSystemState*)state;
+    {
+        self.droneAltitude = inspireSystemState.altitude;
+        
+        self.altitudeLabel.text =[NSString stringWithFormat: @"Alt: %dm", (int)self.droneAltitude];
+    }
+    
+}
+
+#pragma mark - DJIGimbalDelegate
+-(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState*)gimbalState {
+    
+    self.yawLabel.text = [NSString stringWithFormat:@"Yaw: %d", (int)gimbalState.attitude.yaw];
+    
+    self.pitchLabel.text = [NSString stringWithFormat:@"Pitch: %d", (int)gimbalState.attitude.pitch];
+}
+
+#pragma mark - DJICameraDelegate
+
+-(void) camera:(DJICamera*)camera didReceivedVideoData:(uint8_t*)videoBuffer length:(int)length {
+    
+    uint8_t* pBuffer = (uint8_t*)malloc(length);
+    
+    memcpy(pBuffer, videoBuffer, length);
+    
+    [[VideoPreviewer instance].dataQueue push:pBuffer length:length];
+}
+
+-(void) camera:(DJICamera*)camera didUpdateSystemState:(DJICameraSystemState*)systemState
+{
+    if (!systemState.isTimeSynced) {
+        
+        [_camera syncTime:nil];
+    }
+    if (systemState.isUSBMode) {
+        
+        [_camera setCamerMode:CameraCameraMode withResultBlock:Nil];
+    }
+    // This may not be necessary
+    // See here: http://forum.dji.com/thread-12861-1-1.html
+    /*if (_drone.droneType == DJIDrone_Inspire) {
+     if (systemState.workMode != CameraWorkModeCapture) {
+     DJIInspireCamera* inspireCamera = (DJIInspireCamera*)_camera;
+     [inspireCamera setCameraWorkMode:CameraWorkModeCapture withResult:nil];
+     }
+     }*/
+}
+
+/*
+ [_camera getCameraISO:^(CameraISOType iso, DJIError *error) {
+ if (error.errorCode == ERR_Successed) {
+ int index = (int)iso;
+ }
+ else
+ 
+ {
+ 
+ }
+ }];
+ */
+
+#pragma mark - DJINavigationDelegate Method
+-(void) onNavigationMissionStatusChanged:(DJINavigationMissionStatus*)missionStatus {
+    
+    //#vmcomments explain me how we can make use of this function
+    
+    /*if (self.isMissionStarted && missionStatus.missionType == DJINavigationMissionNone) {
+     UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Ground Station" message:@"mission finished" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+     [alertView show];
+     self.isMissionStarted = NO;
+     }*/
+}
+
+/*
+ 
+ #vmcomments : switch is a better programming construct
+ 
+ if(noteType==CmdCenterGimbalRotationFailed){
+ [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+ }else if(noteType==CmdCenterGimbalPitchRotationFailed){
+ [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+ }else if(noteType==CmdCenterGimbalPitchYawRotationFailed){
+ [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+ }else if(noteType==CmdCenterGimbalPitchYawRotationSuccess){
+ 
+ NSNumber *nDegreePitch=[userInfo  objectForKey:@"Pitch"];
+ NSNumber *nDegreeYaw=[userInfo objectForKey:@"Yaw"];
+ 
+ NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",nDegreePitch,nDegreeYaw];
+ [Utils displayToastOnApp:mesg];
+ }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
+ [Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
+ }
+ else if(noteType==CmdCenterGimbalRotationSuccess){
+ [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
+ }else if(noteType==CmdCenterAircraftYawRotationSuccess){
+ [Utils displayToastOnApp:@"Aircraft Rotation succesful"];
+ }else if(noteType==CmdCenterSnapTaken){
+ [Utils displayToastOnApp:@"Clicked!"];
+ }else if(noteType==CmdCenterSnapFailed){
+ [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+ }*/
 
 /*
 -(void)enterNavigationMode {
@@ -1659,179 +1848,8 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     }
 }
 */
--(void) finishPanoAndReset {
-    
-    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
-    
-    // Change the stop button back to a start button
-    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
-    
-    // Reset the yaw
-    [self resetGimbalYaw:nil];
-    
-    // Reset the gimbal pitch
-    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
-   
-    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-        // TODO: had to put all this code here for the time being otherwise calling rotateGimbal would result in an infinite
-        // loop when panoInProgress = NO
-        
-        //#vmcomments Now we can use our static gcd functions
-        
-        DJIGimbalRotationDirection pitchDir = RotationBackward;
-        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
-        pitchRotation.angle = 0;
-        pitchRotation.angleType = AbsoluteAngle;
-        pitchRotation.direction = pitchDir;
-        pitchRotation.enable = YES;
-        
-        yawRotation.angle = 0;
-        yawRotation.angleType = AbsoluteAngle;
-        yawRotation.direction = RotationForward;
-        yawRotation.enable = YES;
-        
-        [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
-            
-        }];
-    });
-    
-    // Reset loop vars #unused
-    //firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
-    
-    // Reset progress indicator
-    self.progressView.progress = 0;
-    
-    totalPhotoCount = totalProgress = 0;
-    
-    panoInProgress = NO;
-}
 
--(void) startBatteryUpdate
-{
-    if (_readBatteryInfoTimer == nil) {
-    
-        _readBatteryInfoTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(batteryTimer:) userInfo:nil repeats:YES];
-    
-    }
-}
-
--(void) batteryTimer:(id)timer {
-    // Update battery status
-    [_drone.smartBattery updateBatteryInfo:^(DJIError *error) {
-    
-        if (error.errorCode == ERR_Succeeded) {
-        
-            _batteryRemainingLabel.text = [NSString stringWithFormat: @"Battery: %ld%%", (long)_drone.smartBattery.remainPowerPercent];
-        }
-    
-    }];
-}
-
--(void) stopBatteryUpdate
-{
-    if (_readBatteryInfoTimer) {
-    
-        [_readBatteryInfoTimer invalidate];
-        
-        _readBatteryInfoTimer = nil;
-    }
-}
-
-// Reset the gimbal yaw
-- (IBAction)resetGimbalYaw:(id)sender {
-    
-    [_gimbal resetGimbalWithResult: nil];
-}
-
--(void) resetGimbalPitch {
-    
-    DJIGimbalRotation pitch = {YES, 180, RelativeAngle, RotationForward};
-    DJIGimbalRotation roll = {NO, 0, RelativeAngle, RotationForward};
-    DJIGimbalRotation yaw = {NO, 0, RelativeAngle, RotationForward};
-    
-    [_gimbal setGimbalPitch:pitch Roll:roll Yaw:yaw withResult:nil];
-}
-
-// Hide the status bar
--(BOOL)prefersStatusBarHidden{
-    return YES;
-}
-
-#pragma mark - DJIMainControllerDelegate
--(void) mainController:(DJIMainController*)mc didUpdateSystemState:(DJIMCSystemState*)state {
-    
-    DJIMCSystemState* inspireSystemState = (DJIMCSystemState*)state;
-    {
-        self.droneAltitude = inspireSystemState.altitude;
-
-        self.altitudeLabel.text =[NSString stringWithFormat: @"Alt: %dm", (int)self.droneAltitude];
-    }
-
-}
-
-#pragma mark - DJIGimbalDelegate
--(void) gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState*)gimbalState {
-    
-    self.yawLabel.text = [NSString stringWithFormat:@"Yaw: %d", (int)gimbalState.attitude.yaw];
-    
-    self.pitchLabel.text = [NSString stringWithFormat:@"Pitch: %d", (int)gimbalState.attitude.pitch];
-}
-
-#pragma mark - DJICameraDelegate
-
--(void) camera:(DJICamera*)camera didReceivedVideoData:(uint8_t*)videoBuffer length:(int)length {
-    
-    uint8_t* pBuffer = (uint8_t*)malloc(length);
-    
-    memcpy(pBuffer, videoBuffer, length);
-    
-    [[VideoPreviewer instance].dataQueue push:pBuffer length:length];
-}
-
--(void) camera:(DJICamera*)camera didUpdateSystemState:(DJICameraSystemState*)systemState
-{
-    if (!systemState.isTimeSynced) {
-    
-        [_camera syncTime:nil];
-    }
-    if (systemState.isUSBMode) {
-        
-        [_camera setCamerMode:CameraCameraMode withResultBlock:Nil];
-    }
-    // This may not be necessary
-    // See here: http://forum.dji.com/thread-12861-1-1.html
-    /*if (_drone.droneType == DJIDrone_Inspire) {
-        if (systemState.workMode != CameraWorkModeCapture) {
-            DJIInspireCamera* inspireCamera = (DJIInspireCamera*)_camera;
-            [inspireCamera setCameraWorkMode:CameraWorkModeCapture withResult:nil];
-        }
-    }*/
-}
-
-/*
- [_camera getCameraISO:^(CameraISOType iso, DJIError *error) {
- if (error.errorCode == ERR_Successed) {
- int index = (int)iso;
- }
- else
-
- {
- 
- }
- }];
- */
-
-#pragma mark - DJINavigationDelegate Method
--(void) onNavigationMissionStatusChanged:(DJINavigationMissionStatus*)missionStatus {
-    
-    //#vmcomments explain me how we can make use of this function
-    
-    /*if (self.isMissionStarted && missionStatus.missionType == DJINavigationMissionNone) {
-        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Ground Station" message:@"mission finished" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-        self.isMissionStarted = NO;
-    }*/
-}
+////Moved functions from here
 
 /*-(void) runModuleTest1{
  
