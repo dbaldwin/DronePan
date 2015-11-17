@@ -42,7 +42,10 @@ enum _NoteType{
     CmdCenterGimbalPitchYawRotationSuccess,
     CmdCenterAircraftYawRotationSuccess,
     CmdCenterSnapTaken,
-    CmdCenterSnapFailed
+    CmdCenterSnapFailed,
+    CmdCenterCameraModeSetFailed,
+    CmdCenterCameraNavigationModeSetFailed
+    
 };
 
 typedef enum _NoteType NoteType;
