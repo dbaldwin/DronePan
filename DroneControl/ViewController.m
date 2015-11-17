@@ -495,7 +495,7 @@
  
  });*/
 
-
+/*
 -(void) startPano {
     if(panoInProgress == NO) {
         
@@ -542,7 +542,7 @@
         alert.tag = stopPanoTag;
         [alert show];
     }
-}
+}*/
 
 // Confirm that the user wants to stop the pano
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -663,13 +663,13 @@ static void (^gcdDelay)(CaptureMode)=^(CaptureMode captureMode){
     sleep(delay);
   
 };
-static void (^gcdCameraDelay)(CaptureMode)=^(CaptureMode captureMode){
+/*static void (^gcdCameraDelay)(CaptureMode)=^(CaptureMode captureMode){
     
     unsigned int delay=(captureMode==YawAircraft)?5:2;
 
+     sleep(delay);
     
-    
-};
+};*/
 static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
     
     __block BOOL snapOperationComplete=false;
@@ -859,7 +859,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 }
 
 
-
+/*
 -(void)enterNavigationMode {
     [self.navigation enterNavigationModeWithResult:^(DJIError *error) {
         if(error.errorCode != ERR_Succeeded) {
@@ -900,8 +900,9 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         
     });
 }
-
+*/
 // There will be 26 photos
+/*
 -(void)doInspireLoop {
     // Check to see if user canceled pano
     if(![self continueWithPano]) return;
@@ -978,12 +979,12 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         
     });
 }
-
+*/
 // Process will be pitch gimbal up
 // Take photo
 // Pitch gimbal
 // Take photo
-
+/*
 -(void)doPhantomLoop {
     
     // Check to see if user canceled pano
@@ -1031,7 +1032,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
             [self yawDrone: 90];
         });
     }
-
+*/
     /*
     sleep(1);
 
@@ -1099,9 +1100,9 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
             [self doPhantomLoop];
         });
     }*/
-}
+//}
 
-
+/*
 -(void)yawDrone:(float)yaw {
     
     DJIFlightControlData ctrlData;
@@ -1113,7 +1114,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     // THIS CALLBACK DOES NOT WORK!!!!
     // Yaw drone and if successful proceed to take the photo
     [self.navigation.flightControl sendFlightControlData:ctrlData withResult:^(DJIError *error) {
-        
+        */
         // TODO: There is no callback happening here so let's ignore this for now and revisit
         //[self displayToast:@"Yaw callback is called!!!!"];
         /*if(error.errorCode != ERR_Successed) {
@@ -1130,7 +1131,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
             });
         }
          */
-    }];
+   /* }];
     
     
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
@@ -1143,8 +1144,8 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     });
     
 }
-
-- (void)warmingUp {
+*/
+/*- (void)warmingUp {
     DJIFlightControlData noActionData;
     noActionData.mPitch = 0;
     noActionData.mRoll = 0;
@@ -1435,8 +1436,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         }
     }];
 }
-
-
+ 
 // Used when yawing the aircraft - both P3 and I1
 - (void)takePhoto2 {
     [_camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
@@ -1496,7 +1496,7 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         return YES;
     }
 }
-
+*/
 -(void) finishPanoAndReset {
     
     self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
