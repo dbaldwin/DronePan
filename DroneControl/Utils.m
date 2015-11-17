@@ -20,7 +20,10 @@
     [hud hide:YES afterDelay:5];
 }
 +(void)displayToastOnApp:(NSString *)message{
+    if([UIApplication sharedApplication].keyWindow.rootViewController.view!=nil)
+    {
     [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:message];
+    }
 }
 + (NSDictionary *)mergeDictionaries:(NSDictionary *)lhs rhs: (NSDictionary *)rhs {
     NSMutableDictionary *ret = [NSMutableDictionary dictionaryWithDictionary:lhs];//[lhs mutableCopy];

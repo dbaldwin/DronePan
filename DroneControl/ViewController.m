@@ -74,6 +74,7 @@
                                                  name:NotificationNavigationModeSet
                                                object:nil];
     
+    
 }
 
 
@@ -89,9 +90,7 @@
     // Check to see if this is the first run of the current version
     
     [self checkFirstRun];
-    //[self doPano2];
-        
-}
+   }
 
 /* View Functions */
 
@@ -678,17 +677,23 @@ static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
     
         if (error.errorCode != ERR_Succeeded) {
             
-            NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
+            __block NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
             
             dispatch_async(dispatch_get_main_queue(), ^(void){
                 snapOperationComplete=true;
-                [Utils displayToastOnApp:myerror];
+                
+                //[Utils displayToastOnApp:myerror];
+                
+                NSDictionary *dict=@{@"errorInfo":myerror};
+                
+                [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterSnapFailed additionalInfo:dict];
             });
             
         }else{
             dispatch_async(dispatch_get_main_queue(), ^(void){
                 snapOperationComplete=true;
-                [Utils displayToastOnApp:@"Clicked!"];
+                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterSnapTaken];
+                //[Utils displayToastOnApp:@"Clicked!"];
             });
         }
     }];
@@ -841,20 +846,66 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     NSDictionary* userInfo=notification.userInfo;
     NSInteger noteType=[[userInfo objectForKey:@"NoteType"] integerValue];
     
-    if(noteType==CmdCenterGimbalRotationFailed){
-      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+   /* if(noteType==CmdCenterGimbalRotationFailed){
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
     }else if(noteType==CmdCenterGimbalPitchRotationFailed){
-      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
-    }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
-      //  [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"Pitch"]];
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+    }else if(noteType==CmdCenterGimbalPitchYawRotationFailed){
+        [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
     }else if(noteType==CmdCenterGimbalPitchYawRotationSuccess){
         
-       // NSMutableString *mesg=[userInfo objectForKey:@"Pitch"];
-       // [mesg appendString:(NSString*) [userInfo objectForKey:@"Yaw"]];
-       // [Utils displayToastOnApp:mesg];
+       NSNumber *nDegreePitch=[userInfo  objectForKey:@"Pitch"];
+       NSNumber *nDegreeYaw=[userInfo objectForKey:@"Yaw"];
+        
+       NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",nDegreePitch,nDegreeYaw];
+       [Utils displayToastOnApp:mesg];
+    }else if(noteType==CmdCenterGimbalPitchRotationSuccess){
+        [Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
     }
     else if(noteType==CmdCenterGimbalRotationSuccess){
-       // [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
+        [Utils displayToastOnApp:@"Gimbal Rotation succesful"];
+    }else if(noteType==CmdCenterAircraftYawRotationSuccess){
+        [Utils displayToastOnApp:@"Aircraft Rotation succesful"];
+    }else if(noteType==CmdCenterSnapTaken){
+        [Utils displayToastOnApp:@"Clicked!"];
+    }else if(noteType==CmdCenterSnapFailed){
+         [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+    }*/
+    switch(noteType){
+        case CmdCenterGimbalRotationFailed:
+        case CmdCenterGimbalPitchRotationFailed:
+        case CmdCenterSnapFailed:
+        case CmdCenterGimbalPitchYawRotationFailed:
+        {
+            [Utils displayToastOnApp:(NSString *)[userInfo objectForKey:@"errorInfo"]];
+            break;
+        }
+        case CmdCenterGimbalPitchYawRotationSuccess:
+        {
+            NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",[userInfo  objectForKey:@"Pitch"],[userInfo objectForKey:@"Yaw"]];
+            [Utils displayToastOnApp:mesg];
+            break;
+        }
+        case CmdCenterGimbalPitchRotationSuccess:
+        {
+            [Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
+            break;
+        }
+        case CmdCenterGimbalRotationSuccess:
+        {
+            break;
+        }
+        case CmdCenterAircraftYawRotationSuccess:
+        {
+            break;
+        }
+        case CmdCenterSnapTaken:
+        {
+            [Utils displayToastOnApp:@"Clicked!"];
+            break;
+        }
+        default:{break;}
+        
     }
 }
 
