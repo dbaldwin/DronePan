@@ -663,7 +663,16 @@ static void (^gcdDelay)(CaptureMode)=^(CaptureMode captureMode){
     sleep(delay);
   
 };
+static void (^gcdCameraDelay)(CaptureMode)=^(CaptureMode captureMode){
+    
+    unsigned int delay=(captureMode==YawAircraft)?5:2;
+
+    
+    
+};
 static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
+    
+    __block BOOL snapOperationComplete=false;
     
     [camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
     
@@ -672,15 +681,25 @@ static void (^gcdTakeASnap)(DJIInspireCamera*)=^(DJIInspireCamera *camera){
             NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
             
             dispatch_async(dispatch_get_main_queue(), ^(void){
+                snapOperationComplete=true;
                 [Utils displayToastOnApp:myerror];
             });
             
         }else{
             dispatch_async(dispatch_get_main_queue(), ^(void){
+                snapOperationComplete=true;
                 [Utils displayToastOnApp:@"Clicked!"];
             });
         }
     }];
+    
+    //NSDate *delaySinceThen=[NSDate dateWithTimeIntervalSinceNow:2.0];
+    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:0.5];
+    
+    while(!snapOperationComplete){
+        
+        [[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate:loopUntil];
+    }
 };
 
 static void(^gcdSetPitch)(DJIInspireGimbal*,float)=^(DJIInspireGimbal *gimbal,float pitch){
