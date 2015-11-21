@@ -541,9 +541,9 @@
 
 -(void) doPanoYawThenPitch{
     
-    NSArray *pitchGimbalYaw=@[@0,@-30,@-60,@-90,@30];
+    NSArray *pitchGimbalYaw=@[@30,@0,@-30,@-60];
     
-    NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@-90,@30];
+    NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@30];
     
     NSArray *gimYaw30=@[@0,@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
     
@@ -642,10 +642,6 @@
             for (NSNumber *nPitch in pitch){
                 
                 
-                if([nPitch integerValue]==-90 && [nYaw integerValue]!=0){
-                    continue;
-                }
-                
                 __block float nDegreePitch=[nPitch floatValue];
                      
                 nDegreePitch=[nPitch floatValue];
@@ -687,6 +683,26 @@
            
         }
     
+        //for -90 one time at the end
+        if(panoInProgress)
+        {
+            if(captureMethod==YawGimbal){
+            
+                dispatch_sync(droneCmdsQueue,^{gcdYawGimbal(-90,0,_gimbal);});
+            
+            }else{
+            
+                dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,-90);});
+            
+            }
+        
+            dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+        
+            dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
+        
+            dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        }
+        
         dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
             
     });
