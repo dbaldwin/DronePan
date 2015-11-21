@@ -339,7 +339,8 @@
    
         warmUpCounter=0;
         
-        [self doPano];
+        //[self doPano];
+        [self doPanoYawThenPitch];
     
     }else{
     
@@ -621,41 +622,53 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         
+        dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
+        
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(5);});
+        
+        
         for (NSNumber *nYaw in yaw) {
         
-            dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
-            
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(5);});
             
             __block float nDegreeYaw=[nYaw floatValue];
 
-           
+            if(captureMethod==YawAircraft)
+            {
+                dispatch_sync(droneCmdsQueue,^{gcdYawDrone(nDegreeYaw,self.navigation);});
+            }
+            
             for (NSNumber *nPitch in pitch){
                 
                 __block float nDegreePitch=[nPitch floatValue];
                      
                 nDegreePitch=[nPitch floatValue];
                 
-                dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(nDegreePitch,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+                if(captureMethod==YawGimbal){
+
+                    dispatch_sync(droneCmdsQueue,^{gcdYawGimbal(0,nDegreeYaw,_gimbal);});
                 
+                }else{
+
+                dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+                
+                }
                 
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
-                
                 dispatch_sync(droneCmdsQueue,^{gcdTakeASnap(_camera);});
-        
-            
+  
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
                 
                 if(!panoInProgress){
-                        break;
+                
+                    break;
                 }
             
             }
                  
             if(captureMethod==YawAircraft)
             {
-                dispatch_sync(droneCmdsQueue,^{gcdSetCameraPitchYaw(0,nDegreeYaw,_gimbal,self.navigation,captureMethod);});
+                dispatch_sync(droneCmdsQueue,^{gcdYawDrone(nDegreeYaw,self.navigation);});
                   
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             }
@@ -971,8 +984,59 @@ static void(^gcdResetGimbalYaw)(DJIInspireGimbal*)=^(DJIInspireGimbal *gimbal){
     
     [gimbal resetGimbalWithResult: nil];
 };
-                   
 
+
+static void (^gcdYawGimbal)(float,float,DJIInspireGimbal*)=^(float degreePitch,float degreeYaw,DJIInspireGimbal *gimbal){
+    
+        DJIGimbalRotationDirection pitchDir = degreePitch > 0 ? RotationForward : RotationBackward;
+        DJIGimbalRotation pitchRotation, yawRotation, rollRotation = {0};
+        pitchRotation.angle = degreePitch;
+        pitchRotation.angleType = AbsoluteAngle;
+        pitchRotation.direction = pitchDir;
+        pitchRotation.enable = YES;
+        
+        yawRotation.angle = degreeYaw;
+        yawRotation.angleType = AbsoluteAngle;
+        yawRotation.direction = RotationForward;
+        yawRotation.enable = YES;
+        
+        
+        [gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
+            
+            if(error.errorCode != ERR_Succeeded) {
+                
+                NSString* myerror = [NSString stringWithFormat: @"Rotate gimbal error code: %lu", (unsigned long)error.errorCode];
+                
+                NSLog(@"%@",myerror);
+                
+                NSDictionary *dict=@{@"errorInfo":myerror};
+                
+                [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalPitchYawRotationFailed additionalInfo:dict];
+                
+                
+            }else{
+                NSDictionary *dict=@{@"Pitch":@(degreePitch),@"Yaw":@(degreeYaw)};
+                [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterGimbalPitchYawRotationSuccess additionalInfo:dict];
+            }
+        }];
+};
+
+static void (^gcdYawDrone)(float,NSObject<DJINavigation> *)=^(float degreeYaw,NSObject<DJINavigation> *navigation){
+    
+        DJIFlightControlData ctrlData;
+        ctrlData.mPitch = 0;
+        ctrlData.mRoll = 0;
+        ctrlData.mThrottle = 0;
+        ctrlData.mYaw = degreeYaw;
+        
+        [[navigation flightControl] sendFlightControlData:ctrlData withResult:^(DJIError *error)
+         {
+             [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterAircraftYawRotationSuccess];
+             
+             NSLog(@"Callback -----------------------+++++++++++++++++------------------------ worked!");
+         }];
+    
+};
 
 static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINavigation> *,CaptureMode)=^(float degreePitch,float degreeYaw,DJIInspireGimbal *gimbal,NSObject<DJINavigation> *navigation,CaptureMode captureMethod){
     
