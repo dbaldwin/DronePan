@@ -645,7 +645,7 @@
                 
                 if(captureMethod==YawGimbal){
 
-                    dispatch_sync(droneCmdsQueue,^{gcdYawGimbal(0,nDegreeYaw,_gimbal);});
+                    dispatch_sync(droneCmdsQueue,^{gcdYawGimbal(nDegreePitch,nDegreeYaw,_gimbal);});
                 
                 }else{
 
