@@ -541,7 +541,7 @@
 
 -(void) doPanoYawThenPitch{
     
-    NSArray *pitchGimbalYaw=@[@0,@-30,@-60,@-90];
+    NSArray *pitchGimbalYaw=@[@0,@-30,@-60,@-90,@30];
     
     NSArray *pitchAircraftYaw=@[@0,@-30,@-60,@-90,@30];
     
@@ -640,6 +640,11 @@
             }
             
             for (NSNumber *nPitch in pitch){
+                
+                
+                if([nPitch integerValue]==-90 && [nYaw integerValue]!=0){
+                    continue;
+                }
                 
                 __block float nDegreePitch=[nPitch floatValue];
                      
