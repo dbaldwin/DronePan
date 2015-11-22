@@ -31,28 +31,6 @@
     
     [super viewDidLoad];
     
-    //#unused
-    // Temp test for widths of status indicators
-    /*self.photoCountLabel.text = @"Photo: 20/20";
-     self.batteryRemainingLabel.text = @"Battery: 100%";
-     self.altitudeLabel.text = @"Alt: 200m";
-     self.yawLabel.text = @"Yaw: 180";
-     self.pitchLabel.text = @"Pitch: -90";*/
-    
-    //#unused
-    //firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
-    
-    //currentLoop = 1;
-    
-    //yawLoopCount = 0;
-    
-    //columnLoopCount = 0;
-    
-    //#unused
-    //numColumns = 6; // We take 6 columns or 6 rotations of photos by default
-    
-    
-    
    
     [self.progressView setTransform:CGAffineTransformMakeScale(1.0, 100.0)];
     
@@ -296,6 +274,9 @@
             NSString* myerror = [NSString stringWithFormat: @"Error entering navigation mode. Please place your mode switch in the F position. Code: %lu", (unsigned long)error.errorCode];
             
             [Utils displayToast:self.view message:myerror];
+            
+            // Reset
+            [self finishPanoAndReset];
         
         }else{
         
@@ -367,7 +348,7 @@
         totalPhotoCount = 1;
        
         
-        if((droneType==1 && YawAircraft) || (droneType==2))
+        if((droneType==1 && captureMethod==YawAircraft) || (droneType==2))
         {
             if(self.droneAltitude < 5.0f) {
            
@@ -402,7 +383,7 @@
 
 -(void) doPanoYawThenPitch{
     
-    NSArray *pitchGimbalYaw=@[@30,@0,@-30,@-60];
+    NSArray *pitchGimbalYaw=@[@0,@-30,@-60];
     
     NSArray *pitchAircraftYaw=@[@30,@0,@-30,@-60];
     
@@ -485,7 +466,7 @@
         
         dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(_gimbal);});
         
-        dispatch_sync(droneCmdsQueue,^{gcdDelay(5);});
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
         
         
         for (NSNumber *nYaw in yaw) {
@@ -502,7 +483,6 @@
             
             for (NSNumber *nPitch in pitch){
                 
-                
                 __block float nDegreePitch=[nPitch floatValue];
                      
                 nDegreePitch=[nPitch floatValue];
@@ -513,7 +493,7 @@
                 
                 }else{
 
-                dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
+                    dispatch_sync(droneCmdsQueue,^{gcdSetPitch(_gimbal,nDegreePitch);});
                 
                 }
                 
@@ -529,14 +509,6 @@
                 }
             
             }
-                 
-            if(captureMethod==YawAircraft)
-            {
-                dispatch_sync(droneCmdsQueue,^{gcdYawDrone(nDegreeYaw,self.navigation);});
-                  
-                dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
-            }
-            
          
             if(!panoInProgress){
                 break;
@@ -565,6 +537,14 @@
         }
         
         dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
+        
+        dispatch_sync(dispatch_get_main_queue(),^(void) {
+            if(captureMethod == YawAircraft)
+                [Utils displayToastOnApp: @"Panorama complete! Please place your mode switch in the P position to take control of your aircraft."];
+            else
+                [Utils displayToastOnApp: @"Panorama complete!"];
+
+        });
             
     });
     
@@ -604,36 +584,30 @@
         }
     } else if(alertView.tag == yawAngleTag) {
         
+        // 30 degree yaw
         if(buttonIndex == 1) {
         
             yawAngle = 30;
-            
-            //#unused
-            numColumns = 12;
             
             if(droneType == 1)
                 self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/49"];
             else if(droneType == 2)
                 self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/37"];
-            
+        
+        // 45 degree yaw
         } else if(buttonIndex == 2) {
             
             yawAngle = 45;
-            
-            //#unused
-            numColumns = 8;
-            
+
             if(droneType == 1)
                 self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/33"];
             else if(droneType == 2)
                 self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
-            
+        
+        // 60 degree yaw
         } else if(buttonIndex == 3) {
             
             yawAngle = 60;
-            
-            //#unused
-            numColumns = 6;
             
             if(droneType == 1)
                 self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
@@ -956,13 +930,13 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         }
         case CmdCenterGimbalPitchYawRotationSuccess:
         {
-            NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",[userInfo  objectForKey:@"Pitch"],[userInfo objectForKey:@"Yaw"]];
-            [Utils displayToastOnApp:mesg];
+            //NSMutableString *mesg=[NSMutableString stringWithFormat:@"Pitch : %@ and Yaw : %@",[userInfo  objectForKey:@"Pitch"],[userInfo objectForKey:@"Yaw"]];
+            //[Utils displayToastOnApp:mesg];
             break;
         }
         case CmdCenterGimbalPitchRotationSuccess:
         {
-            [Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
+            //[Utils displayToastOnApp:(NSString *)[NSString stringWithFormat:@"Pitch : %@",[userInfo objectForKey:@"Pitch"]]];
             break;
         }
         case CmdCenterGimbalRotationSuccess:
@@ -977,21 +951,31 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         }
         case CmdCenterSnapTaken:
         {
-            [Utils displayToastOnApp:@"Clicked!"];
-            
-            //# photocount can be updated here
-            
             dispatch_async(dispatch_get_main_queue(),^(void){
                 
-                if(yawAngle == 30) {
-                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
-                    self.progressView.progress = totalPhotoCount/49.0;
-                } else if(yawAngle == 45) {
-                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
-                    self.progressView.progress = totalPhotoCount/33.0;
-                } else if(yawAngle == 60) {
-                    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
-                    self.progressView.progress = totalPhotoCount/25.0;
+                if((droneType == 1 && captureMethod == YawGimbal) || droneType == 2 ) {
+                    if(yawAngle == 30) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/37", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/37.0;
+                    } else if(yawAngle == 45) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/25.0;
+                    } else if(yawAngle == 60) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/19", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/19.0;
+                    }
+                // Inspire 1 aircraft yaw count
+                } else if (droneType == 1) {
+                    if(yawAngle == 30) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/49", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/49.0;
+                    } else if(yawAngle == 45) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/33", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/33.0;
+                    } else if(yawAngle == 60) {
+                        self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: %d/25", totalPhotoCount];
+                        self.progressView.progress = totalPhotoCount/25.0;
+                    }
                 }
                 
                 totalPhotoCount++;
@@ -1011,7 +995,25 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
 
 -(void) finishPanoAndReset {
     
-    self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/20"];
+    // Refactor this later
+    if((droneType == 1 && captureMethod == YawGimbal) || droneType == 2 ) {
+        if(yawAngle == 30) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/37"];
+        } else if(yawAngle == 45) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
+        } else if(yawAngle == 60) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/19"];
+        }
+        // Inspire 1 aircraft yaw count
+    } else if (droneType == 1) {
+        if(yawAngle == 30) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/49"];
+        } else if(yawAngle == 45) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/33"];
+        } else if(yawAngle == 60) {
+            self.photoCountLabel.text = [NSString stringWithFormat: @"Photo: 0/25"];
+        }
+    }
     
     // Change the stop button back to a start button
     [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start Icon"] forState:UIControlStateNormal];
@@ -1023,8 +1025,6 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC);
     
     dispatch_after(delay, dispatch_get_main_queue(), ^(void){
-        // TODO: had to put all this code here for the time being otherwise calling rotateGimbal would result in an infinite
-        // loop when panoInProgress = NO
         
         //#vmcomments Now we can use our static gcd functions
         
@@ -1043,10 +1043,14 @@ static void (^gcdSetCameraPitchYaw)(float,float,DJIInspireGimbal*,NSObject<DJINa
         [_gimbal setGimbalPitch:pitchRotation Roll:rollRotation Yaw:yawRotation withResult:^(DJIError *error) {
             
         }];
+        
+        // Need to put this code elsewhere and let the user know the pano is complete
+        
+        /*if(captureMethod == YawAircraft)
+            [Utils displayToastOnApp: @"Panorama complete. Please place your mode switch in the P position to take control of your aircraft."];
+        else
+            [Utils displayToastOnApp: @"Panorama complete."];*/
     });
-    
-    // Reset loop vars #unused
-    //firstLoopCount = secondLoopCount = thirdLoopCount = fourthLoopCount = 0;
     
     // Reset progress indicator
     self.progressView.progress = 0;

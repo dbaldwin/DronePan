@@ -25,15 +25,9 @@
     
     int currentLoop;
     int yawLoopCount;
-    int columnLoopCount;
-    int firstLoopCount;
-    int secondLoopCount;
-    int thirdLoopCount;
-    int fourthLoopCount;
     int droneType;
     
     int yawAngle;
-    int numColumns;
     NSTimer* _readBatteryInfoTimer;
     
     CaptureMode captureMethod;
