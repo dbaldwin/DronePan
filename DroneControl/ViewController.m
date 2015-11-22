@@ -504,7 +504,6 @@
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
                 if(!panoInProgress){
-                
                     break;
                 }
             
@@ -536,15 +535,21 @@
             dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         }
         
-        dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
-        
+        // Let them know the pano is complete
         dispatch_sync(dispatch_get_main_queue(),^(void) {
-            if(captureMethod == YawAircraft)
-                [Utils displayToastOnApp: @"Panorama complete! Please place your mode switch in the P position to take control of your aircraft."];
-            else
-                [Utils displayToastOnApp: @"Panorama complete!"];
-
+            if(panoInProgress) {
+                if(captureMethod == YawAircraft)
+                    [Utils displayToastOnApp: @"Panorama complete! Please place your mode switch in the P position to take control of your aircraft."];
+                else
+                    [Utils displayToastOnApp: @"Panorama complete!"];
+            } else {
+                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Panorama Stopped" message:@"Your panorama has been stopped and gimbal reset. You may start a new panorama by clicking the Start button." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            }
+            
         });
+        
+        dispatch_sync(dispatch_get_main_queue(),^(void){[self finishPanoAndReset];});
             
     });
     
