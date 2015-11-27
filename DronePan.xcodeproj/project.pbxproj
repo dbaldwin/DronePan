@@ -36,6 +36,8 @@
 		23FA20811B4F4C1800811185 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23FA20801B4F4C1800811185 /* Images.xcassets */; };
 		23FA20901B4F4C1900811185 /* DroneControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FA208F1B4F4C1900811185 /* DroneControlTests.m */; };
 		23FA209A1B4F50C800811185 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23FA20991B4F50C800811185 /* DJISDK.framework */; };
+		B835E1341BEBAC3400ECF4B5 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = B835E1331BEBAC3400ECF4B5 /* Utils.m */; };
+		B83B24BC1BED11270085DABA /* global.m in Sources */ = {isa = PBXBuildFile; fileRef = B83B24BB1BED11270085DABA /* global.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -166,6 +168,13 @@
 		23FA208E1B4F4C1900811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23FA208F1B4F4C1900811185 /* DroneControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DroneControlTests.m; sourceTree = "<group>"; };
 		23FA20991B4F50C800811185 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DroneControl/DJISDK.framework; sourceTree = "<group>"; };
+
+		B835E1321BEBAC3400ECF4B5 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		B835E1331BEBAC3400ECF4B5 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		B83B24BB1BED11270085DABA /* global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = global.m; sourceTree = "<group>"; };
+		B84CC8CA1BEE9FE000F7657A /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
+		B8517CDB1BEC615B00575531 /* global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
+
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -425,6 +434,7 @@
 				23FA20781B4F4C1800811185 /* AppDelegate.m */,
 				23FA207A1B4F4C1800811185 /* ViewController.h */,
 				23FA207B1B4F4C1800811185 /* ViewController.m */,
+				B84CC8CA1BEE9FE000F7657A /* DronePan-Bridging-Header.h */,
 				23FA207D1B4F4C1800811185 /* Main.storyboard */,
 				23FA20801B4F4C1800811185 /* Images.xcassets */,
 				23FA20731B4F4C1800811185 /* Supporting Files */,
@@ -437,6 +447,10 @@
 				2351C16B1B9DBEE4005D8263 /* PhantomViewController.m */,
 				2351C16D1B9DC419005D8263 /* DroneSelectionViewController.h */,
 				2351C16E1B9DC419005D8263 /* DroneSelectionViewController.m */,
+				B835E1321BEBAC3400ECF4B5 /* Utils.h */,
+				B835E1331BEBAC3400ECF4B5 /* Utils.m */,
+				B8517CDB1BEC615B00575531 /* global.h */,
+				B83B24BB1BED11270085DABA /* global.m */,
 			);
 			name = DronePan;
 			path = DroneControl;
@@ -520,6 +534,7 @@
 		23FA20681B4F4C1800811185 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Unmanned Airlines, LLC";
 				TargetAttributes = {
@@ -581,6 +596,8 @@
 				232942001B519F6A00125172 /* VideoFrameExtractor.m in Sources */,
 				232941FF1B519F6A00125172 /* MovieGLView.m in Sources */,
 				238036631B8B6EC3005FD38B /* TermsViewController.m in Sources */,
+				B835E1341BEBAC3400ECF4B5 /* Utils.m in Sources */,
+				B83B24BC1BED11270085DABA /* global.m in Sources */,
 				2351C16F1B9DC419005D8263 /* DroneSelectionViewController.m in Sources */,
 				23FA207C1B4F4C1800811185 /* ViewController.m in Sources */,
 				2351C16C1B9DBEE4005D8263 /* PhantomViewController.m in Sources */,
@@ -708,6 +725,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -720,14 +738,16 @@
 					./DroneControl/VideoPreviewer/ffmpeg/include,
 				);
 				INFOPLIST_FILE = DroneControl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/db/_dev/DronePan/DroneControl/VideoPreviewer/ffmpeg/lib,
 					"$(PROJECT_DIR)/DroneControl/VideoPreviewer/ffmpeg/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = DronePan;
+				SWIFT_OBJC_BRIDGING_HEADER = "DroneControl/DronePan-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -735,6 +755,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -747,14 +768,15 @@
 					./DroneControl/VideoPreviewer/ffmpeg/include,
 				);
 				INFOPLIST_FILE = DroneControl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/db/_dev/DronePan/DroneControl/VideoPreviewer/ffmpeg/lib,
 					"$(PROJECT_DIR)/DroneControl/VideoPreviewer/ffmpeg/lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = DronePan;
+				SWIFT_OBJC_BRIDGING_HEADER = "DroneControl/DronePan-Bridging-Header.h";
 			};
 			name = Release;
 		};
