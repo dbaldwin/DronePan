@@ -61,8 +61,16 @@
     
     [Utils displayToastOnApp: @"Starting pano"];
     
+    NSString *model = self.product.model;
+    
     // Display the aircract model we're connected to
-    [self.connectionStatusLabel setText: self.product.model];
+    [self.connectionStatusLabel setText: model];
+    
+    if([model containsString:@"Inspire 1"]) {
+        [Utils displayToastOnApp: @"I1"];
+    } else if([model containsString:@"Phantom 3"]) {
+        [Utils displayToastOnApp: @"P3"];
+    }
 
     /* add if logic for I1 and P3
      here we would do aircraft yaw for P3 and give I1 users the option */
@@ -129,7 +137,7 @@
             dispatch_sync(droneCmdsQueue,^{gcdSetPitch([self fetchGimbal], [nPitch floatValue]);});
             
             // Let the gimbal get into position before we yaw and take photos
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
         
             // Yaw loop and photo
             for (NSNumber *nYaw in yaw) {
@@ -144,7 +152,7 @@
                     sendTimer=nil;
                 });
                 
-                // Delay 3 seconds so we can yaw
+                // Delay 2 seconds so we can yaw
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
                 
                 // Take the photo
@@ -154,9 +162,16 @@
                 dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
             }
             
-        }
+        } // End pitch loop
         
-    });
+        // Take the final nadir shot
+        dispatch_sync(droneCmdsQueue,^{gcdSetPitch([self fetchGimbal], -90);});
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+        dispatch_sync(droneCmdsQueue,^{gcdTakeASnap([self fetchCamera]);});
+        
+    }); // End GCD
+    
+    [Utils displayToastOnApp: @"DONE!"];
     
 }
 
