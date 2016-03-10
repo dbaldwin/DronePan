@@ -85,7 +85,8 @@
 }
 
 -(void)doPanoLoop {
-    /*NSArray *pitchGimbalYaw=@[@0,@-30,@-60];
+    
+    NSArray *pitchGimbalYaw=@[@0,@-30,@-60];
     
     NSArray *pitchAircraftYaw=@[@30,@0,@-30,@-60];
     
@@ -97,11 +98,13 @@
     
     NSArray *aircraftYaw45=@[@0,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5,@67.5];
     
-    NSArray *gimYaw60=@[@0,@60,@120,@180,@240,@300];*/
+    NSArray *gimYaw60=@[@0,@60,@120,@180,@240,@300];
 
     NSArray *aircraftYaw60=@[@0,@60,@120,@180,@-120,@-60];
     
     NSMutableArray *yaw = [[NSMutableArray alloc] initWithArray:aircraftYaw60];
+    
+    NSMutableArray *pitch=[[NSMutableArray alloc] initWithArray:pitchAircraftYaw];
     
     droneCmdsQueue=dispatch_queue_create("com.dronepan.queue",DISPATCH_QUEUE_SERIAL);
     
@@ -113,59 +116,44 @@
         // Give gimbal time to reset
         dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         
-        // Yaw loop and photo
-        for (NSNumber *nYaw in yaw) {
+
+        // Loop through the gimbal pitches
+        for (NSNumber *nPitch in pitch) {
             
-            // Timer and run loop so that we can yaw to the desired location
-            dispatch_sync(droneCmdsQueue,^{
-                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat:[nYaw floatValue]], @"yaw", nil];
-                NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yaw:) userInfo:data repeats:YES];
-                [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-                [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-                [sendTimer invalidate];
-                sendTimer=nil;
-            });
+            // Pitch the gimbal
+            dispatch_sync(droneCmdsQueue,^{gcdSetPitch([self fetchGimbal], [nPitch floatValue]);});
             
-            // Delay 3 seconds so we can yaw
+            // Let the gimbal get into position before we yaw and take photos
             dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+        
+            // Yaw loop and photo
+            for (NSNumber *nYaw in yaw) {
+                
+                // Timer and run loop so that we can yaw to the desired location
+                dispatch_sync(droneCmdsQueue,^{
+                    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat:[nYaw floatValue]], @"yaw", nil];
+                    NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yaw:) userInfo:data repeats:YES];
+                    [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
+                    [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+                    [sendTimer invalidate];
+                    sendTimer=nil;
+                });
+                
+                // Delay 3 seconds so we can yaw
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+                
+                // Take the photo
+                dispatch_sync(droneCmdsQueue,^{gcdTakeASnap([self fetchCamera]);});
+                
+                // Delay after the photo
+                dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
+            }
             
-            // Take the photo
-            dispatch_sync(droneCmdsQueue,^{gcdTakeASnap([self fetchCamera]);});
-            
-            // Delay after the photo
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
         }
         
     });
     
-    //DJIGimbal* gimbal = [self fetchGimbal];
-    //[gimbal resetGimbalWithCompletion: nil];
-    
-    
-    
-    /*droneCmdsQueue=dispatch_queue_create("com.dronepan.queue",DISPATCH_QUEUE_SERIAL);
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
-        dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw(gimbal);});
-        
-        dispatch_sync(droneCmdsQueue,^{gcdDelay(3);});
-        
-        // Loop and take photos
-        for (NSNumber *nYaw in yaw) {
-            
-            __block float nDegreeYaw=[nYaw floatValue];
-            
-            dispatch_sync(droneCmdsQueue,^{gcdYawDrone(nDegreeYaw, fc);});
-                
-            dispatch_sync(droneCmdsQueue,^{gcdDelay(10);});
-            
-        }
-
-    });*/
-    
 }
-
 
 
 #pragma mark GCD functions
@@ -225,43 +213,20 @@ static void (^gcdTakeASnap)(DJICamera*)=^(DJICamera *camera){
         }
     }];
     
-    /*[camera startTakePhoto:CameraSingleCapture withResult:^(DJIError *error) {
+};
+
+static void(^gcdSetPitch)(DJIGimbal*,float)=^(DJIGimbal *gimbal,float pitch){
+    
+    DJIGimbalAngleRotation pitchRotation, rollRotation, yawRotation = {};
+    pitchRotation.enabled = YES;
+    pitchRotation.angle = pitch;
+    
+    rollRotation.enabled = NO;
+    yawRotation.enabled = NO;
+    
+    [gimbal rotateGimbalWithAngleMode: DJIGimbalAngleModeAbsoluteAngle pitch: pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError * _Nullable error) {
         
-        if (error.errorCode != ERR_Succeeded) {
-            
-            __block NSString* myerror = [NSString stringWithFormat: @"Take photo error code: %lu", (unsigned long)error.errorCode];
-            
-            dispatch_async(dispatch_get_main_queue(), ^(void){
-                
-                snapOperationComplete=true;
-                
-                //[Utils displayToastOnApp:myerror];
-                
-                NSDictionary *dict=@{@"errorInfo":myerror};
-                
-                [Utils sendNotificationWithAdditionalInfo:NotificationCmdCenter noteType:CmdCenterSnapFailed additionalInfo:dict];
-            });
-            
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^(void){
-                
-                snapOperationComplete=true;
-                
-                [Utils sendNotificationWithNoteType:NotificationCmdCenter noteType:CmdCenterSnapTaken];
-                //[Utils displayToastOnApp:@"Clicked!"];
-            });
-        }
     }];
-    
-    //NSDate *delaySinceThen=[NSDate dateWithTimeIntervalSinceNow:2.0];
-    NSDate *loopUntil = [NSDate dateWithTimeIntervalSinceNow:0.5];
-    
-    while(!snapOperationComplete){
-        
-        [[NSRunLoop currentRunLoop] runMode: NSDefaultRunLoopMode beforeDate:loopUntil];
-        
-        loopUntil = [NSDate dateWithTimeIntervalSinceNow:0.5];
-    }*/
 };
 
 -(void)displayToast:(UIView *)view message:(NSString *)message{
