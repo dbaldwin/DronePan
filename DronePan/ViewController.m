@@ -10,6 +10,7 @@
 #import <DJISDK/DJISDK.h>
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
+#import "Utils.h"
 
 @interface ViewController ()<DJICameraDelegate, DJISDKManagerDelegate> {
     dispatch_queue_t droneCmdsQueue;
@@ -57,7 +58,11 @@
 
 // Let's detect the aircraft and then start the sequence
 - (IBAction)startPano:(id)sender {
-    NSString *msg = [NSString stringWithFormat: @"%@", self.product.model];
+    
+    [Utils displayToastOnApp: @"Starting pano"];
+    
+    // Display the aircract model we're connected to
+    [self.connectionStatusLabel setText: self.product.model];
 
     /* add if logic for I1 and P3
      here we would do aircraft yaw for P3 and give I1 users the option */
@@ -72,7 +77,7 @@
         [fc enableVirtualStickControlModeWithCompletion:^(NSError *error) {
             if (error) {
                 NSString *msg = [NSString stringWithFormat: @"%@", error.description];
-                [self displayToast: msg];
+                [Utils displayToastOnApp: msg];
             } else {
                 [self doPanoLoop];
             }
@@ -209,7 +214,7 @@ static void (^gcdTakeASnap)(DJICamera*)=^(DJICamera *camera){
     
     [camera startShootPhoto:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
         if (error) {
-            // Need to get UTILS DISPLAYTOAST HOOKED UP
+            [Utils displayToastOnApp: @"Error taking photo"];
         }
     }];
     
@@ -228,16 +233,6 @@ static void(^gcdSetPitch)(DJIGimbal*,float)=^(DJIGimbal *gimbal,float pitch){
         
     }];
 };
-
--(void)displayToast:(UIView *)view message:(NSString *)message{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
-    hud.color = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = message;
-    hud.margin = 10.f;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:5];
-}
 
 #pragma mark - DJICameraDelegate
 -(void)camera:(DJICamera *)camera didReceiveVideoData:(uint8_t *)videoBuffer length:(size_t)size {
@@ -314,7 +309,7 @@ static void(^gcdSetPitch)(DJIGimbal*,float)=^(DJIGimbal *gimbal,float pitch){
     
     if (error) {
         NSString *msg = [NSString stringWithFormat: @"%@", error.description];
-        [self displayToast: msg];
+        [Utils displayToastOnApp: msg];
     } else {
     
     #if ENABLE_DEBUG_MODE
@@ -328,17 +323,6 @@ static void(^gcdSetPitch)(DJIGimbal*,float)=^(DJIGimbal *gimbal,float pitch){
     }
     
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
-}
-
-#pragma mark Utils
-- (void)displayToast:(NSString *)message{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo: self.view animated:YES];
-    hud.color = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-    hud.mode = MBProgressHUDModeText;
-    hud.labelText = message;
-    hud.margin = 10.f;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:5];
 }
 
 @end

@@ -37,6 +37,7 @@
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
 		232F6FDD1C544AC90013CCD9 /* DJISDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		232F6FE01C546E830013CCD9 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6FDF1C546E830013CCD9 /* MBProgressHUD.m */; };
+		23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C5D0DF1C91CBE30017F6F8 /* Utils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,6 +206,8 @@
 		232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		232F6FDE1C546E830013CCD9 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		232F6FDF1C546E830013CCD9 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		23C5D0DE1C91CBE30017F6F8 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		23C5D0DF1C91CBE30017F6F8 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -289,6 +292,8 @@
 				232F6F451C54493B0013CCD9 /* VideoPreviewer */,
 				232F6F161C5448320013CCD9 /* ViewController.h */,
 				232F6F171C5448320013CCD9 /* ViewController.m */,
+				23C5D0DE1C91CBE30017F6F8 /* Utils.h */,
+				23C5D0DF1C91CBE30017F6F8 /* Utils.m */,
 			);
 			path = DronePan;
 			sourceTree = "<group>";
@@ -688,6 +693,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */,
 				232F6FD01C54493B0013CCD9 /* VideoFrameExtractor.m in Sources */,
 				232F6FCF1C54493B0013CCD9 /* MovieGLView.m in Sources */,
 				232F6F181C5448320013CCD9 /* ViewController.m in Sources */,
@@ -941,6 +947,7 @@
 				232F6F3C1C5448320013CCD9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		232F6F3D1C5448320013CCD9 /* Build configuration list for PBXNativeTarget "DronePanTests" */ = {
 			isa = XCConfigurationList;
@@ -949,6 +956,7 @@
 				232F6F3F1C5448320013CCD9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		232F6F401C5448320013CCD9 /* Build configuration list for PBXNativeTarget "DronePanUITests" */ = {
 			isa = XCConfigurationList;
@@ -957,6 +965,7 @@
 				232F6F421C5448320013CCD9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
