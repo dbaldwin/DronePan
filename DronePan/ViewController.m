@@ -101,7 +101,7 @@
     
     NSArray *pitchGimbalYaw=@[@0,@-30,@-60];
     
-    NSArray *pitchAircraftYaw=@[@30,@0,@-30,@-60];
+    NSArray *pitchAircraftYaw=@[@0,@-30,@-60];
     
     NSArray *gimYaw30=@[@0,@30,@60,@90,@120,@150,@180,@210,@240,@270,@300,@330];
     
@@ -164,14 +164,15 @@
             
         } // End pitch loop
         
-        // Take the final nadir shot
+        // Take the final nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue,^{gcdSetPitch([self fetchGimbal], -90);});
         dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
         dispatch_sync(droneCmdsQueue,^{gcdTakeASnap([self fetchCamera]);});
+        dispatch_sync(droneCmdsQueue,^{gcdDelay(2);});
+        dispatch_sync(droneCmdsQueue,^{gcdResetGimbalYaw([self fetchGimbal]);});
+        
         
     }); // End GCD
-    
-    [Utils displayToastOnApp: @"DONE!"];
     
 }
 

@@ -15,7 +15,6 @@
 		232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */; };
 		232F6F2B1C5448320013CCD9 /* DronePanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F2A1C5448320013CCD9 /* DronePanTests.m */; };
 		232F6F361C5448320013CCD9 /* DronePanUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F351C5448320013CCD9 /* DronePanUITests.m */; };
-		232F6F441C5449280013CCD9 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; };
 		232F6FC41C54493B0013CCD9 /* libDJIVTH264Decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F4A1C54493B0013CCD9 /* libDJIVTH264Decoder.a */; };
 		232F6FC51C54493B0013CCD9 /* DJILinkQueues.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F4C1C54493B0013CCD9 /* DJILinkQueues.m */; };
 		232F6FC61C54493B0013CCD9 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FB51C54493B0013CCD9 /* libavcodec.a */; };
@@ -35,9 +34,10 @@
 		232F6FD71C5449A40013CCD9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD61C5449A40013CCD9 /* libz.tbd */; };
 		232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */; };
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
-		232F6FDD1C544AC90013CCD9 /* DJISDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		232F6FE01C546E830013CCD9 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6FDF1C546E830013CCD9 /* MBProgressHUD.m */; };
 		23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C5D0DF1C91CBE30017F6F8 /* Utils.m */; };
+		23C5D0E41C92359E0017F6F8 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; };
+		23C5D0E51C92359E0017F6F8 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,14 +58,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		232F6FDC1C544ABF0013CCD9 /* CopyFiles */ = {
+		23C5D0E61C92359E0017F6F8 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				232F6FDD1C544AC90013CCD9 /* DJISDK.framework in CopyFiles */,
+				23C5D0E51C92359E0017F6F8 /* DJISDK.framework in Embed Frameworks */,
 			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -220,11 +221,11 @@
 				232F6FD71C5449A40013CCD9 /* libz.tbd in Frameworks */,
 				232F6FD51C5449980013CCD9 /* libiconv.tbd in Frameworks */,
 				232F6FD31C54498E0013CCD9 /* VideoToolbox.framework in Frameworks */,
+				23C5D0E41C92359E0017F6F8 /* DJISDK.framework in Frameworks */,
 				232F6FC41C54493B0013CCD9 /* libDJIVTH264Decoder.a in Frameworks */,
 				232F6FC81C54493B0013CCD9 /* libavfilter.a in Frameworks */,
 				232F6FCE1C54493B0013CCD9 /* libswscale.a in Frameworks */,
 				232F6FCA1C54493B0013CCD9 /* libavresample.a in Frameworks */,
-				232F6F441C5449280013CCD9 /* DJISDK.framework in Frameworks */,
 				232F6FC91C54493B0013CCD9 /* libavformat.a in Frameworks */,
 				232F6FC71C54493B0013CCD9 /* libavdevice.a in Frameworks */,
 				232F6FCD1C54493B0013CCD9 /* libswresample.a in Frameworks */,
@@ -572,7 +573,7 @@
 				232F6F091C5448320013CCD9 /* Sources */,
 				232F6F0A1C5448320013CCD9 /* Frameworks */,
 				232F6F0B1C5448320013CCD9 /* Resources */,
-				232F6FDC1C544ABF0013CCD9 /* CopyFiles */,
+				23C5D0E61C92359E0017F6F8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -776,6 +777,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -792,7 +794,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -820,6 +822,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -830,7 +833,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -856,6 +859,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -877,6 +881,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

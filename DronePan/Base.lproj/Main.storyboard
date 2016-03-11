@@ -20,13 +20,6 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kGr-ob-jSa">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
-                                        <rect key="frame" x="174" y="499" width="34" height="30"/>
-                                        <state key="normal" title="Start"/>
-                                        <connections>
-                                            <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2VA-7c-MsV"/>
-                                        </connections>
-                                    </button>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11I-cl-76c">
                                         <rect key="frame" x="0.0" y="0.0" width="1024" height="51"/>
                                         <subviews>
@@ -39,6 +32,14 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
+                                        <rect key="frame" x="439" y="661" width="146" height="80"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" title="Start"/>
+                                        <connections>
+                                            <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2VA-7c-MsV"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
