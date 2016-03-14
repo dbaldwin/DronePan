@@ -78,15 +78,15 @@
     DJIFlightController* fc = [self fetchFlightController];
     
     if (fc) {
-        fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
-        fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeAngle;
-        fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
-        
         [fc enableVirtualStickControlModeWithCompletion:^(NSError *error) {
             if (error) {
                 NSString *msg = [NSString stringWithFormat: @"%@", error.description];
                 [Utils displayToastOnApp: msg];
             } else {
+                fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
+                fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
+                fc.verticalControlMode = DJIVirtualStickVerticalControlModePosition;
+
                 [self doPanoLoop];
             }
         }];
@@ -187,15 +187,9 @@ static void (^gcdDelay)(unsigned int)=^(unsigned int delay){
     sleep(delay);
 };
 
+
+/*
 static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightController *fc){
-    
-    /*NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat:yaw], @"yaw", nil];
-    
-    NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yaw:) userInfo:data repeats:YES];
-    [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-    [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];
-    [sendTimer invalidate];
-    sendTimer=nil;*/
     
     DJIVirtualStickFlightControlData ctrlData = {0};
     ctrlData.pitch = 0;
@@ -208,6 +202,7 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
     }
     
 };
+*/
 
 -(void) yaw:(NSTimer *)timer {
     
