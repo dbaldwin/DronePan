@@ -85,7 +85,7 @@
             } else {
                 fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
                 fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
-                fc.verticalControlMode = DJIVirtualStickVerticalControlModePosition;
+                fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
                 [self doPanoLoop];
             }
