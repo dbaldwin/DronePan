@@ -83,8 +83,8 @@
                 NSString *msg = [NSString stringWithFormat: @"%@", error.description];
                 [Utils displayToastOnApp: msg];
             } else {
-                fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
-                fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
+                fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
+                fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeAngle;
                 fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
                 [self doPanoLoop];
