@@ -168,13 +168,11 @@
 		23FA208E1B4F4C1900811185 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		23FA208F1B4F4C1900811185 /* DroneControlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DroneControlTests.m; sourceTree = "<group>"; };
 		23FA20991B4F50C800811185 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DroneControl/DJISDK.framework; sourceTree = "<group>"; };
-
 		B835E1321BEBAC3400ECF4B5 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		B835E1331BEBAC3400ECF4B5 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		B83B24BB1BED11270085DABA /* global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = global.m; sourceTree = "<group>"; };
 		B84CC8CA1BEE9FE000F7657A /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8517CDB1BEC615B00575531 /* global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
