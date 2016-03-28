@@ -12,6 +12,8 @@
 #import "MBProgressHUD.h"
 #import "Utils.h"
 
+#define ENABLE_DEBUG_MODE 1
+
 @interface ViewController ()<DJICameraDelegate, DJISDKManagerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
@@ -208,6 +210,8 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
     
     NSDictionary *data = [timer userInfo];
     
+    NSLog(@"Yawing: %@", [data objectForKey: @"yaw"]);
+    
     DJIVirtualStickFlightControlData ctrlData = {0};
     ctrlData.pitch = 0;
     ctrlData.roll = 0;
@@ -324,7 +328,7 @@ static void(^gcdSetPitch)(DJIGimbal*,float)=^(DJIGimbal *gimbal,float pitch){
     } else {
     
     #if ENABLE_DEBUG_MODE
-        [DJISDKManager enterDebugModeWithDebugId:@"Please type in Debug ID of the DJI Bridge app here"];
+        [DJISDKManager enterDebugModeWithDebugId:@"10.0.1.15"];
     #else
         // This will call sdkManagerProductDidChangeFrom
         [DJISDKManager startConnectionToProduct];
