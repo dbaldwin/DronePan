@@ -123,14 +123,19 @@ static VideoPreviewer* previewer = nil;
     else
     {
         BEGIN_DISPATCH_QUEUE
-        if(_glView == nil){
+        if(_glView == nil) {
             _glView = [[MovieGLView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, view.frame.size.width, view.frame.size.height)];
             _status.isGLViewInit = YES;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_glView setFrame:CGRectMake(0.0f, 0.0f, view.frame.size.width, view.frame.size.height)];
             [view addSubview:_glView];
             [view sendSubviewToBack:_glView];
+            
+            _glView.translatesAutoresizingMaskIntoConstraints = NO;
+            
+            NSDictionary *views = @{@"glview" : _glView};
+            [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[glview]|" options:0 metrics:nil views:views]];
+            [view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[glview]|" options:0 metrics:nil views:views]];
         });
         END_DISPATCH_QUEUE
     }
