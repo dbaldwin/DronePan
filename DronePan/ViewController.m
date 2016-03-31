@@ -292,7 +292,7 @@ static void(^gcdSetYaw)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float yaw) {
     pitchRotation.enabled = NO;
     rollRotation.enabled = NO;
 
-    yawRotation.enabled = NO;
+    yawRotation.enabled = YES;
     yawRotation.angle = yaw;
 
     [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError *_Nullable error) {
