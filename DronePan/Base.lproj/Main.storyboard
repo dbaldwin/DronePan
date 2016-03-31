@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -17,24 +17,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kGr-ob-jSa">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGr-ob-jSa">
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="11I-cl-76c">
-                                        <rect key="frame" x="0.0" y="0.0" width="1024" height="51"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="11I-cl-76c">
+                                        <rect key="frame" x="0.0" y="0.0" width="1024" height="52"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Disconnected" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GSQ-nd-YzN">
-                                                <rect key="frame" x="852" y="15" width="164" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Disconnected" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GSQ-nd-YzN">
+                                                <rect key="frame" x="839" y="17.5" width="165" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="165" id="asY-hQ-B2H"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="GSQ-nd-YzN" secondAttribute="trailing" constant="20" symbolic="YES" id="cEt-hT-N44"/>
+                                            <constraint firstItem="GSQ-nd-YzN" firstAttribute="centerY" secondItem="11I-cl-76c" secondAttribute="centerY" id="fbh-9l-VeF"/>
+                                            <constraint firstAttribute="height" constant="52" id="hEn-LA-PVM"/>
+                                        </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
-                                        <rect key="frame" x="439" y="661" width="146" height="80"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
+                                        <rect key="frame" x="432" y="668" width="160" height="80"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="jbo-Qp-ORG"/>
+                                            <constraint firstAttribute="width" constant="160" id="mJU-gi-hr8"/>
+                                        </constraints>
                                         <state key="normal" title="Start"/>
                                         <connections>
                                             <action selector="startPano:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2VA-7c-MsV"/>
@@ -42,9 +54,22 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="11I-cl-76c" firstAttribute="top" secondItem="kGr-ob-jSa" secondAttribute="top" id="Hdv-C5-abN"/>
+                                    <constraint firstAttribute="bottom" secondItem="ohx-RD-uKh" secondAttribute="bottom" constant="20" symbolic="YES" id="LnV-bX-qeZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="11I-cl-76c" secondAttribute="trailing" id="hRg-F4-9Pu"/>
+                                    <constraint firstItem="ohx-RD-uKh" firstAttribute="centerX" secondItem="kGr-ob-jSa" secondAttribute="centerX" id="hxp-eW-uLr"/>
+                                    <constraint firstItem="11I-cl-76c" firstAttribute="leading" secondItem="kGr-ob-jSa" secondAttribute="leading" id="yFr-yW-sa2"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="kGr-ob-jSa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="CnP-QM-LUD"/>
+                            <constraint firstAttribute="trailing" secondItem="kGr-ob-jSa" secondAttribute="trailing" id="b8l-FG-NO0"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="kGr-ob-jSa" secondAttribute="bottom" id="eOB-wV-0j3"/>
+                            <constraint firstItem="kGr-ob-jSa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="vte-Z2-Fu6"/>
+                        </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
