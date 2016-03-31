@@ -144,6 +144,11 @@
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
+        // Set camera mode
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdSetCameraMode([self fetchCamera]);
+        });
+        
         // Reset gimbal
         dispatch_sync(droneCmdsQueue, ^{
             gcdResetGimbalYaw([self fetchGimbal]);
@@ -235,6 +240,17 @@ static void(^gcdResetGimbalYaw)(DJIGimbal *) = ^(DJIGimbal *gimbal) {
     [gimbal resetGimbalWithCompletion:nil];
 };
 
+static void(^gcdSetCameraMode)(DJICamera *) = ^(DJICamera *camera) {
+//    [[VideoPreviewer instance] stop];
+    [camera setCameraMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
+        if (error) {
+            [Utils displayToastOnApp:@"Couldn't set camera to photo mode"];
+            NSLog(@"Unable to set camera to photo mode: %@", error);
+        }
+//        [[VideoPreviewer instance] start];
+    }];
+};
+
 static void (^gcdDelay)(unsigned int) = ^(unsigned int delay) {
     sleep(delay);
 };
@@ -281,6 +297,8 @@ static void (^gcdTakeASnap)(DJICamera *) = ^(DJICamera *camera) {
         if (error) {
             [Utils displayToastOnApp:@"Error taking photo"];
             NSLog(@"Unable to take image %@", error);
+        } else {
+            [Utils displayToastOnApp:@"Photo taken"];
         }
     }];
 
