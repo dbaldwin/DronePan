@@ -112,7 +112,7 @@
 
     NSArray *pitchAircraftYaw = @[@0, @-30, @-60];
 
-    NSArray *pitchOsmo = @[@60, @30, @0, @-30, @-60];
+    NSArray *pitchOsmo = @[@-60, @-30, @0, @30];
 
     NSArray *gimYaw30 = @[@0, @30, @60, @90, @120, @150, @180, @210, @240, @270, @300, @330];
 
@@ -208,11 +208,7 @@
 
         // Take the final nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
-            if ([self productType] == PT_AIRCRAFT) {
-                gcdSetPitch([self fetchGimbal], -90);
-            } else if ([self productType] == PT_HANDHELD) {
-                gcdSetPitch([self fetchGimbal], 90);
-            }
+            gcdSetPitch([self fetchGimbal], -90);
         });
         dispatch_sync(droneCmdsQueue, ^{
             gcdDelay(2);
@@ -301,7 +297,7 @@ static void(^gcdSetYaw)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float yaw) {
 
     [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError *_Nullable error) {
         if (error) {
-            NSLog(@"Unable to yaw %@", error);
+            NSLog(@"Unable to yaw to %f,  %@", yaw, error);
         }
     }];
 };
@@ -318,7 +314,7 @@ static void(^gcdSetPitch)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float pitch
 
     [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError *_Nullable error) {
         if (error) {
-            NSLog(@"Unable to pitch %@", error);
+            NSLog(@"Unable to pitch to %f:  %@", pitch, error);
         }
     }];
 };
