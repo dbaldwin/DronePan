@@ -14,7 +14,7 @@
 
 #define ENABLE_DEBUG_MODE 0
 
-@interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate> {
+@interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -23,6 +23,8 @@
 @property(weak, nonatomic) IBOutlet UIButton *startButton;
 @property(nonatomic, weak) DJIBaseProduct *product;
 @property(weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *headingLabel;
+
 
 - (IBAction)startPano:(id)sender;
 
@@ -442,6 +444,14 @@ typedef enum {
         if (camera) {
             [camera setDelegate:self];
         }
+        
+        // Setup delegate so we can get fc and compass updates
+        DJIFlightController* fc = [self fetchFlightController];
+        
+        if (fc) {
+            [fc setDelegate: self];
+        }
+        
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
@@ -470,6 +480,11 @@ typedef enum {
     }
 
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
+}
+
+#pragma mark DJIFlightControllerDelegate Methods
+- (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
+    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f", fc.compass.heading];
 }
 
 @end
