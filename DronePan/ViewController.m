@@ -65,18 +65,10 @@
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
-    if ([model containsString:@"Inspire 1"]) {
-        [Utils displayToastOnApp:@"I1"];
-    } else if ([model containsString:@"Phantom 3"]) {
-        [Utils displayToastOnApp:@"P3"];
-    } else if ([model containsString:@"Osmo"]) {
-        [Utils displayToastOnApp:@"Osmo"];
-    }
-
     if ([self productType] == PT_AIRCRAFT) {
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
-        
+
         DJIFlightController *fc = [self fetchFlightController];
 
         if (fc) {
@@ -97,11 +89,7 @@
             return;
         }
     } else {
-        // Need a short delay to not have two toasts
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self doPanoLoop];
-        });
+        [self doPanoLoop];
     }
 
 }
@@ -136,7 +124,7 @@
         pitch = pitchOsmo;
     } else {
         NSLog(@"Pano started with unknown type");
-        
+
         return;
     }
 
@@ -148,7 +136,7 @@
         dispatch_sync(droneCmdsQueue, ^{
             gcdSetCameraMode([self fetchCamera]);
         });
-        
+
         // Reset gimbal
         dispatch_sync(droneCmdsQueue, ^{
             gcdResetGimbalYaw([self fetchGimbal]);
@@ -211,7 +199,17 @@
 
         } // End pitch loop
 
-        // Take the final nadir shot and then reset the gimbal back
+        // Zenith (handheld) or Nadir (Aircraft) are both -90 pitch
+        
+        // Reset yaw to front for zenith/nadir
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdSetYaw([self fetchGimbal], 0);
+        });
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdDelay(2);
+        });
+        
+        // Take the final zenith/nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
             gcdSetPitch([self fetchGimbal], -90);
         });
@@ -227,8 +225,15 @@
         dispatch_sync(droneCmdsQueue, ^{
             gcdResetGimbalYaw([self fetchGimbal]);
         });
+        
+        // This can be removed when we have counters - it's to allow the last "Photo Taken" toast to be removed.
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdDelay(4);
+        });
 
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [Utils displayToastOnApp:@"Completed pano"];
+        });
     }); // End GCD
 
 }
@@ -242,7 +247,7 @@ static void(^gcdResetGimbalYaw)(DJIGimbal *) = ^(DJIGimbal *gimbal) {
 
 static void(^gcdSetCameraMode)(DJICamera *) = ^(DJICamera *camera) {
 //    [[VideoPreviewer instance] stop];
-    [camera setCameraMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
+    [camera setCameraMode:DJICameraModeShootPhoto withCompletion:^(NSError *_Nullable error) {
         if (error) {
             [Utils displayToastOnApp:@"Couldn't set camera to photo mode"];
             NSLog(@"Unable to set camera to photo mode: %@", error);
