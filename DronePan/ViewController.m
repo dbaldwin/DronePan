@@ -65,18 +65,6 @@
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
-    // Need a short delay to not have two toasts
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t) (6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([model containsString:@"Inspire 1"]) {
-            [Utils displayToastOnApp:@"I1"];
-        } else if ([model containsString:@"Phantom 3"]) {
-            [Utils displayToastOnApp:@"P3"];
-        } else if ([model containsString:@"Osmo"]) {
-            [Utils displayToastOnApp:@"Osmo"];
-        }
-    });
-
     if ([self productType] == PT_AIRCRAFT) {
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
