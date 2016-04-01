@@ -199,7 +199,17 @@
 
         } // End pitch loop
 
-        // Take the final nadir shot and then reset the gimbal back
+        // Zenith (handheld) or Nadir (Aircraft) are both -90 pitch
+        
+        // Reset yaw to front for zenith/nadir
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdSetYaw([self fetchGimbal], 0);
+        });
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdDelay(2);
+        });
+        
+        // Take the final zenith/nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
             gcdSetPitch([self fetchGimbal], -90);
         });
@@ -215,8 +225,15 @@
         dispatch_sync(droneCmdsQueue, ^{
             gcdResetGimbalYaw([self fetchGimbal]);
         });
+        
+        // This can be removed when we have counters - it's to allow the last "Photo Taken" toast to be removed.
+        dispatch_sync(droneCmdsQueue, ^{
+            gcdDelay(4);
+        });
 
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [Utils displayToastOnApp:@"Completed pano"];
+        });
     }); // End GCD
 
 }
