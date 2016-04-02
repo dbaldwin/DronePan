@@ -14,6 +14,8 @@
 
 #define ENABLE_DEBUG_MODE 0
 
+#define STANDARD_DELAY 1.5
+
 @interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
@@ -124,6 +126,8 @@
         pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
         pitch = pitchOsmo;
+        
+        [self fetchGimbal].completionTimeForControlAngleAction = 0.5;
     } else {
         NSLog(@"Pano started with unknown type");
 
@@ -146,7 +150,7 @@
 
         // Give gimbal time to reset
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(3);
+            gcdDelay(STANDARD_DELAY);
         });
 
 
@@ -160,7 +164,7 @@
 
             // Let the gimbal get into position before we yaw and take photos
             dispatch_sync(droneCmdsQueue, ^{
-                gcdDelay(2);
+                gcdDelay(STANDARD_DELAY);
             });
 
             // Yaw loop and photo
@@ -185,7 +189,7 @@
 
                 // Delay 2 seconds so we can yaw
                 dispatch_sync(droneCmdsQueue, ^{
-                    gcdDelay(3);
+                    gcdDelay(STANDARD_DELAY);
                 });
 
                 // Take the photo
@@ -195,7 +199,7 @@
 
                 // Delay after the photo
                 dispatch_sync(droneCmdsQueue, ^{
-                    gcdDelay(3);
+                    gcdDelay(STANDARD_DELAY);
                 });
             }
 
@@ -208,7 +212,7 @@
             gcdSetYaw([self fetchGimbal], 0);
         });
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(2);
+            gcdDelay(STANDARD_DELAY);
         });
         
         // Take the final zenith/nadir shot and then reset the gimbal back
@@ -216,13 +220,13 @@
             gcdSetPitch([self fetchGimbal], -90);
         });
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(2);
+            gcdDelay(STANDARD_DELAY);
         });
         dispatch_sync(droneCmdsQueue, ^{
             gcdTakeASnap([self fetchCamera]);
         });
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(2);
+            gcdDelay(STANDARD_DELAY);
         });
         dispatch_sync(droneCmdsQueue, ^{
             gcdResetGimbalYaw([self fetchGimbal]);
@@ -230,7 +234,7 @@
         
         // This can be removed when we have counters - it's to allow the last "Photo Taken" toast to be removed.
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(4);
+            gcdDelay(6 - STANDARD_DELAY);
         });
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -445,13 +449,14 @@ typedef enum {
             [camera setDelegate:self];
         }
         
-        // Setup delegate so we can get fc and compass updates
-        DJIFlightController* fc = [self fetchFlightController];
+        if ([self productType] == PT_AIRCRAFT) {
+            // Setup delegate so we can get fc and compass updates
+            DJIFlightController* fc = [self fetchFlightController];
         
-        if (fc) {
-            [fc setDelegate: self];
+            if (fc) {
+                [fc setDelegate: self];
+            }
         }
-        
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
