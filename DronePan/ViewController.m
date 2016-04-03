@@ -14,7 +14,7 @@
 
 #define ENABLE_DEBUG_MODE 0
 
-#define STANDARD_DELAY 1.5
+#define STANDARD_DELAY 1
 
 @interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
@@ -25,8 +25,10 @@
 @property(weak, nonatomic) IBOutlet UIButton *startButton;
 @property(nonatomic, weak) DJIBaseProduct *product;
 @property(weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
-@property (weak, nonatomic) IBOutlet UILabel *headingLabel;
-
+@property(weak, nonatomic) IBOutlet UILabel *headingLabel;
+@property(weak, nonatomic) IBOutlet UILabel *sequenceLabel;
+@property(nonatomic, assign) long sequenceCount;
+@property(nonatomic, assign) long currentCount;
 
 - (IBAction)startPano:(id)sender;
 
@@ -37,6 +39,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[VideoPreviewer instance] setView:self.cameraView];
+    [[self sequenceLabel] setText:@"Sequence: ?/?"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,6 +101,10 @@
 
 }
 
+- (void)updateSequenceLabel {
+    [[self sequenceLabel] setText:[NSString stringWithFormat:@"Sequence: %ld/%ld", self.currentCount, self.sequenceCount]];
+}
+
 - (void)doPanoLoop {
 
     NSArray *pitchGimbalYaw = @[@0, @-30, @-60];
@@ -126,7 +133,7 @@
         pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
         pitch = pitchOsmo;
-        
+
         [self fetchGimbal].completionTimeForControlAngleAction = 0.5;
     } else {
         NSLog(@"Pano started with unknown type");
@@ -134,37 +141,36 @@
         return;
     }
 
+    self.sequenceCount = ([pitch count] * [yaw count]) + 1;
+    self.currentCount = 0;
+
+    [self updateSequenceLabel];
+
     droneCmdsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL);
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
+        
         // Set camera mode
         dispatch_sync(droneCmdsQueue, ^{
-            gcdSetCameraMode([self fetchCamera]);
+            [self setPhotoMode];
         });
 
         // Reset gimbal
         dispatch_sync(droneCmdsQueue, ^{
-            gcdResetGimbalYaw([self fetchGimbal]);
+            [self resetGimbal];
         });
 
-        // Give gimbal time to reset
-        dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(STANDARD_DELAY);
-        });
-
+        // Short delay - allow you to get out of shot - should be GUI choice/display
+        if ([self productType] == PT_HANDHELD) {
+            [self waitFor:5];
+        }
 
         // Loop through the gimbal pitches
         for (NSNumber *nPitch in pitch) {
 
             // Pitch the gimbal
             dispatch_sync(droneCmdsQueue, ^{
-                gcdSetPitch([self fetchGimbal], [nPitch floatValue]);
-            });
-
-            // Let the gimbal get into position before we yaw and take photos
-            dispatch_sync(droneCmdsQueue, ^{
-                gcdDelay(STANDARD_DELAY);
+                [self setPitch:[nPitch floatValue]];
             });
 
             // Yaw loop and photo
@@ -181,64 +187,51 @@
                         [sendTimer invalidate];
                         sendTimer = nil;
                     });
+
+                    dispatch_sync(droneCmdsQueue, ^{
+                        [self waitFor:STANDARD_DELAY];
+                    });
                 } else if ([self productType] == PT_HANDHELD) {
                     dispatch_sync(droneCmdsQueue, ^{
-                        gcdSetYaw([self fetchGimbal], [nYaw floatValue]);
+                        [self setYaw:[nYaw floatValue]];
                     });
                 }
 
-                // Delay 2 seconds so we can yaw
-                dispatch_sync(droneCmdsQueue, ^{
-                    gcdDelay(STANDARD_DELAY);
-                });
-
                 // Take the photo
                 dispatch_sync(droneCmdsQueue, ^{
-                    gcdTakeASnap([self fetchCamera]);
-                });
-
-                // Delay after the photo
-                dispatch_sync(droneCmdsQueue, ^{
-                    gcdDelay(STANDARD_DELAY);
+                    [self takeASnap];
                 });
             }
 
         } // End pitch loop
 
         // Zenith (handheld) or Nadir (Aircraft) are both -90 pitch
-        
+
         // Reset yaw to front for zenith/nadir
         dispatch_sync(droneCmdsQueue, ^{
-            gcdSetYaw([self fetchGimbal], 0);
+            [self setYaw:0.0];
         });
-        dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(STANDARD_DELAY);
-        });
-        
+
         // Take the final zenith/nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
-            gcdSetPitch([self fetchGimbal], -90);
+            [self setPitch:-90.0];
         });
+
         dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(STANDARD_DELAY);
+            [self takeASnap];
         });
+
         dispatch_sync(droneCmdsQueue, ^{
-            gcdTakeASnap([self fetchCamera]);
+            [self resetGimbal];
         });
-        dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(STANDARD_DELAY);
-        });
-        dispatch_sync(droneCmdsQueue, ^{
-            gcdResetGimbalYaw([self fetchGimbal]);
-        });
-        
-        // This can be removed when we have counters - it's to allow the last "Photo Taken" toast to be removed.
-        dispatch_sync(droneCmdsQueue, ^{
-            gcdDelay(6 - STANDARD_DELAY);
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[self sequenceLabel] setText:@"Sequence: Done"];
         });
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [Utils displayToastOnApp:@"Completed pano"];
+            
         });
     }); // End GCD
 
@@ -247,24 +240,37 @@
 
 #pragma mark GCD functions
 
-static void(^gcdResetGimbalYaw)(DJIGimbal *) = ^(DJIGimbal *gimbal) {
-    [gimbal resetGimbalWithCompletion:nil];
-};
+- (void)resetGimbal {
+    DJIGimbal *gimbal = [self fetchGimbal];
 
-static void(^gcdSetCameraMode)(DJICamera *) = ^(DJICamera *camera) {
-//    [[VideoPreviewer instance] stop];
-    [camera setCameraMode:DJICameraModeShootPhoto withCompletion:^(NSError *_Nullable error) {
-        if (error) {
-            [Utils displayToastOnApp:@"Couldn't set camera to photo mode"];
-            NSLog(@"Unable to set camera to photo mode: %@", error);
-        }
-//        [[VideoPreviewer instance] start];
-    }];
-};
+    if (gimbal) {
+        [gimbal resetGimbalWithCompletion:^(NSError *_Nullable error) {
+            if (error) {
+                NSLog(@"Error resetting gimbal: %@", error);
+            }
+            
+            [self waitFor:STANDARD_DELAY];
+        }];
+    }
+}
 
-static void (^gcdDelay)(unsigned int) = ^(unsigned int delay) {
+- (void)setPhotoMode {
+    DJICamera *camera = [self fetchCamera];
+
+    if (camera) {
+        [camera setCameraMode:DJICameraModeShootPhoto withCompletion:^(NSError *_Nullable error) {
+            if (error) {
+                [Utils displayToastOnApp:@"Couldn't set camera to photo mode"];
+                NSLog(@"Unable to set camera to photo mode: %@", error);
+            }
+        }];
+    }
+}
+
+// I still think this should be using some kind of GCD dispatch eventing - but for now leave it in
+- (void)waitFor:(unsigned int)delay {
     sleep(delay);
-};
+}
 
 
 /*
@@ -302,51 +308,63 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
     }
 }
 
-static void (^gcdTakeASnap)(DJICamera *) = ^(DJICamera *camera) {
+- (void)takeASnap {
+    DJICamera *camera = [self fetchCamera];
 
-    [camera startShootPhoto:DJICameraShootPhotoModeSingle withCompletion:^(NSError *_Nullable error) {
-        if (error) {
-            [Utils displayToastOnApp:@"Error taking photo"];
-            NSLog(@"Unable to take image %@", error);
-        } else {
-            [Utils displayToastOnApp:@"Photo taken"];
-        }
-    }];
+    if (camera) {
+        [camera startShootPhoto:DJICameraShootPhotoModeSingle withCompletion:^(NSError *_Nullable error) {
+            if (error) {
+                [Utils displayToastOnApp:@"Error taking photo"];
+                NSLog(@"Unable to take image %@", error);
+            } else {
+                self.currentCount++;
+                [self updateSequenceLabel];
+            }
+            
+            [self waitFor:STANDARD_DELAY];
+        }];
+    }
+}
 
-};
+- (void)setYaw:(DJIGimbalAngleRotation)yaw pitch:(DJIGimbalAngleRotation)pitch {
+    DJIGimbal *gimbal = [self fetchGimbal];
 
-static void(^gcdSetYaw)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float yaw) {
+    if (gimbal) {
+        DJIGimbalAngleRotation roll = {};
+        roll.enabled = NO;
 
-    DJIGimbalAngleRotation pitchRotation, rollRotation, yawRotation = {};
-    pitchRotation.enabled = NO;
-    rollRotation.enabled = NO;
+        [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitch roll:roll yaw:yaw withCompletion:^(NSError *_Nullable error) {
+            if (error) {
+                if (yaw.enabled) {
+                    NSLog(@"Unable to yaw to yaw: %f,  %@", yaw.angle, error);
+                }
+                if (pitch.enabled) {
+                    NSLog(@"Unable to pitch to pitch: %f,  %@", pitch.angle, error);
+                }
+            }
+            
+            [self waitFor:STANDARD_DELAY];
+        }];
+    }
+}
 
-    yawRotation.enabled = YES;
-    yawRotation.angle = yaw;
+- (void)setYaw:(float)yaw {
+    DJIGimbalAngleRotation yawR, pitchR = {};
+    yawR.angle = yaw;
+    yawR.enabled = YES;
+    pitchR.enabled = NO;
 
-    [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError *_Nullable error) {
-        if (error) {
-            NSLog(@"Unable to yaw to %f,  %@", yaw, error);
-        }
-    }];
-};
+    [self setYaw:yawR pitch:pitchR];
+}
 
+- (void)setPitch:(float)pitch {
+    DJIGimbalAngleRotation yawR, pitchR = {};
+    yawR.enabled = NO;
+    pitchR.enabled = YES;
+    pitchR.angle = pitch;
 
-static void(^gcdSetPitch)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float pitch) {
-
-    DJIGimbalAngleRotation pitchRotation, rollRotation, yawRotation = {};
-    pitchRotation.enabled = YES;
-    pitchRotation.angle = pitch;
-
-    rollRotation.enabled = NO;
-    yawRotation.enabled = NO;
-
-    [gimbal rotateGimbalWithAngleMode:DJIGimbalAngleModeAbsoluteAngle pitch:pitchRotation roll:rollRotation yaw:yawRotation withCompletion:^(NSError *_Nullable error) {
-        if (error) {
-            NSLog(@"Unable to pitch to %f:  %@", pitch, error);
-        }
-    }];
-};
+    [self setYaw:yawR pitch:pitchR];
+}
 
 #pragma mark - DJICameraDelegate
 
@@ -448,13 +466,13 @@ typedef enum {
         if (camera) {
             [camera setDelegate:self];
         }
-        
+
         if ([self productType] == PT_AIRCRAFT) {
             // Setup delegate so we can get fc and compass updates
-            DJIFlightController* fc = [self fetchFlightController];
-        
+            DJIFlightController *fc = [self fetchFlightController];
+
             if (fc) {
-                [fc setDelegate: self];
+                [fc setDelegate:self];
             }
         }
     } else {
@@ -488,6 +506,7 @@ typedef enum {
 }
 
 #pragma mark DJIFlightControllerDelegate Methods
+
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
     self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f", fc.compass.heading];
 }

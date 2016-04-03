@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -32,8 +32,21 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Heading: N/A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45f-k0-R1S">
-                                                <rect key="frame" x="8" y="15" width="115" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Heading: N/A" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="45f-k0-R1S">
+                                                <rect key="frame" x="20" y="17" width="115" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="115" id="5ba-rZ-4UM"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sequence: n/m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jQe-Pe-bik" userLabel="Counter Label">
+                                                <rect key="frame" x="143" y="17" width="115" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="115" id="bHo-eV-uAk"/>
+                                                    <constraint firstAttribute="width" constant="115" id="lVc-1D-WLd"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -41,9 +54,13 @@
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="45f-k0-R1S" firstAttribute="leading" secondItem="11I-cl-76c" secondAttribute="leading" constant="20" symbolic="YES" id="1iK-Qq-FOR"/>
+                                            <constraint firstItem="45f-k0-R1S" firstAttribute="centerY" secondItem="11I-cl-76c" secondAttribute="centerY" id="Mrr-ci-Yyg"/>
+                                            <constraint firstItem="jQe-Pe-bik" firstAttribute="leading" secondItem="45f-k0-R1S" secondAttribute="trailing" constant="8" symbolic="YES" id="Qbv-zQ-fky"/>
                                             <constraint firstAttribute="trailing" secondItem="GSQ-nd-YzN" secondAttribute="trailing" constant="20" symbolic="YES" id="cEt-hT-N44"/>
                                             <constraint firstItem="GSQ-nd-YzN" firstAttribute="centerY" secondItem="11I-cl-76c" secondAttribute="centerY" id="fbh-9l-VeF"/>
                                             <constraint firstAttribute="height" constant="52" id="hEn-LA-PVM"/>
+                                            <constraint firstItem="jQe-Pe-bik" firstAttribute="centerY" secondItem="11I-cl-76c" secondAttribute="centerY" id="iue-1I-EQm"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
@@ -83,6 +100,7 @@
                         <outlet property="cameraView" destination="kGr-ob-jSa" id="ZyF-He-neF"/>
                         <outlet property="connectionStatusLabel" destination="GSQ-nd-YzN" id="dJi-Hd-b2i"/>
                         <outlet property="headingLabel" destination="45f-k0-R1S" id="Opc-Uh-i0j"/>
+                        <outlet property="sequenceLabel" destination="jQe-Pe-bik" id="IHw-S9-flK"/>
                         <outlet property="startButton" destination="ohx-RD-uKh" id="VDh-yo-ohn"/>
                     </connections>
                 </viewController>
