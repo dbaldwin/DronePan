@@ -14,7 +14,7 @@
 
 #define ENABLE_DEBUG_MODE 0
 
-#define STANDARD_DELAY 1.5
+#define STANDARD_DELAY 1
 
 @interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
