@@ -26,7 +26,9 @@
 @property(nonatomic, weak) DJIBaseProduct *product;
 @property(weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
 @property (weak, nonatomic) IBOutlet UILabel *headingLabel;
-
+@property (weak, nonatomic) IBOutlet UILabel *sequenceLabel;
+@property (nonatomic, assign) long sequenceCount;
+@property (nonatomic, assign) long currentCount;
 
 - (IBAction)startPano:(id)sender;
 
@@ -37,6 +39,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[VideoPreviewer instance] setView:self.cameraView];
+    [[self sequenceLabel] setText:@"Sequence: ?/?"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,6 +101,10 @@
 
 }
 
+- (void)updateSequenceLabel {
+    [[self sequenceLabel] setText:[NSString stringWithFormat:@"Sequence: %ld/%ld", self.currentCount, self.sequenceCount]];
+}
+
 - (void)doPanoLoop {
 
     NSArray *pitchGimbalYaw = @[@0, @-30, @-60];
@@ -134,8 +141,13 @@
         return;
     }
 
+    self.sequenceCount = ([pitch count] * [yaw count]) + 1;
+    self.currentCount = 0;
+    
+    [self updateSequenceLabel];
+    
     droneCmdsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL);
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
         // Set camera mode
@@ -194,7 +206,7 @@
 
                 // Take the photo
                 dispatch_sync(droneCmdsQueue, ^{
-                    gcdTakeASnap([self fetchCamera]);
+                    [self takeASnapWithCamera:[self fetchCamera]];
                 });
 
                 // Delay after the photo
@@ -223,7 +235,7 @@
             gcdDelay(STANDARD_DELAY);
         });
         dispatch_sync(droneCmdsQueue, ^{
-            gcdTakeASnap([self fetchCamera]);
+            [self takeASnapWithCamera:[self fetchCamera]];
         });
         dispatch_sync(droneCmdsQueue, ^{
             gcdDelay(STANDARD_DELAY);
@@ -302,18 +314,17 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
     }
 }
 
-static void (^gcdTakeASnap)(DJICamera *) = ^(DJICamera *camera) {
-
-    [camera startShootPhoto:DJICameraShootPhotoModeSingle withCompletion:^(NSError *_Nullable error) {
+- (void) takeASnapWithCamera:(DJICamera *)camera {
+    [camera startShootPhoto:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
         if (error) {
             [Utils displayToastOnApp:@"Error taking photo"];
             NSLog(@"Unable to take image %@", error);
         } else {
-            [Utils displayToastOnApp:@"Photo taken"];
+            self.currentCount++;
+            [self updateSequenceLabel];
         }
     }];
-
-};
+}
 
 static void(^gcdSetYaw)(DJIGimbal *, float) = ^(DJIGimbal *gimbal, float yaw) {
 
