@@ -149,7 +149,7 @@
     droneCmdsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL);
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
+        
         // Set camera mode
         dispatch_sync(droneCmdsQueue, ^{
             [self setPhotoMode];
@@ -157,14 +157,13 @@
 
         // Reset gimbal
         dispatch_sync(droneCmdsQueue, ^{
-            [self resetGimbalYaw];
+            [self resetGimbal];
         });
 
-        // Give gimbal time to reset
-        dispatch_sync(droneCmdsQueue, ^{
-            [self waitFor:STANDARD_DELAY];
-        });
-
+        // Short delay - allow you to get out of shot - should be GUI choice/display
+        if ([self productType] == PT_HANDHELD) {
+            [self waitFor:5];
+        }
 
         // Loop through the gimbal pitches
         for (NSNumber *nPitch in pitch) {
@@ -172,11 +171,6 @@
             // Pitch the gimbal
             dispatch_sync(droneCmdsQueue, ^{
                 [self setPitch:[nPitch floatValue]];
-            });
-
-            // Let the gimbal get into position before we yaw and take photos
-            dispatch_sync(droneCmdsQueue, ^{
-                [self waitFor:STANDARD_DELAY];
             });
 
             // Yaw loop and photo
@@ -193,25 +187,19 @@
                         [sendTimer invalidate];
                         sendTimer = nil;
                     });
+
+                    dispatch_sync(droneCmdsQueue, ^{
+                        [self waitFor:STANDARD_DELAY];
+                    });
                 } else if ([self productType] == PT_HANDHELD) {
                     dispatch_sync(droneCmdsQueue, ^{
                         [self setYaw:[nYaw floatValue]];
                     });
                 }
 
-                // Delay 2 seconds so we can yaw
-                dispatch_sync(droneCmdsQueue, ^{
-                    [self waitFor:STANDARD_DELAY];
-                });
-
                 // Take the photo
                 dispatch_sync(droneCmdsQueue, ^{
                     [self takeASnap];
-                });
-
-                // Delay after the photo
-                dispatch_sync(droneCmdsQueue, ^{
-                    [self waitFor:STANDARD_DELAY];
                 });
             }
 
@@ -223,30 +211,18 @@
         dispatch_sync(droneCmdsQueue, ^{
             [self setYaw:0.0];
         });
-        dispatch_sync(droneCmdsQueue, ^{
-            [self waitFor:STANDARD_DELAY];
-        });
 
         // Take the final zenith/nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
             [self setPitch:-90.0];
         });
-        dispatch_sync(droneCmdsQueue, ^{
-            [self waitFor:STANDARD_DELAY];
-        });
+
         dispatch_sync(droneCmdsQueue, ^{
             [self takeASnap];
         });
-        dispatch_sync(droneCmdsQueue, ^{
-            [self waitFor:STANDARD_DELAY];
-        });
-        dispatch_sync(droneCmdsQueue, ^{
-            [self resetGimbalYaw];
-        });
 
-        // This can be removed when we have counters - it's to allow the last "Photo Taken" toast to be removed.
         dispatch_sync(droneCmdsQueue, ^{
-            [self waitFor:6 - STANDARD_DELAY];
+            [self resetGimbal];
         });
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -264,7 +240,7 @@
 
 #pragma mark GCD functions
 
-- (void)resetGimbalYaw {
+- (void)resetGimbal {
     DJIGimbal *gimbal = [self fetchGimbal];
 
     if (gimbal) {
@@ -272,6 +248,8 @@
             if (error) {
                 NSLog(@"Error resetting gimbal: %@", error);
             }
+            
+            [self waitFor:STANDARD_DELAY];
         }];
     }
 }
@@ -342,6 +320,8 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
                 self.currentCount++;
                 [self updateSequenceLabel];
             }
+            
+            [self waitFor:STANDARD_DELAY];
         }];
     }
 }
@@ -362,6 +342,8 @@ static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightCont
                     NSLog(@"Unable to pitch to pitch: %f,  %@", pitch.angle, error);
                 }
             }
+            
+            [self waitFor:STANDARD_DELAY];
         }];
     }
 }
