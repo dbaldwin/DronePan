@@ -14,7 +14,7 @@
 
 #define ENABLE_DEBUG_MODE 0
 
-#define STANDARD_DELAY 1
+#define STANDARD_DELAY 3
 
 @interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
@@ -29,6 +29,8 @@
 @property(weak, nonatomic) IBOutlet UILabel *sequenceLabel;
 @property(nonatomic, assign) long sequenceCount;
 @property(nonatomic, assign) long currentCount;
+@property(nonatomic, assign) double currentHeading;
+@property(nonatomic, assign) NSTimer *yawTimer;
 
 - (IBAction)startPano:(id)sender;
 
@@ -84,7 +86,7 @@
                     NSString *msg = [NSString stringWithFormat:@"%@", error.description];
                     [Utils displayToastOnApp:msg];
                 } else {
-                    fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
+                    fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
                     fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeAngle;
                     fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
@@ -178,14 +180,8 @@
 
                 if ([self productType] == PT_AIRCRAFT) {
 
-                    // Timer and run loop so that we can yaw to the desired location
                     dispatch_sync(droneCmdsQueue, ^{
-                        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[nYaw floatValue]], @"yaw", nil];
-                        NSTimer *sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yaw:) userInfo:data repeats:YES];
-                        [[NSRunLoop currentRunLoop] addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-                        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-                        [sendTimer invalidate];
-                        sendTimer = nil;
+                        [self yawAircraft:[nYaw floatValue]];
                     });
 
                     dispatch_sync(droneCmdsQueue, ^{
@@ -272,37 +268,16 @@
     sleep(delay);
 }
 
-
-/*
-static void (^gcdYawDrone)(float,DJIFlightController*)=^(float yaw,DJIFlightController *fc){
+- (void)yawAircraft:(float)yaw {
     
     DJIVirtualStickFlightControlData ctrlData = {0};
     ctrlData.pitch = 0;
     ctrlData.roll = 0;
     ctrlData.verticalThrottle = 0;
-    ctrlData.yaw = 60;
+    ctrlData.yaw = yaw;
     
-    if (fc && fc.isVirtualStickControlModeAvailable) {
-        [fc sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
-    }
-    
-};
-*/
-
-- (void)yaw:(NSTimer *)timer {
-
-    NSDictionary *data = [timer userInfo];
-
-    NSLog(@"Yawing: %@", [data objectForKey:@"yaw"]);
-
-    DJIVirtualStickFlightControlData ctrlData = {0};
-    ctrlData.pitch = 0;
-    ctrlData.roll = 0;
-    ctrlData.verticalThrottle = 0;
-    ctrlData.yaw = [[data objectForKey:@"yaw"] floatValue];
-
     DJIFlightController *fc = [self fetchFlightController];
-
+    
     if (fc && fc.isVirtualStickControlModeAvailable) {
         [fc sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
     }
@@ -467,6 +442,7 @@ typedef enum {
             [camera setDelegate:self];
         }
 
+        // Set the flight controller delegate only with aircraft. Ignore for Osmo.
         if ([self productType] == PT_AIRCRAFT) {
             // Setup delegate so we can get fc and compass updates
             DJIFlightController *fc = [self fetchFlightController];
@@ -475,6 +451,7 @@ typedef enum {
                 [fc setDelegate:self];
             }
         }
+        
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
@@ -493,7 +470,7 @@ typedef enum {
     } else {
 
 #if ENABLE_DEBUG_MODE
-        [DJISDKManager enterDebugModeWithDebugId:@"10.0.1.15"];
+        [DJISDKManager enterDebugModeWithDebugId:@"10.0.1.4"];
 #else
         // This will call sdkManagerProductDidChangeFrom
         [DJISDKManager startConnectionToProduct];
@@ -508,7 +485,8 @@ typedef enum {
 #pragma mark DJIFlightControllerDelegate Methods
 
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
-    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f", fc.compass.heading];
+    self.currentHeading = fc.compass.heading;
+    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f", self.currentHeading];
 }
 
 @end
