@@ -3,7 +3,6 @@
 //  DronePan
 //
 //  Created by Dennis Baldwin on 1/23/16.
-//  Copyright © 2016 Unmanned Airlines, LLC. All rights reserved.
 //
 
 #import "AppDelegate.h"
