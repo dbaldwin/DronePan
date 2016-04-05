@@ -162,9 +162,8 @@
         });
 
         // Short delay - allow you to get out of shot - should be GUI choice/display
-        if ([self productType] == PT_HANDHELD) {
-            [self waitFor:5];
-        }
+        // We need this delay for aircraft too so the gimbal can reset
+        [self waitFor:5];
 
         // Loop through the gimbal pitches
         for (NSNumber *nPitch in pitch) {
@@ -186,6 +185,7 @@
                     dispatch_sync(droneCmdsQueue, ^{
                         [self waitFor:STANDARD_DELAY];
                     });
+                    
                 } else if ([self productType] == PT_HANDHELD) {
                     dispatch_sync(droneCmdsQueue, ^{
                         [self setYaw:[nYaw floatValue]];
@@ -195,6 +195,11 @@
                 // Take the photo
                 dispatch_sync(droneCmdsQueue, ^{
                     [self takeASnap];
+                });
+                
+                // Delay before next yaw rotation
+                dispatch_sync(droneCmdsQueue, ^{
+                    [self waitFor:STANDARD_DELAY];
                 });
             }
 
@@ -339,6 +344,7 @@
 
     [self setYaw:yawR pitch:pitchR];
 }
+
 
 #pragma mark - DJICameraDelegate
 
