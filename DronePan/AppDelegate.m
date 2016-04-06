@@ -16,6 +16,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    // Keep ipad from sleeping
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
     return YES;
 }
 
