@@ -157,7 +157,7 @@
             [self setPhotoMode];
         });
 
-        // Reset gimbal
+        // Reset gimbal - this will reset the gimbal yaw in case the user has changed it outside of DronePan
         dispatch_sync(droneCmdsQueue, ^{
             [self resetGimbal];
         });
@@ -186,7 +186,6 @@
                         [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
                         [sendTimer invalidate];
                         sendTimer=nil;
-                        //[self yawAircraft:[nYaw floatValue]];
                     });
 
                     dispatch_sync(droneCmdsQueue, ^{
@@ -213,13 +212,32 @@
         } // End pitch loop
 
         // Zenith (handheld) or Nadir (Aircraft) are both -90 pitch
-
         // Reset yaw to front for zenith/nadir
-        dispatch_sync(droneCmdsQueue, ^{
-            [self setYaw:0.0];
-        });
+        // TODO: refactor this bit since it's redundant with the code above
+        if ([self productType] == PT_AIRCRAFT) {
+            
+            // Calling this on a timer as it improves the accuracy of aircraft yaw
+            dispatch_sync(droneCmdsQueue, ^{
+                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat: 0], @"yaw", nil];
+                NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraft:) userInfo:data repeats:YES];
+                [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
+                [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+                [sendTimer invalidate];
+                sendTimer=nil;
+            });
+            
+            dispatch_sync(droneCmdsQueue, ^{
+                [self waitFor:STANDARD_DELAY];
+            });
+            
+        } else if ([self productType] == PT_HANDHELD) {
+            dispatch_sync(droneCmdsQueue, ^{
+                [self setYaw:0.0];
+            });
+        }
 
         // Take the final zenith/nadir shot and then reset the gimbal back
+        
         dispatch_sync(droneCmdsQueue, ^{
             [self setPitch:-90.0];
         });
@@ -232,9 +250,14 @@
         dispatch_sync(droneCmdsQueue, ^{
             [self takeASnap];
         });
+        
+        // Delay before we reset the gimbal back to the horizon
+        dispatch_sync(droneCmdsQueue, ^{
+            [self waitFor:STANDARD_DELAY];
+        });
 
         dispatch_sync(droneCmdsQueue, ^{
-            [self resetGimbal];
+            [self setPitch:0.0];
         });
 
         dispatch_async(dispatch_get_main_queue(), ^{
