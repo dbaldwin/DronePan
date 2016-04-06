@@ -134,14 +134,15 @@
         pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
         pitch = pitchOsmo;
-
-        [self fetchGimbal].completionTimeForControlAngleAction = 0.5;
     } else {
         NSLog(@"Pano started with unknown type");
 
         return;
     }
 
+    // Make pitching gimbal fast so we have time to shoot
+    [self fetchGimbal].completionTimeForControlAngleAction = 0.5;
+    
     self.sequenceCount = ([pitch count] * [yaw count]) + 1;
     self.currentCount = 0;
 
@@ -162,7 +163,6 @@
         });
 
         // Short delay - allow you to get out of shot - should be GUI choice/display
-        // We need this delay for aircraft too so the gimbal can reset
         [self waitFor:5];
 
         // Loop through the gimbal pitches
@@ -177,9 +177,16 @@
             for (NSNumber *nYaw in yaw) {
 
                 if ([self productType] == PT_AIRCRAFT) {
-
+                    
+                    // Calling this on a timer as it improves the accuracy of aircraft yaw
                     dispatch_sync(droneCmdsQueue, ^{
-                        [self yawAircraft:[nYaw floatValue]];
+                        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat:[nYaw floatValue]], @"yaw", nil];
+                        NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraft:) userInfo:data repeats:YES];
+                        [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
+                        [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
+                        [sendTimer invalidate];
+                        sendTimer=nil;
+                        //[self yawAircraft:[nYaw floatValue]];
                     });
 
                     dispatch_sync(droneCmdsQueue, ^{
@@ -215,6 +222,11 @@
         // Take the final zenith/nadir shot and then reset the gimbal back
         dispatch_sync(droneCmdsQueue, ^{
             [self setPitch:-90.0];
+        });
+        
+        // Delay before we take the final photo
+        dispatch_sync(droneCmdsQueue, ^{
+            [self waitFor:STANDARD_DELAY];
         });
 
         dispatch_sync(droneCmdsQueue, ^{
@@ -272,13 +284,15 @@
     sleep(delay);
 }
 
-- (void)yawAircraft:(float)yaw {
+- (void)yawAircraft:(NSTimer *)timer {
+    
+    NSDictionary *data = [timer userInfo];
     
     DJIVirtualStickFlightControlData ctrlData = {0};
     ctrlData.pitch = 0;
     ctrlData.roll = 0;
     ctrlData.verticalThrottle = 0;
-    ctrlData.yaw = yaw;
+    ctrlData.yaw = [[data objectForKey: @"yaw"] floatValue];
     
     DJIFlightController *fc = [self fetchFlightController];
     
@@ -306,6 +320,7 @@
 }
 
 - (void)setYaw:(DJIGimbalAngleRotation)yaw pitch:(DJIGimbalAngleRotation)pitch {
+    
     DJIGimbal *gimbal = [self fetchGimbal];
 
     if (gimbal) {
@@ -337,10 +352,13 @@
 }
 
 - (void)setPitch:(float)pitch {
+    // For aircraft gimbal positive values represent clockwise (upward) rotation and negative values represent counter clockwise (downward) rotation
+    DJIGimbalRotateDirection pitchDir = pitch > 0 ? DJIGimbalRotateDirectionClockwise : DJIGimbalRotateDirectionCounterClockwise;
     DJIGimbalAngleRotation yawR, pitchR = {};
     yawR.enabled = NO;
     pitchR.enabled = YES;
     pitchR.angle = pitch;
+    pitchR.direction = pitchDir;
 
     [self setYaw:yawR pitch:pitchR];
 }
