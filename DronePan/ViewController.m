@@ -86,7 +86,7 @@
                     [Utils displayToastOnApp:msg];
                 } else {
                     fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
-                    fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeAngle;
+                    fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
                     fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
                     [self doPanoLoop];
