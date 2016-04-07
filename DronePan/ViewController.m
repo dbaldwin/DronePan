@@ -6,6 +6,7 @@
 //
 
 #import "ViewController.h"
+#import "SettingsViewController.h"
 #import <DJISDK/DJISDK.h>
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
@@ -386,6 +387,11 @@
     [self setYaw:yawR pitch:pitchR];
 }
 
+- (IBAction)launchSettingsView:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    SettingsViewController *settings = [storyboard instantiateViewControllerWithIdentifier:@"Settings"];
+    [self presentViewController:settings animated:YES completion:nil];
+}
 
 #pragma mark - DJICameraDelegate
 
@@ -469,6 +475,8 @@ typedef enum {
 
     return nil;
 }
+
+
 
 
 #pragma mark DJISDKManagerDelegate Method
