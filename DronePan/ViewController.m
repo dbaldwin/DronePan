@@ -12,7 +12,7 @@
 #import "MBProgressHUD.h"
 #import "Utils.h"
 
-#define ENABLE_DEBUG_MODE 0
+#define ENABLE_DEBUG_MODE 1
 
 #define STANDARD_DELAY 3
 
@@ -30,7 +30,11 @@
 @property(nonatomic, assign) long sequenceCount;
 @property(nonatomic, assign) long currentCount;
 @property(nonatomic, assign) double currentHeading;
+@property(nonatomic, assign) float yawSpeed;
+@property(nonatomic, assign) int yawDestination;
 @property(nonatomic, assign) NSTimer *yawTimer;
+
+@property (weak, nonatomic) IBOutlet UITextView *debugTextView;
 
 - (IBAction)startPano:(id)sender;
 
@@ -54,6 +58,11 @@
 
     NSString *appKey = @"d6b78c9337f72fadd85d88e2";
     [DJISDKManager registerApp:appKey withDelegate:self];
+}
+
+// Hide status bar
+-(BOOL)prefersStatusBarHidden{
+    return YES;
 }
 
 - (void)viewDidLoad {
@@ -86,7 +95,7 @@
                     NSString *msg = [NSString stringWithFormat:@"%@", error.description];
                     [Utils displayToastOnApp:msg];
                 } else {
-                    fc.yawControlMode = DJIVirtualStickYawControlModeAngle;
+                    fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
                     fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
                     fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
@@ -110,7 +119,7 @@
 - (void)doPanoLoop {
 
     NSArray *pitchGimbalYaw = @[@0, @-30, @-60];
-
+    
     NSArray *pitchAircraftYaw = @[@0, @-30, @-60];
 
     NSArray *pitchOsmo = @[@-60, @-30, @0, @30];
@@ -127,9 +136,25 @@
 
     NSArray *aircraftYaw60 = @[@0, @60, @120, @180, @-120, @-60];
 
-    NSArray *yaw = aircraftYaw60;
-
     NSArray *pitch;
+    
+    int PHOTOS_PER_ROW = 6;
+    
+    int YAW_ANGLE = 360/PHOTOS_PER_ROW;
+    
+    NSMutableArray *yaw = [[NSMutableArray alloc] init];
+    
+    // Here we loop and create yaw angles bassed off the current aircraft heading
+    // When a users clicks the start button that will be the point of reference from
+    // Which we build the entire array of yaw angles
+    for(int i=0; i<PHOTOS_PER_ROW; i++) {
+        int destinationAngle = self.currentHeading + (YAW_ANGLE*(i+1));
+        int convertedDestinationAngle = [self convertYawAngle: destinationAngle];
+        [yaw addObject:[NSNumber numberWithInt: convertedDestinationAngle]];
+        
+        NSString *debug = [NSString stringWithFormat: @"%@degrees: %d\n", self.debugTextView.text, convertedDestinationAngle];
+        [self.debugTextView setText: debug];
+    }
 
     if ([self productType] == PT_AIRCRAFT) {
         pitch = pitchAircraftYaw;
@@ -165,78 +190,59 @@
 
         // Short delay - allow you to get out of shot - should be GUI choice/display
         [self waitFor:5];
+        
+        // We yaw the aircraft to its destination
+        // For now we'll pitch gimbal back to 0 and restart the sequence
+        // An improvement may be to move the gimbal in a "sawtooth" manner
+        for (NSNumber *nYaw in yaw) {
+            
+            if ([self productType] == PT_AIRCRAFT) {
+                
+                self.yawSpeed = 60; // This represents 20m/sec
+                self.yawDestination = [nYaw floatValue];
+                
+                // Calling this on a timer as it improves the accuracy of aircraft yaw
+                dispatch_sync(droneCmdsQueue, ^{
+                    NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraftUsingVelocity:) userInfo:nil repeats:YES];
+                    [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
+                    [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
+                    [sendTimer invalidate];
+                    sendTimer=nil;
+                });
+                
+            } else if ([self productType] == PT_HANDHELD) {
+                dispatch_sync(droneCmdsQueue, ^{
+                    [self setYaw:[nYaw floatValue]];
+                });
+            }
 
-        // Loop through the gimbal pitches
-        for (NSNumber *nPitch in pitch) {
+            // Loop through the gimbal pitches
+            for (NSNumber *nPitch in pitch) {
 
-            // Pitch the gimbal
-            dispatch_sync(droneCmdsQueue, ^{
-                [self setPitch:[nPitch floatValue]];
-            });
-
-            // Yaw loop and photo
-            for (NSNumber *nYaw in yaw) {
-
-                if ([self productType] == PT_AIRCRAFT) {
-                    
-                    // Calling this on a timer as it improves the accuracy of aircraft yaw
-                    dispatch_sync(droneCmdsQueue, ^{
-                        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat:[nYaw floatValue]], @"yaw", nil];
-                        NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraft:) userInfo:data repeats:YES];
-                        [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-                        [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-                        [sendTimer invalidate];
-                        sendTimer=nil;
-                    });
-
-                    dispatch_sync(droneCmdsQueue, ^{
-                        [self waitFor:STANDARD_DELAY];
-                    });
-                    
-                } else if ([self productType] == PT_HANDHELD) {
-                    dispatch_sync(droneCmdsQueue, ^{
-                        [self setYaw:[nYaw floatValue]];
-                    });
-                }
-
+                // Pitch the gimbal
+                dispatch_sync(droneCmdsQueue, ^{
+                    [self setPitch:[nPitch floatValue]];
+                });
+                
+                // Delay
+                dispatch_sync(droneCmdsQueue, ^{
+                    [self waitFor:STANDARD_DELAY];
+                });
+                
                 // Take the photo
                 dispatch_sync(droneCmdsQueue, ^{
                     [self takeASnap];
                 });
                 
-                // Delay before next yaw rotation
+                // Delay
                 dispatch_sync(droneCmdsQueue, ^{
                     [self waitFor:STANDARD_DELAY];
                 });
-            }
-
-        } // End pitch loop
-
-        // Zenith (handheld) or Nadir (Aircraft) are both -90 pitch
-        // Reset yaw to front for zenith/nadir
-        // TODO: refactor this bit since it's redundant with the code above
-        if ([self productType] == PT_AIRCRAFT) {
+                
+            } // End the gimbal pitch loop
             
-            // Calling this on a timer as it improves the accuracy of aircraft yaw
-            dispatch_sync(droneCmdsQueue, ^{
-                NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithFloat: 0], @"yaw", nil];
-                NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraft:) userInfo:data repeats:YES];
-                [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-                [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-                [sendTimer invalidate];
-                sendTimer=nil;
-            });
-            
-            dispatch_sync(droneCmdsQueue, ^{
-                [self waitFor:STANDARD_DELAY];
-            });
-            
-        } else if ([self productType] == PT_HANDHELD) {
-            dispatch_sync(droneCmdsQueue, ^{
-                [self setYaw:0.0];
-            });
-        }
-
+        } // End yaw loop
+        
         // Take the final zenith/nadir shot and then reset the gimbal back
         
         dispatch_sync(droneCmdsQueue, ^{
@@ -247,7 +253,7 @@
         dispatch_sync(droneCmdsQueue, ^{
             [self waitFor:STANDARD_DELAY];
         });
-
+        
         dispatch_sync(droneCmdsQueue, ^{
             [self takeASnap];
         });
@@ -256,21 +262,39 @@
         dispatch_sync(droneCmdsQueue, ^{
             [self waitFor:STANDARD_DELAY];
         });
-
+        
         dispatch_sync(droneCmdsQueue, ^{
             [self setPitch:0.0];
         });
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Sequence: Done"];
         });
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [Utils displayToastOnApp:@"Completed pano"];
             
         });
+        
     }); // End GCD
 
+}
+
+// Converts a 360 yaw angle to -180 to +180
+-(int) convertYawAngle:(int)yawAngle {
+    
+    if(yawAngle > 180) {
+        yawAngle = yawAngle - 180;
+        yawAngle = 180 - yawAngle;
+        yawAngle = yawAngle * -1;
+    }
+    
+    if(yawAngle < -180) {
+        yawAngle = yawAngle + 180; // -190 for example, which would = -10
+        yawAngle = 180 + yawAngle; // 180-10 = an absolute angle of 170
+    }
+    
+    return yawAngle;
 }
 
 
@@ -317,6 +341,21 @@
     ctrlData.roll = 0;
     ctrlData.verticalThrottle = 0;
     ctrlData.yaw = [[data objectForKey: @"yaw"] floatValue];
+    
+    DJIFlightController *fc = [self fetchFlightController];
+    
+    if (fc && fc.isVirtualStickControlModeAvailable) {
+        [fc sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
+    }
+}
+
+- (void)yawAircraftUsingVelocity:(NSTimer *)timer {
+    
+    DJIVirtualStickFlightControlData ctrlData = {0};
+    ctrlData.pitch = 0;
+    ctrlData.roll = 0;
+    ctrlData.verticalThrottle = 0;
+    ctrlData.yaw = self.yawSpeed;
     
     DJIFlightController *fc = [self fetchFlightController];
     
@@ -376,6 +415,9 @@
 }
 
 - (void)setPitch:(float)pitch {
+    
+    NSLog(@"Pitching gimbal to %f", pitch);
+    
     // For aircraft gimbal positive values represent clockwise (upward) rotation and negative values represent counter clockwise (downward) rotation
     DJIGimbalRotateDirection pitchDir = pitch > 0 ? DJIGimbalRotateDirectionClockwise : DJIGimbalRotateDirectionCounterClockwise;
     DJIGimbalAngleRotation yawR, pitchR = {};
@@ -426,58 +468,41 @@ typedef enum {
 }
 
 - (DJICamera *)fetchCamera {
-    NSLog(@"Fetching camera");
 
     ProductType pt = [self productType];
 
     if (pt == PT_AIRCRAFT) {
-        NSLog(@"Getting aircraft camera");
         return ((DJIAircraft *) self.product).camera;
     } else if (pt == PT_HANDHELD) {
-        NSLog(@"Getting handheld camera");
         return ((DJIHandheld *) self.product).camera;
     }
-
-    NSLog(@"No camera found");
 
     return nil;
 }
 
 - (DJIFlightController *)fetchFlightController {
-    NSLog(@"Fetching flight controller");
 
     ProductType pt = [self productType];
 
     if (pt == PT_AIRCRAFT) {
-        NSLog(@"Getting aircraft flight controller");
         return ((DJIAircraft *) self.product).flightController;
     }
-
-    NSLog(@"No flight controller found");
 
     return nil;
 }
 
 - (DJIGimbal *)fetchGimbal {
-    NSLog(@"Fetching gimbal");
 
     ProductType pt = [self productType];
 
     if (pt == PT_AIRCRAFT) {
-        NSLog(@"Getting aircraft gimbal");
         return ((DJIAircraft *) self.product).gimbal;
     } else if (pt == PT_HANDHELD) {
-        NSLog(@"Getting handheld gimbal");
         return ((DJIHandheld *) self.product).gimbal;
     }
 
-    NSLog(@"No gimbal found");
-
     return nil;
 }
-
-
-
 
 #pragma mark DJISDKManagerDelegate Method
 
@@ -540,7 +565,20 @@ typedef enum {
 
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
     self.currentHeading = fc.compass.heading;
-    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f", self.currentHeading];
+    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f, %d", self.currentHeading, self.yawDestination];
+    
+    int diff = abs(self.yawDestination) - abs([self convertYawAngle: self.currentHeading]);
+    
+    NSLog(@"Heading: %f, Destination: %d, Diff: %d", self.currentHeading, self.yawDestination, diff);
+    
+    self.yawSpeed = diff;
+    
+    // Check the current heading and invalidate the timer when we get to the destination
+    /*if(self.currentHeading > self.yawDestination && self.currentHeading < (self.yawDestination+5)) {
+        NSLog(@"Stopping yaw with currentHeading of: %f, and yaw of: %d", self.currentHeading, self.yawDestination);
+        self.yawSpeed = 0; // Stop yawing
+    }*/
+
 }
 
 @end
