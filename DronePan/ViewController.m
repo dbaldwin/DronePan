@@ -32,6 +32,8 @@
 @property(nonatomic, assign) double currentHeading;
 @property(nonatomic, assign) double yawSpeed;
 @property(nonatomic, assign) double yawDestination;
+@property(nonatomic, assign) float gimbalPitchDestination;
+@property(nonatomic, assign) float currentGimbalPitch;
 @property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
 @property(nonatomic, assign) float aircraftAltitude;
@@ -170,7 +172,7 @@
     
     NSArray *pitch;
     
-    int PHOTOS_PER_ROW = 8; // Make this a setting
+    int PHOTOS_PER_ROW = 6; // Make this a setting
     
     NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
     
@@ -216,6 +218,8 @@
             
             // Loop through the gimbal pitches
             for (NSNumber *nPitch in pitch) {
+            
+                self.gimbalPitchDestination = [nPitch floatValue];
                 
                 // Pitch the gimbal
                 dispatch_sync(droneCmdsQueue, ^{
@@ -406,6 +410,17 @@
 }
 
 - (void)takeASnap {
+    
+    // Before we take snap let's check to make sure the gimbal is in the desired position because we've seen several cases where a command
+    // is either ignored or dropped. This was a problem with SDK 2.4.1 and still exists with SDK 3.1
+    /*
+    
+    if(self.currentGimbalPitch > (self.gimbalPitchDestination-2.5) && self.currentGimbalPitch < (self.gimbalPitchDestination+2.5)) {
+        NSLog(@"Gimbal is in range");
+    } else {
+        NSLog(@"Gimbal is not in range which means there will be a duplicate photo at photo: %ld", self.currentCount);
+    }*/
+    
     DJICamera *camera = [self fetchCamera];
     
     if (camera) {
@@ -438,14 +453,14 @@
                 }
                 if (pitch.enabled) {
                     NSLog(@"Unable to pitch to pitch: %f,  %@", pitch.angle, error);
-                    
-                    NSString *debug = [NSString stringWithFormat: @"%@gimbal pitch error: %@\n", self.debugTextView.text, error.description];
-                    [self.debugTextView setText: debug];
-                    
                 }
             }
             
             [self waitFor:STANDARD_DELAY];
+            
+            // After a delay let's check where we are pitch-wise
+            NSLog(@"Current pitch: %f, Destination pitch: %f", self.currentGimbalPitch, self.gimbalPitchDestination);
+            
         }];
     }
 }
@@ -641,8 +656,7 @@ typedef enum {
 #pragma mark DJIGimbalDelegate Methods
 - (void)gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState *)gimbalState {
     DJIGimbalAttitude atti = gimbalState.attitudeInDegrees;
-    
-    NSLog(@"Gimbal pitch is: %f", atti.pitch);
+    self.currentGimbalPitch = atti.pitch;
 }
 
 @end
