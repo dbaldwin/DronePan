@@ -12,11 +12,11 @@
 #import "MBProgressHUD.h"
 #import "Utils.h"
 
-#define ENABLE_DEBUG_MODE 0
+#define ENABLE_DEBUG_MODE 1
 
 #define STANDARD_DELAY 3
 
-@interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate> {
+@interface ViewController () <DJICameraDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIGimbalDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -168,21 +168,9 @@
     
     NSArray *pitchOsmo = @[@-60, @-30, @0, @30];
     
-    NSArray *gimYaw30 = @[@0, @30, @60, @90, @120, @150, @180, @210, @240, @270, @300, @330];
-    
-    NSArray *aircraftYaw30 = @[@0, @45, @45, @45, @45, @45, @45, @45, @45, @45, @45, @45];
-    
-    NSArray *gimYaw45 = @[@0, @45, @90, @135, @180, @225, @270, @315];
-    
-    NSArray *aircraftYaw45 = @[@0, @67.5, @67.5, @67.5, @67.5, @67.5, @67.5, @67.5];
-    
-    NSArray *gimYaw60 = @[@0, @60, @120, @180, @240, @300];
-    
-    NSArray *aircraftYaw60 = @[@0, @60, @120, @180, @-120, @-60];
-    
     NSArray *pitch;
     
-    int PHOTOS_PER_ROW = 6;
+    int PHOTOS_PER_ROW = 8; // Make this a setting
     
     NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
     
@@ -226,26 +214,6 @@
         // An improvement may be to move the gimbal in a "sawtooth" manner
         for (NSNumber *nYaw in yaw) {
             
-            if ([self productType] == PT_AIRCRAFT) {
-                
-                self.yawSpeed = 30; // This represents 25m/sec
-                self.yawDestination = [nYaw floatValue];
-                
-                // Calling this on a timer as it improves the accuracy of aircraft yaw
-                dispatch_sync(droneCmdsQueue, ^{
-                    NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraftUsingVelocity:) userInfo:nil repeats:YES];
-                    [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
-                    [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
-                    [sendTimer invalidate];
-                    sendTimer=nil;
-                });
-                
-            } else if ([self productType] == PT_HANDHELD) {
-                dispatch_sync(droneCmdsQueue, ^{
-                    [self setYaw:[nYaw floatValue]];
-                });
-            }
-            
             // Loop through the gimbal pitches
             for (NSNumber *nPitch in pitch) {
                 
@@ -270,6 +238,33 @@
                 });
                 
             } // End the gimbal pitch loop
+            
+            // Now we yaw after a column of photos has been taken
+            if ([self productType] == PT_AIRCRAFT) {
+                
+                self.yawSpeed = 30; // This represents 25m/sec
+                self.yawDestination = [nYaw floatValue];
+                
+                // Calling this on a timer as it improves the accuracy of aircraft yaw
+                dispatch_sync(droneCmdsQueue, ^{
+                    NSTimer* sendTimer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraftUsingVelocity:) userInfo:nil repeats:YES];
+                    [[NSRunLoop currentRunLoop]addTimer:sendTimer forMode:NSDefaultRunLoopMode];
+                    [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
+                    [sendTimer invalidate];
+                    sendTimer=nil;
+                });
+                
+            } else if ([self productType] == PT_HANDHELD) {
+                dispatch_sync(droneCmdsQueue, ^{
+                    [self setYaw:[nYaw floatValue]];
+                });
+            }
+            
+            // Adding delay after yaw
+            dispatch_sync(droneCmdsQueue, ^{
+                [self waitFor:STANDARD_DELAY];
+            });
+            
             
         } // End yaw loop
         
@@ -320,7 +315,7 @@
     // When a users clicks the start button that will be the point of reference from
     // Which we build the entire array of yaw angles
     for(int i=0; i<count; i++) {
-        double destinationAngle = heading + (YAW_ANGLE*i);
+        double destinationAngle = heading + (YAW_ANGLE*(i+1)); // The +1 makes sure the first destination is not the current heading
         
         if(destinationAngle > 360)
             destinationAngle = destinationAngle - 360;
@@ -397,9 +392,6 @@
 
 - (void)yawAircraftUsingVelocity:(NSTimer *)timer {
     
-    NSLog(@"Current heading: %f, Destination: %f", self.currentHeading, self.yawDestination);
-    NSLog(@"Yaw speed: %f", self.yawSpeed);
-    
     DJIVirtualStickFlightControlData ctrlData = {0};
     ctrlData.pitch = 0;
     ctrlData.roll = 0;
@@ -446,6 +438,10 @@
                 }
                 if (pitch.enabled) {
                     NSLog(@"Unable to pitch to pitch: %f,  %@", pitch.angle, error);
+                    
+                    NSString *debug = [NSString stringWithFormat: @"%@gimbal pitch error: %@\n", self.debugTextView.text, error.description];
+                    [self.debugTextView setText: debug];
+                    
                 }
             }
             
@@ -580,6 +576,14 @@ typedef enum {
             }
         }
         
+        // Setup the gimbal delegate because the gimbal tends to ignore commands from time to time
+        // We want to verify the gimbal pitch before we shoot
+        DJIGimbal *gimbal = [self fetchGimbal];
+        
+        if(gimbal) {
+            [gimbal setDelegate:self];
+        }
+        
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
@@ -632,6 +636,13 @@ typedef enum {
         self.yawSpeed = fmod(360.0,diff)*0.5;
     }
 
+}
+
+#pragma mark DJIGimbalDelegate Methods
+- (void)gimbalController:(DJIGimbal *)controller didUpdateGimbalState:(DJIGimbalState *)gimbalState {
+    DJIGimbalAttitude atti = gimbalState.attitudeInDegrees;
+    
+    NSLog(@"Gimbal pitch is: %f", atti.pitch);
 }
 
 @end
