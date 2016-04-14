@@ -80,7 +80,17 @@
 // Let's detect the aircraft and then start the sequence
 - (IBAction)startPano:(id)sender {
     
+    // Check to see if a pano is in progress
+    NSString *label = self.startButton.currentTitle;
+    if([label isEqualToString:@"Stop"]) {
+        NSLog(@"Let's stop the pano");
+        return;
+    }
+    
     [Utils displayToastOnApp:@"Starting pano"];
+    
+    // Change the button text to stop
+    [self.startButton setTitle: @"Stop" forState: UIControlStateNormal];
     
     NSString *model = self.product.model;
     
@@ -123,6 +133,7 @@
 }
 
 // This is a test method to isolate yaw with no other commands - we can pull it out later
+/*
 -(void)doPanoLoop3 {
     
     int PHOTOS_PER_ROW = 6;
@@ -161,10 +172,9 @@
         
     });
 }
+ */
 
 - (void)doPanoLoop {
-    
-    NSArray *pitchGimbalYaw = @[@0, @-30, @-60];
     
     NSArray *pitchAircraftYaw = @[@0, @-30, @-60];
     
@@ -273,9 +283,9 @@
         } // End yaw loop
         
         // Take the final zenith/nadir shot and then reset the gimbal back
-        
         dispatch_sync(droneCmdsQueue, ^{
-            [self setPitch:-90.0];
+            self.gimbalPitchDestination = -90.0;
+            [self setPitch:self.gimbalPitchDestination];
         });
         
         // Delay before we take the final photo
@@ -293,7 +303,8 @@
         });
         
         dispatch_sync(droneCmdsQueue, ^{
-            [self setPitch:0.0];
+            self.gimbalPitchDestination = 0;
+            [self setPitch:self.gimbalPitchDestination];
         });
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -302,7 +313,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [Utils displayToastOnApp:@"Completed pano"];
-            
+            [self.startButton setTitle: @"Start" forState: UIControlStateNormal];
         });
         
     }); // End GCD
@@ -410,17 +421,7 @@
 }
 
 - (void)takeASnap {
-    
-    // Before we take snap let's check to make sure the gimbal is in the desired position because we've seen several cases where a command
-    // is either ignored or dropped. This was a problem with SDK 2.4.1 and still exists with SDK 3.1
-    /*
-    
-    if(self.currentGimbalPitch > (self.gimbalPitchDestination-2.5) && self.currentGimbalPitch < (self.gimbalPitchDestination+2.5)) {
-        NSLog(@"Gimbal is in range");
-    } else {
-        NSLog(@"Gimbal is not in range which means there will be a duplicate photo at photo: %ld", self.currentCount);
-    }*/
-    
+
     DJICamera *camera = [self fetchCamera];
     
     if (camera) {
@@ -458,9 +459,6 @@
             
             [self waitFor:STANDARD_DELAY];
             
-            // After a delay let's check where we are pitch-wise
-            NSLog(@"Current pitch: %f, Destination pitch: %f", self.currentGimbalPitch, self.gimbalPitchDestination);
-            
         }];
     }
 }
@@ -476,8 +474,6 @@
 
 - (void)setPitch:(float)pitch {
     
-    NSLog(@"Pitching gimbal to %f", pitch);
-    
     // For aircraft gimbal positive values represent clockwise (upward) rotation and negative values represent counter clockwise (downward) rotation
     DJIGimbalRotateDirection pitchDir = pitch > 0 ? DJIGimbalRotateDirectionClockwise : DJIGimbalRotateDirectionCounterClockwise;
     DJIGimbalAngleRotation yawR, pitchR = {};
@@ -487,6 +483,20 @@
     pitchR.direction = pitchDir;
     
     [self setYaw:yawR pitch:pitchR];
+    
+    // Let's delay for 2 seconds and then check to see if the gimbal has moved to the destination
+    // if it hasn't then let's retry setting the gimbal pitch
+    double delayInSeconds = 2.0;
+    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(delay, dispatch_get_main_queue(), ^(void){
+        if(self.currentGimbalPitch > (self.gimbalPitchDestination-2.5) && self.currentGimbalPitch < (self.gimbalPitchDestination+2.5)) {
+            //NSLog(@"Gimbal pitch in correct position");
+        } else {
+            NSLog(@"Gimbal not in correct position. Let's check photo #%ld", self.currentCount);
+            [self setPitch: self.gimbalPitchDestination];
+        }
+    });
+    
 }
 
 - (IBAction)launchSettingsView:(id)sender {
