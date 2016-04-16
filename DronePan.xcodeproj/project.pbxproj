@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
+		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
+		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
 		232F6F121C5448320013CCD9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F111C5448320013CCD9 /* main.m */; };
 		232F6F151C5448320013CCD9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F141C5448320013CCD9 /* AppDelegate.m */; };
 		232F6F181C5448320013CCD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F171C5448320013CCD9 /* ViewController.m */; };
@@ -38,6 +41,7 @@
 		23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C5D0DF1C91CBE30017F6F8 /* Utils.m */; };
 		23C5D0E41C92359E0017F6F8 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; };
 		23C5D0E51C92359E0017F6F8 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +76,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1583BF541CC26C2100C00C0D /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
+		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
+		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		232F6F111C5448320013CCD9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		232F6F131C5448320013CCD9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -209,6 +217,7 @@
 		232F6FDF1C546E830013CCD9 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		23C5D0DE1C91CBE30017F6F8 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		23C5D0DF1C91CBE30017F6F8 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -282,6 +291,7 @@
 			children = (
 				232F6F131C5448320013CCD9 /* AppDelegate.h */,
 				232F6F141C5448320013CCD9 /* AppDelegate.m */,
+				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
 				232F6F1C1C5448320013CCD9 /* Assets.xcassets */,
 				232F6F431C5449280013CCD9 /* DJISDK.framework */,
 				232F6F211C5448320013CCD9 /* Info.plist */,
@@ -291,6 +301,10 @@
 				232F6FDF1C546E830013CCD9 /* MBProgressHUD.m */,
 				232F6F101C5448320013CCD9 /* Supporting Files */,
 				232F6F451C54493B0013CCD9 /* VideoPreviewer */,
+				1583BF541CC26C2100C00C0D /* CameraController.swift */,
+				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
+				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
+				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
 				232F6F161C5448320013CCD9 /* ViewController.h */,
 				232F6F171C5448320013CCD9 /* ViewController.m */,
 				23C5D0DE1C91CBE30017F6F8 /* Utils.h */,
@@ -712,14 +726,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */,
+				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
 				232F6FD01C54493B0013CCD9 /* VideoFrameExtractor.m in Sources */,
 				232F6FCF1C54493B0013CCD9 /* MovieGLView.m in Sources */,
 				232F6F181C5448320013CCD9 /* ViewController.m in Sources */,
 				232F6F151C5448320013CCD9 /* AppDelegate.m in Sources */,
 				232F6F121C5448320013CCD9 /* main.m in Sources */,
+				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				232F6FC51C54493B0013CCD9 /* DJILinkQueues.m in Sources */,
 				232F6FD11C54493B0013CCD9 /* VideoPreviewer.m in Sources */,
+				15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */,
 				232F6FE01C546E830013CCD9 /* MBProgressHUD.m in Sources */,
+				4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -876,6 +894,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DronePan/DronePan-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -898,6 +917,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "DronePan/DronePan-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
