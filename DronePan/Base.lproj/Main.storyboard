@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -130,7 +130,7 @@
         <!--Settings View Controller-->
         <scene sceneID="EzA-xT-5NI">
             <objects>
-                <viewController storyboardIdentifier="Settings" id="fxj-Bn-uya" customClass="SettingsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Settings" id="fxj-Bn-uya" customClass="SettingsViewController" customModule="DronePan" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5Fq-aP-CVc"/>
                         <viewControllerLayoutGuide type="bottom" id="uAt-4Q-C0s"/>
@@ -208,7 +208,7 @@
                                 </constraints>
                                 <state key="normal" title="Save"/>
                                 <connections>
-                                    <action selector="saveSettings:" destination="fxj-Bn-uya" eventType="touchUpInside" id="EL1-hT-smQ"/>
+                                    <action selector="saveSettings:" destination="fxj-Bn-uya" eventType="touchUpInside" id="cmR-Uq-Dfw"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eda-ZZ-HW9">
@@ -247,7 +247,7 @@
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
-                        <outlet property="photoDelayControl" destination="JDk-5N-vj5" id="ugW-7e-roF"/>
+                        <outlet property="photoDelayControl" destination="JDk-5N-vj5" id="JY9-7s-CII"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43s-vL-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>

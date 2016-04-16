@@ -17,6 +17,8 @@
 
 @interface ViewController : UIViewController
 
+-(double) headingTo360:(double)heading;
+- (NSArray *)yawAnglesForCount:(int)count withHeading:(double)heading;
 
 @end
 

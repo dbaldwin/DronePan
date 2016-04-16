@@ -6,13 +6,13 @@
 //
 
 #import "ViewController.h"
-#import "SettingsViewController.h"
+#import "DronePan-Swift.h"
 #import <DJISDK/DJISDK.h>
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
 #import "Utils.h"
 
-#define ENABLE_DEBUG_MODE 1
+#define ENABLE_DEBUG_MODE 0
 
 #define STANDARD_DELAY 3
 
