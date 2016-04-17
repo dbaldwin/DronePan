@@ -14,7 +14,6 @@
  */
 
 #import "ViewController.h"
-#import "DronePan-Swift.h"
 #import <DJISDK/DJISDK.h>
 #import "VideoPreviewer.h"
 #import "MBProgressHUD.h"
@@ -155,8 +154,10 @@
     NSArray *pitchOsmo = @[@-60, @-30, @0, @30];
 
     NSArray *pitch;
-
-    int PHOTOS_PER_ROW = 6; // Make this a setting
+    
+    // Get the photos per row count from the settings VC
+    SettingsViewController *settings = [[SettingsViewController alloc] init];
+    int PHOTOS_PER_ROW = [settings getSetting: @"photos_per_row"];
 
     NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
 
@@ -348,9 +349,16 @@
 }
 
 - (IBAction)launchSettingsView:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    SettingsViewController *settings = [storyboard instantiateViewControllerWithIdentifier:@"Settings"];
-    [self presentViewController:settings animated:YES completion:nil];
+    [self performSegueWithIdentifier:@"launchSettings" sender:nil];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    SettingsViewController *settings = [segue destinationViewController];
+    
+    if(self.product.model.length == 0)
+        settings.model = @"Simulator"; // This is for testing in dev env
+    else
+        settings.model = self.product.model; // Pass the model to Settings VC
 }
 
 #pragma mark - GimbalControllerDelegate

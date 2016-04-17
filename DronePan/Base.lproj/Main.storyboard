@@ -121,11 +121,12 @@
                         <outlet property="headingLabel" destination="45f-k0-R1S" id="Opc-Uh-i0j"/>
                         <outlet property="sequenceLabel" destination="jQe-Pe-bik" id="IHw-S9-flK"/>
                         <outlet property="startButton" destination="ohx-RD-uKh" id="VDh-yo-ohn"/>
+                        <segue destination="fxj-Bn-uya" kind="presentation" identifier="launchSettings" id="vVQ-rt-O3Q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="287" y="276"/>
+            <point key="canvasLocation" x="257" y="276"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="EzA-xT-5NI">
@@ -139,20 +140,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delay between photos:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xla-iX-iIr">
-                                <rect key="frame" x="49" y="28" width="176" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delay between photos:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xla-iX-iIr">
+                                <rect key="frame" x="50" y="231" width="176" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of photos per row:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtZ-dc-gsG">
-                                <rect key="frame" x="48" y="161" width="206" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of photos per row:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtZ-dc-gsG">
+                                <rect key="frame" x="49" y="364" width="206" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Dl-OL-Xmr">
-                                <rect key="frame" x="273" y="158" width="197" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Dl-OL-Xmr">
+                                <rect key="frame" x="274" y="361" width="271" height="29"/>
                                 <segments>
                                     <segment title="6"/>
                                     <segment title="8"/>
@@ -162,15 +163,18 @@
                                     <segment title="15"/>
                                     <segment title="18"/>
                                 </segments>
+                                <connections>
+                                    <action selector="photosPerRowChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="9M8-IC-bHn"/>
+                                </connections>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of rows:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U0C-3d-ygf">
-                                <rect key="frame" x="48" y="266" width="127" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of rows:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U0C-3d-ygf">
+                                <rect key="frame" x="49" y="469" width="127" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JDk-5N-vj5">
-                                <rect key="frame" x="243" y="25" width="197" height="29"/>
+                                <rect key="frame" x="244" y="228" width="339" height="29"/>
                                 <segments>
                                     <segment title="1"/>
                                     <segment title="2"/>
@@ -180,21 +184,21 @@
                                     <segment title="6"/>
                                 </segments>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZn-je-j4U">
-                                <rect key="frame" x="49" y="44" width="442" height="81"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZn-je-j4U">
+                                <rect key="frame" x="50" y="247" width="442" height="81"/>
                                 <string key="text">Controls the # of seconds after each photo is taken. Be careful with this setting as it can have an impact on whether or the photo is complete before the next yaw rotation.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Controls how many photos are taken in a row, and ultimately the angle between each photo. fff" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FIE-6I-2YJ">
-                                <rect key="frame" x="48" y="171" width="534" height="71"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Controls how many photos are taken in a row, and ultimately the angle between each photo. adddd dd" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FIE-6I-2YJ">
+                                <rect key="frame" x="7" y="374" width="576" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The number of rows not including the nadir (for aircraft) and zenith (for Osmo) shot" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Hb-kN-LRc">
-                                <rect key="frame" x="48" y="271" width="534" height="71"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="The number of rows not including the nadir (for aircraft) and zenith (for Osmo) shot" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Hb-kN-LRc">
+                                <rect key="frame" x="49" y="474" width="534" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -212,7 +216,7 @@
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eda-ZZ-HW9">
-                                <rect key="frame" x="191" y="263" width="121" height="29"/>
+                                <rect key="frame" x="192" y="466" width="121" height="29"/>
                                 <segments>
                                     <segment title="3"/>
                                     <segment title="4"/>
@@ -220,13 +224,36 @@
                                 </segments>
                             </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="** Based on settings above we can display to the user an estimated # of photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-Jn-aaq">
-                                <rect key="frame" x="49" y="350" width="607" height="21"/>
+                                <rect key="frame" x="50" y="553" width="607" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="** Maybe we can give a rough estimate of time. 18 photos/row with 5 rows will be 90 photos and take about 5 min at 3s delay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b6N-eT-N8F">
-                                <rect key="frame" x="48" y="396" width="955" height="21"/>
+                                <rect key="frame" x="49" y="599" width="955" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delay before starting pano (seconds):" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-Jm-WCn">
+                                <rect key="frame" x="49" y="28" width="288" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uvL-N9-jUN">
+                                <rect key="frame" x="350" y="25" width="250" height="29"/>
+                                <segments>
+                                    <segment title="5"/>
+                                    <segment title="10"/>
+                                    <segment title="15"/>
+                                    <segment title="20"/>
+                                    <segment title="25"/>
+                                    <segment title="30"/>
+                                </segments>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Angle:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePt-uY-5qw">
+                                <rect key="frame" x="553" y="364" width="95" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -236,18 +263,15 @@
                         <constraints>
                             <constraint firstItem="d4Y-Wf-wug" firstAttribute="centerX" secondItem="m9e-md-Mho" secondAttribute="centerX" id="63H-Oq-eTZ"/>
                             <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="d4Y-Wf-wug" secondAttribute="bottom" constant="50" id="Fj1-pI-ssF"/>
-                            <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="d4Y-Wf-wug" secondAttribute="bottom" constant="50" id="UOC-nm-gy4"/>
+                            <constraint firstItem="ePt-uY-5qw" firstAttribute="leading" secondItem="6Dl-OL-Xmr" secondAttribute="trailing" constant="27" id="G0G-hS-3tj"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="UOC-nm-gy4"/>
-                            </mask>
-                        </variation>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
+                        <outlet property="angleLabel" destination="ePt-uY-5qw" id="om4-C6-jgk"/>
                         <outlet property="photoDelayControl" destination="JDk-5N-vj5" id="JY9-7s-CII"/>
+                        <outlet property="photosPerRowControl" destination="6Dl-OL-Xmr" id="giL-ia-LdW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43s-vL-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>
