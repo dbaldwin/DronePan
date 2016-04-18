@@ -42,6 +42,7 @@
 		23C5D0E41C92359E0017F6F8 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; };
 		23C5D0E51C92359E0017F6F8 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6F431C5449280013CCD9 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
+		839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +219,7 @@
 		23C5D0DE1C91CBE30017F6F8 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		23C5D0DF1C91CBE30017F6F8 /* Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
+		839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,6 +307,7 @@
 				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
 				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
+				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
 				232F6F161C5448320013CCD9 /* ViewController.h */,
 				232F6F171C5448320013CCD9 /* ViewController.m */,
 				23C5D0DE1C91CBE30017F6F8 /* Utils.h */,
@@ -725,6 +728,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				23C5D0E01C91CBE30017F6F8 /* Utils.m in Sources */,
 				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
 				232F6FD01C54493B0013CCD9 /* VideoFrameExtractor.m in Sources */,
