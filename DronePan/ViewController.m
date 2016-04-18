@@ -86,6 +86,8 @@
     [super viewDidLoad];
     self.gimbalDispatchGroup = dispatch_group_create();
     self.cameraDispatchGroup = dispatch_group_create();
+    
+    [self.startButton setEnabled:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -463,6 +465,7 @@ typedef enum {
         self.product = newProduct;
 
         [self.connectionStatusLabel setText:newProduct.model];
+        [self.startButton setEnabled:YES];
 
         // Set the flight controller delegate only with aircraft. Ignore for Osmo.
         if ([self productType] == PT_AIRCRAFT) {
@@ -499,6 +502,8 @@ typedef enum {
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
+        [self.startButton setEnabled:NO];
+
 
         NSLog(@"Product disconnected");
 
