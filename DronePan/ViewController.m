@@ -155,9 +155,7 @@
 
     NSArray *pitch;
     
-    // Get the photos per row count from the settings VC
-    SettingsViewController *settings = [[SettingsViewController alloc] init];
-    int PHOTOS_PER_ROW = [settings getSetting: @"photos_per_row"];
+    long PHOTOS_PER_ROW = [ModelSettings photosPerRow:self.product.model];
 
     NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
 
@@ -235,7 +233,7 @@
 
 }
 
-- (NSArray *)yawAnglesForCount:(int)count withHeading:(double)heading {
+- (NSArray *)yawAnglesForCount:(long)count withHeading:(double)heading {
     // We must ensure that valid PHOTOS_PER_ROW in settings is a divisor of 360
     int YAW_ANGLE = 360 / count;
 
