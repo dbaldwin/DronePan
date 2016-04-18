@@ -140,20 +140,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Delay between photos:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xla-iX-iIr">
-                                <rect key="frame" x="50" y="231" width="176" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delay between photos:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xla-iX-iIr">
+                                <rect key="frame" x="20" y="91" width="176" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of photos per row:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtZ-dc-gsG">
-                                <rect key="frame" x="49" y="364" width="206" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of photos per row:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtZ-dc-gsG">
+                                <rect key="frame" x="20" y="173.5" width="206" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Dl-OL-Xmr">
-                                <rect key="frame" x="274" y="361" width="271" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Dl-OL-Xmr">
+                                <rect key="frame" x="234" y="170.5" width="245" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="245" id="25j-CI-XoX"/>
+                                </constraints>
                                 <segments>
                                     <segment title="6"/>
                                     <segment title="8"/>
@@ -167,14 +170,11 @@
                                     <action selector="photosPerRowChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="9M8-IC-bHn"/>
                                 </connections>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of rows:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U0C-3d-ygf">
-                                <rect key="frame" x="49" y="469" width="127" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JDk-5N-vj5">
-                                <rect key="frame" x="244" y="228" width="339" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JDk-5N-vj5">
+                                <rect key="frame" x="234" y="88" width="210" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="210" id="MdG-2x-ieF"/>
+                                </constraints>
                                 <segments>
                                     <segment title="1"/>
                                     <segment title="2"/>
@@ -184,27 +184,21 @@
                                     <segment title="6"/>
                                 </segments>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZn-je-j4U">
-                                <rect key="frame" x="50" y="247" width="442" height="81"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JZn-je-j4U">
+                                <rect key="frame" x="20" y="124" width="962.5" height="14.5"/>
                                 <string key="text">Controls the # of seconds after each photo is taken. Be careful with this setting as it can have an impact on whether or the photo is complete before the next yaw rotation.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Controls how many photos are taken in a row, and ultimately the angle between each photo. adddd dd" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FIE-6I-2YJ">
-                                <rect key="frame" x="7" y="374" width="576" height="71"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Controls how many photos are taken in a row, and ultimately the angle between each photo. adddd dd" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FIE-6I-2YJ">
+                                <rect key="frame" x="20" y="206.5" width="576" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Three rows does not include the sky. If you want the sky shot then you need to select four." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Hb-kN-LRc">
-                                <rect key="frame" x="49" y="474" width="534" height="71"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Wf-wug">
-                                <rect key="frame" x="473" y="645" width="78" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Wf-wug">
+                                <rect key="frame" x="473" y="658" width="78" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="78" id="Fjs-HX-TAl"/>
@@ -215,34 +209,29 @@
                                     <action selector="saveSettings:" destination="fxj-Bn-uya" eventType="touchUpInside" id="cmR-Uq-Dfw"/>
                                 </connections>
                             </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eda-ZZ-HW9">
-                                <rect key="frame" x="192" y="466" width="121" height="29"/>
-                                <segments>
-                                    <segment title="3"/>
-                                    <segment title="4"/>
-                                    <segment title="5"/>
-                                </segments>
-                            </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="** Based on settings above we can display to the user an estimated # of photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-Jn-aaq">
-                                <rect key="frame" x="50" y="553" width="607" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="** Based on settings above we can display to the user an estimated # of photos" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-Jn-aaq">
+                                <rect key="frame" x="20" y="335.5" width="607" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="** Maybe we can give a rough estimate of time. 18 photos/row with 5 rows will be 90 photos and take about 5 min at 3s delay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b6N-eT-N8F">
-                                <rect key="frame" x="49" y="599" width="955" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="** Maybe we can give a rough estimate of time. 18 photos/row with 5 rows will be 90 photos and take about 5 min at 3s delay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b6N-eT-N8F">
+                                <rect key="frame" x="20" y="364.5" width="955" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start delay (seconds):" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-Jm-WCn">
-                                <rect key="frame" x="49" y="28" width="168" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start delay (seconds):" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-Jm-WCn">
+                                <rect key="frame" x="20" y="31" width="168" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uvL-N9-jUN">
-                                <rect key="frame" x="350" y="25" width="250" height="29"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="uvL-N9-jUN">
+                                <rect key="frame" x="234" y="28" width="210" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="210" id="DCd-G4-ba9"/>
+                                </constraints>
                                 <segments>
                                     <segment title="5"/>
                                     <segment title="10"/>
@@ -252,19 +241,77 @@
                                     <segment title="30"/>
                                 </segments>
                             </segmentedControl>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Angle:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePt-uY-5qw">
-                                <rect key="frame" x="553" y="364" width="95" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Angle:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ePt-uY-5qw">
+                                <rect key="frame" x="506" y="174" width="48.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of rows:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U0C-3d-ygf">
+                                <rect key="frame" x="20" y="256" width="127" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Three rows does not include the sky. If you want the sky shot then you need to select four." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Hb-kN-LRc">
+                                <rect key="frame" x="20" y="289" width="510.5" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eda-ZZ-HW9">
+                                <rect key="frame" x="234" y="253" width="105" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="105" id="PZc-dY-X7z"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="3"/>
+                                    <segment title="4"/>
+                                    <segment title="5"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="d4Y-Wf-wug" firstAttribute="centerX" secondItem="m9e-md-Mho" secondAttribute="centerX" id="63H-Oq-eTZ"/>
+                            <constraint firstItem="9Hb-kN-LRc" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="7NE-Cp-s6B"/>
+                            <constraint firstItem="Tq4-Jn-aaq" firstAttribute="top" secondItem="9Hb-kN-LRc" secondAttribute="bottom" constant="32" id="B0H-41-b9X"/>
+                            <constraint firstItem="xla-iX-iIr" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="C1o-i3-8LG"/>
+                            <constraint firstItem="uvL-N9-jUN" firstAttribute="centerY" secondItem="qcZ-Jm-WCn" secondAttribute="centerY" id="Czh-VF-uSy"/>
+                            <constraint firstItem="ePt-uY-5qw" firstAttribute="centerY" secondItem="6Dl-OL-Xmr" secondAttribute="centerY" id="EGC-rK-jdo"/>
+                            <constraint firstItem="FIE-6I-2YJ" firstAttribute="top" secondItem="6Dl-OL-Xmr" secondAttribute="bottom" constant="8" symbolic="YES" id="F7e-Ql-FYX"/>
+                            <constraint firstItem="FIE-6I-2YJ" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="FL5-IT-vuN"/>
                             <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="d4Y-Wf-wug" secondAttribute="bottom" constant="50" id="Fj1-pI-ssF"/>
+                            <constraint firstItem="6Dl-OL-Xmr" firstAttribute="centerY" secondItem="wtZ-dc-gsG" secondAttribute="centerY" id="Fps-SR-2jA"/>
                             <constraint firstItem="ePt-uY-5qw" firstAttribute="leading" secondItem="6Dl-OL-Xmr" secondAttribute="trailing" constant="27" id="G0G-hS-3tj"/>
+                            <constraint firstItem="9Hb-kN-LRc" firstAttribute="top" secondItem="eda-ZZ-HW9" secondAttribute="bottom" constant="8" symbolic="YES" id="G2r-Qe-Cz1"/>
+                            <constraint firstItem="JDk-5N-vj5" firstAttribute="centerY" secondItem="xla-iX-iIr" secondAttribute="centerY" id="IMt-bt-2Z9"/>
+                            <constraint firstItem="JZn-je-j4U" firstAttribute="top" secondItem="JDk-5N-vj5" secondAttribute="bottom" constant="8" symbolic="YES" id="Ifk-yF-CwE"/>
+                            <constraint firstItem="6Dl-OL-Xmr" firstAttribute="leading" secondItem="wtZ-dc-gsG" secondAttribute="trailing" constant="8" symbolic="YES" id="Jyg-7a-9mW"/>
+                            <constraint firstItem="6Dl-OL-Xmr" firstAttribute="top" secondItem="JZn-je-j4U" secondAttribute="bottom" constant="32" id="OFJ-rG-sMX"/>
+                            <constraint firstItem="JDk-5N-vj5" firstAttribute="top" secondItem="uvL-N9-jUN" secondAttribute="bottom" constant="172" id="Pgu-j6-aFw"/>
+                            <constraint firstItem="qcZ-Jm-WCn" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="S5h-ME-iBA"/>
+                            <constraint firstItem="uvL-N9-jUN" firstAttribute="top" secondItem="5Fq-aP-CVc" secondAttribute="bottom" constant="8" symbolic="YES" id="SxT-ou-8iv"/>
+                            <constraint firstItem="JDk-5N-vj5" firstAttribute="top" secondItem="uvL-N9-jUN" secondAttribute="bottom" constant="32" id="TFX-m0-PiI"/>
+                            <constraint firstItem="JDk-5N-vj5" firstAttribute="leading" secondItem="uvL-N9-jUN" secondAttribute="leading" id="fyT-3M-WH6"/>
+                            <constraint firstItem="b6N-eT-N8F" firstAttribute="top" secondItem="Tq4-Jn-aaq" secondAttribute="bottom" constant="8" symbolic="YES" id="gVL-ot-uv4"/>
+                            <constraint firstItem="eda-ZZ-HW9" firstAttribute="centerY" secondItem="U0C-3d-ygf" secondAttribute="centerY" id="hUe-9h-pAg"/>
+                            <constraint firstItem="b6N-eT-N8F" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="iOk-WA-DUg"/>
+                            <constraint firstItem="uvL-N9-jUN" firstAttribute="leading" secondItem="qcZ-Jm-WCn" secondAttribute="trailing" constant="8" symbolic="YES" id="j3T-ad-lCo"/>
+                            <constraint firstItem="6Dl-OL-Xmr" firstAttribute="leading" secondItem="uvL-N9-jUN" secondAttribute="leading" id="l7B-So-8cO"/>
+                            <constraint firstItem="wtZ-dc-gsG" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="lrq-qD-Zyl"/>
+                            <constraint firstItem="JZn-je-j4U" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="oef-Ud-vwT"/>
+                            <constraint firstItem="eda-ZZ-HW9" firstAttribute="top" secondItem="FIE-6I-2YJ" secondAttribute="bottom" constant="32" id="pG8-Id-G1D"/>
+                            <constraint firstItem="eda-ZZ-HW9" firstAttribute="leading" secondItem="uvL-N9-jUN" secondAttribute="leading" id="sYU-2u-G7m"/>
+                            <constraint firstItem="U0C-3d-ygf" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="ths-YV-urz"/>
+                            <constraint firstItem="Tq4-Jn-aaq" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="20" symbolic="YES" id="xcJ-6f-7pq"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="j3T-ad-lCo"/>
+                                <exclude reference="Pgu-j6-aFw"/>
+                            </mask>
+                        </variation>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
