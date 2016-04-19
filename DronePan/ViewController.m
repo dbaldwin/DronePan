@@ -45,6 +45,7 @@
 @property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
 @property(nonatomic, assign) float aircraftAltitude;
+@property(nonatomic, assign) bool panoInProgress;
 
 @property(nonatomic, strong) GimbalController *gimbalController;
 @property(nonatomic, strong) dispatch_group_t gimbalDispatchGroup;
@@ -85,7 +86,8 @@
     self.gimbalDispatchGroup = dispatch_group_create();
     self.cameraDispatchGroup = dispatch_group_create();
     
-    [self.startButton setEnabled:NO];
+    // Temporarily disabling during testing
+    //[self.startButton setEnabled:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -95,17 +97,25 @@
 // Let's detect the aircraft and then start the sequence
 - (IBAction)startPano:(id)sender {
 
-    // Check to see if a pano is in progress
-    NSString *label = self.startButton.currentTitle;
-    if ([label isEqualToString:@"Stop"]) {
-        NSLog(@"Let's stop the pano");
+    // Need to get this all hooked up so we can stop the pano
+    if (self.panoInProgress) {
+        
+        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
+        
+        [Utils displayToastOnApp:@"Stopping pano"];
+        
+        self.panoInProgress = false;
+        
         return;
+        
     }
+    
+    
+    self.panoInProgress = true;
+    
+    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
 
     [Utils displayToastOnApp:@"Starting pano"];
-
-    // Change the button text to stop
-    [self.startButton setTitle:@"Stop" forState:UIControlStateNormal];
 
     NSString *model = self.product.model;
 

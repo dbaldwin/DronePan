@@ -76,15 +76,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGr-ob-jSa">
                                 <rect key="frame" x="0.0" y="52" width="1024" height="716"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
-                                        <rect key="frame" x="432" y="565" width="160" height="80"/>
-                                        <color key="backgroundColor" red="0.0" green="0.47843137254901957" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ohx-RD-uKh">
+                                        <rect key="frame" x="448" y="541" width="128" height="128"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="80" id="jbo-Qp-ORG"/>
-                                            <constraint firstAttribute="width" constant="160" id="mJU-gi-hr8"/>
+                                            <constraint firstAttribute="height" constant="128" id="jbo-Qp-ORG"/>
+                                            <constraint firstAttribute="width" constant="128" id="mJU-gi-hr8"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                        <state key="normal" title="Start"/>
+                                        <state key="normal" backgroundImage="Start"/>
                                         <state key="disabled">
                                             <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -100,7 +99,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="ohx-RD-uKh" secondAttribute="bottom" constant="20" symbolic="YES" id="LnV-bX-qeZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="ohx-RD-uKh" secondAttribute="bottom" constant="47" id="LnV-bX-qeZ"/>
                                     <constraint firstItem="ohx-RD-uKh" firstAttribute="centerX" secondItem="kGr-ob-jSa" secondAttribute="centerX" id="hxp-eW-uLr"/>
                                 </constraints>
                             </view>
@@ -332,5 +331,6 @@
     </scenes>
     <resources>
         <image name="Settings2" width="32" height="32"/>
+        <image name="Start" width="128" height="128"/>
     </resources>
 </document>
