@@ -51,8 +51,6 @@
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
 
-@property(weak, nonatomic) IBOutlet UITextView *debugTextView;
-
 - (IBAction)startPano:(id)sender;
 
 @end
@@ -251,11 +249,6 @@
             destinationAngle = destinationAngle - 360;
 
         [yaw addObject:@(destinationAngle)];
-
-        NSString *debug = [NSString stringWithFormat:@"%@degrees: %f\n", self.debugTextView.text, destinationAngle];
-        [self.debugTextView setText:debug];
-
-        NSLog(@"angle: %f\n", destinationAngle);
     }
 
     return yaw;
