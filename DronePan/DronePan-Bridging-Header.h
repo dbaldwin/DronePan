@@ -18,5 +18,6 @@
 #ifndef DronePan_Bridging_Header_h
 #define DronePan_Bridging_Header_h
 
+#include "ViewController.h"
 
 #endif
