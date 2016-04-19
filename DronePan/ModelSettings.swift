@@ -24,22 +24,14 @@ enum SettingsKeys: String {
 }
 
 @objc class ModelSettings: NSObject {
-    private class func settingForKey(model: String, key: SettingsKeys, defaultValue: AnyObject) -> AnyObject {
-        var value = defaultValue
-        
-        if let settings = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) {
-            if let storedValue = settings[key.rawValue] {
-                value = storedValue
-            }
-        }
-        
-        return value
+    private class func settingForKey(model: String, key: SettingsKeys) -> AnyObject? {
+        return NSUserDefaults.standardUserDefaults().dictionaryForKey(model)?[key.rawValue]
     }
     
     private class func intSettingForKey(model: String, key: SettingsKeys, defaultValue: Int) -> Int {
         var value = defaultValue
         
-        if let storedValue = ModelSettings.settingForKey(model, key: key, defaultValue: defaultValue) as? Int {
+        if let storedValue = ModelSettings.settingForKey(model, key: key) as? Int {
             value = storedValue
         }
         
@@ -49,7 +41,7 @@ enum SettingsKeys: String {
     private class func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
         var value = defaultValue
         
-        if let storedValue = ModelSettings.settingForKey(model, key: key, defaultValue: defaultValue) as? Bool {
+        if let storedValue = ModelSettings.settingForKey(model, key: key) as? Bool {
             value = storedValue
         }
         
