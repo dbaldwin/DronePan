@@ -94,7 +94,7 @@ import DJISDK
         }
     }
 
-    private func gimbalAngleForHeading(angle: Float) -> Float {
+    func gimbalAngleForHeading(angle: Float) -> Float {
         let sign = (angle == 0) ? 1 : angle / fabs(angle)
 
         var angleInRange = angle * sign
