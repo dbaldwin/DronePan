@@ -164,11 +164,17 @@
     NSArray *pitch;
     
     long PHOTOS_PER_ROW = [ModelSettings photosPerRow:self.product.model];
+    
+    // Switch from config when available
+    bool aircraftYaw = YES;
 
     if ([self productType] == PT_AIRCRAFT) {
         pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
         pitch = pitchOsmo;
+        
+        // Force gimbal yaw for handheld
+        aircraftYaw = NO;
         
         // Osmo has no heading - set to 0
         // TODO - should also be done for gimbal yaw of AC when that is in place
@@ -208,7 +214,7 @@
             } // End the gimbal pitch loop
 
             // Now we yaw after a column of photos has been taken
-            if ([self productType] == PT_AIRCRAFT) {
+            if (aircraftYaw) {
 
                 self.yawSpeed = 30; // This represents 25m/sec
                 self.yawDestination = [nYaw floatValue];
@@ -222,7 +228,7 @@
                     sendTimer = nil;
                 });
 
-            } else if ([self productType] == PT_HANDHELD) {
+            } else {
                 [self setYaw:[nYaw floatValue]];
             }
         } // End yaw loop
