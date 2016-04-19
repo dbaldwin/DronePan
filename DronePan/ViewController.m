@@ -517,10 +517,18 @@ typedef enum {
             camera = ((DJIAircraft *) self.product).camera;
             gimbal = ((DJIAircraft *) self.product).gimbal;
             battery = ((DJIAircraft*) self.product).battery;
+
+            [self altitudeLabel].hidden = NO;
+            [self satelliteLabel].hidden = NO;
+            [self distanceLabel].hidden = NO;
         } else if (pt == PT_HANDHELD) {
             camera = ((DJIHandheld *) self.product).camera;
             gimbal = ((DJIHandheld *) self.product).gimbal;
             battery = ((DJIHandheld*) self.product).battery;
+            
+            [self altitudeLabel].hidden = YES;
+            [self satelliteLabel].hidden = YES;
+            [self distanceLabel].hidden = YES;
         }
 
         if (camera) {
@@ -605,6 +613,7 @@ typedef enum {
 }
 
 #pragma mark - DJIBatteryDelegate
+
 -(void) battery:(DJIBattery *)battery didUpdateState:(DJIBatteryState *)batteryState {
     [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryState.batteryEnergyRemainingPercent]];
 }
