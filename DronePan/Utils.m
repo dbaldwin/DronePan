@@ -27,9 +27,11 @@
     [hud hide:YES afterDelay:5];
 }
 +(void)displayToastOnApp:(NSString *)message{
-    if([UIApplication sharedApplication].keyWindow.rootViewController.view!=nil) {
-        [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:message];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([UIApplication sharedApplication].keyWindow.rootViewController.view!=nil) {
+            [Utils displayToast:[UIApplication sharedApplication].keyWindow.rootViewController.view message:message];
+        }
+    });
 }
 
 @end

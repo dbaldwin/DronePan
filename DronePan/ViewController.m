@@ -16,7 +16,6 @@
 #import "ViewController.h"
 #import <DJISDK/DJISDK.h>
 #import "VideoPreviewer.h"
-#import "MBProgressHUD.h"
 #import "Utils.h"
 
 #import "DronePan-Swift.h"
@@ -238,8 +237,9 @@
             [[self sequenceLabel] setText:@"Sequence: Done"];
         });
 
+        [Utils displayToastOnApp:@"Completed pano"];
+
         dispatch_async(dispatch_get_main_queue(), ^{
-            [Utils displayToastOnApp:@"Completed pano"];
             [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         });
 
@@ -379,11 +379,13 @@
 }
 
 - (void)gimbalControllerAborted {
-    // TODO - STOP THE PANO
-
     NSLog(@"Gimbal signalled abort");
+    
+    [Utils displayToastOnApp:@"Aborted - gimbal move failed"];
 
     dispatch_async(droneCmdsQueue, ^{
+        self.panoInProgress = false;
+
         dispatch_group_leave(self.gimbalDispatchGroup);
     });
 }
@@ -418,11 +420,13 @@
 }
 
 - (void)cameraControllerAborted {
-    // TODO - STOP THE PANO
-
     NSLog(@"Camera signalled abort");
     
+    [Utils displayToastOnApp:@"Aborted - photo not saved"];
+
     dispatch_async(droneCmdsQueue, ^{
+        self.panoInProgress = false;
+
         dispatch_group_leave(self.cameraDispatchGroup);
     });
 }
