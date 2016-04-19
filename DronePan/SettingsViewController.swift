@@ -86,9 +86,9 @@ import UIKit
         
         let photoCount = Int(photosPerRowControl.titleForSegmentAtIndex(photosPerRowControl.selectedSegmentIndex)!)!
         
-        let settings : [String : Int] = [
-            "start_delay" : startDelay,
-            "photos_per_row" : photoCount
+        let settings : [SettingsKeys : AnyObject] = [
+            .StartDelay : startDelay,
+            .PhotosPerRow : photoCount
             /* add other settings in here */
         ]
         

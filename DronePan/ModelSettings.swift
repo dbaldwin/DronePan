@@ -73,10 +73,10 @@ enum SettingsKeys: String {
     }
 
     class func skyRow(model: String) -> Bool {
-        return ModelSettings.boolSettingForKey(model, key: .NumberOfRows, defaultValue: false)
+        return ModelSettings.boolSettingForKey(model, key: .SkyRow, defaultValue: false)
     }
 
-    class func updateSettings(model: String, settings newSettings : [String: AnyObject]) {
+    class func updateSettings(model: String, settings newSettings : [SettingsKeys: AnyObject]) {
         var settings : [String : AnyObject] = [:]
         
         if let storedSettings = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) {
@@ -84,7 +84,7 @@ enum SettingsKeys: String {
         }
         
         for (key, val) in newSettings {
-            settings[key] = val
+            settings[key.rawValue] = val
         }
         
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: model)
