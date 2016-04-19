@@ -24,7 +24,7 @@
 
 #define STANDARD_DELAY 3
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIBatteryDelegate, GimbalControllerDelegate, CameraControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -33,8 +33,13 @@
 @property(weak, nonatomic) IBOutlet UIView *cameraView;
 @property(weak, nonatomic) IBOutlet UIButton *startButton;
 @property(weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
-@property(weak, nonatomic) IBOutlet UILabel *headingLabel;
+@property (weak, nonatomic) IBOutlet UILabel *altitudeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *satelliteLabel;
+@property (weak, nonatomic) IBOutlet UILabel *batteryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+
 @property(weak, nonatomic) IBOutlet UILabel *sequenceLabel;
+
 
 @property(nonatomic, assign) long sequenceCount;
 @property(nonatomic, assign) long currentCount;
@@ -59,7 +64,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [[VideoPreviewer instance] setView:self.cameraView];
-    [[self sequenceLabel] setText:@"Sequence: ?/?"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -86,10 +90,20 @@
     
     // Temporarily disabling during testing
     //[self.startButton setEnabled:NO];
+    
+    [self initLabels];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)initLabels {
+    [[self altitudeLabel] setText:@"Alt: -"];
+    [[self satelliteLabel] setText:@"Sats: -"];
+    [[self batteryLabel] setText:@"Batt: -"];
+    [[self distanceLabel] setText:@"Dist: -"];
+    [[self sequenceLabel] setText:@"Photo: -/-"];
 }
 
 // Let's detect the aircraft and then start the sequence
@@ -497,13 +511,16 @@ typedef enum {
 
         DJIGimbal *gimbal;
         DJICamera *camera;
+        DJIBattery *battery;
 
         if (pt == PT_AIRCRAFT) {
             camera = ((DJIAircraft *) self.product).camera;
             gimbal = ((DJIAircraft *) self.product).gimbal;
+            battery = ((DJIAircraft*) self.product).battery;
         } else if (pt == PT_HANDHELD) {
             camera = ((DJIHandheld *) self.product).camera;
             gimbal = ((DJIHandheld *) self.product).gimbal;
+            battery = ((DJIHandheld*) self.product).battery;
         }
 
         if (camera) {
@@ -515,6 +532,12 @@ typedef enum {
             self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal];
             self.gimbalController.delegate = self;
         }
+        
+        // Should refactor into its own controller to get other battery delegate updates
+        if (battery) {
+            [battery setDelegate: self];
+        }
+        
     } else {
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
@@ -556,9 +579,19 @@ typedef enum {
     self.aircraftLocation = state.aircraftLocation;
 
     self.currentHeading = [self headingTo360:fc.compass.heading];
-
-    self.headingLabel.text = [NSString stringWithFormat:@"Heading: %0.1f, %0.1f", self.currentHeading, self.yawDestination];
-
+    
+    [[self altitudeLabel] setText: [NSString stringWithFormat: @"Alt: %dm", (int)state.altitude]];
+    
+    [[self satelliteLabel] setText: [NSString stringWithFormat: @"Sats: %d", state.satelliteCount]];
+    
+    // Calculate the distance from home
+    CLLocation *homeLocation = [[CLLocation alloc] initWithLatitude: state.homeLocation.latitude longitude: state.homeLocation.longitude];
+    CLLocation *aircraftLocation = [[CLLocation alloc] initWithLatitude: state.aircraftLocation.latitude longitude: state.aircraftLocation.longitude];
+    CLLocationDistance dist = [homeLocation distanceFromLocation:aircraftLocation];
+    [[self distanceLabel] setText: [NSString stringWithFormat: @"Dist: %dm", (int)dist]];
+    
+    
+    // Calculate the yaw speed so we can slow the rotation as the aircraft reaches its destination
     double diff;
 
     if (self.yawDestination > self.currentHeading) {
@@ -570,5 +603,11 @@ typedef enum {
     }
 
 }
+
+#pragma mark - DJIBatteryDelegate
+-(void) battery:(DJIBattery *)battery didUpdateState:(DJIBatteryState *)batteryState {
+    [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryState.batteryEnergyRemainingPercent]];
+}
+
 
 @end
