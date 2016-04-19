@@ -99,6 +99,12 @@
 }
 
 - (void)initLabels {
+    [self sequenceLabel].hidden = YES;
+    [self batteryLabel].hidden = YES;
+    [self altitudeLabel].hidden = YES;
+    [self satelliteLabel].hidden = YES;
+    [self distanceLabel].hidden = YES;
+    
     [[self altitudeLabel] setText:@"Alt: -"];
     [[self satelliteLabel] setText:@"Sats: -"];
     [[self batteryLabel] setText:@"Batt: -"];
@@ -513,6 +519,9 @@ typedef enum {
         DJICamera *camera;
         DJIBattery *battery;
 
+        [self sequenceLabel].hidden = NO;
+        [self batteryLabel].hidden = NO;
+
         if (pt == PT_AIRCRAFT) {
             camera = ((DJIAircraft *) self.product).camera;
             gimbal = ((DJIAircraft *) self.product).gimbal;
@@ -551,6 +560,7 @@ typedef enum {
         [self.connectionStatusLabel setText:@"Disconnected"];
         [self.startButton setEnabled:NO];
 
+        [self initLabels];
 
         NSLog(@"Product disconnected");
 
