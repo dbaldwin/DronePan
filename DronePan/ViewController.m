@@ -167,18 +167,22 @@
     
     long PHOTOS_PER_ROW = [ModelSettings photosPerRow:self.product.model];
 
-    NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
-
     if ([self productType] == PT_AIRCRAFT) {
         pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
         pitch = pitchOsmo;
+        
+        // Osmo has no heading - set to 0
+        // TODO - should also be done for gimbal yaw of AC when that is in place
+        self.currentHeading = 0;
     } else {
         NSLog(@"Pano started with unknown type");
 
         return;
     }
 
+    NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
+    
     self.sequenceCount = ([pitch count] * [yaw count]) + 1;
     self.currentCount = 0;
 
