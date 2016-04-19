@@ -253,8 +253,8 @@
 }
 
 - (NSArray *)yawAnglesForCount:(long)count withHeading:(double)heading {
-    // We must ensure that valid PHOTOS_PER_ROW in settings is a divisor of 360
-    int YAW_ANGLE = 360 / count;
+    
+    double YAW_ANGLE = 360 / count;
 
     NSMutableArray *yaw = [[NSMutableArray alloc] init];
 
