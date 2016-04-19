@@ -43,7 +43,6 @@
 @property(nonatomic, assign) double yawDestination;
 @property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
-@property(nonatomic, assign) float aircraftAltitude;
 @property(nonatomic, assign) bool panoInProgress;
 
 @property(nonatomic, strong) GimbalController *gimbalController;
@@ -549,8 +548,6 @@ typedef enum {
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
 
     self.aircraftLocation = state.aircraftLocation;
-
-    self.aircraftAltitude = state.altitude;
 
     self.currentHeading = [self headingTo360:fc.compass.heading];
 
