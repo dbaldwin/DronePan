@@ -183,7 +183,7 @@
 }
 
 - (void)updateSequenceLabel {
-    [[self sequenceLabel] setText:[NSString stringWithFormat:@"Sequence: %ld/%ld", self.currentCount, self.sequenceCount]];
+    [[self sequenceLabel] setText:[NSString stringWithFormat:@"Photo: %ld/%ld", self.currentCount, self.sequenceCount]];
 }
 
 - (NSArray *)pitchesForLoopWithSkyRow:(BOOL)skyRow forType:(ProductType)productType andRowCount:(int)rowCount {
@@ -290,7 +290,7 @@
         [self resetGimbal];
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[self sequenceLabel] setText:@"Sequence: Done"];
+            [[self sequenceLabel] setText:@"Photo: Done"];
         });
 
         [Utils displayToastOnApp:@"Completed pano"];
