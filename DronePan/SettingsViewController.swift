@@ -18,7 +18,7 @@ import UIKit
 @objc class SettingsViewController: UIViewController {
     
     var model:String = ""
-    var handheld: Bool = false
+    var productType: ProductType = PT_AIRCRAFT
     
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -57,7 +57,7 @@ import UIKit
             NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
         ])
         
-        if (handheld) {
+        if (productType == PT_HANDHELD) {
             startDelayControl.enabled = true
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
             

@@ -406,10 +406,10 @@
     
     if(self.product.model.length == 0) {
         settings.model = @"Simulator"; // This is for testing in dev env
-        settings.handheld = NO;
+        settings.productType = PT_AIRCRAFT;
     } else {
         settings.model = self.product.model;
-        settings.handheld = ([self productType] == PT_HANDHELD);
+        settings.productType = [self productType];
     }
     
 }
