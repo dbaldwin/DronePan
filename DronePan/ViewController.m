@@ -125,9 +125,7 @@
         self.panoInProgress = false;
         
         return;
-        
     }
-    
     
     self.panoInProgress = true;
     
@@ -175,22 +173,43 @@
     [[self sequenceLabel] setText:[NSString stringWithFormat:@"Sequence: %ld/%ld", self.currentCount, self.sequenceCount]];
 }
 
-- (void)doPanoLoop {
-
-    NSArray *pitchAircraftYaw = @[@0, @-30, @-60];
-
-    NSArray *pitchOsmo = @[@-60, @-30, @0, @30];
-
-    NSArray *pitch;
+- (NSArray *)pitchesForLoopWithSkyRow:(BOOL)skyRow forType:(ProductType)productType andRowCount:(int)rowCount {
+    int max = 0;
+    int min = -60;
     
+    int actualCount = rowCount;
+    
+    if (skyRow) {
+        max = 30;
+        actualCount = actualCount + 1;
+    }
+    
+    double interval = (max - min) / (actualCount - 1);
+    
+    NSMutableArray *values = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < actualCount; i++) {
+        
+        [values addObject:[NSNumber numberWithDouble:(max - (i*interval))]];
+    }
+    
+    if (productType == PT_AIRCRAFT) {
+        return [NSArray arrayWithArray:values];
+    } else {
+        return [NSArray arrayWithArray:[[values reverseObjectEnumerator] allObjects]];
+    }
+}
+
+- (void)doPanoLoop {
+    NSArray *pitches = [self pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
+                                              forType:[self productType]
+                                          andRowCount:[ModelSettings numberOfRows:self.product.model]];
+
     // Switch from config when available
     bool aircraftYaw = YES;
 
     if ([self productType] == PT_AIRCRAFT) {
-        pitch = pitchAircraftYaw;
     } else if ([self productType] == PT_HANDHELD) {
-        pitch = pitchOsmo;
-        
         // Force gimbal yaw for handheld
         aircraftYaw = NO;
         
@@ -205,7 +224,7 @@
 
     NSArray *yaw = [self yawAnglesForCount:[ModelSettings photosPerRow:self.product.model] withHeading:[self headingTo360:self.currentHeading]];
     
-    self.sequenceCount = ([pitch count] * [yaw count]) + 1;
+    self.sequenceCount = ([pitches count] * [yaw count]) + 1;
     self.currentCount = 0;
 
     [self updateSequenceLabel];
@@ -226,7 +245,7 @@
         for (NSNumber *nYaw in yaw) {
 
             // Loop through the gimbal pitches
-            for (NSNumber *nPitch in pitch) {
+            for (NSNumber *nPitch in pitches) {
                 [self setPitch:[nPitch floatValue]];
                 [self takeASnap];
             } // End the gimbal pitch loop
@@ -459,12 +478,6 @@
 }
 
 #pragma mark Hardware helper methods
-
-typedef enum {
-    PT_AIRCRAFT,
-    PT_HANDHELD,
-    PT_UNKNOWN
-} ProductType;
 
 - (ProductType)productType {
     ProductType pt = PT_UNKNOWN;
