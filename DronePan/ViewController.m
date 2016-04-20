@@ -472,13 +472,15 @@
     });
 }
 
-- (void)cameraControllerCompleted {
+- (void)cameraControllerCompleted:(BOOL)shotTaken {
     NSLog(@"Camera signalled complete");
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.currentCount = self.currentCount + 1;
-        [self updateSequenceLabel];
-    });
+    if (shotTaken) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.currentCount = self.currentCount + 1;
+            [self updateSequenceLabel];
+        });
+    }
     
     dispatch_async(droneCmdsQueue, ^{
         dispatch_group_leave(self.cameraDispatchGroup);

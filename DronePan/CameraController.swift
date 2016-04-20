@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 
 @objc protocol CameraControllerDelegate {
-    func cameraControllerCompleted()
+    func cameraControllerCompleted(shotTaken: Bool)
 
     func cameraControllerAborted(reason: String)
 
@@ -93,7 +93,7 @@ import DJISDK
 
         delay(2) {
             if (self.mode == .ShootPhoto) {
-                self.delegate?.cameraControllerCompleted()
+                self.delegate?.cameraControllerCompleted(false)
             } else {
                 NSLog("Camera hasn't set mode yet count: \(counter)")
 
@@ -138,7 +138,7 @@ import DJISDK
 
         delay(2) {
             if (self.tookShot) {
-                self.delegate?.cameraControllerCompleted()
+                self.delegate?.cameraControllerCompleted(true)
             } else if (self.isShooting || self.isStoring) {
                 self.checkTakeASnap(checkCounter + 1, counter: counter)
             } else {
