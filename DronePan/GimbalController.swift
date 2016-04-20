@@ -20,7 +20,7 @@ import DJISDK
 @objc protocol GimbalControllerDelegate {
     func gimbalControllerCompleted()
 
-    func gimbalControllerAborted()
+    func gimbalControllerAborted(reason: String)
 }
 
 @objc class GimbalController: NSObject, DJIGimbalDelegate {
@@ -130,7 +130,7 @@ import DJISDK
         self.lastSetRoll = 0
 
         if (counter > maxCount) {
-            self.delegate?.gimbalControllerAborted()
+            self.delegate?.gimbalControllerAborted("Unable to reset gimbal")
             return
         }
 
@@ -163,7 +163,7 @@ import DJISDK
         NSLog("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
 
         if (counter > maxCount) {
-            self.delegate?.gimbalControllerAborted()
+            self.delegate?.gimbalControllerAborted("Unable to set gimbal attitude")
             return
         }
 

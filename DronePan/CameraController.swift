@@ -20,7 +20,7 @@ import DJISDK
 @objc protocol CameraControllerDelegate {
     func cameraControllerCompleted()
 
-    func cameraControllerAborted()
+    func cameraControllerAborted(reason: String)
 
     func cameraControllerReset()
 
@@ -41,6 +41,8 @@ import DJISDK
     var isStoring: Bool = false
 
     var mode: DJICameraMode = .Unknown
+    
+    var inError : Bool = false
 
     init(camera: DJICamera) {
         self.camera = camera
@@ -51,12 +53,16 @@ import DJISDK
     }
 
     func setPhotoMode() {
+        self.inError = false
+        
         dispatch_async(self.cameraWorkQueue) {
             self.setPhotoMode(0)
         }
     }
 
     func takeASnap() {
+        self.inError = false
+
         self.tookShot = false
         dispatch_async(self.cameraWorkQueue) {
             self.takeASnap(0)
@@ -64,8 +70,12 @@ import DJISDK
     }
 
     private func setPhotoMode(counter: Int) {
+        if (inError) {
+            return
+        }
+        
         if (counter > maxCount) {
-            self.delegate?.cameraControllerAborted()
+            self.delegate?.cameraControllerAborted("Failed to set mode")
             return
         }
 
@@ -93,8 +103,12 @@ import DJISDK
     }
 
     private func takeASnap(counter: Int) {
+        if (inError) {
+            return
+        }
+
         if (counter > maxCount) {
-            self.delegate?.cameraControllerAborted()
+            self.delegate?.cameraControllerAborted("Failed to take a photo")
             return
         }
 
@@ -113,8 +127,12 @@ import DJISDK
     }
 
     private func checkTakeASnap(checkCounter: Int, counter: Int) {
+        if (inError) {
+            return
+        }
+
         if (checkCounter > maxCount) {
-            self.delegate?.cameraControllerAborted()
+            self.delegate?.cameraControllerAborted("Failed to check photo")
             return
         }
 
@@ -132,6 +150,10 @@ import DJISDK
     }
 
     private func delay(delay: Double, closure: () -> ()) {
+        if (inError) {
+            return
+        }
+
         ControllerUtils.delay(delay, queue: self.cameraWorkQueue, closure: closure)
     }
 
@@ -140,6 +162,15 @@ import DJISDK
     }
 
     func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {
+        if (systemState.isCameraOverHeated) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("Camera overheated")
+        }
+        if (systemState.isCameraError) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("Camera in error state")
+        }
+        
         self.mode = systemState.mode
 
         self.isShooting = systemState.isShootingSinglePhoto ||
@@ -154,11 +185,25 @@ import DJISDK
         self.tookShot = true
     }
 
-    func camera(camera: DJICamera, didGenerateTimeLapsePreview previewImage: UIImage) {
-        // Might be able to use this for progress later
-    }
-
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {
-        // TODO - check full, error etc
+        if (sdCardState.hasError) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("SD Card in error state")
+        }
+
+        if (sdCardState.isReadOnly) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("SD Card is read only")
+        }
+        
+        if (sdCardState.isInvalidFormat) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("SD Card has invalid format")
+        }
+
+        if (sdCardState.isFull) {
+            self.inError = true
+            self.delegate?.cameraControllerAborted("SD Card full")
+        }
     }
 }

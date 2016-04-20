@@ -403,10 +403,10 @@
     });
 }
 
-- (void)gimbalControllerAborted {
+- (void)gimbalControllerAborted:(NSString *) reason {
     NSLog(@"Gimbal signalled abort");
     
-    [Utils displayToastOnApp:@"Aborted - gimbal move failed"];
+    [Utils displayToastOnApp:reason];
 
     dispatch_async(droneCmdsQueue, ^{
         self.panoInProgress = false;
@@ -444,10 +444,10 @@
     });
 }
 
-- (void)cameraControllerAborted {
+- (void)cameraControllerAborted:(NSString *) reason {
     NSLog(@"Camera signalled abort");
     
-    [Utils displayToastOnApp:@"Aborted - photo not saved"];
+    [Utils displayToastOnApp:reason];
 
     dispatch_async(droneCmdsQueue, ^{
         self.panoInProgress = false;
@@ -550,7 +550,6 @@ typedef enum {
             self.gimbalController.delegate = self;
         }
         
-        // Should refactor into its own controller to get other battery delegate updates
         if (battery) {
             [battery setDelegate: self];
         }
@@ -626,6 +625,9 @@ typedef enum {
 
 -(void) battery:(DJIBattery *)battery didUpdateState:(DJIBatteryState *)batteryState {
     [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryState.batteryEnergyRemainingPercent]];
+    
+    // TODO Battery temp
+    // batteryState.batteryTemperature
 }
 
 
