@@ -217,7 +217,7 @@
 - (void)doPanoLoop {
     NSArray *pitches = [self pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
                                               forType:[self productType]
-                                          andRowCount:[ModelSettings numberOfRows:self.product.model]];
+                                          andRowCount:(int)[ModelSettings numberOfRows:self.product.model]];
 
     // Switch from config when available
     bool aircraftYaw = YES;
