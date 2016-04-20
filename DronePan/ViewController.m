@@ -183,8 +183,6 @@
 
     NSArray *pitch;
     
-    long PHOTOS_PER_ROW = [ModelSettings photosPerRow:self.product.model];
-    
     // Switch from config when available
     bool aircraftYaw = YES;
 
@@ -205,7 +203,7 @@
         return;
     }
 
-    NSArray *yaw = [self yawAnglesForCount:PHOTOS_PER_ROW withHeading:[self headingTo360:self.currentHeading]];
+    NSArray *yaw = [self yawAnglesForCount:[ModelSettings photosPerRow:self.product.model] withHeading:[self headingTo360:self.currentHeading]];
     
     self.sequenceCount = ([pitch count] * [yaw count]) + 1;
     self.currentCount = 0;
