@@ -387,10 +387,14 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     SettingsViewController *settings = [segue destinationViewController];
     
-    if(self.product.model.length == 0)
+    if(self.product.model.length == 0) {
         settings.model = @"Simulator"; // This is for testing in dev env
-    else
-        settings.model = self.product.model; // Pass the model to Settings VC
+        settings.handheld = NO;
+    } else {
+        settings.model = self.product.model;
+        settings.handheld = ([self productType] == PT_HANDHELD);
+    }
+    
 }
 
 #pragma mark - GimbalControllerDelegate

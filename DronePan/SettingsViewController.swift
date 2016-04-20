@@ -18,14 +18,19 @@ import UIKit
 @objc class SettingsViewController: UIViewController {
     
     var model:String = ""
+    var handheld: Bool = false
+    
+    @IBOutlet weak var titleLabel: UILabel!
     
     @IBOutlet weak var startDelayControl: UISegmentedControl!
-    
-    @IBOutlet weak var photoDelayControl: UISegmentedControl!
-    
     @IBOutlet weak var photosPerRowControl: UISegmentedControl!
-    
+    @IBOutlet weak var skyRowControl: UISegmentedControl!
+
     @IBOutlet weak var angleLabel: UILabel!
+    @IBOutlet weak var countLabel: UILabel!
+    
+    @IBOutlet weak var startDelayDescription: UILabel!
+    @IBOutlet weak var skyRowDescription: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,64 +38,131 @@ import UIKit
         initSettings()
     }
     
-    func initSettings() {
-
-        let startDelay = ModelSettings.startDelay(model)
-        
-        // Set the selected item
-        for i in 0..<startDelayControl.numberOfSegments {
+    private func initSegment(control: UISegmentedControl, setting : Int) {
+        for i in 0..<control.numberOfSegments {
             
-            if let title = startDelayControl.titleForSegmentAtIndex(i) {
+            if let title = control.titleForSegmentAtIndex(i) {
                 if let segment = Int(title) {
-                    if (segment == startDelay) {
-                        startDelayControl.selectedSegmentIndex = Int(i)
+                    if (segment == setting) {
+                        control.selectedSegmentIndex = Int(i)
                     }
                 }
+            }
+        }
+    }
+    
+    func initSettings() {
+        titleLabel.attributedText = NSAttributedString(string: "\(model) Settings", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(20),
+            NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+        ])
+        
+        if (handheld) {
+            startDelayControl.enabled = true
+            startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
+            
+            let startDelay = ModelSettings.startDelay(model)
+            initSegment(startDelayControl, setting: startDelay)
+            
+            skyRowDescription.text = "Only applicable for aircraft"
+            skyRowControl.enabled = false
+            skyRowControl.selectedSegmentIndex = 0
+        } else {
+            startDelayControl.selectedSegmentIndex = UISegmentedControlNoSegment
+            startDelayControl.enabled = false
+            startDelayDescription.text = "Only applicable for handheld"
+            
+            skyRowControl.enabled = true
+            skyRowDescription.text = "If set, DronePan will shoot a \"sky row\" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting \"No\" will skip the sky row."
+
+            let skyRow = ModelSettings.skyRow(model)
+            
+            if (skyRow) {
+                skyRowControl.selectedSegmentIndex = 0
+            } else {
+                skyRowControl.selectedSegmentIndex = 1
             }
         }
         
         let photosPerRow = ModelSettings.photosPerRow(model)
+        initSegment(photosPerRowControl, setting: photosPerRow)
         
-        // Set the selected item
-        for i in 0..<photosPerRowControl.numberOfSegments {
-            
-            if let title = photosPerRowControl.titleForSegmentAtIndex(i) {
-                if let segment = Int(title) {
-                    if (segment == photosPerRow) {
-                        photosPerRowControl.selectedSegmentIndex = Int(i)
-                    }
-                }
-            }
+        updateCounts()
+    }
+    
+    private func setAngleLabel(angle: Float) {
+        let angleString = NSMutableAttributedString(string: "\(angle)", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(14)
+        ])
+        
+        
+        angleString.appendAttributedString(NSAttributedString(string: "˚", attributes: [
+            NSFontAttributeName : UIFont.systemFontOfSize(14)
+            ]))
+        
+        angleLabel.attributedText = angleString
+    }
+    
+    private func updateCounts() {
+        var numberOfRows = ModelSettings.numberOfRows(model)
+        
+        if (isSkyRow()) {
+            numberOfRows += 1
         }
         
-        // Ints
-        let delayBetweenShots = ModelSettings.delayBetweenShots(model)
-        let numberOfRows = ModelSettings.numberOfRows(model)
+        if let photosPerRow = selectedPhotosPerRow() {
+            self.setAngleLabel(360.0/Float(photosPerRow))
+            self.countLabel.text = "\((numberOfRows * photosPerRow) + 1)"
+        } else {
+            self.setAngleLabel(0)
+            self.countLabel.text = "--"
+        }
+    }
+    
+    private func isSkyRow() -> Bool {
+        return skyRowControl.selectedSegmentIndex == 0
+    }
+
+    private func selectedValue(control: UISegmentedControl) -> Int? {
+        if (control.selectedSegmentIndex == UISegmentedControlNoSegment) {
+            return nil
+        }
         
-        // Bool
-        let includeSkyRow = ModelSettings.skyRow(model)
-        
+        if let title = control.titleForSegmentAtIndex(control.selectedSegmentIndex) {
+            return Int(title)
+        } else {
+            return nil
+        }
+    }
+
+    private func selectedPhotosPerRow() -> Int? {
+        return selectedValue(photosPerRowControl)
+    }
+
+    private func selectedStartDelay() -> Int? {
+        return selectedValue(startDelayControl)
     }
     
     @IBAction func photosPerRowChanged(sender: AnyObject) {
-        
-        let photoCount = Int(photosPerRowControl.titleForSegmentAtIndex(sender.selectedSegmentIndex)!)!
-        
-        angleLabel.text = "Angle: " + String(360 / photoCount)
-        
+        updateCounts()
     }
     
+    @IBAction func skyRowChanged(sender: AnyObject) {
+        updateCounts()
+    }
+
     @IBAction func saveSettings(sender: AnyObject) {
-        
-        let startDelay = Int(startDelayControl.titleForSegmentAtIndex(startDelayControl.selectedSegmentIndex)!)!
-        
-        let photoCount = Int(photosPerRowControl.titleForSegmentAtIndex(photosPerRowControl.selectedSegmentIndex)!)!
-        
-        let settings : [SettingsKeys : AnyObject] = [
-            .StartDelay : startDelay,
-            .PhotosPerRow : photoCount
-            /* add other settings in here */
+        var settings : [SettingsKeys : AnyObject] = [
+            .SkyRow : isSkyRow()
         ]
+        
+        if let startDelay = selectedStartDelay() {
+            settings[.StartDelay] = startDelay
+        }
+        
+        if let photoCount = selectedPhotosPerRow() {
+            settings[.PhotosPerRow] = photoCount
+        }
         
         ModelSettings.updateSettings(model, settings: settings)
         

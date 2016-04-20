@@ -18,7 +18,6 @@ import Foundation
 enum SettingsKeys: String {
     case StartDelay = "delay"
     case PhotosPerRow = "photos_per_row"
-    case DelayBetweenShots = "delay_between"
     case NumberOfRows = "row_count"
     case SkyRow = "sky_row"
 }
@@ -56,16 +55,12 @@ enum SettingsKeys: String {
         return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
     }
 
-    class func delayBetweenShots(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .DelayBetweenShots, defaultValue: 6)
-    }
-
     class func numberOfRows(model: String) -> Int {
         return ModelSettings.intSettingForKey(model, key: .NumberOfRows, defaultValue: 3)
     }
 
     class func skyRow(model: String) -> Bool {
-        return ModelSettings.boolSettingForKey(model, key: .SkyRow, defaultValue: false)
+        return ModelSettings.boolSettingForKey(model, key: .SkyRow, defaultValue: true)
     }
 
     class func updateSettings(model: String, settings newSettings : [SettingsKeys: AnyObject]) {

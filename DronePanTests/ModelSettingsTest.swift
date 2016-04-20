@@ -54,7 +54,7 @@ class ModelSettingsTest: XCTestCase {
     func testDefaultSkyRow() {
         let value = ModelSettings.skyRow(model)
         
-        XCTAssertFalse(value, "Incorrect default sky row \(value)")
+        XCTAssertTrue(value, "Incorrect default sky row \(value)")
     }
     
     func testStoreStartDelay() {
