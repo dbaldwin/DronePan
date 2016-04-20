@@ -48,12 +48,14 @@
 @property(nonatomic, assign) double yawDestination;
 @property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
-@property(nonatomic, assign) bool panoInProgress;
+@property(nonatomic, assign) BOOL panoInProgress;
 
 @property(nonatomic, strong) GimbalController *gimbalController;
 @property(nonatomic, strong) dispatch_group_t gimbalDispatchGroup;
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
+
+@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
 - (IBAction)startPano:(id)sender;
 
@@ -88,8 +90,11 @@
     self.gimbalDispatchGroup = dispatch_group_create();
     self.cameraDispatchGroup = dispatch_group_create();
     
-    // Temporarily disabling during testing
-    //[self.startButton setEnabled:NO];
+    // TODO - this should be tested
+#ifndef DEBUG
+    [self.startButton setEnabled:NO];
+    [self.settingsButton setEnabled:NO];
+#endif
     
     [self initLabels];
 }
@@ -119,18 +124,23 @@
     if (self.panoInProgress) {
         
         [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
-        
+#ifndef DEBUG
+        [self.settingsButton setEnabled:YES];
+#endif
         [Utils displayToastOnApp:@"Stopping pano"];
         
-        self.panoInProgress = false;
+        self.panoInProgress = NO;
         
         return;
     }
     
-    self.panoInProgress = true;
+    self.panoInProgress = YES;
     
     [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
-
+#ifndef DEBUG
+    [self.settingsButton setEnabled:NO];
+#endif
+    
     [Utils displayToastOnApp:@"Starting pano"];
 
     NSString *model = self.product.model;
@@ -159,14 +169,17 @@
             }];
 
         } else {
-            // Do something or nothing here
+            [Utils displayToastOnApp:@"Unable to initialize flight controller"];
+            self.panoInProgress = NO;
+
             return;
         }
 
     } else {
-        [self doPanoLoop];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, [ModelSettings startDelay:model] * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self doPanoLoop];
+        });
     }
-
 }
 
 - (void)updateSequenceLabel {
@@ -200,6 +213,7 @@
     }
 }
 
+// TODO throught loop - check panoInProgress
 - (void)doPanoLoop {
     NSArray *pitches = [self pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
                                               forType:[self productType]
@@ -403,14 +417,20 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     SettingsViewController *settings = [segue destinationViewController];
-    
+
+#ifdef DEBUG
     if(self.product.model.length == 0) {
-        settings.model = @"Simulator"; // This is for testing in dev env
+        settings.model = @"Simulator";
         settings.productType = PT_AIRCRAFT;
     } else {
         settings.model = self.product.model;
         settings.productType = [self productType];
     }
+#else
+    settings.model = self.product.model;
+    settings.productType = [self productType];
+#endif
+    
     
 }
 
@@ -430,7 +450,7 @@
     [Utils displayToastOnApp:reason];
 
     dispatch_async(droneCmdsQueue, ^{
-        self.panoInProgress = false;
+        self.panoInProgress = NO;
 
         dispatch_group_leave(self.gimbalDispatchGroup);
     });
@@ -471,7 +491,7 @@
     [Utils displayToastOnApp:reason];
 
     dispatch_async(droneCmdsQueue, ^{
-        self.panoInProgress = false;
+        self.panoInProgress = NO;
 
         dispatch_group_leave(self.cameraDispatchGroup);
     });
@@ -517,6 +537,10 @@
 
         [self.connectionStatusLabel setText:newProduct.model];
         [self.startButton setEnabled:YES];
+
+#ifndef DEBUG
+        [self.settingsButton setEnabled:YES];
+#endif
 
         // Set the flight controller delegate only with aircraft. Ignore for Osmo.
         if ([self productType] == PT_AIRCRAFT) {
@@ -573,6 +597,9 @@
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
         [self.startButton setEnabled:NO];
+#ifndef DEBUG
+        [self.settingsButton setEnabled:NO];
+#endif
 
         [self initLabels];
 

@@ -158,6 +158,7 @@
                         <outlet property="distanceLabel" destination="7Nu-ec-Fyc" id="bSy-EV-wkU"/>
                         <outlet property="satelliteLabel" destination="TEV-EU-7MV" id="G2D-6m-lOJ"/>
                         <outlet property="sequenceLabel" destination="jQe-Pe-bik" id="IHw-S9-flK"/>
+                        <outlet property="settingsButton" destination="zSI-nh-XHL" id="XFT-qO-Cva"/>
                         <outlet property="startButton" destination="ohx-RD-uKh" id="VDh-yo-ohn"/>
                         <segue destination="fxj-Bn-uya" kind="presentation" identifier="launchSettings" id="vVQ-rt-O3Q"/>
                     </connections>
