@@ -53,25 +53,25 @@ class MainViewControllerTests: XCTestCase {
     func testPitchesForTypeSkyRowAircraft() {
         let value = controller.pitchesForLoopWithSkyRow(true, forType: PT_AIRCRAFT, andRowCount: 3) as! [Int]
         
-        XCTAssertEqual([30, 0, -30, -60], value, "Incorrect pitches for no sky row for aircraft \(value)")
+        XCTAssertEqual([30, 0, -30, -60], value, "Incorrect pitches for sky row for aircraft \(value)")
     }
 
     func testPitchesForTypeSkyRowAircraft5Rows() {
         let value = controller.pitchesForLoopWithSkyRow(true, forType: PT_AIRCRAFT, andRowCount: 5) as! [Int]
         
-        XCTAssertEqual([30, 12, -6, -24, -42, -60], value, "Incorrect pitches for no sky row for aircraft \(value)")
+        XCTAssertEqual([30, 12, -6, -24, -42, -60], value, "Incorrect pitches for sky row for aircraft row count 5 \(value)")
     }
 
     func testPitchesForTypeNoSkyRowHandheld() {
         let value = controller.pitchesForLoopWithSkyRow(false, forType: PT_HANDHELD, andRowCount: 3) as! [Int]
         
-        XCTAssertEqual([-60, -30, 0], value, "Incorrect pitches for no sky row for aircraft \(value)")
+        XCTAssertEqual([-60, -30, 0], value, "Incorrect pitches for no sky row for handheld \(value)")
     }
 
     func testPitchesForTypeSkyRowHandheld() {
         let value = controller.pitchesForLoopWithSkyRow(true, forType: PT_HANDHELD, andRowCount: 3) as! [Int]
         
-        XCTAssertEqual([-60, -30, 0, 30], value, "Incorrect pitches for no sky row for aircraft \(value)")
+        XCTAssertEqual([-60, -30, 0, 30], value, "Incorrect pitches for sky row for handheld \(value)")
     }
     
 }
