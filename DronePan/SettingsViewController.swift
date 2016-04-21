@@ -169,4 +169,9 @@ import UIKit
         // Dismiss the VC
         self.dismissViewControllerAnimated(true, completion: {})
     }
+
+    @IBAction func cancelSettings(sender: AnyObject) {
+        // Dismiss the VC
+        self.dismissViewControllerAnimated(true, completion: {})
+    }
 }
