@@ -135,7 +135,6 @@
     
     self.panoInProgress = YES;
     
-    [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
 #ifndef DEBUG
     [self.settingsButton setEnabled:NO];
 #endif
@@ -316,10 +315,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Photo: Done"];
         });
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
-        });
+
+        self.panoInProgress = NO;
 
     }); // End GCD
 
@@ -445,6 +442,14 @@
         if (self.gimbalController) {
             [self.gimbalController setStatus:ControllerStatusStopping];
         }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
+        });
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
+        });
     }
 }
 
@@ -506,15 +511,33 @@
     
     [Utils displayToastOnApp:reason];
     
-    // Let's make sure this queue exists since there are cases where
-    // the camera throws an error and the queue hasn't been initialized
-    if(droneCmdsQueue != nil) {
-        dispatch_async(droneCmdsQueue, ^{
-            self.panoInProgress = NO;
+    dispatch_async(droneCmdsQueue, ^{
+        self.panoInProgress = NO;
 
-            dispatch_group_leave(self.cameraDispatchGroup);
-        });
+        dispatch_group_leave(self.cameraDispatchGroup);
+    });
+}
+
+- (void)cameraControllerInError:(NSString *) reason {
+    [Utils displayToastOnApp:reason];
+    
+    if (self.panoInProgress) {
+        if (droneCmdsQueue != nil) {
+            dispatch_async(droneCmdsQueue, ^{
+                self.panoInProgress = NO;
+            });
+        } else {
+            self.panoInProgress = NO;
+        }
     }
+    
+    [[self startButton] setEnabled:NO];
+}
+
+- (void)cameraControllerOK {
+    [Utils displayToastOnApp:@"Camera is ready"];
+
+    [[self startButton] setEnabled:YES];
 }
 
 #pragma mark Hardware helper methods
@@ -691,6 +714,7 @@
     // TODO Battery temp
     // batteryState.batteryTemperature
 }
+
 
 
 @end

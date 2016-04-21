@@ -21,6 +21,10 @@ import DJISDK
     func cameraControllerCompleted(shotTaken: Bool)
 
     func cameraControllerAborted(reason: String)
+    
+    func cameraControllerInError(reason: String)
+    
+    func cameraControllerOK()
 
     func cameraControllerReset()
 
@@ -186,44 +190,43 @@ import DJISDK
     }
 
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {
+        var newState : ControllerStatus = .Normal
+        var message = ""
+        
         if (sdCardState.hasError) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card in error state")
-        }
-
-        if (sdCardState.isReadOnly) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card is read only")
+            newState = .Error
+            message = "SD Card in error state"
+        } else if (sdCardState.isReadOnly) {
+            newState = .Error
+            message = "SD Card is read only"
+        } else if (sdCardState.isInvalidFormat) {
+            newState = .Error
+            message = "SD Card has invalid format"
+        } else if (sdCardState.isFull) {
+            newState = .Error
+            message = "SD Card full"
+        } else if (!sdCardState.isInserted) {
+            newState = .Error
+            message = "SD Card missing"
+        } else if (!sdCardState.isFormatted) {
+            newState = .Error
+            message = "SD Card requires formatting"
+        } else if (sdCardState.isFormatting) {
+            newState = .Error
+            message = "SD Card is currently formatting"
+        } else if (sdCardState.isInitializing) {
+            newState = .Error
+            message = "SD Card is currently initializing"
         }
         
-        if (sdCardState.isInvalidFormat) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card has invalid format")
-        }
-
-        if (sdCardState.isFull) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card full")
-        }
-        
-        if (!sdCardState.isInserted) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card missing")
-        }
-
-        if (!sdCardState.isFormatted) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card requires formatting")
-        }
-
-        if (sdCardState.isFormatting) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card is currently formatting")
-        }
-
-        if (sdCardState.isInitializing) {
-            self.status = .Error
-            self.delegate?.cameraControllerAborted("SD Card is currently initializing")
+        if (self.status != newState) {
+            if (newState == .Error) {
+                self.delegate?.cameraControllerInError(message)
+            } else {
+                self.delegate?.cameraControllerOK()
+            }
+            
+            self.status = newState
         }
     }
 }
