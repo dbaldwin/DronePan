@@ -20,7 +20,7 @@
 
 #import "DronePan-Swift.h"
 
-#define ENABLE_DEBUG_MODE 1
+#define ENABLE_DEBUG_MODE 0
 
 #define STANDARD_DELAY 3
 
