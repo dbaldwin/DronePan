@@ -123,11 +123,10 @@
     // Need to get this all hooked up so we can stop the pano
     if (self.panoInProgress) {
         
-        [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
 #ifndef DEBUG
         [self.settingsButton setEnabled:YES];
 #endif
-        [Utils displayToastOnApp:@"Stopping pano"];
+        [Utils displayToastOnApp:@"Stopping pano. Please wait..."];
         
         self.panoInProgress = NO;
         
@@ -257,9 +256,20 @@
         // For now we'll pitch gimbal back to 0 and restart the sequence
         // An improvement may be to move the gimbal in a "sawtooth" manner
         for (NSNumber *nYaw in yaw) {
+            
+            // If the user has stopped the pano we'll break
+            if(!self.panoInProgress) {
+                break;
+            }
 
             // Loop through the gimbal pitches
             for (NSNumber *nPitch in pitches) {
+                
+                // If the user has stopped the pano we'll break
+                if(!self.panoInProgress) {
+                    break;
+                }
+                
                 [self setPitch:[nPitch floatValue]];
                 [self takeASnap];
             } // End the gimbal pitch loop
@@ -267,7 +277,7 @@
             // Now we yaw after a column of photos has been taken
             if (aircraftYaw) {
 
-                self.yawSpeed = 30; // This represents 25m/sec
+                self.yawSpeed = 30; // This represents 30m/sec
                 self.yawDestination = [nYaw floatValue];
 
                 // Calling this on a timer as it improves the accuracy of aircraft yaw
@@ -285,18 +295,30 @@
         } // End yaw loop
 
         // Take the final zenith/nadir shot and then reset the gimbal back
-        [self setPitch:(float) -90.0];
-        [self takeASnap];
+        // or we cancel the pano and still reset the gimbal
+        if(self.panoInProgress) {
+            
+            [self setPitch:(float) -90.0];
+            [self takeASnap];
+            
+            [Utils displayToastOnApp:@"Completed pano"];
+            
+            self.panoInProgress = NO;
+            
+        } else { // The panorama has been aborted
+            
+            [Utils displayToastOnApp: @"Pano stopped successfully"];
+            
+        }
+        
         [self resetGimbal];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Photo: Done"];
         });
-
-        [Utils displayToastOnApp:@"Completed pano"];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
+            [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
         });
 
     }); // End GCD
@@ -347,28 +369,6 @@
         dispatch_group_enter(self.cameraDispatchGroup);
         [self.cameraController takeASnap];
         dispatch_group_wait(self.cameraDispatchGroup, DISPATCH_TIME_FOREVER);
-    }
-}
-
-// I still think this should be using some kind of GCD dispatch eventing - but for now leave it in
-- (void)waitFor:(unsigned int)delay {
-    sleep(delay);
-}
-
-- (void)yawAircraft:(NSTimer *)timer {
-
-    NSDictionary *data = [timer userInfo];
-
-    DJIVirtualStickFlightControlData ctrlData = {0};
-    ctrlData.pitch = 0;
-    ctrlData.roll = 0;
-    ctrlData.verticalThrottle = 0;
-    ctrlData.yaw = [data[@"yaw"] floatValue];
-
-    DJIFlightController *fc = [self fetchFlightController];
-
-    if (fc && fc.isVirtualStickControlModeAvailable) {
-        [fc sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
     }
 }
 
