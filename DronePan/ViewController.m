@@ -475,6 +475,17 @@
     });
 }
 
+- (void)gimbalMoveOutOfRange:(NSString *) reason {
+    NSLog(@"Gimbal signalled out of range");
+    
+    [Utils displayToastOnApp:reason];
+
+    // We signal and ignore - let's try the next move
+    dispatch_async(droneCmdsQueue, ^{
+        dispatch_group_leave(self.gimbalDispatchGroup);
+    });
+}
+
 #pragma mark - CameraControllerDelegate
 
 - (void)cameraReceivedVideo:(uint8_t *)videoBuffer size:(NSInteger)size {

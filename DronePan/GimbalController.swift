@@ -21,6 +21,8 @@ import DJISDK
     func gimbalControllerCompleted()
 
     func gimbalControllerAborted(reason: String)
+    
+    func gimbalMoveOutOfRange(reason: String)
 }
 
 @objc class GimbalController: NSObject, DJIGimbalDelegate {
@@ -46,6 +48,8 @@ import DJISDK
 
     let gimbalWorkQueue = dispatch_queue_create("com.dronepan.queue.gimbal", DISPATCH_QUEUE_CONCURRENT)
 
+    var constraints : DJIGimbalConstraints?
+    
     init(gimbal: DJIGimbal) {
         self.gimbal = gimbal
 
@@ -59,6 +63,10 @@ import DJISDK
             isRollAdjustable = false
         }
 
+        if let c = gimbal.getGimbalConstraints() {
+            constraints = c
+        }
+        
         super.init()
 
         gimbal.completionTimeForControlAngleAction = 0.5
@@ -74,6 +82,14 @@ import DJISDK
     }
 
     func setPitch(pitch: Float) {
+        if let constraints = self.constraints {
+            if (!(constraints.pitchStopMin...constraints.pitchStopMax ~= pitch)) {
+                self.delegate?.gimbalMoveOutOfRange("Pitch \(pitch) was out of range")
+                
+                return
+            }
+        }
+        
         self.status = .Normal
 
         let pitchInRange = self.gimbalAngleForHeading(pitch)
@@ -84,6 +100,14 @@ import DJISDK
     }
 
     func setYaw(yaw: Float) {
+        if let constraints = self.constraints {
+            if (!(constraints.yawStopMin...constraints.yawStopMax ~= yaw)) {
+                self.delegate?.gimbalMoveOutOfRange("Yaw \(yaw) was out of range")
+                
+                return
+            }
+        }
+
         self.status = .Normal
 
         let yawInRange = self.gimbalAngleForHeading(yaw)
@@ -94,6 +118,14 @@ import DJISDK
     }
 
     func setRoll(roll: Float) {
+        if let constraints = self.constraints {
+            if (!(constraints.rollStopMin...constraints.rollStopMax ~= roll)) {
+                self.delegate?.gimbalMoveOutOfRange("Roll \(roll) was out of range")
+                
+                return
+            }
+        }
+
         self.status = .Normal
 
         let rollInRange = self.gimbalAngleForHeading(roll)
@@ -243,4 +275,5 @@ import DJISDK
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll
     }
+    
 }
