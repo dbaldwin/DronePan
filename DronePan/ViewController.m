@@ -20,7 +20,7 @@
 
 #import "DronePan-Swift.h"
 
-#define ENABLE_DEBUG_MODE 0
+#define ENABLE_DEBUG_MODE 1
 
 #define STANDARD_DELAY 3
 
@@ -505,12 +505,16 @@
     NSLog(@"Camera signalled abort");
     
     [Utils displayToastOnApp:reason];
+    
+    // Let's make sure this queue exists since there are cases where
+    // the camera throws an error and the queue hasn't been initialized
+    if(droneCmdsQueue != nil) {
+        dispatch_async(droneCmdsQueue, ^{
+            self.panoInProgress = NO;
 
-    dispatch_async(droneCmdsQueue, ^{
-        self.panoInProgress = NO;
-
-        dispatch_group_leave(self.cameraDispatchGroup);
-    });
+            dispatch_group_leave(self.cameraDispatchGroup);
+        });
+    }
 }
 
 #pragma mark Hardware helper methods

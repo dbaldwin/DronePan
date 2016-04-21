@@ -216,12 +216,12 @@ import DJISDK
             self.delegate?.cameraControllerAborted("SD Card requires formatting")
         }
 
-        if (!sdCardState.isFormatting) {
+        if (sdCardState.isFormatting) {
             self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card is currently formatting")
         }
 
-        if (!sdCardState.isInitializing) {
+        if (sdCardState.isInitializing) {
             self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card is currently initializing")
         }
