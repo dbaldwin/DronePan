@@ -124,7 +124,7 @@
     if (self.panoInProgress) {
         
 #ifndef DEBUG
-        [self.settingsButton setEnabled:YES];
+        [self.settingsButton setEnabled:NO];
 #endif
         [Utils displayToastOnApp:@"Stopping pano. Please wait..."];
         
