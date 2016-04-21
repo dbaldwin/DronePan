@@ -31,6 +31,7 @@ import DJISDK
     let camera: DJICamera
 
     var delegate: CameraControllerDelegate?
+    var status : ControllerStatus = .Normal
 
     let maxCount = 5
 
@@ -42,7 +43,6 @@ import DJISDK
 
     var mode: DJICameraMode = .Unknown
     
-    var inError : Bool = false
 
     init(camera: DJICamera) {
         self.camera = camera
@@ -53,7 +53,7 @@ import DJISDK
     }
 
     func setPhotoMode() {
-        self.inError = false
+        self.status = .Normal
         
         dispatch_async(self.cameraWorkQueue) {
             self.setPhotoMode(0)
@@ -61,7 +61,7 @@ import DJISDK
     }
 
     func takeASnap() {
-        self.inError = false
+        self.status = .Normal
 
         self.tookShot = false
         dispatch_async(self.cameraWorkQueue) {
@@ -70,7 +70,7 @@ import DJISDK
     }
 
     private func setPhotoMode(counter: Int) {
-        if (inError) {
+        if (status != .Normal) {
             return
         }
         
@@ -103,7 +103,7 @@ import DJISDK
     }
 
     private func takeASnap(counter: Int) {
-        if (inError) {
+        if (status != .Normal) {
             return
         }
 
@@ -127,7 +127,7 @@ import DJISDK
     }
 
     private func checkTakeASnap(checkCounter: Int, counter: Int) {
-        if (inError) {
+        if (status != .Normal) {
             return
         }
 
@@ -150,7 +150,7 @@ import DJISDK
     }
 
     private func delay(delay: Double, closure: () -> ()) {
-        if (inError) {
+        if (status != .Normal) {
             return
         }
 
@@ -163,11 +163,11 @@ import DJISDK
 
     func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {
         if (systemState.isCameraOverHeated) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("Camera overheated")
         }
         if (systemState.isCameraError) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("Camera in error state")
         }
         
@@ -187,22 +187,22 @@ import DJISDK
 
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {
         if (sdCardState.hasError) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card in error state")
         }
 
         if (sdCardState.isReadOnly) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card is read only")
         }
         
         if (sdCardState.isInvalidFormat) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card has invalid format")
         }
 
         if (sdCardState.isFull) {
-            self.inError = true
+            self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card full")
         }
     }

@@ -15,6 +15,12 @@
 
 import Foundation
 
+@objc enum ControllerStatus: Int {
+    case Normal = 0
+    case Error = 1
+    case Stopping = 2
+}
+
 class ControllerUtils {
     class func delay(delay: Double, queue: dispatch_queue_t, closure: () -> ()) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),

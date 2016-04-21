@@ -27,6 +27,7 @@ import DJISDK
     let gimbal: DJIGimbal
 
     var delegate: GimbalControllerDelegate?
+    var status : ControllerStatus = .Normal
 
     let maxCount = 5
     let allowedOffset: Float = 2.5
@@ -65,12 +66,16 @@ import DJISDK
     }
 
     func reset() {
+        self.status = .Normal
+
         dispatch_async(self.gimbalWorkQueue) {
             self.reset(0)
         }
     }
 
     func setPitch(pitch: Float) {
+        self.status = .Normal
+
         let pitchInRange = self.gimbalAngleForHeading(pitch)
         self.lastSetPitch = pitchInRange
         dispatch_async(self.gimbalWorkQueue) {
@@ -79,6 +84,8 @@ import DJISDK
     }
 
     func setYaw(yaw: Float) {
+        self.status = .Normal
+
         let yawInRange = self.gimbalAngleForHeading(yaw)
         self.lastSetYaw = yawInRange
         dispatch_async(self.gimbalWorkQueue) {
@@ -87,6 +94,8 @@ import DJISDK
     }
 
     func setRoll(roll: Float) {
+        self.status = .Normal
+
         let rollInRange = self.gimbalAngleForHeading(roll)
         self.lastSetRoll = rollInRange
         dispatch_async(self.gimbalWorkQueue) {
@@ -111,6 +120,10 @@ import DJISDK
     }
 
     private func delay(delay: Double, closure: () -> ()) {
+        if (status != .Normal) {
+            return
+        }
+        
         ControllerUtils.delay(delay, queue: self.gimbalWorkQueue, closure: closure)
     }
 
@@ -125,6 +138,10 @@ import DJISDK
     }
 
     private func reset(counter: Int) {
+        if (status != .Normal) {
+            return
+        }
+        
         self.lastSetPitch = 0
         self.lastSetYaw = 0
         self.lastSetRoll = 0
@@ -160,6 +177,10 @@ import DJISDK
     }
 
     private func setAttitude(counter: Int, pitch: Float, yaw: Float, roll: Float) {
+        if (status != .Normal) {
+            return
+        }
+        
         NSLog("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
 
         if (counter > maxCount) {

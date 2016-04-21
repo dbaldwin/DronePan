@@ -434,6 +434,20 @@
     
 }
 
+// Override setter
+- (void)setPanoInProgress:(BOOL)panoInProgress {
+    self->_panoInProgress = panoInProgress;
+    
+    if (!panoInProgress) {
+        if (self.cameraController) {
+            [self.cameraController setStatus:ControllerStatusStopping];
+        }
+        if (self.gimbalController) {
+            [self.gimbalController setStatus:ControllerStatusStopping];
+        }
+    }
+}
+
 #pragma mark - GimbalControllerDelegate
 
 - (void)gimbalControllerCompleted {
