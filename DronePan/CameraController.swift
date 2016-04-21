@@ -220,10 +220,14 @@ import DJISDK
         }
         
         if (self.status != newState) {
-            if (newState == .Error) {
+
+            if ( newState == .Error) {
                 self.delegate?.cameraControllerInError(message)
             } else {
-                self.delegate?.cameraControllerOK()
+                // Don't send message if stopping
+                if (self.status == .Normal) {
+                    self.delegate?.cameraControllerOK()
+                }
             }
             
             self.status = newState
