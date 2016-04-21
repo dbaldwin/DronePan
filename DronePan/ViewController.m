@@ -124,7 +124,7 @@
     if (self.panoInProgress) {
         
 #ifndef DEBUG
-        [self.settingsButton setEnabled:NO];
+        [self.settingsButton setEnabled:YES];
 #endif
         [Utils displayToastOnApp:@"Stopping pano. Please wait..."];
         
@@ -313,6 +313,10 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Photo: Done"];
+
+#ifndef DEBUG
+            [self.settingsButton setEnabled:YES];
+#endif
         });
 
         self.panoInProgress = NO;
