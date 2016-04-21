@@ -53,8 +53,7 @@ import UIKit
     
     func initSettings() {
         titleLabel.attributedText = NSAttributedString(string: "\(model) Settings", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(20),
-            NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
         ])
         
         if (productType == PT_HANDHELD) {
