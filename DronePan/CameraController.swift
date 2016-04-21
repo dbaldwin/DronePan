@@ -205,5 +205,25 @@ import DJISDK
             self.status = .Error
             self.delegate?.cameraControllerAborted("SD Card full")
         }
+        
+        if (!sdCardState.isInserted) {
+            self.status = .Error
+            self.delegate?.cameraControllerAborted("SD Card missing")
+        }
+
+        if (!sdCardState.isFormatted) {
+            self.status = .Error
+            self.delegate?.cameraControllerAborted("SD Card requires formatting")
+        }
+
+        if (!sdCardState.isFormatting) {
+            self.status = .Error
+            self.delegate?.cameraControllerAborted("SD Card is currently formatting")
+        }
+
+        if (!sdCardState.isInitializing) {
+            self.status = .Error
+            self.delegate?.cameraControllerAborted("SD Card is currently initializing")
+        }
     }
 }
