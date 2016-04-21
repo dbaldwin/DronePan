@@ -8,7 +8,7 @@
 
 * Update to DJI SDK 3.1
 * Faster - we now react to the device saying "finished" instead of waiting long enough that we think it worked - so panoramas should go faster
-* More stable - since we actually check for move completion and camera shot saved to disk - we should finally be **quit the missing shot bug** - in fact it'll retry up to 5 times for each move and photo
+* More stable - since we actually check for move completion and camera shot saved to disk - we should finally be **over the missing shot bug** - in fact it'll retry up to 5 times for each move and photo
 * Osmo support
 * Phantom 4 support
 * Delay on start (Osmo) - your "get out of shot" time
@@ -18,3 +18,5 @@
 #### Known issues
 
 * Even if you enable sky row for P3 in DJI Go - it doesn't allow it via the SDK - so it will skip the sky row (and tell you it can't make that move)
+* Video feed doesn't fill the view
+* Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
