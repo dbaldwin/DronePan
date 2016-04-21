@@ -211,7 +211,6 @@
     }
 }
 
-// TODO throught loop - check panoInProgress
 - (void)doPanoLoop {
     NSArray *pitches = [self pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
                                               forType:[self productType]
