@@ -17,6 +17,10 @@ If you want to help out then there are several things you can do:
 * Fork the project and send in pull requests
 * Create issues if you have a problem/bug or suggestion
 
+## Want to beta test?
+
+For iOS we use TestFlight from Apple. To sign up - please fill out [the following form](http://visitor.r20.constantcontact.com/manage/optin?v=001giAVbUCFt6Z0lHA2j823X8YlGHySkIZU2_0-gjeim4o4r4T2WGHTGBXU4zPH3taTcbW4D7ZXjegaGxWjFTGBiHPwQmf-lVHqhEoKeJ6z_8Mopf-pVV7ruoyBe8eHKJwNlYnWehVqt8uJqkNbAXYLp0fArIx4SJrj)
+
 ## Facebook
 
 Join our Facebook group here: http://www.facebook.com/groups/dronepan
