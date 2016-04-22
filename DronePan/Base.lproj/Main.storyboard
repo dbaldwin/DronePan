@@ -179,11 +179,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7sO-LJ-HZd">
+                                <rect key="frame" x="916" y="745" width="100" height="15"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="XDZ-Yp-ECa"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" translatesAutoresizingMaskIntoConstraints="NO" id="uZ1-HP-PEj">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="737"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Model Name Settings" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hUh-rC-BBm">
-                                        <rect key="frame" x="409" y="24" width="205" height="24"/>
+                                        <rect key="frame" x="410" y="24" width="205" height="24"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="20"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -203,13 +212,13 @@
                                         </segments>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start delay (seconds):" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-Jm-WCn">
-                                        <rect key="frame" x="421" y="76" width="181" height="21"/>
+                                        <rect key="frame" x="422" y="76" width="181" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="8Pp-fn-P5T">
-                                        <rect key="frame" x="304" y="157" width="415" height="34"/>
+                                        <rect key="frame" x="305" y="157" width="415" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -387,7 +396,7 @@
                                     <constraint firstItem="bzI-Gw-2HV" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="10P-ee-O1H"/>
                                     <constraint firstItem="wtZ-dc-gsG" firstAttribute="top" secondItem="7X9-8q-rea" secondAttribute="bottom" constant="16" id="2Js-qy-Scu"/>
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="35g-Sb-VDO"/>
-                                    <constraint firstAttribute="bottom" secondItem="bzI-Gw-2HV" secondAttribute="bottom" constant="50" id="3kh-C7-geB"/>
+                                    <constraint firstAttribute="bottom" secondItem="bzI-Gw-2HV" secondAttribute="bottom" constant="24" id="3kh-C7-geB"/>
                                     <constraint firstItem="6Dl-OL-Xmr" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="8E4-JG-zZZ"/>
                                     <constraint firstItem="7X9-8q-rea" firstAttribute="top" secondItem="8Pp-fn-P5T" secondAttribute="bottom" constant="16" id="8kB-6J-Kfo"/>
                                     <constraint firstItem="wcu-Bz-lhG" firstAttribute="top" secondItem="ExQ-yC-UxC" secondAttribute="bottom" constant="16" id="9vN-qK-Wea"/>
@@ -425,10 +434,12 @@
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="7sO-LJ-HZd" firstAttribute="top" secondItem="uZ1-HP-PEj" secondAttribute="bottom" constant="8" id="Fi2-o7-sii"/>
                             <constraint firstAttribute="trailing" secondItem="uZ1-HP-PEj" secondAttribute="trailing" id="HpQ-U8-5KJ"/>
                             <constraint firstItem="uZ1-HP-PEj" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" id="PE6-qP-9ie"/>
-                            <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="uZ1-HP-PEj" secondAttribute="bottom" id="W5Y-JQ-jMk"/>
+                            <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="7sO-LJ-HZd" secondAttribute="bottom" constant="8" id="gJT-V7-Y1Q"/>
                             <constraint firstItem="uZ1-HP-PEj" firstAttribute="top" secondItem="m9e-md-Mho" secondAttribute="top" id="gLZ-Ut-PLT"/>
+                            <constraint firstAttribute="trailing" secondItem="7sO-LJ-HZd" secondAttribute="trailing" constant="8" id="jJU-55-8P9"/>
                         </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -437,11 +448,13 @@
                         <outlet property="angleLabel" destination="ums-pl-xF0" id="VkV-at-5Gw"/>
                         <outlet property="countLabel" destination="SQP-KJ-3Jt" id="qSF-pB-sxx"/>
                         <outlet property="photosPerRowControl" destination="6Dl-OL-Xmr" id="giL-ia-LdW"/>
+                        <outlet property="scrollView" destination="uZ1-HP-PEj" id="5Cq-Hb-Rta"/>
                         <outlet property="skyRowControl" destination="z1j-Ik-VPo" id="G1E-M5-VYU"/>
                         <outlet property="skyRowDescription" destination="8i3-1a-eMe" id="gZX-mK-FvQ"/>
                         <outlet property="startDelayControl" destination="uvL-N9-jUN" id="1Yr-Wf-A1D"/>
                         <outlet property="startDelayDescription" destination="8Pp-fn-P5T" id="mIW-6K-gMT"/>
                         <outlet property="titleLabel" destination="hUh-rC-BBm" id="Xew-cb-Kej"/>
+                        <outlet property="versionLabel" destination="7sO-LJ-HZd" id="2t9-3K-e9Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="43s-vL-cjP" userLabel="First Responder" sceneMemberID="firstResponder"/>

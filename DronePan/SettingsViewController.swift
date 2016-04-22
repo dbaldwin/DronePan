@@ -32,10 +32,26 @@ import UIKit
     @IBOutlet weak var startDelayDescription: UILabel!
     @IBOutlet weak var skyRowDescription: UILabel!
     
+    @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initSettings()
+
+        let info = NSBundle.mainBundle().infoDictionary
+        
+        if let version = info?["CFBundleShortVersionString"], build = info?["CFBundleVersion"] {
+            self.versionLabel.hidden = false
+            self.versionLabel.text = "Version \(version)(\(build))"
+        } else {
+            self.versionLabel.hidden = true
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.scrollView.flashScrollIndicators()
     }
     
     private func initSegment(control: UISegmentedControl, setting : Int) {
