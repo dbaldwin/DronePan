@@ -2,6 +2,12 @@
 
 ## 1.4.2
 
+### [1.4.2b3](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
+
+#### Updates
+
+* Allow setting number of rows via settings
+
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
 #### Updates

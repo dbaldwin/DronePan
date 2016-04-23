@@ -24,6 +24,7 @@ import UIKit
     
     @IBOutlet weak var startDelayControl: UISegmentedControl!
     @IBOutlet weak var photosPerRowControl: UISegmentedControl!
+    @IBOutlet weak var numberOfRowsControl: UISegmentedControl!
     @IBOutlet weak var skyRowControl: UISegmentedControl!
 
     @IBOutlet weak var angleLabel: UILabel!
@@ -101,6 +102,9 @@ import UIKit
         
         let photosPerRow = ModelSettings.photosPerRow(model)
         initSegment(photosPerRowControl, setting: photosPerRow)
+
+        let numberOfRows = ModelSettings.numberOfRows(model)
+        initSegment(numberOfRowsControl, setting: numberOfRows)
         
         updateCounts()
     }
@@ -119,18 +123,18 @@ import UIKit
     }
     
     private func updateCounts() {
-        var numberOfRows = ModelSettings.numberOfRows(model)
+        if var numberOfRows = selectedNumberOfRows() {
+            if (isSkyRow()) {
+                numberOfRows += 1
+            }
         
-        if (isSkyRow()) {
-            numberOfRows += 1
-        }
-        
-        if let photosPerRow = selectedPhotosPerRow() {
-            self.setAngleLabel(360.0/Float(photosPerRow))
-            self.countLabel.text = "\((numberOfRows * photosPerRow) + 1)"
-        } else {
-            self.setAngleLabel(0)
-            self.countLabel.text = "--"
+            if let photosPerRow = selectedPhotosPerRow() {
+                self.setAngleLabel(360.0/Float(photosPerRow))
+                self.countLabel.text = "\((numberOfRows * photosPerRow) + 1)"
+            } else {
+                self.setAngleLabel(0)
+                self.countLabel.text = "--"
+            }
         }
     }
     
@@ -154,11 +158,19 @@ import UIKit
         return selectedValue(photosPerRowControl)
     }
 
+    private func selectedNumberOfRows() -> Int? {
+        return selectedValue(numberOfRowsControl)
+    }
+
     private func selectedStartDelay() -> Int? {
         return selectedValue(startDelayControl)
     }
     
     @IBAction func photosPerRowChanged(sender: AnyObject) {
+        updateCounts()
+    }
+    
+    @IBAction func numberOfRowsChanged(sender: AnyObject) {
         updateCounts()
     }
     
@@ -177,6 +189,10 @@ import UIKit
         
         if let photoCount = selectedPhotosPerRow() {
             settings[.PhotosPerRow] = photoCount
+        }
+
+        if let rowCount = selectedNumberOfRows() {
+            settings[.NumberOfRows] = rowCount
         }
         
         ModelSettings.updateSettings(model, settings: settings)
