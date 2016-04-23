@@ -2,16 +2,22 @@
 
 ## 1.4.2
 
+### Known issues
+
+* Even if you enable sky row for P3 in DJI Go - it doesn't allow it via the SDK - so it will skip the sky row (and tell you it can't make that move)
+* Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
+* Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
+
 ### [1.4.2b3](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
 
 #### Updates
 
 * Allow setting number of rows via settings
-* Check that the card has space for the pano before starting
+* Check that the card has space for the pano before startin
 
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
-#### Updates
+#### Fixes
 
 * Fix yaw past 180 for Osmo
 
@@ -28,8 +34,3 @@
 * Choose number of photos in row
 * Choose extra sky row (point the gimbal up to 30˚) - aircraft only (Osmo will always do it's full gimbal pitch)
 
-#### Known issues
-
-* Even if you enable sky row for P3 in DJI Go - it doesn't allow it via the SDK - so it will skip the sky row (and tell you it can't make that move)
-* Video feed doesn't fill the view
-* Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
