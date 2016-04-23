@@ -14,6 +14,7 @@
 
 * Allow setting number of rows via settings
 * Check that the card has space for the pano before starting
+* Check flight mode is F before starting
 
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
