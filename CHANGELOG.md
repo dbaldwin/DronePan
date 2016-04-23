@@ -2,6 +2,12 @@
 
 ## 1.4.2
 
+### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
+
+#### Updates
+
+* Fix yaw past 180 for Osmo
+
 ### [1.4.2b1](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b1)
 
 #### Updates
