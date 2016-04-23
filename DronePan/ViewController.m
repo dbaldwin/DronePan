@@ -24,7 +24,7 @@
 
 #define STANDARD_DELAY 3
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIBatteryDelegate, GimbalControllerDelegate, CameraControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIRemoteControllerDelegate, DJIBatteryDelegate, GimbalControllerDelegate, CameraControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -49,6 +49,7 @@
 @property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
 @property(nonatomic, assign) BOOL panoInProgress;
+@property(nonatomic, assign) BOOL rcInFMode;
 
 @property(nonatomic, strong) GimbalController *gimbalController;
 @property(nonatomic, strong) dispatch_group_t gimbalDispatchGroup;
@@ -96,6 +97,8 @@
     [self.settingsButton setEnabled:NO];
 #endif
     
+    self.rcInFMode = NO;
+
     [self initLabels];
 }
 
@@ -139,6 +142,15 @@
         [Utils displayToastOnApp:[NSString stringWithFormat:@"Not enough space on card for %ld images", panoCount]];
         
         return;
+    }
+    
+    // TODO - update for gimbal yaw for I1
+    if ([self productType] == PT_AIRCRAFT) {
+        if (!self.rcInFMode) {
+            [Utils displayToastOnApp:[NSString stringWithFormat:@"Please set RC Flight Mode to F first."]];
+            
+            return;
+        }
     }
     
     self.panoInProgress = YES;
@@ -630,6 +642,12 @@
             camera = ((DJIAircraft *) self.product).camera;
             gimbal = ((DJIAircraft *) self.product).gimbal;
             battery = ((DJIAircraft*) self.product).battery;
+            
+            DJIRemoteController *remote = ((DJIAircraft *) self.product).remoteController;
+            
+            if (remote) {
+                remote.delegate = self;
+            }
 
             [self altitudeLabel].hidden = NO;
             [self satelliteLabel].hidden = NO;
@@ -642,6 +660,8 @@
             [self altitudeLabel].hidden = YES;
             [self satelliteLabel].hidden = YES;
             [self distanceLabel].hidden = YES;
+            
+            self.rcInFMode = NO;
         }
 
         if (camera) {
@@ -665,6 +685,8 @@
 #ifndef DEBUG
         [self.settingsButton setEnabled:NO];
 #endif
+
+        self.rcInFMode = NO;
 
         [self initLabels];
 
@@ -735,6 +757,16 @@
     
     // TODO Battery temp
     // batteryState.batteryTemperature
+}
+
+#pragma mark - DJIRemoteControllerDelegate
+
+- (void)remoteController:(DJIRemoteController *)rc didUpdateHardwareState:(DJIRCHardwareState)state {
+    if (state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
+        self.rcInFMode = YES;
+    } else {
+        self.rcInFMode = NO;
+    }
 }
 
 
