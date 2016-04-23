@@ -762,7 +762,7 @@
 #pragma mark - DJIRemoteControllerDelegate
 
 - (void)remoteController:(DJIRemoteController *)rc didUpdateHardwareState:(DJIRCHardwareState)state {
-    if (state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
+    if ([self.product.model isEqualToString:DJIAircraftModelNamePhantom4] || state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
         self.rcInFMode = YES;
     } else {
         self.rcInFMode = NO;
