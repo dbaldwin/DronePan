@@ -82,9 +82,11 @@ import DJISDK
     }
 
     func setPitch(pitch: Float) {
+        let pitchInRange = self.gimbalAngleForHeading(pitch)
+
         if let constraints = self.constraints {
-            if (!(constraints.pitchStopMin...constraints.pitchStopMax ~= pitch)) {
-                self.delegate?.gimbalMoveOutOfRange("Pitch \(pitch) was out of range")
+            if (!(constraints.pitchStopMin...constraints.pitchStopMax ~= pitchInRange)) {
+                self.delegate?.gimbalMoveOutOfRange("Pitch \(pitchInRange) was out of range")
                 
                 return
             }
@@ -92,7 +94,6 @@ import DJISDK
         
         self.status = .Normal
 
-        let pitchInRange = self.gimbalAngleForHeading(pitch)
         self.lastSetPitch = pitchInRange
         dispatch_async(self.gimbalWorkQueue) {
             self.setAttitude(0, pitch: pitchInRange, yaw: self.lastSetYaw, roll: self.lastSetRoll)
@@ -100,9 +101,11 @@ import DJISDK
     }
 
     func setYaw(yaw: Float) {
+        let yawInRange = self.gimbalAngleForHeading(yaw)
+
         if let constraints = self.constraints {
-            if (!(constraints.yawStopMin...constraints.yawStopMax ~= yaw)) {
-                self.delegate?.gimbalMoveOutOfRange("Yaw \(yaw) was out of range")
+            if (!(constraints.yawStopMin...constraints.yawStopMax ~= yawInRange)) {
+                self.delegate?.gimbalMoveOutOfRange("Yaw \(yawInRange) was out of range")
                 
                 return
             }
@@ -110,7 +113,6 @@ import DJISDK
 
         self.status = .Normal
 
-        let yawInRange = self.gimbalAngleForHeading(yaw)
         self.lastSetYaw = yawInRange
         dispatch_async(self.gimbalWorkQueue) {
             self.setAttitude(0, pitch: self.lastSetPitch, yaw: yawInRange, roll: self.lastSetRoll)
@@ -118,9 +120,11 @@ import DJISDK
     }
 
     func setRoll(roll: Float) {
+        let rollInRange = self.gimbalAngleForHeading(roll)
+
         if let constraints = self.constraints {
-            if (!(constraints.rollStopMin...constraints.rollStopMax ~= roll)) {
-                self.delegate?.gimbalMoveOutOfRange("Roll \(roll) was out of range")
+            if (!(constraints.rollStopMin...constraints.rollStopMax ~= rollInRange)) {
+                self.delegate?.gimbalMoveOutOfRange("Roll \(rollInRange) was out of range")
                 
                 return
             }
@@ -128,7 +132,6 @@ import DJISDK
 
         self.status = .Normal
 
-        let rollInRange = self.gimbalAngleForHeading(roll)
         self.lastSetRoll = rollInRange
         dispatch_async(self.gimbalWorkQueue) {
             self.setAttitude(0, pitch: self.lastSetPitch, yaw: self.lastSetYaw, roll: rollInRange)

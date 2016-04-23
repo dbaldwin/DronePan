@@ -52,5 +52,6 @@ class GimbalControllerTests: XCTestCase {
         compare(   0, heading: -720)
         compare(   1, heading:  721)
         compare(  -1, heading: -721)
+        compare(-144, heading:  216)
     }
 }
