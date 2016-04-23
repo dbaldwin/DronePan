@@ -46,7 +46,7 @@ import DJISDK
     var isStoring: Bool = false
 
     var mode: DJICameraMode = .Unknown
-    
+    var availableCaptureCount : Int = 0
 
     init(camera: DJICamera) {
         self.camera = camera
@@ -71,6 +71,10 @@ import DJISDK
         dispatch_async(self.cameraWorkQueue) {
             self.takeASnap(0)
         }
+    }
+    
+    func hasSpaceForPano(shotCount: Int) -> Bool {
+        return availableCaptureCount == 0 || shotCount < availableCaptureCount
     }
 
     private func setPhotoMode(counter: Int) {
@@ -190,6 +194,8 @@ import DJISDK
     }
 
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {
+        self.availableCaptureCount = Int(sdCardState.availableCaptureCount)
+        
         var newState : ControllerStatus = .Normal
         var message = ""
         

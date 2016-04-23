@@ -133,6 +133,14 @@
         return;
     }
     
+    long panoCount = [ModelSettings numberOfImagesForCurrentSettings:self.product.model];
+    
+    if (![self.cameraController hasSpaceForPano:panoCount]) {
+        [Utils displayToastOnApp:[NSString stringWithFormat:@"Not enough space on card for %ld images", panoCount]];
+        
+        return;
+    }
+    
     self.panoInProgress = YES;
     
 #ifndef DEBUG

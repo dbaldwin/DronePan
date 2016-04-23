@@ -77,4 +77,16 @@ enum SettingsKeys: String {
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: model)
         NSUserDefaults.standardUserDefaults().synchronize()
     }
+    
+    class func numberOfImagesForCurrentSettings(model: String) -> Int {
+        var numberOfRows = ModelSettings.numberOfRows(model)
+        
+        if (ModelSettings.skyRow(model)) {
+            numberOfRows += 1
+        }
+
+        let photosPerRow = ModelSettings.photosPerRow(model)
+        
+        return (numberOfRows * photosPerRow) + 1
+    }
 }
