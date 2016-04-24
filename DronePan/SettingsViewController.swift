@@ -15,6 +15,8 @@
 
 import UIKit
 
+import CocoaLumberjackSwift
+
 @objc class SettingsViewController: UIViewController {
     
     var model:String = ""
@@ -37,21 +39,26 @@ import UIKit
     @IBOutlet weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         initSettings()
 
-        let info = NSBundle.mainBundle().infoDictionary
-        
-        if let version = info?["CFBundleShortVersionString"], build = info?["CFBundleVersion"] {
+        if let version = ControllerUtils.buildVersion() {
             self.versionLabel.hidden = false
-            self.versionLabel.text = "Version \(version)(\(build))"
+            self.versionLabel.text = "Version \(version)"
+            
+            DDLogDebug("Settings VC showing version \(version)")
         } else {
             self.versionLabel.hidden = true
+
+            DDLogWarn("Settings VC unknown version")
         }
     }
     
     override func viewDidAppear(animated: Bool) {
+        DDLogInfo("Settings VC Showing settings view")
+
         self.scrollView.flashScrollIndicators()
     }
     
@@ -204,5 +211,25 @@ import UIKit
     @IBAction func cancelSettings(sender: AnyObject) {
         // Dismiss the VC
         self.dismissViewControllerAnimated(true, completion: {})
+    }
+    
+    @IBAction func copyLogToClipboard(sender: UIButton) {
+        if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+            if (appDelegate.copyLogToClipboard()) {
+                showAlert("Log copied", body: "Log copied to clipboard")
+            } else {
+                showAlert("Failed", body: "Failed to copy log to clipboard")
+            }
+        }
+    }
+    
+    private func showAlert(title: String, body: String) {
+        let alert = UIAlertController(title: title, message: body, preferredStyle: .Alert)
+        
+        let ok = UIAlertAction(title: "OK", style: .Default, handler: nil)
+        
+        alert.addAction(ok)
+        
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }

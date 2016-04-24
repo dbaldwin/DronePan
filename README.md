@@ -24,3 +24,12 @@ For iOS we use TestFlight from Apple. To sign up - please fill out [the followin
 ## Facebook
 
 Join our Facebook group here: http://www.facebook.com/groups/dronepan
+
+## Development
+
+Apart from XCode we're using [Carthage](https://github.com/Carthage/Carthage) to handle dependencies.
+
+After cloning - you'll need to run
+
+    carthage bootstrap
+

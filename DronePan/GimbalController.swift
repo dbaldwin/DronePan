@@ -16,6 +16,7 @@
 import Foundation
 
 import DJISDK
+import CocoaLumberjackSwift
 
 @objc protocol GimbalControllerDelegate {
     func gimbalControllerCompleted()
@@ -51,20 +52,24 @@ import DJISDK
     var constraints : DJIGimbalConstraints?
     
     init(gimbal: DJIGimbal) {
+        DDLogInfo("Gimbal Controller init")
+
         self.gimbal = gimbal
 
         if let constraints = gimbal.getGimbalConstraints() {
             isPitchAdjustable = constraints.isPitchAdjustable
             isYawAdjustable = constraints.isYawAdjustable
             isRollAdjustable = constraints.isRollAdjustable
+            
+            self.constraints = constraints
+            
+            DDLogDebug("Gimbal Controller constraints adjustable P: \(constraints.isPitchAdjustable), Y: \(constraints.isYawAdjustable), R: \(constraints.isRollAdjustable)")
+            DDLogDebug("Gimbal Controller constraints min P: \(constraints.pitchStopMin), Y: \(constraints.yawStopMin), R: \(constraints.rollStopMin)")
+            DDLogDebug("Gimbal Controller constraints max P: \(constraints.pitchStopMax), Y: \(constraints.yawStopMax), R: \(constraints.rollStopMax)")
         } else {
             isPitchAdjustable = false
             isYawAdjustable = false
             isRollAdjustable = false
-        }
-
-        if let c = gimbal.getGimbalConstraints() {
-            constraints = c
         }
         
         super.init()
@@ -74,6 +79,8 @@ import DJISDK
     }
 
     func reset() {
+        DDLogInfo("Gimbal Controller reset")
+
         self.status = .Normal
 
         dispatch_async(self.gimbalWorkQueue) {
@@ -82,10 +89,14 @@ import DJISDK
     }
 
     func setPitch(pitch: Float) {
+        DDLogInfo("Gimbal Controller set pitch to \(pitch)")
+
         let pitchInRange = self.gimbalAngleForHeading(pitch)
 
         if let constraints = self.constraints {
             if (!(constraints.pitchStopMin...constraints.pitchStopMax ~= pitchInRange)) {
+                DDLogWarn("Gimbal Controller set pitch to \(pitchInRange) out of range")
+
                 self.delegate?.gimbalMoveOutOfRange("Pitch \(pitchInRange) was out of range")
                 
                 return
@@ -101,10 +112,14 @@ import DJISDK
     }
 
     func setYaw(yaw: Float) {
+        DDLogInfo("Gimbal Controller set yaw to \(yaw)")
+
         let yawInRange = self.gimbalAngleForHeading(yaw)
 
         if let constraints = self.constraints {
             if (!(constraints.yawStopMin...constraints.yawStopMax ~= yawInRange)) {
+                DDLogWarn("Gimbal Controller set yaw to \(yawInRange) out of range")
+
                 self.delegate?.gimbalMoveOutOfRange("Yaw \(yawInRange) was out of range")
                 
                 return
@@ -120,10 +135,14 @@ import DJISDK
     }
 
     func setRoll(roll: Float) {
+        DDLogInfo("Gimbal Controller set roll to \(roll)")
+
         let rollInRange = self.gimbalAngleForHeading(roll)
 
         if let constraints = self.constraints {
             if (!(constraints.rollStopMin...constraints.rollStopMax ~= rollInRange)) {
+                DDLogWarn("Gimbal Controller set roll to \(rollInRange) out of range")
+
                 self.delegate?.gimbalMoveOutOfRange("Roll \(rollInRange) was out of range")
                 
                 return
@@ -151,11 +170,17 @@ import DJISDK
             angleInRange = (360 - angleInRange) * -1.0
         }
 
-        return angleInRange * sign
+        let newAngle = angleInRange * sign
+        
+        DDLogDebug("Gimbal Controller angle \(angle) adjusted to \(newAngle)")
+
+        return newAngle
     }
 
     private func delay(delay: Double, closure: () -> ()) {
         if (status != .Normal) {
+            DDLogDebug("Gimbal Controller delay - status was \(status) - returning")
+
             return
         }
         
@@ -174,6 +199,8 @@ import DJISDK
 
     private func reset(counter: Int) {
         if (status != .Normal) {
+            DDLogDebug("Gimbal Controller reset - status was \(status) - returning")
+
             return
         }
         
@@ -213,12 +240,16 @@ import DJISDK
 
     private func setAttitude(counter: Int, pitch: Float, yaw: Float, roll: Float) {
         if (status != .Normal) {
+            DDLogDebug("Gimbal Controller setAttitude - status was \(status) - returning")
+
             return
         }
         
-        NSLog("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
+        DDLogDebug("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
 
         if (counter > maxCount) {
+            DDLogWarn("Gimbal Controller setAttitude - counter exceeds max count - aborting")
+
             self.delegate?.gimbalControllerAborted("Unable to set gimbal attitude")
             return
         }
@@ -254,7 +285,7 @@ import DJISDK
             (error) in
 
             if let e = error {
-                NSLog("Error setting attitude on gimbal: \(e)")
+                DDLogWarn("Gimbal Controller setAttitude - error seen - \(e)")
 
                 self.setAttitude(nextCount, pitch: pitch, yaw: yaw, roll: roll)
             }
@@ -262,10 +293,12 @@ import DJISDK
 
         delay(gimbal.completionTimeForControlAngleAction + 0.5) {
             if !self.check(pitch: pitch, yaw: yaw, roll: roll) {
-                NSLog("Gimbal attitude not set count: \(counter)")
+                DDLogWarn("Gimbal Controller setAttitude hasn't completed yet count: \(counter)")
 
                 self.setAttitude(nextCount, pitch: pitch, yaw: yaw, roll: roll)
             } else {
+                DDLogDebug("Gimbal Controller setAttitude - OK")
+
                 self.delegate?.gimbalControllerCompleted()
             }
         }
@@ -274,6 +307,8 @@ import DJISDK
     func gimbalController(controller: DJIGimbal, didUpdateGimbalState gimbalState: DJIGimbalState) {
         let atti = gimbalState.attitudeInDegrees
 
+        DDLogVerbose("Gimbal Controller didUpdateGimbalState P:\(atti.pitch) Y:\(atti.yaw) R:\(atti.roll)")
+        
         self.currentPitch = atti.pitch
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll

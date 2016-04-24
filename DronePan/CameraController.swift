@@ -16,6 +16,7 @@
 import Foundation
 
 import DJISDK
+import CocoaLumberjackSwift
 
 @objc protocol CameraControllerDelegate {
     func cameraControllerCompleted(shotTaken: Bool)
@@ -49,6 +50,8 @@ import DJISDK
     var availableCaptureCount : Int = 0
 
     init(camera: DJICamera) {
+        DDLogInfo("Camera Controller init")
+        
         self.camera = camera
 
         super.init()
@@ -57,6 +60,8 @@ import DJISDK
     }
 
     func setPhotoMode() {
+        DDLogInfo("Camera Controller setPhotoMode")
+
         self.status = .Normal
         
         dispatch_async(self.cameraWorkQueue) {
@@ -65,6 +70,8 @@ import DJISDK
     }
 
     func takeASnap() {
+        DDLogInfo("Camera Controller takeASnap")
+        
         self.status = .Normal
 
         self.tookShot = false
@@ -74,15 +81,21 @@ import DJISDK
     }
     
     func hasSpaceForPano(shotCount: Int) -> Bool {
+        DDLogDebug("Camera Controller comparing shotCount: \(shotCount) with availableCaptureCount \(availableCaptureCount)")
+
         return availableCaptureCount == 0 || shotCount < availableCaptureCount
     }
 
     private func setPhotoMode(counter: Int) {
         if (status != .Normal) {
+            DDLogDebug("Camera Controller setPhotoMode - status was \(status) - returning")
+
             return
         }
         
         if (counter > maxCount) {
+            DDLogWarn("Camera Controller setPhotoMode - counter exceeds max count - aborting")
+
             self.delegate?.cameraControllerAborted("Failed to set mode")
             return
         }
@@ -93,7 +106,7 @@ import DJISDK
             (error) in
 
             if let e = error {
-                NSLog("Error setting photo mode: \(e)")
+                DDLogWarn("Camera Controller setPhotoMode - error seen - \(e)")
 
                 self.setPhotoMode(nextCount)
             }
@@ -101,9 +114,11 @@ import DJISDK
 
         delay(2) {
             if (self.mode == .ShootPhoto) {
+                DDLogDebug("Camera Controller setPhotoMode - OK")
+                
                 self.delegate?.cameraControllerCompleted(false)
             } else {
-                NSLog("Camera hasn't set mode yet count: \(counter)")
+                DDLogWarn("Camera Controller hasn't completed yet count: \(counter)")
 
                 self.setPhotoMode(nextCount)
             }
@@ -112,10 +127,14 @@ import DJISDK
 
     private func takeASnap(counter: Int) {
         if (status != .Normal) {
+            DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
+
             return
         }
 
         if (counter > maxCount) {
+            DDLogWarn("Camera Controller takeASnap - counter exceeds max count - aborting")
+
             self.delegate?.cameraControllerAborted("Failed to take a photo")
             return
         }
@@ -125,7 +144,7 @@ import DJISDK
         self.camera.startShootPhoto(.Single) {
             (error) in
             if let e = error {
-                NSLog("Error taking a photo: \(e)")
+                DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
 
                 self.takeASnap(nextCount)
             }
@@ -136,21 +155,29 @@ import DJISDK
 
     private func checkTakeASnap(checkCounter: Int, counter: Int) {
         if (status != .Normal) {
+            DDLogDebug("Camera Controller checkTakeASnap - status was \(status) - returning")
+
             return
         }
 
         if (checkCounter > maxCount) {
+            DDLogWarn("Camera Controller checkTakeASnap - counter exceeds max count - aborting")
+
             self.delegate?.cameraControllerAborted("Failed to check photo")
             return
         }
 
         delay(2) {
             if (self.tookShot) {
+                DDLogDebug("Camera Controller checkTakeASnap - OK")
+
                 self.delegate?.cameraControllerCompleted(true)
             } else if (self.isShooting || self.isStoring) {
+                DDLogDebug("Camera Controller checkTakeASnap - busy - retry")
+
                 self.checkTakeASnap(checkCounter + 1, counter: counter)
             } else {
-                NSLog("Camera hasn't taken shot yet count: \(counter)")
+                DDLogWarn("Camera Controller checkTakeASnap hasn't completed yet count: \(counter)")
 
                 self.takeASnap(counter + 1)
             }
@@ -159,6 +186,8 @@ import DJISDK
 
     private func delay(delay: Double, closure: () -> ()) {
         if (status != .Normal) {
+            DDLogDebug("Camera Controller delay - status was \(status) - returning")
+
             return
         }
 
@@ -166,15 +195,21 @@ import DJISDK
     }
 
     func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {
+        DDLogVerbose("Camera Controller didReceiveVideoData")
+
         self.delegate?.cameraReceivedVideo(videoBuffer, size: size)
     }
 
     func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {
+        DDLogVerbose("Camera Controller didUpdateSystemState")
+
         if (systemState.isCameraOverHeated) {
+            DDLogWarn("Camera overheated")
             self.status = .Error
             self.delegate?.cameraControllerAborted("Camera overheated")
         }
         if (systemState.isCameraError) {
+            DDLogWarn("Camera in error state")
             self.status = .Error
             self.delegate?.cameraControllerAborted("Camera in error state")
         }
@@ -190,10 +225,13 @@ import DJISDK
     }
 
     func camera(camera: DJICamera, didGenerateNewMediaFile newMedia: DJIMedia) {
+        DDLogDebug("Camera Controller didGenerateNewMediaFile")
         self.tookShot = true
     }
 
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {
+        DDLogVerbose("Camera Controller didUpdateSDCardState")
+
         self.availableCaptureCount = Int(sdCardState.availableCaptureCount)
         
         var newState : ControllerStatus = .Normal
@@ -226,12 +264,16 @@ import DJISDK
         }
         
         if (self.status != newState) {
+            DDLogDebug("Camera Controller changing status from \(self.status.rawValue) to \(newState.rawValue)")
 
-            if ( newState == .Error) {
+            if (newState == .Error) {
+                DDLogWarn("Camera Controller signal error state with message \(message)")
                 self.delegate?.cameraControllerInError(message)
             } else {
                 // Don't send message if stopping
                 if (self.status == .Normal) {
+                    DDLogDebug("Camera Controller changed state to normal - signal")
+
                     self.delegate?.cameraControllerOK()
                 }
             }
