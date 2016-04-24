@@ -189,18 +189,24 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         DJIFlightController *fc = [self fetchFlightController];
 
         if (fc) {
-            [fc enableVirtualStickControlModeWithCompletion:^(NSError *error) {
-                if (error) {
-                    NSString *msg = [NSString stringWithFormat:@"%@", error.description];
-                    [ControllerUtils displayToastOnApp:msg];
-                } else {
-                    fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
-                    fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
-                    fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
+            if (fc.isVirtualStickControlModeAvailable) {
+                [fc enableVirtualStickControlModeWithCompletion:^(NSError *error) {
+                    if (error) {
+                        NSString *msg = [NSString stringWithFormat:@"%@", error.description];
+                        [ControllerUtils displayToastOnApp:msg];
+                    } else {
+                        fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
+                        fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
+                        fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
-                    [self doPanoLoop];
-                }
-            }];
+                        [self doPanoLoop];
+                    }
+                }];
+            } else {
+                DDLogWarn(@"FC Virtual Stick Control Mode not available");
+                
+                [ControllerUtils displayToastOnApp:@"Unable to set virtual stick control mode"];
+            }
 
         } else {
             DDLogWarn(@"No flight controller found - couldn't initialize");
