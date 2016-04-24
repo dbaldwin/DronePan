@@ -271,7 +271,7 @@ import CocoaLumberjackSwift
                 self.delegate?.cameraControllerInError(message)
             } else {
                 // Don't send message if stopping
-                if (self.status == .Normal) {
+                if (newState == .Normal) {
                     DDLogDebug("Camera Controller changed state to normal - signal")
 
                     self.delegate?.cameraControllerOK()
