@@ -87,7 +87,7 @@ import CocoaLumberjackSwift
             let startDelay = ModelSettings.startDelay(model)
             initSegment(startDelayControl, setting: startDelay)
             
-            skyRowDescription.text = "Only applicable for aircraft"
+            skyRowDescription.text = "Handheld always gets this extra row. Number of rows will be the number selected above +1."
             skyRowControl.enabled = false
             skyRowControl.selectedSegmentIndex = 0
         } else {
