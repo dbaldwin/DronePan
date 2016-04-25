@@ -7,13 +7,21 @@
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 
+### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
+
+#### Updates
+
+* Update to DJISDK 3.1.1
+* Update to latest Video Previewer
+* Use hardware decoding for Video Previewer when the model supports it
+
 ### [1.4.2b3](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
 
 #### Updates
 
 * Allow setting number of rows via settings
 * Check that the card has space for the pano before starting
-* Check flight mode is F before starting
+* Check flight mode is F before starting for P3 and I1
 * Add ability to copy current log to clipboard from settings
 * Some text label updates in settings to make things clearer
 
@@ -21,7 +29,7 @@
 
 * Fix handling of change in camera state so that we don't forget to re-enabled start button
 * Fix (hopefully) the reset gimbal error by moving to the reset position with normal move instead of reset
-* Don't allow sky row for Phantom 3 - it doesn't support +30 via the SDK.
+* Don't allow sky row for Phantom - it doesn't support +30 via the SDK.
 
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
