@@ -21,10 +21,35 @@ import Foundation
     case Stopping = 2
 }
 
-class ControllerUtils {
+@objc class ControllerUtils: NSObject {
     class func delay(delay: Double, queue: dispatch_queue_t, closure: () -> ()) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),
                 queue,
                 closure)
+    }
+    
+
+    class func buildVersion() -> String? {
+        let info = NSBundle.mainBundle().infoDictionary
+    
+        if let version = info?["CFBundleShortVersionString"], build = info?["CFBundleVersion"] {
+            return "\(version)(\(build))"
+        }
+    
+        return nil
+    }
+    
+    class func displayToastOnApp(message: String) {
+        dispatch_async(dispatch_get_main_queue()) { 
+            if let view = UIApplication.sharedApplication().keyWindow?.rootViewController?.view {
+                let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+                hud.color = UIColor(colorLiteralRed: 0, green: 122.0/255.0, blue: 1, alpha: 1)
+                hud.mode = .Text
+                hud.labelText = message
+                hud.margin = 10.0
+                hud.removeFromSuperViewOnHide = true
+                hud.hide(true, afterDelay: 5)
+            }
+        }
     }
 }

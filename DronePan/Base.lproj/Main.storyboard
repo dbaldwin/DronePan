@@ -248,7 +248,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="oED-Mb-eMG">
-                                        <rect key="frame" x="442.5" y="393" width="140" height="29"/>
+                                        <rect key="frame" x="442" y="393" width="140" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="ZwG-ep-2iU"/>
                                             <constraint firstAttribute="width" constant="140" id="cXH-Uv-iaq"/>
@@ -398,7 +398,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="x4g-Cr-ig7">
-                                        <rect key="frame" x="304.5" y="429" width="415" height="67"/>
+                                        <rect key="frame" x="304" y="429" width="415" height="67"/>
                                         <string key="text">Depending on your camera and FOV you'll need to adjust this setting. By default 3 works well with the X3. X5 users will need more photos, depending on lens type. This does not include the nadir/zenith shot or sky row.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -445,12 +445,24 @@
                                     <constraint firstItem="uvL-N9-jUN" firstAttribute="top" secondItem="qcZ-Jm-WCn" secondAttribute="bottom" constant="8" id="swc-sw-xoF"/>
                                 </constraints>
                             </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fyS-n9-4Io">
+                                <rect key="frame" x="8" y="739" width="122" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="Copy log to clipboard">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="copyLogToClipboard:" destination="fxj-Bn-uya" eventType="touchUpInside" id="iEO-Vx-ehN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="fyS-n9-4Io" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" constant="8" id="B1x-9M-41U"/>
                             <constraint firstItem="7sO-LJ-HZd" firstAttribute="top" secondItem="uZ1-HP-PEj" secondAttribute="bottom" constant="8" id="Fi2-o7-sii"/>
                             <constraint firstAttribute="trailing" secondItem="uZ1-HP-PEj" secondAttribute="trailing" id="HpQ-U8-5KJ"/>
                             <constraint firstItem="uZ1-HP-PEj" firstAttribute="leading" secondItem="m9e-md-Mho" secondAttribute="leading" id="PE6-qP-9ie"/>
+                            <constraint firstItem="7sO-LJ-HZd" firstAttribute="centerY" secondItem="fyS-n9-4Io" secondAttribute="centerY" id="S7Y-i5-SuR"/>
                             <constraint firstItem="uAt-4Q-C0s" firstAttribute="top" secondItem="7sO-LJ-HZd" secondAttribute="bottom" constant="8" id="gJT-V7-Y1Q"/>
                             <constraint firstItem="uZ1-HP-PEj" firstAttribute="top" secondItem="m9e-md-Mho" secondAttribute="top" id="gLZ-Ut-PLT"/>
                             <constraint firstAttribute="trailing" secondItem="7sO-LJ-HZd" secondAttribute="trailing" constant="8" id="jJU-55-8P9"/>
