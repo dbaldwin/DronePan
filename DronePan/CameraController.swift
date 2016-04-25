@@ -25,7 +25,7 @@ import CocoaLumberjackSwift
     
     func cameraControllerInError(reason: String)
     
-    func cameraControllerOK()
+    func cameraControllerOK(fromError: Bool)
 
     func cameraControllerReset()
 
@@ -274,7 +274,7 @@ import CocoaLumberjackSwift
                 if (newState == .Normal) {
                     DDLogDebug("Camera Controller changed state to normal - signal")
 
-                    self.delegate?.cameraControllerOK()
+                    self.delegate?.cameraControllerOK(self.status == .Error)
                 }
             }
             

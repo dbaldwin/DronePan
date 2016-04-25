@@ -633,10 +633,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [[self startButton] setEnabled:NO];
 }
 
-- (void)cameraControllerOK {
+- (void)cameraControllerOK:(BOOL) fromError {
     DDLogDebug(@"Camera signalled OK");
 
-    [ControllerUtils displayToastOnApp:@"Camera is ready"];
+    if (fromError) {
+        [ControllerUtils displayToastOnApp:@"Camera is ready"];
+    }
 
     [[self startButton] setEnabled:YES];
 }
