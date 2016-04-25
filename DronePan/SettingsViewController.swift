@@ -96,7 +96,7 @@ import CocoaLumberjackSwift
             startDelayDescription.text = "Only applicable for handheld"
             
             if (ControllerUtils.isPhantom(model)) {
-                skyRowControl.enabled = true
+                skyRowControl.enabled = false
                 skyRowDescription.text = "Phantom models do not support sky row"
                 skyRowControl.selectedSegmentIndex = 1
             } else {
