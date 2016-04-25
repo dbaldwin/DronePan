@@ -158,12 +158,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // TODO - update for gimbal yaw for I1
     if ([self productType] == PT_AIRCRAFT) {
 
-        if (!self.rcInFMode) {
-            DDLogDebug(@"Not in F mode");
+        if (![self.product.model isEqualToString:DJIAircraftModelNamePhantom4]) {
+            if (!self.rcInFMode) {
+                DDLogDebug(@"Not in F mode");
 
-            [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Please set RC Flight Mode to F first."]];
+                [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Please set RC Flight Mode to F first."]];
             
-            return;
+                return;
+            }
         }
     }
     
@@ -852,7 +854,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 - (void)remoteController:(DJIRemoteController *)rc didUpdateHardwareState:(DJIRCHardwareState)state {
     DDLogVerbose(@"Remote didUpdateHardwareState");
 
-    if ([self.product.model isEqualToString:DJIAircraftModelNamePhantom4] || state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
+    if (state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
         self.rcInFMode = YES;
     } else {
         self.rcInFMode = NO;
