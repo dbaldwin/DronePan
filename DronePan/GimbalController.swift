@@ -51,14 +51,14 @@ import CocoaLumberjackSwift
 
     var constraints : DJIGimbalConstraints?
     
-    init(gimbal: DJIGimbal) {
+    init(gimbal: DJIGimbal, supportsSDKYaw: Bool = true) {
         DDLogInfo("Gimbal Controller init")
 
         self.gimbal = gimbal
 
         if let constraints = gimbal.getGimbalConstraints() {
             isPitchAdjustable = constraints.isPitchAdjustable
-            isYawAdjustable = constraints.isYawAdjustable
+            isYawAdjustable = supportsSDKYaw && constraints.isYawAdjustable
             isRollAdjustable = constraints.isRollAdjustable
             
             self.constraints = constraints

@@ -745,7 +745,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         }
 
         if (gimbal) {
-            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal];
+            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
             self.gimbalController.delegate = self;
         } else {
             DDLogError(@"No gimbal found");
