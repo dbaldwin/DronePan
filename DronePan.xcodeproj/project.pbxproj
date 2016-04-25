@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508FEEC1CCD4237000CE953 /* LogFormatter.swift */; };
+		1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */; };
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
@@ -76,6 +77,7 @@
 
 /* Begin PBXFileReference section */
 		1508FEEC1CCD4237000CE953 /* LogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFormatter.swift; sourceTree = "<group>"; };
+		1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtilsTests.swift; sourceTree = "<group>"; };
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
@@ -568,6 +570,7 @@
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
 				83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */,
+				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = "<group>";
@@ -728,6 +731,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
+				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
 				83251CBF1CC65F68009D4A4B /* MainViewControllerTests.swift in Sources */,
 			);
