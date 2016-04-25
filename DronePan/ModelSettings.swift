@@ -60,7 +60,7 @@ enum SettingsKeys: String {
     }
 
     class func skyRow(model: String) -> Bool {
-        if (ControllerUtils.isPhantom3(model)) {
+        if (ControllerUtils.isPhantom(model)) {
             return false
         }
         

@@ -70,4 +70,8 @@ import DJISDK
     @objc class func isPhantom4(model: String) -> Bool {
         return model == DJIAircraftModelNamePhantom4
     }
+
+    @objc class func isPhantom(model: String) -> Bool {
+        return ControllerUtils.isPhantom3(model) || ControllerUtils.isPhantom4(model)
+    }
 }

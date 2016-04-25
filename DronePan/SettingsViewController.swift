@@ -95,9 +95,9 @@ import CocoaLumberjackSwift
             startDelayControl.enabled = false
             startDelayDescription.text = "Only applicable for handheld"
             
-            if (ControllerUtils.isPhantom3(model)) {
+            if (ControllerUtils.isPhantom(model)) {
                 skyRowControl.enabled = true
-                skyRowDescription.text = "Phantom 3 does not support sky row"
+                skyRowDescription.text = "Phantom models do not support sky row"
                 skyRowControl.selectedSegmentIndex = 1
             } else {
                 skyRowControl.enabled = true
