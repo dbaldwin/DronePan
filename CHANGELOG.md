@@ -27,9 +27,9 @@
 
 #### Fixes
 
-* Fix handling of change in camera state so that we don't forget to re-enabled start button
+* Fix handling of change in camera state so that we don't forget to re-enable start button
 * Fix (hopefully) the reset gimbal error by moving to the reset position with normal move instead of reset
-* Don't allow sky row for Phantom - it doesn't support +30 via the SDK.
+* Don't allow sky row for Phantom models - they don't support +30 via the SDK.
 
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
