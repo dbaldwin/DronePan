@@ -1,6 +1,0 @@
-framework module VideoPreviewer {
-  umbrella header "VideoPreviewer.h"
-
-  export *
-  module * { export * }
-}

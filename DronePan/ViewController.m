@@ -15,7 +15,7 @@
 
 #import "ViewController.h"
 #import <DJISDK/DJISDK.h>
-#import <VideoPreviewer/VideoPreviewer.h>
+#import "VideoPreviewer.h"
 
 #import "DronePan-Swift.h"
 
@@ -27,7 +27,7 @@
 
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIRemoteControllerDelegate, DJIBatteryDelegate, GimbalControllerDelegate, CameraControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIRemoteControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -56,8 +56,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property(nonatomic, strong) GimbalController *gimbalController;
 @property(nonatomic, strong) dispatch_group_t gimbalDispatchGroup;
+
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
+
+@property(nonatomic, strong) BatteryController *batteryController;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
@@ -541,6 +544,16 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 }
 
+#pragma mark - BatteryControllerDelegate
+
+- (void)batteryPercentUpdated:(NSInteger)batteryPercent {
+    [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryPercent]];
+}
+
+- (void)batteryTemperatureUpdated:(NSInteger)batteryTemperature {
+    // TODO
+}
+
 #pragma mark - GimbalControllerDelegate
 
 - (void)gimbalControllerCompleted {
@@ -769,9 +782,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         }
         
         if (battery) {
-            [battery setDelegate: self];
+            self.batteryController = [[BatteryController alloc] initWithBattery: battery];
+            self.batteryController.delegate = self;
         }
-        
     } else {
         DDLogInfo(@"Disconnected");
         // Disconnected - let's update status label here
@@ -848,17 +861,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         self.yawSpeed = fmod(360.0, diff) * 0.5;
     }
 
-}
-
-#pragma mark - DJIBatteryDelegate
-
--(void) battery:(DJIBattery *)battery didUpdateState:(DJIBatteryState *)batteryState {
-    DDLogVerbose(@"Battery didUpdateState");
-
-    [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryState.batteryEnergyRemainingPercent]];
-    
-    // TODO Battery temp
-    // batteryState.batteryTemperature
 }
 
 #pragma mark - DJIRemoteControllerDelegate
