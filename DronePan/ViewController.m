@@ -789,9 +789,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         DDLogDebug(@"Connecting to product");
 
 #if ENABLE_DEBUG_MODE
+        DDLogDebug(@"Connecting to debug bridge");
         [DJISDKManager enterDebugModeWithDebugId:@"10.0.1.18"];
 #else
         // This will call sdkManagerProductDidChangeFrom
+        DDLogDebug(@"Connecting to real product");
         [DJISDKManager startConnectionToProduct];
 #endif
         [[VideoPreviewer instance] start];
