@@ -15,7 +15,7 @@
 
 #import "ViewController.h"
 #import <DJISDK/DJISDK.h>
-#import "VideoPreviewer.h"
+#import <VideoPreviewer/VideoPreviewer.h>
 
 #import "DronePan-Swift.h"
 
@@ -72,11 +72,13 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     
     DDLogInfo(@"Showing main window");
     
+    [[VideoPreviewer instance] start];
     [[VideoPreviewer instance] setView:self.cameraView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
     [[VideoPreviewer instance] setView:nil];
 }
 
@@ -575,9 +577,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #pragma mark - CameraControllerDelegate
 
 - (void)cameraReceivedVideo:(uint8_t *)videoBuffer size:(NSInteger)size {
-    uint8_t *pBuffer = (uint8_t *) malloc(size);
+    uint8_t* pBuffer = (uint8_t*)malloc(size);
     memcpy(pBuffer, videoBuffer, size);
-    [[VideoPreviewer instance].dataQueue push:pBuffer length:(int) size];
+
+    if(![[[VideoPreviewer instance] dataQueue] isFull]){
+        [[VideoPreviewer instance] push:pBuffer length:(int)size];
+    }
 }
 
 - (void)cameraControllerReset {
@@ -683,6 +688,18 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
         self.product = newProduct;
 
+        DDLogDebug(@"Trying to set hardware decoding");
+        BOOL hardwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeHardwareDecoder];
+        
+        if (!hardwareDecodeSupported) {
+            DDLogDebug(@"Hardware decoding failed - try to set software decoding");
+            BOOL softwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeSoftwareDecoder];
+            
+            if (!softwareDecodeSupported) {
+                DDLogError(@"OK - so it doesn't support hardware or software - no idea what to do now");
+            }
+        }
+        
         [self.connectionStatusLabel setText:newProduct.model];
         [self.startButton setEnabled:YES];
 
@@ -757,7 +774,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         
     } else {
         DDLogInfo(@"Disconnected");
-
         // Disconnected - let's update status label here
         [self.connectionStatusLabel setText:@"Disconnected"];
         [self.startButton setEnabled:NO];
@@ -794,8 +810,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         // This will call sdkManagerProductDidChangeFrom
         [DJISDKManager startConnectionToProduct];
 #endif
-        [[VideoPreviewer instance] start];
-
     }
 
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
