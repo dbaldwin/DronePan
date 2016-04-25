@@ -197,6 +197,10 @@ import CocoaLumberjackSwift
     }
 
     private func check(pitch p: Float, yaw y: Float, roll r: Float) -> Bool {
+        DDLogDebug("Checking PA: \(isPitchAdjustable) P: \(p) CP: \(self.currentPitch)")
+        DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw)")
+        DDLogDebug("Checking RA: \(isRollAdjustable) R: \(r) CR: \(self.currentRoll)")
+        
         return valueInRange(isPitchAdjustable, value: p, currentValue: self.currentPitch) &&
                 valueInRange(isYawAdjustable, value: y, currentValue: self.currentYaw) &&
                 valueInRange(isRollAdjustable, value: r, currentValue: self.currentRoll)
