@@ -27,7 +27,7 @@
 
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIRemoteControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -59,8 +59,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
-
-@property(nonatomic, strong) BatteryController *batteryController;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
@@ -546,12 +544,22 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 #pragma mark - BatteryControllerDelegate
 
-- (void)batteryPercentUpdated:(NSInteger)batteryPercent {
+- (void)batteryControllerPercentUpdated:(NSInteger)batteryPercent {
     [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryPercent]];
 }
 
-- (void)batteryTemperatureUpdated:(NSInteger)batteryTemperature {
+- (void)batteryControllerTemperatureUpdated:(NSInteger)batteryTemperature {
     // TODO
+}
+
+#pragma mark - RemoteControllerDelegate
+
+- (void)remoteControllerSetFlightMode:(enum FlightMode)mode {
+    if (mode == FlightModeFunction) {
+        self.rcInFMode = YES;
+    } else {
+        self.rcInFMode = NO;
+    }
 }
 
 #pragma mark - GimbalControllerDelegate
@@ -749,7 +757,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             DJIRemoteController *remote = ((DJIAircraft *) self.product).remoteController;
             
             if (remote) {
-                remote.delegate = self;
+                RemoteController *remoteController = [[RemoteController alloc] initWithRemote:remote];
+                remoteController.delegate = self;
             }
 
             [self altitudeLabel].hidden = NO;
@@ -782,8 +791,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         }
         
         if (battery) {
-            self.batteryController = [[BatteryController alloc] initWithBattery: battery];
-            self.batteryController.delegate = self;
+            BatteryController *batteryController = [[BatteryController alloc] initWithBattery: battery];
+            batteryController.delegate = self;
         }
     } else {
         DDLogInfo(@"Disconnected");
@@ -862,19 +871,5 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 
 }
-
-#pragma mark - DJIRemoteControllerDelegate
-
-- (void)remoteController:(DJIRemoteController *)rc didUpdateHardwareState:(DJIRCHardwareState)state {
-    DDLogVerbose(@"Remote didUpdateHardwareState");
-
-    if (state.flightModeSwitch.mode == DJIRCHardwareFlightModeSwitchStateF) {
-        self.rcInFMode = YES;
-    } else {
-        self.rcInFMode = NO;
-    }
-}
-
-
 
 @end
