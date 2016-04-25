@@ -45,6 +45,8 @@
 		83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */; };
 		83251CBF1CC65F68009D4A4B /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */; };
 		8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */; };
+		837983B71CCE0D1C001D1A27 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
+		837983B81CCE0D1F001D1A27 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */; };
 /* End PBXBuildFile section */
 
@@ -246,7 +248,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				837983B71CCE0D1C001D1A27 /* CocoaLumberjack.framework in Frameworks */,
 				83251CBB1CC65253009D4A4B /* DJISDK.framework in Frameworks */,
+				837983B81CCE0D1F001D1A27 /* CocoaLumberjackSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -904,6 +908,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = DronePanTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -922,6 +927,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = DronePanTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
