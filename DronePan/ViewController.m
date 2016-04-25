@@ -158,7 +158,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // TODO - update for gimbal yaw for I1
     if ([self productType] == PT_AIRCRAFT) {
 
-        if (![self.product.model isEqualToString:DJIAircraftModelNamePhantom4]) {
+        if (![ControllerUtils isPhantom4:self.product.model]) {
             if (!self.rcInFMode) {
                 DDLogDebug(@"Not in F mode");
 

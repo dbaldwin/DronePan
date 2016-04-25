@@ -14,6 +14,7 @@
  */
 
 import Foundation
+import DJISDK
 
 @objc enum ControllerStatus: Int {
     case Normal = 0
@@ -51,5 +52,22 @@ import Foundation
                 hud.hide(true, afterDelay: 5)
             }
         }
+    }
+    
+    @objc class func isInspire(model: String) -> Bool {
+        return model == DJIAircraftModelNameInspire1 ||
+            model == DJIAircraftModelNameInspire1Pro ||
+            model == DJIAircraftModelNameInspire1RAW
+    }
+    
+    @objc class func isPhantom3(model: String) -> Bool {
+        return model == DJIAircraftModelNamePhantom34K ||
+            model == DJIAircraftModelNamePhantom3Advanced ||
+            model == DJIAircraftModelNamePhantom3Standard ||
+            model == DJIAircraftModelNamePhantom3Professional
+    }
+    
+    @objc class func isPhantom4(model: String) -> Bool {
+        return model == DJIAircraftModelNamePhantom4
     }
 }

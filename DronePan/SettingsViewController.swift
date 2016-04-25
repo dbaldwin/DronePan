@@ -95,15 +95,20 @@ import CocoaLumberjackSwift
             startDelayControl.enabled = false
             startDelayDescription.text = "Only applicable for handheld"
             
-            skyRowControl.enabled = true
-            skyRowDescription.text = "If set, DronePan will shoot a \"sky row\" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting \"No\" will skip the sky row."
-
-            let skyRow = ModelSettings.skyRow(model)
-            
-            if (skyRow) {
-                skyRowControl.selectedSegmentIndex = 0
-            } else {
+            if (ControllerUtils.isPhantom3(model)) {
+                skyRowControl.enabled = true
+                skyRowDescription.text = "Phantom 3 does not support sky row"
                 skyRowControl.selectedSegmentIndex = 1
+            } else {
+                skyRowControl.enabled = true
+                skyRowDescription.text = "If set, DronePan will shoot a \"sky row\" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting \"No\" will skip the sky row."
+                let skyRow = ModelSettings.skyRow(model)
+            
+                if (skyRow) {
+                    skyRowControl.selectedSegmentIndex = 0
+                } else {
+                    skyRowControl.selectedSegmentIndex = 1
+                }
             }
         }
         
