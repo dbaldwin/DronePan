@@ -83,8 +83,13 @@ import CocoaLumberjackSwift
 
         self.status = .Normal
 
+        self.lastSetPitch = 0
+        self.lastSetYaw = 0
+        self.lastSetRoll = 0
+
         dispatch_async(self.gimbalWorkQueue) {
-            self.reset(0)
+//            self.reset(0) This seems to have a bug in the API which fails without error
+            self.setAttitude(0, pitch: 0, yaw: 0, roll: 0)
         }
     }
 
