@@ -15,6 +15,13 @@
 * Allow setting number of rows via settings
 * Check that the card has space for the pano before starting
 * Check flight mode is F before starting
+* Add ability to copy current log to clipboard from settings
+* Some text label updates in settings to make things clearer
+
+#### Fixes
+
+* Fix handling of change in camera state so that we don't forget to re-enabled start button
+* Fix (hopefully) the reset gimbal error by moving to the reset position with normal move instead of reset
 
 ### [1.4.2b2](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b2)
 
