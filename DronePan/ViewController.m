@@ -562,6 +562,10 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 }
 
+- (void)remoteControllerBatteryPercentUpdated:(NSInteger)batteryPercent {
+    // TODO
+}
+
 #pragma mark - GimbalControllerDelegate
 
 - (void)gimbalControllerCompleted {

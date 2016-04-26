@@ -27,6 +27,8 @@ import CocoaLumberjackSwift
 
 @objc protocol RemoteControllerDelegate {
     func remoteControllerSetFlightMode(mode: FlightMode)
+    
+    func remoteControllerBatteryPercentUpdated(batteryPercent : Int)
 }
 
 @objc class RemoteController: NSObject, DJIRemoteControllerDelegate {
@@ -44,6 +46,9 @@ import CocoaLumberjackSwift
         remote.delegate = self
     }
     
+    func remoteController(rc: DJIRemoteController, didUpdateBatteryState batteryInfo: DJIRCBatteryInfo) {
+         self.delegate?.remoteControllerBatteryPercentUpdated(Int(batteryInfo.remainingEnergyInPercent))
+    }
     
     func remoteController(rc: DJIRemoteController, didUpdateHardwareState state: DJIRCHardwareState) {
         DDLogVerbose("Remote didUpdateHardwareState")
