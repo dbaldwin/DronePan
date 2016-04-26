@@ -60,6 +60,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
 
+@property (nonatomic, strong) DJIFlightController *flightController;
+
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
 - (IBAction)startPano:(id)sender;
@@ -191,22 +193,19 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
 
-        DJIFlightController *fc = [self fetchFlightController];
+        if (self.flightController) {
+            [self.flightController enableVirtualStickControlModeWithCompletion:^(NSError *error) {
+                if (error) {
+                    DDLogWarn(@"Unable to set virtual stick mode %@", error);
+                    [ControllerUtils displayToastOnApp:@"Unable to set virtual stick control mode"];
+                } else {
+                    self.flightController.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
+                    self.flightController.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
+                    self.flightController.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
 
-        if (fc) {
-                [fc enableVirtualStickControlModeWithCompletion:^(NSError *error) {
-                    if (error) {
-                        DDLogWarn(@"Unable to set virtual stick mode %@", error);
-                        [ControllerUtils displayToastOnApp:@"Unable to set virtual stick control mode"];
-                    } else {
-                        fc.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
-                        fc.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
-                        fc.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
-
-                        [self doPanoLoop];
-                    }
-                }];
-
+                    [self doPanoLoop];
+                }
+            }];
         } else {
             DDLogWarn(@"No flight controller found - couldn't initialize");
 
@@ -457,10 +456,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     ctrlData.verticalThrottle = 0;
     ctrlData.yaw = (float) self.yawSpeed;
 
-    DJIFlightController *fc = [self fetchFlightController];
-
-    if (fc && fc.isVirtualStickControlModeAvailable) {
-        [fc sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
+    if (self.flightController && self.flightController.isVirtualStickControlModeAvailable) {
+        [self.flightController sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
     }
 }
 
@@ -691,17 +688,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     return pt;
 }
 
-- (DJIFlightController *)fetchFlightController {
-
-    ProductType pt = [self productType];
-
-    if (pt == PT_AIRCRAFT) {
-        return ((DJIAircraft *) self.product).flightController;
-    }
-
-    return nil;
-}
-
 #pragma mark DJISDKManagerDelegate Method
 
 // Called from startConnectionToProduct
@@ -732,23 +718,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         [self.settingsButton setEnabled:YES];
 #endif
 
-        // Set the flight controller delegate only with aircraft. Ignore for Osmo.
-        if ([self productType] == PT_AIRCRAFT) {
-            // Setup delegate so we can get fc and compass updates
-            DJIFlightController *fc = [self fetchFlightController];
-
-            if (fc) {
-                [fc setDelegate:self];
-            } else {
-                DDLogError(@"No FC found");
-            }
-        }
-
         ProductType pt = [self productType];
 
         DJIGimbal *gimbal;
         DJICamera *camera;
         DJIBattery *battery;
+        DJIFlightController *flightController;
 
         [self sequenceLabel].hidden = NO;
         [self batteryLabel].hidden = NO;
@@ -756,7 +731,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         if (pt == PT_AIRCRAFT) {
             camera = ((DJIAircraft *) self.product).camera;
             gimbal = ((DJIAircraft *) self.product).gimbal;
-            battery = ((DJIAircraft*) self.product).battery;
+            battery = ((DJIAircraft *) self.product).battery;
+            flightController = ((DJIAircraft *) self.product).flightController;
             
             DJIRemoteController *remote = ((DJIAircraft *) self.product).remoteController;
             
@@ -780,11 +756,25 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             self.rcInFMode = NO;
         }
 
+        NSMutableArray *missing = [[NSMutableArray alloc] init];
+        
+        if (flightController) {
+            // TODO - this should not be a direct property but wrapped like the others
+            self.flightController = flightController;
+            self.flightController.delegate = self;
+        } else {
+            if (pt == PT_AIRCRAFT) {
+                DDLogError(@"No FC found");
+                [missing addObject:@"Flight Controller"];
+            }
+        }
+
         if (camera) {
             self.cameraController = [[CameraController alloc] initWithCamera:camera];
             self.cameraController.delegate = self;
         } else {
             DDLogError(@"No camera found");
+            [missing addObject:@"Camera"];
         }
 
         if (gimbal) {
@@ -792,11 +782,19 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             self.gimbalController.delegate = self;
         } else {
             DDLogError(@"No gimbal found");
+            [missing addObject:@"Gimbal"];
         }
         
         if (battery) {
             BatteryController *batteryController = [[BatteryController alloc] initWithBattery: battery];
             batteryController.delegate = self;
+        } else {
+            DDLogError(@"No battery found");
+            [missing addObject:@"Battery"];
+        }
+        
+        if ([missing count] > 0) {
+            [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Device seen but missing %@", [missing componentsJoinedByString:@", "]]];
         }
     } else {
         DDLogInfo(@"Disconnected");
@@ -816,6 +814,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         self.product = nil;
         self.cameraController = nil;
         self.gimbalController = nil;
+        
+        self.flightController = nil;
     }
 }
 
