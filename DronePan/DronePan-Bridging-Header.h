@@ -19,6 +19,5 @@
 #define DronePan_Bridging_Header_h
 
 #include "ViewController.h"
-#include "MBProgressHUD.h"
 
 #endif

@@ -15,6 +15,7 @@
 
 import Foundation
 import DJISDK
+import MBProgressHUD
 
 @objc enum ControllerStatus: Int {
     case Normal = 0
