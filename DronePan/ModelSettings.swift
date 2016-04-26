@@ -28,23 +28,11 @@ enum SettingsKeys: String {
     }
     
     private class func intSettingForKey(model: String, key: SettingsKeys, defaultValue: Int) -> Int {
-        var value = defaultValue
-        
-        if let storedValue = ModelSettings.settingForKey(model, key: key) as? Int {
-            value = storedValue
-        }
-        
-        return value
+        return ModelSettings.settingForKey(model, key: key) as? Int ?? defaultValue
     }
 
     private class func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
-        var value = defaultValue
-        
-        if let storedValue = ModelSettings.settingForKey(model, key: key) as? Bool {
-            value = storedValue
-        }
-        
-        return value
+        return ModelSettings.settingForKey(model, key: key) as? Bool ?? defaultValue
     }
 
     class func startDelay(model: String) -> Int {
@@ -68,11 +56,7 @@ enum SettingsKeys: String {
     }
 
     class func updateSettings(model: String, settings newSettings : [SettingsKeys: AnyObject]) {
-        var settings : [String : AnyObject] = [:]
-        
-        if let storedSettings = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) {
-            settings = storedSettings
-        }
+        var settings : [String : AnyObject] = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) ?? [:]
         
         for (key, val) in newSettings {
             settings[key.rawValue] = val
