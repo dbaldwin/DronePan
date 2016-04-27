@@ -64,6 +64,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
+@property (weak, nonatomic) IBOutlet UIView *infoView;
+@property (weak, nonatomic) IBOutlet UILabel *acYawLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gimbalYawLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gimbalPitchLabel;
+@property (weak, nonatomic) IBOutlet UILabel *gimbalRollLabel;
+
 - (IBAction)startPano:(id)sender;
 
 @end
@@ -519,10 +525,23 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
+            
+            [UIView animateWithDuration:2 animations:^{
+                [self.infoView setAlpha:0];
+            }];
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
+
+            [self.acYawLabel setText:[NSString stringWithFormat:@"----"]];
+            [self.gimbalYawLabel setText:[NSString stringWithFormat:@"----"]];
+            [self.gimbalRollLabel setText:[NSString stringWithFormat:@"----"]];
+            [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"----"]];
+            
+            [UIView animateWithDuration:2 animations:^{
+                [self.infoView setAlpha:0.5];
+            }];
         });
     }
 }
@@ -581,6 +600,15 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // We signal and ignore - let's try the next move
     dispatch_async(droneCmdsQueue, ^{
         dispatch_group_leave(self.gimbalDispatchGroup);
+    });
+}
+
+- (void)gimbalAttitudeChangedWithPitch:(float)pitch yaw:(float)yaw roll:(float)roll {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.2f", pitch]];
+        [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.2f", yaw]];
+        [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.2f", roll]];
     });
 }
 
@@ -862,6 +890,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         self.yawSpeed = fmod(360.0, diff) * 0.5;
     }
 
+    [self.acYawLabel setText:[NSString stringWithFormat:@"%.2f", self.currentHeading]];
 }
 
 @end

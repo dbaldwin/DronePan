@@ -24,6 +24,8 @@ import CocoaLumberjackSwift
     func gimbalControllerAborted(reason: String)
     
     func gimbalMoveOutOfRange(reason: String)
+    
+    optional func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 }
 
 @objc class GimbalController: NSObject, DJIGimbalDelegate {
@@ -321,6 +323,8 @@ import CocoaLumberjackSwift
         self.currentPitch = atti.pitch
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll
+        
+        self.delegate?.gimbalAttitudeChanged?(pitch: atti.pitch, yaw: atti.yaw, roll: atti.roll)
     }
     
 }
