@@ -27,7 +27,7 @@
 
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIBaseProductDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -714,6 +714,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         DDLogInfo(@"New product %@", newProduct.model);
 
         self.product = newProduct;
+        
+        self.product.delegate = self;
 
         DDLogDebug(@"Trying to set hardware decoding");
         BOOL hardwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeHardwareDecoder];
@@ -891,6 +893,16 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 
     [self.acYawLabel setText:[NSString stringWithFormat:@"%.2f", self.currentHeading]];
+}
+
+#pragma mark DJIBaseProductDelegate Methods
+
+- (void)product:(DJIBaseProduct *)product didUpdateDiagnosticsInformation:(NSArray *)info {
+    for (id diagnostic in info) {
+        DJIDiagnostics *d = (DJIDiagnostics *)diagnostic;
+        
+        DDLogDebug(@"Diagnostic for %@: Code: %ld, Reason: %@, Solution: %@", product.model, (long)d.code, d.reason, d.solution);
+    }
 }
 
 @end
