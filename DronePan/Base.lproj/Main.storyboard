@@ -327,6 +327,9 @@
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                 <state key="normal" title="Save"/>
+                                                <state key="disabled">
+                                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                         <integer key="value" value="8"/>
@@ -473,8 +476,11 @@
                     <connections>
                         <outlet property="angleLabel" destination="ums-pl-xF0" id="VkV-at-5Gw"/>
                         <outlet property="countLabel" destination="SQP-KJ-3Jt" id="qSF-pB-sxx"/>
+                        <outlet property="numberOfPhotosPerRowDescription" destination="wcu-Bz-lhG" id="n4S-2a-5ZW"/>
                         <outlet property="numberOfRowsControl" destination="oED-Mb-eMG" id="Zqy-ly-chA"/>
+                        <outlet property="numberOfRowsDescription" destination="x4g-Cr-ig7" id="vCv-Cu-NnI"/>
                         <outlet property="photosPerRowControl" destination="6Dl-OL-Xmr" id="giL-ia-LdW"/>
+                        <outlet property="saveButton" destination="d4Y-Wf-wug" id="qi2-2Y-a4o"/>
                         <outlet property="scrollView" destination="uZ1-HP-PEj" id="5Cq-Hb-Rta"/>
                         <outlet property="skyRowControl" destination="z1j-Ik-VPo" id="G1E-M5-VYU"/>
                         <outlet property="skyRowDescription" destination="8i3-1a-eMe" id="gZX-mK-FvQ"/>

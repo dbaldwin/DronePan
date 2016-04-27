@@ -33,11 +33,14 @@ import CocoaLumberjackSwift
     @IBOutlet weak var countLabel: UILabel!
     
     @IBOutlet weak var startDelayDescription: UILabel!
+    @IBOutlet weak var numberOfPhotosPerRowDescription: UILabel!
+    @IBOutlet weak var numberOfRowsDescription: UILabel!
     @IBOutlet weak var skyRowDescription: UILabel!
     
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     
+    @IBOutlet weak var saveButton: UIButton!
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -76,6 +79,29 @@ import CocoaLumberjackSwift
     }
     
     func initSettings() {
+        if (self.model == "") {
+            titleLabel.attributedText = NSAttributedString(string: "Disconnected", attributes: [
+            NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
+            ])
+
+            for control in [startDelayControl, photosPerRowControl, numberOfRowsControl, skyRowControl] {
+                control.enabled = false
+                control.selectedSegmentIndex = UISegmentedControlNoSegment
+            }
+
+            for label in [startDelayDescription, numberOfPhotosPerRowDescription, numberOfRowsDescription, skyRowDescription] {
+                label.text = "Disconnected"
+            }
+            
+            setAngleLabel(0)
+            countLabel.text = "--"
+
+            saveButton.enabled = false
+            
+            return
+        }
+        
+        
         titleLabel.attributedText = NSAttributedString(string: "\(model) Settings", attributes: [
             NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
         ])

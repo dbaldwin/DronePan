@@ -107,7 +107,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // TODO - this should be tested
 #ifndef DEBUG
     [self.startButton setEnabled:NO];
-    [self.settingsButton setEnabled:NO];
 #endif
     
     self.rcInFMode = NO;
@@ -140,9 +139,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     if (self.panoInProgress) {
         DDLogInfo(@"Stopping pano from button");
         
-#ifndef DEBUG
-        [self.settingsButton setEnabled:YES];
-#endif
         [ControllerUtils displayToastOnApp:@"Stopping pano. Please wait..."];
         
         self.panoInProgress = NO;
@@ -176,10 +172,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     
     self.panoInProgress = YES;
     
-#ifndef DEBUG
-    [self.settingsButton setEnabled:NO];
-#endif
-
     [ControllerUtils displayToastOnApp:@"Starting pano"];
 
     NSString *model = self.product.model;
@@ -379,10 +371,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Photo: Done"];
-
-#ifndef DEBUG
-            [self.settingsButton setEnabled:YES];
-#endif
         });
 
         DDLogDebug(@"PanoLoop: END");
@@ -502,7 +490,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     SettingsViewController *settings = [segue destinationViewController];
 
 #ifdef DEBUG
-    if(self.product.model.length == 0) {
+    if (self.product.model.length == 0) {
         settings.model = @"Simulator";
         settings.productType = PT_AIRCRAFT;
     } else {
@@ -510,11 +498,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         settings.productType = [self productType];
     }
 #else
-    settings.model = self.product.model;
-    settings.productType = [self productType];
+    if (self.product.model.length > 0) {
+        settings.model = self.product.model;
+        settings.productType = [self productType];
+    }
 #endif
-    
-    
 }
 
 // Override setter
