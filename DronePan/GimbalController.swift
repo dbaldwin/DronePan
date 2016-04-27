@@ -49,32 +49,72 @@ import CocoaLumberjackSwift
     let isYawAdjustable: Bool
     let isRollAdjustable: Bool
 
+    let pitchRange : Range<Int>?
+    let yawRange : Range<Int>?
+    let rollRange : Range<Int>?
+    
     let gimbalWorkQueue = dispatch_queue_create("com.dronepan.queue.gimbal", DISPATCH_QUEUE_CONCURRENT)
 
-    var constraints : DJIGimbalConstraints?
-    
     init(gimbal: DJIGimbal, supportsSDKYaw: Bool = true) {
         DDLogInfo("Gimbal Controller init")
 
         self.gimbal = gimbal
 
-        if let constraints = gimbal.getGimbalConstraints() {
-            isPitchAdjustable = constraints.isPitchAdjustable
-            isYawAdjustable = supportsSDKYaw && constraints.isYawAdjustable
-            isRollAdjustable = constraints.isRollAdjustable
-            
-            self.constraints = constraints
-            
-            DDLogDebug("Gimbal Controller constraints adjustable P: \(constraints.isPitchAdjustable), Y: \(constraints.isYawAdjustable), R: \(constraints.isRollAdjustable)")
-            DDLogDebug("Gimbal Controller constraints min P: \(constraints.pitchStopMin), Y: \(constraints.yawStopMin), R: \(constraints.rollStopMin)")
-            DDLogDebug("Gimbal Controller constraints max P: \(constraints.pitchStopMax), Y: \(constraints.yawStopMax), R: \(constraints.rollStopMax)")
+        if let pitchInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustPitch] as? DJIParamCapabilityMinMax {
+            isPitchAdjustable = pitchInfo.isSupported
+
+            if (isPitchAdjustable) {
+                pitchRange = pitchInfo.min.integerValue...pitchInfo.max.integerValue
+            } else {
+                pitchRange = nil
+            }
         } else {
             isPitchAdjustable = false
+            pitchRange = nil
+        }
+
+        if let yawInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustYaw] as? DJIParamCapabilityMinMax {
+            isYawAdjustable = yawInfo.isSupported
+            
+            if (isYawAdjustable) {
+                yawRange = yawInfo.min.integerValue...yawInfo.max.integerValue
+            } else {
+                yawRange = nil
+            }
+        } else {
             isYawAdjustable = false
-            isRollAdjustable = false
+            yawRange = nil
         }
         
+        if let rollInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustRoll] as? DJIParamCapabilityMinMax {
+            isRollAdjustable = rollInfo.isSupported
+            
+            if (isRollAdjustable) {
+                rollRange = rollInfo.min.integerValue...rollInfo.max.integerValue
+            } else {
+                rollRange = nil
+            }
+        } else {
+            isRollAdjustable = false
+            rollRange = nil
+        }
+        
+        if let rangeExtension = gimbal.gimbalCapability[DJIGimbalKeyPitchRangeExtension] as? DJIParamCapability {
+            DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
+            
+            // TOOD - we should now be able to check and set sky row. Testing on all devices needed.
+            /*
+            if rangeExtension.isSupported {
+                gimbal!.setPitchRangeExtensionEnabled(true, withCompletion: nil)
+            }
+            */
+        }
+ 
         super.init()
+
+        DDLogDebug("Gimbal Controller contraints pitch: A: \(isPitchAdjustable) Mn: \(pitchRange?.minElement()) Mx: \(pitchRange?.maxElement())")
+        DDLogDebug("Gimbal Controller contraints yaw: A: \(isYawAdjustable) Mn: \(yawRange?.minElement()) Mx: \(yawRange?.maxElement())")
+        DDLogDebug("Gimbal Controller contraints roll: A: \(isRollAdjustable) Mn: \(rollRange?.minElement()) Mx: \(rollRange?.maxElement())")
 
         gimbal.completionTimeForControlAngleAction = 0.5
         gimbal.delegate = self
@@ -95,19 +135,29 @@ import CocoaLumberjackSwift
         }
     }
 
+    private func inRange(value: Float, range: Range<Int>?, available: Bool) -> Bool {
+        if (!available) {
+            return false
+        }
+        
+        if let min = range?.minElement(), max = range?.maxElement() {
+            return Float(min)...Float(max) ~= value
+        }
+        
+        return false
+    }
+    
     func setPitch(pitch: Float) {
         DDLogInfo("Gimbal Controller set pitch to \(pitch)")
 
         let pitchInRange = self.gimbalAngleForHeading(pitch)
 
-        if let constraints = self.constraints {
-            if (!(constraints.pitchStopMin...constraints.pitchStopMax ~= pitchInRange)) {
-                DDLogWarn("Gimbal Controller set pitch to \(pitchInRange) out of range")
+        if (!inRange(pitchInRange, range: pitchRange, available: isPitchAdjustable)) {
+            DDLogWarn("Gimbal Controller set pitch to \(pitchInRange) out of range")
 
-                self.delegate?.gimbalMoveOutOfRange("Pitch \(pitchInRange) was out of range")
+            self.delegate?.gimbalMoveOutOfRange("Pitch \(pitchInRange) was out of range")
                 
-                return
-            }
+            return
         }
         
         self.status = .Normal
@@ -123,14 +173,12 @@ import CocoaLumberjackSwift
 
         let yawInRange = self.gimbalAngleForHeading(yaw)
 
-        if let constraints = self.constraints {
-            if (!(constraints.yawStopMin...constraints.yawStopMax ~= yawInRange)) {
-                DDLogWarn("Gimbal Controller set yaw to \(yawInRange) out of range")
+        if (!inRange(yawInRange, range: yawRange, available: isYawAdjustable)) {
+            DDLogWarn("Gimbal Controller set yaw to \(yawInRange) out of range")
 
-                self.delegate?.gimbalMoveOutOfRange("Yaw \(yawInRange) was out of range")
+            self.delegate?.gimbalMoveOutOfRange("Yaw \(yawInRange) was out of range")
                 
-                return
-            }
+            return
         }
 
         self.status = .Normal
@@ -146,14 +194,12 @@ import CocoaLumberjackSwift
 
         let rollInRange = self.gimbalAngleForHeading(roll)
 
-        if let constraints = self.constraints {
-            if (!(constraints.rollStopMin...constraints.rollStopMax ~= rollInRange)) {
-                DDLogWarn("Gimbal Controller set roll to \(rollInRange) out of range")
+        if (!inRange(rollInRange, range: rollRange, available: isRollAdjustable)) {
+            DDLogWarn("Gimbal Controller set roll to \(rollInRange) out of range")
 
-                self.delegate?.gimbalMoveOutOfRange("Roll \(rollInRange) was out of range")
+            self.delegate?.gimbalMoveOutOfRange("Roll \(rollInRange) was out of range")
                 
-                return
-            }
+            return
         }
 
         self.status = .Normal

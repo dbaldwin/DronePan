@@ -45,13 +45,13 @@
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
 		83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */; };
 		83251CBF1CC65F68009D4A4B /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */; };
-		832CA5581CCE15B500E68139 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 832CA5571CCE15B500E68139 /* DJISDK.framework */; };
-		832CA56B1CCE189800E68139 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 832CA5571CCE15B500E68139 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */; };
 		836F73391CCF513700233FF3 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 836F73381CCF513700233FF3 /* MBProgressHUD.framework */; };
 		837983B71CCE0D1C001D1A27 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
 		837983B81CCE0D1F001D1A27 /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */; };
+		83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; };
+		83A5585B1CD08FEE000BB6C6 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +71,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				832CA56B1CCE189800E68139 /* DJISDK.framework in Embed Frameworks */,
+				83A5585B1CD08FEE000BB6C6 /* DJISDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,12 +219,12 @@
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
 		83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalControllerTests.swift; sourceTree = "<group>"; };
 		83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
-		832CA5571CCE15B500E68139 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
 		8362BB1D1CC64C8D0071D0BA /* DronePanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DronePanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8362BB211CC64C8D0071D0BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettingsTest.swift; sourceTree = "<group>"; };
 		836F73381CCF513700233FF3 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
 		839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettings.swift; sourceTree = "<group>"; };
+		83A558591CD08FE7000BB6C6 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,8 +239,8 @@
 				154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */,
 				15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */,
 				154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */,
-				832CA5581CCE15B500E68139 /* DJISDK.framework in Frameworks */,
 				232F6FD31C54498E0013CCD9 /* VideoToolbox.framework in Frameworks */,
+				83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */,
 				15839FB71CCEA224008B7E97 /* libswresample.a in Frameworks */,
 				15839FB41CCEA224008B7E97 /* libavformat.a in Frameworks */,
 				232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */,
@@ -268,7 +268,7 @@
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				832CA5571CCE15B500E68139 /* DJISDK.framework */,
+				83A558591CD08FE7000BB6C6 /* DJISDK.framework */,
 				836F73381CCF513700233FF3 /* MBProgressHUD.framework */,
 				232F6FD21C54498E0013CCD9 /* VideoToolbox.framework */,
 				154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */,
