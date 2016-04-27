@@ -6,14 +6,18 @@
 
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
+* Gimbal reset for I1 doesn't work for all devices [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
+* Battery level isn't working for latest SDK (3.1.1) [Issue 50](https://github.com/dbaldwin/DronePan/issues/50)
 
 ### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
 
 #### Updates
 
-* Update to DJI SDK 3.1.1
+* Update to DJI SDK 3.2
 * Update to latest Video Previewer
 * Use hardware decoding for Video Previewer when the connected model supports it
+* Small info window (bottom left) while capturing to show current values of yaw/pitch/roll
+* Allow access to settings window when disconnected to get version and copy to log functionality
 
 ### [1.4.2b3](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
 
