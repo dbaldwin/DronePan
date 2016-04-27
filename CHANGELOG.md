@@ -4,6 +4,15 @@
 
 ### Known issues
 
+
+#### DJI Issues
+
+SDK 3.2 does not tell us when a photo or video is taken the first time after the SD card is formatted. DJI
+have said that this will be fixed in a later version of the SDK. Please make sure that after formatting you
+have taken at least one photo or video before running DronePan.
+
+#### App Issues
+
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 * Gimbal reset for I1 doesn't work for all devices [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
