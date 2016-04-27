@@ -546,19 +546,10 @@
 			children = (
 				15839F2E1CCEA224008B7E97 /* VideoPreviewer */,
 				154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */,
-				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
-				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
-				232F6F1C1C5448320013CCD9 /* Assets.xcassets */,
-				232F6F211C5448320013CCD9 /* Info.plist */,
-				232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */,
-				232F6F191C5448320013CCD9 /* Main.storyboard */,
-				15839E931CCE9A40008B7E97 /* BatteryController.swift */,
-				1583BF541CC26C2100C00C0D /* CameraController.swift */,
-				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
-				15839FC11CCEAB3E008B7E97 /* RemoteController.swift */,
+				83EBB1651CD0DA6C00F381A8 /* Device Controllers */,
+				83EBB1641CD0DA3E00F381A8 /* Storyboards */,
+				83EBB1631CD0DA1A00F381A8 /* Supporting files */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
-				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
-				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
 				232F6F161C5448320013CCD9 /* ViewController.h */,
 				232F6F171C5448320013CCD9 /* ViewController.m */,
 			);
@@ -575,6 +566,39 @@
 				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
 			);
 			path = DronePanTests;
+			sourceTree = "<group>";
+		};
+		83EBB1631CD0DA1A00F381A8 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
+				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
+				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
+				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
+				232F6F1C1C5448320013CCD9 /* Assets.xcassets */,
+				232F6F211C5448320013CCD9 /* Info.plist */,
+			);
+			name = "Supporting files";
+			sourceTree = "<group>";
+		};
+		83EBB1641CD0DA3E00F381A8 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */,
+				232F6F191C5448320013CCD9 /* Main.storyboard */,
+			);
+			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		83EBB1651CD0DA6C00F381A8 /* Device Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				15839E931CCE9A40008B7E97 /* BatteryController.swift */,
+				1583BF541CC26C2100C00C0D /* CameraController.swift */,
+				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
+				15839FC11CCEAB3E008B7E97 /* RemoteController.swift */,
+			);
+			name = "Device Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
