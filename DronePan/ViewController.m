@@ -416,7 +416,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 }
 
-#pragma mark GCD functions
+#pragma mark - GCD functions
 
 - (void)setPhotoMode {
     DDLogDebug(@"Set photo mode");
@@ -686,7 +686,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [[self startButton] setEnabled:YES];
 }
 
-#pragma mark Hardware helper methods
+#pragma mark - Hardware helper methods
 
 - (ProductType)productType {
     ProductType pt = PT_UNKNOWN;
@@ -704,7 +704,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     return pt;
 }
 
-#pragma mark DJISDKManagerDelegate Method
+#pragma mark - DJISDKManagerDelegate Method
 
 // Called from startConnectionToProduct
 - (void)sdkManagerProductDidChangeFrom:(DJIBaseProduct *_Nullable)oldProduct to:(DJIBaseProduct *_Nullable)newProduct {
@@ -861,7 +861,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
 }
 
-#pragma mark DJIFlightControllerDelegate Methods
+#pragma mark - DJIFlightControllerDelegate Methods
 
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
     DDLogVerbose(@"FC didUpdateSystemState");
@@ -895,7 +895,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [self.acYawLabel setText:[NSString stringWithFormat:@"%.2f", self.currentHeading]];
 }
 
-#pragma mark DJIBaseProductDelegate Methods
+#pragma mark - DJIBaseProductDelegate Methods
 
 - (void)product:(DJIBaseProduct *)product didUpdateDiagnosticsInformation:(NSArray *)info {
     for (id diagnostic in info) {
