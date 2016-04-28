@@ -361,7 +361,7 @@ import CocoaLumberjackSwift
         }
     }
 
-    func gimbalController(controller: DJIGimbal, didUpdateGimbalState gimbalState: DJIGimbalState) {
+    func gimbal(controller: DJIGimbal, didUpdateGimbalState gimbalState: DJIGimbalState) {
         let atti = gimbalState.attitudeInDegrees
 
         DDLogVerbose("Gimbal Controller didUpdateGimbalState P:\(atti.pitch) Y:\(atti.yaw) R:\(atti.roll)")
