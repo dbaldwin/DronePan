@@ -226,6 +226,8 @@ import CocoaLumberjackSwift
 
     func camera(camera: DJICamera, didGenerateNewMediaFile newMedia: DJIMedia) {
         DDLogDebug("Camera Controller didGenerateNewMediaFile")
+        DDLogInfo("Photo \(newMedia.fileName) (\(newMedia.mediaType)) taken")
+
         self.tookShot = true
     }
 
