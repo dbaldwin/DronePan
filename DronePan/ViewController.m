@@ -187,6 +187,22 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     DDLogInfo(@"Starting pano for %@", model);
 
+    if (!self.gimbalController) {
+        DDLogError(@"Panorama started without gimbal controller");
+        [ControllerUtils displayToastOnApp:@"Unable to find gimbal"];
+
+        self.panoInProgress = NO;
+        return;
+    }
+
+    if (!self.cameraController) {
+        DDLogError(@"Panorama started without camera controller");
+        [ControllerUtils displayToastOnApp:@"Unable to find camera"];
+        
+        self.panoInProgress = NO;
+        return;
+    }
+    
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
@@ -609,9 +625,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 - (void)gimbalAttitudeChangedWithPitch:(float)pitch yaw:(float)yaw roll:(float)roll {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.2f", pitch]];
-        [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.2f", yaw]];
-        [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.2f", roll]];
+        [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.1f˚", pitch]];
+        [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.1f˚", yaw]];
+        [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.1f˚", roll]];
     });
 }
 
@@ -777,45 +793,25 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             self.rcInFMode = NO;
         }
 
-        NSMutableArray *missing = [[NSMutableArray alloc] init];
-        
         if (flightController) {
             // TODO - this should not be a direct property but wrapped like the others
             self.flightController = flightController;
             self.flightController.delegate = self;
-        } else {
-            if (pt == PT_AIRCRAFT) {
-                DDLogError(@"No FC found");
-                [missing addObject:@"Flight Controller"];
-            }
         }
 
         if (camera) {
             self.cameraController = [[CameraController alloc] initWithCamera:camera];
             self.cameraController.delegate = self;
-        } else {
-            DDLogError(@"No camera found");
-            [missing addObject:@"Camera"];
         }
 
         if (gimbal) {
             self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
             self.gimbalController.delegate = self;
-        } else {
-            DDLogError(@"No gimbal found");
-            [missing addObject:@"Gimbal"];
         }
         
         if (battery) {
             self.batteryController = [[BatteryController alloc] initWithBattery: battery];
             self.batteryController.delegate = self;
-        } else {
-            DDLogError(@"No battery found");
-            [missing addObject:@"Battery"];
-        }
-        
-        if ([missing count] > 0) {
-            [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Device seen but missing %@", [missing componentsJoinedByString:@", "]]];
         }
     } else {
         DDLogInfo(@"Disconnected");
@@ -868,15 +864,19 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     if (newComponent) {
         if ([key isEqualToString:DJIBatteryComponentKey]) {
             self.batteryController = [[BatteryController alloc]initWithBattery:(DJIBattery *)newComponent];
+            self.batteryController.delegate = self;
         }
         if ([key isEqualToString:DJICameraComponentKey]) {
             self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
+            self.cameraController.delegate = self;
         }
         if ([key isEqualToString:DJIGimbalComponentKey]) {
             self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
+            self.gimbalController.delegate = self;
         }
         if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
             self.remoteController = [[RemoteController alloc]initWithRemote:(DJIRemoteController*)newComponent];
+            self.remoteController.delegate = self;
         }
     } else {
         if ([key isEqualToString:DJIBatteryComponentKey]) {
@@ -925,7 +925,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         self.yawSpeed = fmod(360.0, diff) * 0.5;
     }
 
-    [self.acYawLabel setText:[NSString stringWithFormat:@"%.2f", self.currentHeading]];
+    [self.acYawLabel setText:[NSString stringWithFormat:@"%.1f˚", self.currentHeading]];
 }
 
 #pragma mark - DJIBaseProductDelegate Methods
