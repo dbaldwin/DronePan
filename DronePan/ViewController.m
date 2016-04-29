@@ -60,6 +60,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
 
+@property (nonatomic, strong) BatteryController *batteryController;
+@property (nonatomic, strong) RemoteController *remoteController;
+
 @property (nonatomic, strong) DJIFlightController *flightController;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
@@ -755,8 +758,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             DJIRemoteController *remote = ((DJIAircraft *) self.product).remoteController;
             
             if (remote) {
-                RemoteController *remoteController = [[RemoteController alloc] initWithRemote:remote];
-                remoteController.delegate = self;
+                self.remoteController = [[RemoteController alloc] initWithRemote:remote];
+                self.remoteController.delegate = self;
             }
 
             [self altitudeLabel].hidden = NO;
@@ -804,8 +807,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         }
         
         if (battery) {
-            BatteryController *batteryController = [[BatteryController alloc] initWithBattery: battery];
-            batteryController.delegate = self;
+            self.batteryController = [[BatteryController alloc] initWithBattery: battery];
+            self.batteryController.delegate = self;
         } else {
             DDLogError(@"No battery found");
             [missing addObject:@"Battery"];
@@ -859,6 +862,36 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
+}
+
+- (void)componentWithKey:(NSString *)key changedFrom:(DJIBaseComponent *)oldComponent to:(DJIBaseComponent *)newComponent {
+    if (newComponent) {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = [[BatteryController alloc]initWithBattery:(DJIBattery *)newComponent];
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = [[RemoteController alloc]initWithRemote:(DJIRemoteController*)newComponent];
+        }
+    } else {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = nil;
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = nil;
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = nil;
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = nil;
+        }
+    }
 }
 
 #pragma mark - DJIFlightControllerDelegate Methods
