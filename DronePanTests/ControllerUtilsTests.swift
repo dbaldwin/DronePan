@@ -71,4 +71,19 @@ class ControllerUtilsTests: XCTestCase {
         XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was not phantom")
     }
 
+    func testSupporsSDKYaw() {
+        XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) supports SDK yaw")
+        XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) supports SDK yaw")
+        XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) supports SDK yaw")
+        
+        XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) supports SDK yaw")
+        
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) didn't support SDK yaw")
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) didn't support SDK yaw")
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) didn't support SDK yaw")
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) didn't support SDK yaw")
+
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmo), "\(DJIHandheldModelNameOsmo) didn't support SDK yaw")
+        XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmoPro), "\(DJIHandheldModelNameOsmoPro) didn't support SDK yaw")
+}
 }
