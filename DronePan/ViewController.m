@@ -860,40 +860,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
 }
 
-- (void)componentWithKey:(NSString *)key changedFrom:(DJIBaseComponent *)oldComponent to:(DJIBaseComponent *)newComponent {
-    if (newComponent) {
-        if ([key isEqualToString:DJIBatteryComponentKey]) {
-            self.batteryController = [[BatteryController alloc]initWithBattery:(DJIBattery *)newComponent];
-            self.batteryController.delegate = self;
-        }
-        if ([key isEqualToString:DJICameraComponentKey]) {
-            self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
-            self.cameraController.delegate = self;
-        }
-        if ([key isEqualToString:DJIGimbalComponentKey]) {
-            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
-            self.gimbalController.delegate = self;
-        }
-        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
-            self.remoteController = [[RemoteController alloc]initWithRemote:(DJIRemoteController*)newComponent];
-            self.remoteController.delegate = self;
-        }
-    } else {
-        if ([key isEqualToString:DJIBatteryComponentKey]) {
-            self.batteryController = nil;
-        }
-        if ([key isEqualToString:DJICameraComponentKey]) {
-            self.cameraController = nil;
-        }
-        if ([key isEqualToString:DJIGimbalComponentKey]) {
-            self.gimbalController = nil;
-        }
-        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
-            self.remoteController = nil;
-        }
-    }
-}
-
 #pragma mark - DJIFlightControllerDelegate Methods
 
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
@@ -935,6 +901,47 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         DJIDiagnostics *d = (DJIDiagnostics *)diagnostic;
         
         DDLogDebug(@"Diagnostic for %@: Code: %ld, Reason: %@, Solution: %@", product.model, (long)d.code, d.reason, d.solution);
+    }
+}
+
+- (void)componentWithKey:(NSString *)key changedFrom:(DJIBaseComponent *)oldComponent to:(DJIBaseComponent *)newComponent {
+    if (newComponent) {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = [[BatteryController alloc]initWithBattery:(DJIBattery *)newComponent];
+            self.batteryController.delegate = self;
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
+            self.cameraController.delegate = self;
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
+            self.gimbalController.delegate = self;
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = [[RemoteController alloc]initWithRemote:(DJIRemoteController*)newComponent];
+            self.remoteController.delegate = self;
+        }
+        if ([key isEqualToString:DJIFlightControllerComponentKey]) {
+            self.flightController = (DJIFlightController*)newComponent;
+            self.flightController.delegate = self;
+        }
+    } else {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = nil;
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = nil;
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = nil;
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = nil;
+        }
+        if ([key isEqualToString:DJIFlightControllerComponentKey]) {
+            self.flightController = nil;
+        }
     }
 }
 
