@@ -27,7 +27,7 @@
 
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
-@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
+@interface ViewController () <DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIBaseProductDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -59,6 +59,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
+
+@property (nonatomic, strong) BatteryController *batteryController;
+@property (nonatomic, strong) RemoteController *remoteController;
 
 @property (nonatomic, strong) DJIFlightController *flightController;
 
@@ -184,6 +187,22 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     DDLogInfo(@"Starting pano for %@", model);
 
+    if (!self.gimbalController) {
+        DDLogError(@"Panorama started without gimbal controller");
+        [ControllerUtils displayToastOnApp:@"Unable to find gimbal"];
+
+        self.panoInProgress = NO;
+        return;
+    }
+
+    if (!self.cameraController) {
+        DDLogError(@"Panorama started without camera controller");
+        [ControllerUtils displayToastOnApp:@"Unable to find camera"];
+        
+        self.panoInProgress = NO;
+        return;
+    }
+    
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
@@ -416,7 +435,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 }
 
-#pragma mark GCD functions
+#pragma mark - GCD functions
 
 - (void)setPhotoMode {
     DDLogDebug(@"Set photo mode");
@@ -606,9 +625,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 - (void)gimbalAttitudeChangedWithPitch:(float)pitch yaw:(float)yaw roll:(float)roll {
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.2f", pitch]];
-        [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.2f", yaw]];
-        [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.2f", roll]];
+        [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.1f˚", pitch]];
+        [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.1f˚", yaw]];
+        [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.1f˚", roll]];
     });
 }
 
@@ -686,7 +705,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [[self startButton] setEnabled:YES];
 }
 
-#pragma mark Hardware helper methods
+#pragma mark - Hardware helper methods
 
 - (ProductType)productType {
     ProductType pt = PT_UNKNOWN;
@@ -704,7 +723,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     return pt;
 }
 
-#pragma mark DJISDKManagerDelegate Method
+#pragma mark - DJISDKManagerDelegate Method
 
 // Called from startConnectionToProduct
 - (void)sdkManagerProductDidChangeFrom:(DJIBaseProduct *_Nullable)oldProduct to:(DJIBaseProduct *_Nullable)newProduct {
@@ -714,6 +733,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         DDLogInfo(@"New product %@", newProduct.model);
 
         self.product = newProduct;
+        
+        self.product.delegate = self;
 
         DDLogDebug(@"Trying to set hardware decoding");
         BOOL hardwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeHardwareDecoder];
@@ -753,8 +774,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             DJIRemoteController *remote = ((DJIAircraft *) self.product).remoteController;
             
             if (remote) {
-                RemoteController *remoteController = [[RemoteController alloc] initWithRemote:remote];
-                remoteController.delegate = self;
+                self.remoteController = [[RemoteController alloc] initWithRemote:remote];
+                self.remoteController.delegate = self;
             }
 
             [self altitudeLabel].hidden = NO;
@@ -772,45 +793,25 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             self.rcInFMode = NO;
         }
 
-        NSMutableArray *missing = [[NSMutableArray alloc] init];
-        
         if (flightController) {
             // TODO - this should not be a direct property but wrapped like the others
             self.flightController = flightController;
             self.flightController.delegate = self;
-        } else {
-            if (pt == PT_AIRCRAFT) {
-                DDLogError(@"No FC found");
-                [missing addObject:@"Flight Controller"];
-            }
         }
 
         if (camera) {
             self.cameraController = [[CameraController alloc] initWithCamera:camera];
             self.cameraController.delegate = self;
-        } else {
-            DDLogError(@"No camera found");
-            [missing addObject:@"Camera"];
         }
 
         if (gimbal) {
-            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:![ControllerUtils isPhantom4:self.product.model]];
+            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:![ControllerUtils supportsSDKYaw:self.product.model]];
             self.gimbalController.delegate = self;
-        } else {
-            DDLogError(@"No gimbal found");
-            [missing addObject:@"Gimbal"];
         }
         
         if (battery) {
-            BatteryController *batteryController = [[BatteryController alloc] initWithBattery: battery];
-            batteryController.delegate = self;
-        } else {
-            DDLogError(@"No battery found");
-            [missing addObject:@"Battery"];
-        }
-        
-        if ([missing count] > 0) {
-            [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Device seen but missing %@", [missing componentsJoinedByString:@", "]]];
+            self.batteryController = [[BatteryController alloc] initWithBattery: battery];
+            self.batteryController.delegate = self;
         }
     } else {
         DDLogInfo(@"Disconnected");
@@ -859,7 +860,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     //[self showAlertViewWithTitle:@"Register App" withMessage:message];
 }
 
-#pragma mark DJIFlightControllerDelegate Methods
+#pragma mark - DJIFlightControllerDelegate Methods
 
 - (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
     DDLogVerbose(@"FC didUpdateSystemState");
@@ -890,7 +891,58 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         self.yawSpeed = fmod(360.0, diff) * 0.5;
     }
 
-    [self.acYawLabel setText:[NSString stringWithFormat:@"%.2f", self.currentHeading]];
+    [self.acYawLabel setText:[NSString stringWithFormat:@"%.1f˚", self.currentHeading]];
+}
+
+#pragma mark - DJIBaseProductDelegate Methods
+
+- (void)product:(DJIBaseProduct *)product didUpdateDiagnosticsInformation:(NSArray *)info {
+    for (id diagnostic in info) {
+        DJIDiagnostics *d = (DJIDiagnostics *)diagnostic;
+        
+        DDLogDebug(@"Diagnostic for %@: Code: %ld, Reason: %@, Solution: %@", product.model, (long)d.code, d.reason, d.solution);
+    }
+}
+
+- (void)componentWithKey:(NSString *)key changedFrom:(DJIBaseComponent *)oldComponent to:(DJIBaseComponent *)newComponent {
+    if (newComponent) {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = [[BatteryController alloc]initWithBattery:(DJIBattery *)newComponent];
+            self.batteryController.delegate = self;
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
+            self.cameraController.delegate = self;
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils supportsSDKYaw:self.product.model]];
+            self.gimbalController.delegate = self;
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = [[RemoteController alloc]initWithRemote:(DJIRemoteController*)newComponent];
+            self.remoteController.delegate = self;
+        }
+        if ([key isEqualToString:DJIFlightControllerComponentKey]) {
+            self.flightController = (DJIFlightController*)newComponent;
+            self.flightController.delegate = self;
+        }
+    } else {
+        if ([key isEqualToString:DJIBatteryComponentKey]) {
+            self.batteryController = nil;
+        }
+        if ([key isEqualToString:DJICameraComponentKey]) {
+            self.cameraController = nil;
+        }
+        if ([key isEqualToString:DJIGimbalComponentKey]) {
+            self.gimbalController = nil;
+        }
+        if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
+            self.remoteController = nil;
+        }
+        if ([key isEqualToString:DJIFlightControllerComponentKey]) {
+            self.flightController = nil;
+        }
+    }
 }
 
 @end
