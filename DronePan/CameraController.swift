@@ -28,7 +28,9 @@ import CocoaLumberjackSwift
     func cameraControllerOK(fromError: Bool)
 
     func cameraControllerReset()
+}
 
+@objc protocol VideoControllerDelegate {
     func cameraReceivedVideo(videoBuffer: UnsafeMutablePointer<UInt8>, size: Int)
 }
 
@@ -36,6 +38,8 @@ import CocoaLumberjackSwift
     let camera: DJICamera
 
     var delegate: CameraControllerDelegate?
+    var videoDelegate: VideoControllerDelegate?
+    
     var status : ControllerStatus = .Normal
 
     let maxCount = 5
@@ -197,7 +201,7 @@ import CocoaLumberjackSwift
     func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {
         DDLogVerbose("Camera Controller didReceiveVideoData")
 
-        self.delegate?.cameraReceivedVideo(videoBuffer, size: size)
+        self.videoDelegate?.cameraReceivedVideo(videoBuffer, size: size)
     }
 
     func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {

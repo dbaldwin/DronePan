@@ -15,7 +15,6 @@
 
 #import "ViewController.h"
 #import <DJISDK/DJISDK.h>
-#import "VideoPreviewer.h"
 
 #import "DronePan-Swift.h"
 
@@ -62,6 +61,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property (nonatomic, strong) BatteryController *batteryController;
 @property (nonatomic, strong) RemoteController *remoteController;
+@property (nonatomic, strong) PreviewController *previewController;
 
 @property (nonatomic, strong) DJIFlightController *flightController;
 
@@ -84,14 +84,13 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     
     DDLogInfo(@"Showing main window");
     
-    [[VideoPreviewer instance] start];
-    [[VideoPreviewer instance] setView:self.cameraView];
+    [self.previewController startWithView:self.cameraView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    [[VideoPreviewer instance] setView:nil];
+    [self.previewController removeFromView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -112,6 +111,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [super viewDidLoad];
     self.gimbalDispatchGroup = dispatch_group_create();
     self.cameraDispatchGroup = dispatch_group_create();
+    
+    self.previewController = [[PreviewController alloc] init];
     
     // TODO - this should be tested
 #ifndef DEBUG
@@ -633,15 +634,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 #pragma mark - CameraControllerDelegate
 
-- (void)cameraReceivedVideo:(uint8_t *)videoBuffer size:(NSInteger)size {
-    uint8_t* pBuffer = (uint8_t*)malloc(size);
-    memcpy(pBuffer, videoBuffer, size);
-
-    if(![[[VideoPreviewer instance] dataQueue] isFull]){
-        [[VideoPreviewer instance] push:pBuffer length:(int)size];
-    }
-}
-
 - (void)cameraControllerReset {
     DDLogDebug(@"Camera signalled reset");
     
@@ -736,17 +728,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         
         self.product.delegate = self;
 
-        DDLogDebug(@"Trying to set hardware decoding");
-        BOOL hardwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeHardwareDecoder];
-        
-        if (!hardwareDecodeSupported) {
-            DDLogDebug(@"Hardware decoding failed - try to set software decoding");
-            BOOL softwareDecodeSupported = [[VideoPreviewer instance] setDecoderWithProduct:newProduct andDecoderType:VideoPreviewerDecoderTypeSoftwareDecoder];
-            
-            if (!softwareDecodeSupported) {
-                DDLogError(@"OK - so it doesn't support hardware or software - no idea what to do now");
-            }
-        }
+        [self.previewController setMode:newProduct];
         
         [self.connectionStatusLabel setText:newProduct.model];
         [self.startButton setEnabled:YES];
@@ -802,6 +784,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         if (camera) {
             self.cameraController = [[CameraController alloc] initWithCamera:camera];
             self.cameraController.delegate = self;
+            self.cameraController.videoDelegate = self.previewController;
         }
 
         if (gimbal) {
@@ -913,6 +896,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         if ([key isEqualToString:DJICameraComponentKey]) {
             self.cameraController = [[CameraController alloc]initWithCamera:(DJICamera*)newComponent];
             self.cameraController.delegate = self;
+            self.cameraController.videoDelegate = self.previewController;
         }
         if ([key isEqualToString:DJIGimbalComponentKey]) {
             self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:[ControllerUtils supportsSDKYaw:self.product.model]];

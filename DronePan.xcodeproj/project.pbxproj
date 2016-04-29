@@ -30,6 +30,7 @@
 		15839FBE1CCEA224008B7E97 /* VideoPreviewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 15839FAD1CCEA224008B7E97 /* VideoPreviewer.m */; };
 		15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 15839FAF1CCEA224008B7E97 /* VideoPreviewerQueue.m */; };
 		15839FC21CCEAB3E008B7E97 /* RemoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC11CCEAB3E008B7E97 /* RemoteController.swift */; };
+		15839FC41CD3EC56008B7E97 /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC31CD3EC56008B7E97 /* PreviewController.swift */; };
 		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
@@ -200,6 +201,7 @@
 		15839FAE1CCEA224008B7E97 /* VideoPreviewerQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPreviewerQueue.h; sourceTree = "<group>"; };
 		15839FAF1CCEA224008B7E97 /* VideoPreviewerQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPreviewerQueue.m; sourceTree = "<group>"; };
 		15839FC11CCEAB3E008B7E97 /* RemoteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteController.swift; sourceTree = "<group>"; };
+		15839FC31CD3EC56008B7E97 /* PreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
 		1583BF541CC26C2100C00C0D /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 				15839E931CCE9A40008B7E97 /* BatteryController.swift */,
 				1583BF541CC26C2100C00C0D /* CameraController.swift */,
 				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
+				15839FC31CD3EC56008B7E97 /* PreviewController.swift */,
 				15839FC11CCEAB3E008B7E97 /* RemoteController.swift */,
 			);
 			name = "Device Controllers";
@@ -741,6 +744,7 @@
 				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
 				15839FBE1CCEA224008B7E97 /* VideoPreviewer.m in Sources */,
+				15839FC41CD3EC56008B7E97 /* PreviewController.swift in Sources */,
 				15839FBA1CCEA224008B7E97 /* LB2AUDHackParser.m in Sources */,
 				154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */,
 				15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */,

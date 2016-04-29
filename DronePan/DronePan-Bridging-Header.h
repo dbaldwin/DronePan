@@ -19,5 +19,6 @@
 #define DronePan_Bridging_Header_h
 
 #include "ViewController.h"
+#import "VideoPreviewer.h"
 
 #endif
