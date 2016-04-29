@@ -15,8 +15,7 @@ have taken at least one photo or video before running DronePan.
 
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
-* Gimbal reset for I1 doesn't work for all devices [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
-* Battery level isn't working for latest SDK (3.1.1) [Issue 50](https://github.com/dbaldwin/DronePan/issues/50)
+* Gimbal yaw reset for P4 and I1 is currently disabled - you will have to make sure the gimbal is pointing forwards yourself [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
 
 ### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b3)
 
