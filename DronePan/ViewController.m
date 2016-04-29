@@ -805,7 +805,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         }
 
         if (gimbal) {
-            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:![ControllerUtils supportsSDKYaw:self.product.model]];
+            self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:[ControllerUtils supportsSDKYaw:self.product.model]];
             self.gimbalController.delegate = self;
         }
         
@@ -915,7 +915,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             self.cameraController.delegate = self;
         }
         if ([key isEqualToString:DJIGimbalComponentKey]) {
-            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:![ControllerUtils supportsSDKYaw:self.product.model]];
+            self.gimbalController = [[GimbalController alloc]initWithGimbal:(DJIGimbal*)newComponent supportsSDKYaw:[ControllerUtils supportsSDKYaw:self.product.model]];
             self.gimbalController.delegate = self;
         }
         if ([key isEqualToString:DJIRemoteControllerComponentKey]) {
