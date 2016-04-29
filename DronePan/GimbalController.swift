@@ -74,7 +74,7 @@ import CocoaLumberjackSwift
         }
 
         if let yawInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustYaw] as? DJIParamCapabilityMinMax {
-            isYawAdjustable = yawInfo.isSupported
+            isYawAdjustable = yawInfo.isSupported && supportsSDKYaw
             
             if (isYawAdjustable) {
                 yawRange = yawInfo.min.integerValue...yawInfo.max.integerValue
