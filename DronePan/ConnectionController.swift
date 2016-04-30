@@ -18,6 +18,13 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
+@objc enum ProductType : Int {
+    case Aircraft = 0
+    case Handheld = 1
+    case Unknown = 2
+}
+
+
 @objc protocol ConnectionControllerDelegate {
     func registered()
     func failedToRegister(reason: String)

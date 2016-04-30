@@ -20,7 +20,7 @@ import CocoaLumberjackSwift
 @objc class SettingsViewController: UIViewController {
     
     var model:String = ""
-    var productType: ProductType = PT_AIRCRAFT
+    var productType: ProductType = .Aircraft
     
     @IBOutlet weak var titleLabel: UILabel!
     
@@ -106,7 +106,7 @@ import CocoaLumberjackSwift
             NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
         ])
         
-        if (productType == PT_HANDHELD) {
+        if (productType == .Handheld) {
             startDelayControl.enabled = true
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
             

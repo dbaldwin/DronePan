@@ -15,17 +15,8 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum {
-    PT_AIRCRAFT,
-    PT_HANDHELD,
-    PT_UNKNOWN
-} ProductType;
 
 @interface ViewController : UIViewController
-
--(double) headingTo360:(double)heading;
-- (NSArray *)yawAnglesForCount:(long)count withHeading:(double)heading;
-- (NSArray *)pitchesForLoopWithSkyRow:(BOOL)skyRow forType:(ProductType)productType andRowCount:(int)rowCount;
 
 @end
 

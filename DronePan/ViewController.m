@@ -168,7 +168,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
     
     // TODO - update for gimbal yaw for I1
-    if ([self productType] == PT_AIRCRAFT) {
+    if ([self productType] == ProductTypeAircraft) {
 
         if (![ControllerUtils isPhantom4:self.product.model]) {
             if (!self.rcInFMode) {
@@ -208,7 +208,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
-    if ([self productType] == PT_AIRCRAFT) {
+    if ([self productType] == ProductTypeAircraft) {
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
 
@@ -249,43 +249,16 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [[self sequenceLabel] setText:seqText];
 }
 
-- (NSArray *)pitchesForLoopWithSkyRow:(BOOL)skyRow forType:(ProductType)productType andRowCount:(int)rowCount {
-    int max = 0;
-    int min = -60;
-    
-    int actualCount = rowCount;
-    
-    if (skyRow) {
-        max = 30;
-        actualCount = actualCount + 1;
-    }
-    
-    double interval = (max - min) / (actualCount - 1);
-    
-    NSMutableArray *values = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < actualCount; i++) {
-        
-        [values addObject:[NSNumber numberWithDouble:(max - (i*interval))]];
-    }
-    
-    if (productType == PT_AIRCRAFT) {
-        return [NSArray arrayWithArray:values];
-    } else {
-        return [NSArray arrayWithArray:[[values reverseObjectEnumerator] allObjects]];
-    }
-}
-
 - (void)doPanoLoop {
-    NSArray *pitches = [self pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
-                                              forType:[self productType]
-                                          andRowCount:(int)[ModelSettings numberOfRows:self.product.model]];
+    NSArray *pitches = [PanoramaController pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
+                                                               type:[self productType]
+                                                           rowCount:(int)[ModelSettings numberOfRows:self.product.model]];
 
     // Switch from config when available
     bool aircraftYaw = YES;
 
-    if ([self productType] == PT_AIRCRAFT) {
-    } else if ([self productType] == PT_HANDHELD) {
+    if ([self productType] == ProductTypeAircraft) {
+    } else if ([self productType] == ProductTypeHandheld) {
         // Force gimbal yaw for handheld
         aircraftYaw = NO;
         
@@ -298,7 +271,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         return;
     }
 
-    NSArray *yaw = [self yawAnglesForCount:[ModelSettings photosPerRow:self.product.model] withHeading:[self headingTo360:self.currentHeading]];
+    NSArray *yaw = [PanoramaController yawAnglesWithCount:[ModelSettings photosPerRow:self.product.model] heading:[PanoramaController headingTo360:self.currentHeading]];
     
     self.sequenceCount = ([pitches count] * [yaw count]) + 1;
     self.currentCount = 0;
@@ -408,35 +381,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 }
 
-- (NSArray *)yawAnglesForCount:(long)count withHeading:(double)heading {
-    
-    double YAW_ANGLE = 360 / count;
-
-    NSMutableArray *yaw = [[NSMutableArray alloc] init];
-
-    // Here we loop and create yaw angles based off the current aircraft heading
-    // When a users clicks the start button that will be the point of reference from
-    // Which we build the entire array of yaw angles
-    for (int i = 0; i < count; i++) {
-        double destinationAngle = heading + (YAW_ANGLE * (i + 1)); // The +1 makes sure the first destination is not the current heading
-
-        if (destinationAngle > 360)
-            destinationAngle = destinationAngle - 360;
-
-        [yaw addObject:@(destinationAngle)];
-    }
-
-    return yaw;
-}
-
-- (double)headingTo360:(double)heading {
-    if (heading >= 0) {
-        return heading;
-    } else {
-        return heading + 360;
-    }
-}
-
 #pragma mark - GCD functions
 
 - (void)setPhotoMode {
@@ -519,7 +463,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #ifdef DEBUG
     if (self.product.model.length == 0) {
         settings.model = @"Simulator";
-        settings.productType = PT_AIRCRAFT;
+        settings.productType = ProductTypeAircraft;
     } else {
         settings.model = self.product.model;
         settings.productType = [self productType];
@@ -701,15 +645,15 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #pragma mark - Hardware helper methods
 
 - (ProductType)productType {
-    ProductType pt = PT_UNKNOWN;
+    ProductType pt = ProductTypeUnknown;
 
     if (!self.product) {
         NSLog(@"Didn't find product");
     } else {
         if ([self.product isKindOfClass:[DJIAircraft class]]) {
-            pt = PT_AIRCRAFT;
+            pt = ProductTypeAircraft;
         } else if ([self.product isKindOfClass:[DJIHandheld class]]) {
-            pt = PT_HANDHELD;
+            pt = ProductTypeHandheld;
         }
     }
 
@@ -748,11 +692,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [self sequenceLabel].hidden = NO;
     [self batteryLabel].hidden = NO;
     
-    if (pt == PT_AIRCRAFT) {
+    if (pt == ProductTypeAircraft) {
         [self altitudeLabel].hidden = NO;
         [self satelliteLabel].hidden = NO;
         [self distanceLabel].hidden = NO;
-    } else if (pt == PT_HANDHELD) {
+    } else if (pt == ProductTypeHandheld) {
         self.rcInFMode = NO;
     }
 }
@@ -830,7 +774,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     self.aircraftLocation = state.aircraftLocation;
 
-    self.currentHeading = [self headingTo360:fc.compass.heading];
+    self.currentHeading = [PanoramaController headingTo360:fc.compass.heading];
     
     [[self altitudeLabel] setText: [NSString stringWithFormat: @"Alt: %dm", (int)state.altitude]];
     

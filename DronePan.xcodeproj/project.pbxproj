@@ -32,6 +32,8 @@
 		15839FC21CCEAB3E008B7E97 /* RemoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC11CCEAB3E008B7E97 /* RemoteController.swift */; };
 		15839FC41CD3EC56008B7E97 /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC31CD3EC56008B7E97 /* PreviewController.swift */; };
 		15839FC71CD487BB008B7E97 /* ConnectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC61CD487BB008B7E97 /* ConnectionController.swift */; };
+		15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FC81CD4BC40008B7E97 /* PanoramaController.swift */; };
+		15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */; };
 		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
@@ -46,7 +48,6 @@
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
 		83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */; };
-		83251CBF1CC65F68009D4A4B /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */; };
 		8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */; };
 		836F73391CCF513700233FF3 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 836F73381CCF513700233FF3 /* MBProgressHUD.framework */; };
 		837983B71CCE0D1C001D1A27 /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
@@ -204,6 +205,8 @@
 		15839FC11CCEAB3E008B7E97 /* RemoteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteController.swift; sourceTree = "<group>"; };
 		15839FC31CD3EC56008B7E97 /* PreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
 		15839FC61CD487BB008B7E97 /* ConnectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionController.swift; sourceTree = "<group>"; };
+		15839FC81CD4BC40008B7E97 /* PanoramaController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaController.swift; sourceTree = "<group>"; };
+		15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaControllerTests.swift; sourceTree = "<group>"; };
 		1583BF541CC26C2100C00C0D /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -222,7 +225,6 @@
 		232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
 		83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalControllerTests.swift; sourceTree = "<group>"; };
-		83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
 		8362BB1D1CC64C8D0071D0BA /* DronePanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DronePanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8362BB211CC64C8D0071D0BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettingsTest.swift; sourceTree = "<group>"; };
@@ -566,8 +568,8 @@
 				8362BB211CC64C8D0071D0BA /* Info.plist */,
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
-				83251CBE1CC65F68009D4A4B /* MainViewControllerTests.swift */,
 				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
+				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = "<group>";
@@ -603,6 +605,7 @@
 				4E1ADC2CAEC27E8366417603 /* GimbalController.swift */,
 				15839FC31CD3EC56008B7E97 /* PreviewController.swift */,
 				15839FC11CCEAB3E008B7E97 /* RemoteController.swift */,
+				15839FC81CD4BC40008B7E97 /* PanoramaController.swift */,
 			);
 			name = "Device Controllers";
 			sourceTree = "<group>";
@@ -757,6 +760,7 @@
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
 				15839FBC1CCEA224008B7E97 /* SoftwareDecodeProcessor.m in Sources */,
+				15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */,
 				15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */,
 				15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */,
 				15839FC21CCEAB3E008B7E97 /* RemoteController.swift in Sources */,
@@ -771,8 +775,8 @@
 			files = (
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
+				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
-				83251CBF1CC65F68009D4A4B /* MainViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
