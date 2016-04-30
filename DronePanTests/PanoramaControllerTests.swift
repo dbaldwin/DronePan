@@ -72,6 +72,12 @@ class PanoramaControllerTests: XCTestCase {
         XCTAssertEqual([-24, 36, 96, 156, 216, 276], value, "Incorrect angles for count 6 heading -84 \(value)")
     }
 
+    func testHeadingTo360() {
+        let value = PanoramaController.headingTo360(0)
+        
+        XCTAssertEqual(0, value, "Incorrect heading for 0 \(value)")
+    }
+
     func testHeadingTo360Negative() {
         let value = PanoramaController.headingTo360(-117)
 
