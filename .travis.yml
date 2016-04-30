@@ -11,6 +11,13 @@ script:
   - open -b com.apple.iphonesimulator
   - set -o pipefail
   - xcodebuild -scheme DronePan -sdk iphonesimulator9.3 -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' clean build test GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  
+notifications:
+  webhooks:
+    urls:
+      secure: UmkkU540M0ckQcHRG3iBWBt2lZW33zd7zC3zRt3WoK/N3jo0qWJKBKFuVIf3nUt6Br79SwbznYHtsHb7YuXg4UCVs3H+dilxZu/q+/c9jEYnVY7ek/4+MILmRMjq2ylc8y7pO8EdyHj5WcgWngYNdJyRtM4OTfJVFToDcPR9x5u2xP2PO5bSAANDmMuhUTu3PzYTXrSjnDtSUeSt5XwIhK1boMXzgUYHmaUFLZyBDgQw43VVv36h+YS1CMVTpyyy5pioNnPesFBnk6QNUZAFUFil38Bi48OVPrwLlE5JiYX4xqxW3EjY7lHTAr88ay6H5+Hw21QAWCqlBMLaGqxYvRKMWpwLoFi14lUKud2HKqxrduWtNhZf/AIY3Psc0wJculCdlgpTiSTJyMAHpiidUib2qkLOVEe89kUPN8Tv57coUx/15Zwn11+1lZYCgo4CfMFCr5M2sOxZ/aVnFkulXOMStLZ1bF6Hk2ix30jI27qL2H5alThsdo13jhLWnKpVr2qoXJjRTszA79wBdBnDQS5tn0vC91AcnvMeSTG3yHAx57Iu1EihW8Dka4selpEQ476RI+r2VBKhU6sOYmT3BdIeJcFX3oZ/wTXJ85ikkMdCiAHuG6Exn8101gKDrGekFaeT5g3FyAYpLBbdHZv653CwglSrjVvuPSNOFRzVBIE=
+    on_success: change
+    on_failure: always
+    on_start: never
