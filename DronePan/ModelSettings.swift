@@ -26,7 +26,7 @@ enum SettingsKeys: String {
     private class func settingForKey(model: String, key: SettingsKeys) -> AnyObject? {
         return NSUserDefaults.standardUserDefaults().dictionaryForKey(model)?[key.rawValue]
     }
-    
+
     private class func intSettingForKey(model: String, key: SettingsKeys, defaultValue: Int) -> Int {
         return ModelSettings.settingForKey(model, key: key) as? Int ?? defaultValue
     }
@@ -38,7 +38,7 @@ enum SettingsKeys: String {
     class func startDelay(model: String) -> Int {
         return ModelSettings.intSettingForKey(model, key: .StartDelay, defaultValue: 5)
     }
-    
+
     class func photosPerRow(model: String) -> Int {
         return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
     }
@@ -51,30 +51,30 @@ enum SettingsKeys: String {
         if (ControllerUtils.isPhantom(model)) {
             return false
         }
-        
+
         return ModelSettings.boolSettingForKey(model, key: .SkyRow, defaultValue: true)
     }
 
-    class func updateSettings(model: String, settings newSettings : [SettingsKeys: AnyObject]) {
-        var settings : [String : AnyObject] = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) ?? [:]
-        
+    class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
+        var settings: [String:AnyObject] = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) ?? [:]
+
         for (key, val) in newSettings {
             settings[key.rawValue] = val
         }
-        
+
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: model)
         NSUserDefaults.standardUserDefaults().synchronize()
     }
-    
+
     class func numberOfImagesForCurrentSettings(model: String) -> Int {
         var numberOfRows = ModelSettings.numberOfRows(model)
-        
+
         if (ModelSettings.skyRow(model)) {
             numberOfRows += 1
         }
 
         let photosPerRow = ModelSettings.photosPerRow(model)
-        
+
         return (numberOfRows * photosPerRow) + 1
     }
 }

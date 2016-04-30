@@ -20,21 +20,21 @@ import DJISDK
 
 class GimbalControllerTests: XCTestCase {
     var gimbalController : GimbalController?
-    
+
     override func setUp() {
         super.setUp()
-        
+
         let gimbal = DJIGimbal()
 
         self.gimbalController = GimbalController(gimbal: gimbal)
     }
-    
+
     func compare(angle: Float, heading: Float) {
         let value = gimbalController!.gimbalAngleForHeading(heading)
-        
+
         XCTAssertEqual(angle, value, "Incorrect angle \(value) for heading \(heading)")
     }
-    
+
     func testGimbalAngleForHeading() {
         compare(   0, heading:    0)
         compare(  90, heading:   90)

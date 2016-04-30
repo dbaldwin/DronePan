@@ -17,17 +17,17 @@ import Foundation
 
 import CocoaLumberjackSwift
 
-class LogFormatter : NSObject, DDLogFormatter {
-    let dateFormatter : NSDateFormatter
-    
+class LogFormatter: NSObject, DDLogFormatter {
+    let dateFormatter: NSDateFormatter
+
     override init() {
         dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss:SSS"
     }
-    
+
     @objc func formatLogMessage(logMessage: DDLogMessage!) -> String! {
-        var logPrefix : String
-        
+        var logPrefix: String
+
         switch (logMessage.flag) {
         case DDLogFlag.Error:
             logPrefix = "E"

@@ -26,18 +26,18 @@ import CocoaLumberjackSwift
 
 @objc class BatteryController: NSObject, DJIBatteryDelegate {
     var delegate: BatteryControllerDelegate?
-    
+
     init(battery: DJIBattery) {
         DDLogInfo("Battery Controller init")
-        
+
         super.init()
 
         battery.delegate = self
     }
-    
+
     func battery(battery: DJIBattery, didUpdateState batteryState: DJIBatteryState) {
         DDLogVerbose("Battery didUpdateState")
-        
+
         self.delegate?.batteryControllerPercentUpdated(batteryState.batteryEnergyRemainingPercent)
 
         self.delegate?.batteryControllerTemperatureUpdated(batteryState.batteryTemperature)

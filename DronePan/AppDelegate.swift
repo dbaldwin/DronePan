@@ -20,37 +20,37 @@ let ddloglevel = DDLogLevel.Debug
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
+
     var window: UIWindow?
-    
-    var fileLogger : DDFileLogger?
-    
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
+    var fileLogger: DDFileLogger?
+
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool {
         UIApplication.sharedApplication().idleTimerDisabled = true
 
         let logFormatter = LogFormatter()
-        
+
         DDTTYLogger.sharedInstance().logFormatter = logFormatter
         DDASLLogger.sharedInstance().logFormatter = logFormatter
-        
+
         DDLog.addLogger(DDTTYLogger.sharedInstance(), withLevel: .Debug) // TTY = Xcode console
         DDLog.addLogger(DDASLLogger.sharedInstance(), withLevel: .Debug) // ASL = Apple System Logs
 
         fileLogger = DDFileLogger()
-        fileLogger!.rollingFrequency = 60*60*24
+        fileLogger!.rollingFrequency = 60 * 60 * 24
         fileLogger!.logFileManager.maximumNumberOfLogFiles = 2
         fileLogger!.logFormatter = logFormatter
-        
+
         DDLog.addLogger(fileLogger!, withLevel: .Debug)
-        
+
         DDLogInfo("DronePan launched")
-        
+
         if let version = ControllerUtils.buildVersion() {
             DDLogInfo("Running version \(version)")
         }
-        
+
         //DDLogDebug("Logging to \(fileLogger.currentLogFileInfo().filePath)  \(fileLogger.currentLogFileInfo().fileName)")
-        
+
         return true
     }
 
@@ -58,13 +58,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let info = fileLogger?.currentLogFileInfo() {
             if let data = NSData(contentsOfFile: info.filePath) {
                 UIPasteboard.generalPasteboard().setData(data, forPasteboardType: "public.text")
-                
+
                 return true
             }
         }
-        
+
         return false
     }
-    
+
 }
 

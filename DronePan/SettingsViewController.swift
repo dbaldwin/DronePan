@@ -18,12 +18,12 @@ import UIKit
 import CocoaLumberjackSwift
 
 @objc class SettingsViewController: UIViewController {
-    
-    var model:String = ""
+
+    var model: String = ""
     var productType: ProductType = .Aircraft
-    
+
     @IBOutlet weak var titleLabel: UILabel!
-    
+
     @IBOutlet weak var startDelayControl: UISegmentedControl!
     @IBOutlet weak var photosPerRowControl: UISegmentedControl!
     @IBOutlet weak var numberOfRowsControl: UISegmentedControl!
@@ -31,26 +31,26 @@ import CocoaLumberjackSwift
 
     @IBOutlet weak var angleLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
-    
+
     @IBOutlet weak var startDelayDescription: UILabel!
     @IBOutlet weak var numberOfPhotosPerRowDescription: UILabel!
     @IBOutlet weak var numberOfRowsDescription: UILabel!
     @IBOutlet weak var skyRowDescription: UILabel!
-    
+
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
-    
+
     @IBOutlet weak var saveButton: UIButton!
     override func viewDidLoad() {
-        
+
         super.viewDidLoad()
-        
+
         initSettings()
 
         if let version = ControllerUtils.buildVersion() {
             self.versionLabel.hidden = false
             self.versionLabel.text = "Version \(version)"
-            
+
             DDLogDebug("Settings VC showing version \(version)")
         } else {
             self.versionLabel.hidden = true
@@ -58,16 +58,16 @@ import CocoaLumberjackSwift
             DDLogWarn("Settings VC unknown version")
         }
     }
-    
+
     override func viewDidAppear(animated: Bool) {
         DDLogInfo("Settings VC Showing settings view")
 
         self.scrollView.flashScrollIndicators()
     }
-    
-    private func initSegment(control: UISegmentedControl, setting : Int) {
-        for i in 0..<control.numberOfSegments {
-            
+
+    private func initSegment(control: UISegmentedControl, setting: Int) {
+        for i in 0 ..< control.numberOfSegments {
+
             if let title = control.titleForSegmentAtIndex(i) {
                 if let segment = Int(title) {
                     if (segment == setting) {
@@ -77,11 +77,11 @@ import CocoaLumberjackSwift
             }
         }
     }
-    
+
     func initSettings() {
         if (self.model == "") {
             titleLabel.attributedText = NSAttributedString(string: "Disconnected", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
+                    NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
             ])
 
             for control in [startDelayControl, photosPerRowControl, numberOfRowsControl, skyRowControl] {
@@ -92,27 +92,27 @@ import CocoaLumberjackSwift
             for label in [startDelayDescription, numberOfPhotosPerRowDescription, numberOfRowsDescription, skyRowDescription] {
                 label.text = "Disconnected"
             }
-            
+
             setAngleLabel(0)
             countLabel.text = "--"
 
             saveButton.enabled = false
-            
+
             return
         }
-        
-        
+
+
         titleLabel.attributedText = NSAttributedString(string: "\(model) Settings", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(20)
+                NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
         ])
-        
+
         if (productType == .Handheld) {
             startDelayControl.enabled = true
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
-            
+
             let startDelay = ModelSettings.startDelay(model)
             initSegment(startDelayControl, setting: startDelay)
-            
+
             skyRowDescription.text = "Handheld always gets this extra row. Number of rows will be the number selected above +1."
             skyRowControl.enabled = false
             skyRowControl.selectedSegmentIndex = 0
@@ -120,7 +120,7 @@ import CocoaLumberjackSwift
             startDelayControl.selectedSegmentIndex = UISegmentedControlNoSegment
             startDelayControl.enabled = false
             startDelayDescription.text = "Only applicable for handheld"
-            
+
             if (ControllerUtils.isPhantom(model)) {
                 skyRowControl.enabled = false
                 skyRowDescription.text = "Phantom models do not support sky row"
@@ -129,7 +129,7 @@ import CocoaLumberjackSwift
                 skyRowControl.enabled = true
                 skyRowDescription.text = "If set, DronePan will shoot a \"sky row\" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting \"No\" will skip the sky row."
                 let skyRow = ModelSettings.skyRow(model)
-            
+
                 if (skyRow) {
                     skyRowControl.selectedSegmentIndex = 0
                 } else {
@@ -137,37 +137,37 @@ import CocoaLumberjackSwift
                 }
             }
         }
-        
+
         let photosPerRow = ModelSettings.photosPerRow(model)
         initSegment(photosPerRowControl, setting: photosPerRow)
 
         let numberOfRows = ModelSettings.numberOfRows(model)
         initSegment(numberOfRowsControl, setting: numberOfRows)
-        
+
         updateCounts()
     }
-    
+
     private func setAngleLabel(angle: Float) {
         let angleString = NSMutableAttributedString(string: "\(angle)", attributes: [
-            NSFontAttributeName : UIFont.boldSystemFontOfSize(14)
+                NSFontAttributeName: UIFont.boldSystemFontOfSize(14)
         ])
-        
-        
+
+
         angleString.appendAttributedString(NSAttributedString(string: "˚", attributes: [
-            NSFontAttributeName : UIFont.systemFontOfSize(14)
-            ]))
-        
+                NSFontAttributeName: UIFont.systemFontOfSize(14)
+        ]))
+
         angleLabel.attributedText = angleString
     }
-    
+
     private func updateCounts() {
         if var numberOfRows = selectedNumberOfRows() {
             if (isSkyRow()) {
                 numberOfRows += 1
             }
-        
+
             if let photosPerRow = selectedPhotosPerRow() {
-                self.setAngleLabel(360.0/Float(photosPerRow))
+                self.setAngleLabel(360.0 / Float(photosPerRow))
                 self.countLabel.text = "\((numberOfRows * photosPerRow) + 1)"
             } else {
                 self.setAngleLabel(0)
@@ -175,7 +175,7 @@ import CocoaLumberjackSwift
             }
         }
     }
-    
+
     private func isSkyRow() -> Bool {
         return skyRowControl.selectedSegmentIndex == 0
     }
@@ -184,7 +184,7 @@ import CocoaLumberjackSwift
         if (control.selectedSegmentIndex == UISegmentedControlNoSegment) {
             return nil
         }
-        
+
         if let title = control.titleForSegmentAtIndex(control.selectedSegmentIndex) {
             return Int(title)
         } else {
@@ -203,28 +203,28 @@ import CocoaLumberjackSwift
     private func selectedStartDelay() -> Int? {
         return selectedValue(startDelayControl)
     }
-    
+
     @IBAction func photosPerRowChanged(sender: AnyObject) {
         updateCounts()
     }
-    
+
     @IBAction func numberOfRowsChanged(sender: AnyObject) {
         updateCounts()
     }
-    
+
     @IBAction func skyRowChanged(sender: AnyObject) {
         updateCounts()
     }
 
     @IBAction func saveSettings(sender: AnyObject) {
-        var settings : [SettingsKeys : AnyObject] = [
-            .SkyRow : isSkyRow()
+        var settings: [SettingsKeys:AnyObject] = [
+                .SkyRow: isSkyRow()
         ]
-        
+
         if let startDelay = selectedStartDelay() {
             settings[.StartDelay] = startDelay
         }
-        
+
         if let photoCount = selectedPhotosPerRow() {
             settings[.PhotosPerRow] = photoCount
         }
@@ -232,9 +232,9 @@ import CocoaLumberjackSwift
         if let rowCount = selectedNumberOfRows() {
             settings[.NumberOfRows] = rowCount
         }
-        
+
         ModelSettings.updateSettings(model, settings: settings)
-        
+
         // Dismiss the VC
         self.dismissViewControllerAnimated(true, completion: {})
     }
@@ -243,7 +243,7 @@ import CocoaLumberjackSwift
         // Dismiss the VC
         self.dismissViewControllerAnimated(true, completion: {})
     }
-    
+
     @IBAction func copyLogToClipboard(sender: UIButton) {
         if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
             if (appDelegate.copyLogToClipboard()) {
@@ -253,14 +253,14 @@ import CocoaLumberjackSwift
             }
         }
     }
-    
+
     private func showAlert(title: String, body: String) {
         let alert = UIAlertController(title: title, message: body, preferredStyle: .Alert)
-        
+
         let ok = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        
+
         alert.addAction(ok)
-        
+
         self.presentViewController(alert, animated: true, completion: nil)
     }
 }

@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc enum FlightMode : Int {
+@objc enum FlightMode: Int {
     case Function = 0
     case Attitude = 1
     case Positioning = 2
@@ -27,30 +27,30 @@ import CocoaLumberjackSwift
 
 @objc protocol RemoteControllerDelegate {
     func remoteControllerSetFlightMode(mode: FlightMode)
-    
-    func remoteControllerBatteryPercentUpdated(batteryPercent : Int)
+
+    func remoteControllerBatteryPercentUpdated(batteryPercent: Int)
 }
 
 @objc class RemoteController: NSObject, DJIRemoteControllerDelegate {
     var delegate: RemoteControllerDelegate?
-    
+
     init(remote: DJIRemoteController) {
         DDLogInfo("Remote Controller init")
-        
+
         super.init()
-        
+
         remote.delegate = self
     }
-    
+
     func remoteController(rc: DJIRemoteController, didUpdateBatteryState batteryInfo: DJIRCBatteryInfo) {
-         self.delegate?.remoteControllerBatteryPercentUpdated(Int(batteryInfo.remainingEnergyInPercent))
+        self.delegate?.remoteControllerBatteryPercentUpdated(Int(batteryInfo.remainingEnergyInPercent))
     }
-    
+
     func remoteController(rc: DJIRemoteController, didUpdateHardwareState state: DJIRCHardwareState) {
         DDLogVerbose("Remote didUpdateHardwareState")
-        
-        var mode : FlightMode
-        
+
+        var mode: FlightMode
+
         switch (state.flightModeSwitch.mode) {
         case .F:
             mode = .Function
@@ -61,8 +61,8 @@ import CocoaLumberjackSwift
         case .S:
             mode = .Sport
         }
-        
-        
+
+
         self.delegate?.remoteControllerSetFlightMode(mode)
     }
 }

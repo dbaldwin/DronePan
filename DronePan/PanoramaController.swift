@@ -20,29 +20,30 @@ import CocoaLumberjackSwift
 
 @objc class PanoramaController: NSObject {
     class func pitchesForLoop(skyRow skyRow: Bool, type: ProductType, rowCount: Int) -> Array<Double> {
-        let min : Double = -60
-        let max : Double = skyRow ? 30 : 0
+        let min: Double = -60
+        let max: Double = skyRow ? 30 : 0
         let count = skyRow ? rowCount + 1 : rowCount
-        
+
         let interval = Double(max - min) / Double(count - 1)
-        
-        let values = (0..<count).map({
+
+        let values = (0 ..< count).map({
             max - (Double($0) * interval)
         })
 
         return type == .Aircraft ? values : values.reverse()
     }
-    
+
     class func yawAngles(count count: Int, heading: Double) -> [Double] {
-        let yaw_angle = 360.0/Double(count)
-        
-        return (0..<count).map({
+        let yaw_angle = 360.0 / Double(count)
+
+        return (0 ..< count).map({
             heading + (yaw_angle * Double($0 + 1))
-        }).map({ (angle : Double) -> Double in
+        }).map({
+            (angle: Double) -> Double in
             angle > 360 ? angle - 360.0 : angle
         })
     }
-    
+
     class func headingTo360(heading: Double) -> Double {
         return heading >= 0 ? heading : heading + 360.0
     }

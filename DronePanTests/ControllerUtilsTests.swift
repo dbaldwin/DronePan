@@ -31,40 +31,40 @@ class ControllerUtilsTests: XCTestCase {
         XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was inspire")
         XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was inspire")
     }
-    
+
     func testIsPhantom3() {
         XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom 3")
         XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom 3")
         XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom 3")
-        
+
         XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was phantom 3")
-        
+
         XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was not phantom 3")
         XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was not phantom 3")
         XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was not phantom 3")
         XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was not phantom 3")
     }
-    
+
     func testIsPhantom4() {
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom 4")
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom 4")
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom 4")
-        
+
         XCTAssertTrue(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was not phantom 4")
-        
+
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was phantom 4")
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was phantom 4")
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was phantom 4")
         XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was phantom 4")
     }
-    
+
     func testIsPhantom() {
         XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom")
         XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom")
         XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom")
-        
+
         XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was not phantom")
-        
+
         XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was not phantom")
         XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was not phantom")
         XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was not phantom")
@@ -75,9 +75,9 @@ class ControllerUtilsTests: XCTestCase {
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) supports SDK yaw")
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) supports SDK yaw")
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) supports SDK yaw")
-        
+
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) supports SDK yaw")
-        
+
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) didn't support SDK yaw")
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) didn't support SDK yaw")
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) didn't support SDK yaw")
@@ -85,5 +85,5 @@ class ControllerUtilsTests: XCTestCase {
 
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmo), "\(DJIHandheldModelNameOsmo) didn't support SDK yaw")
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmoPro), "\(DJIHandheldModelNameOsmoPro) didn't support SDK yaw")
-}
+    }
 }

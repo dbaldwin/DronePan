@@ -20,14 +20,10 @@
 
 #import <CocoaLumberjack/CocoaLumberjack.h>
 
-#define ENABLE_DEBUG_MODE 0
-
-#define STANDARD_DELAY 3
-
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @interface ViewController () <FlightControllerDelegate, ConnectionControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
-    dispatch_queue_t droneCmdsQueue;
+    dispatch_queue_t droneCommandsQueue;
 }
 
 @property(nonatomic, weak) DJIBaseProduct *product;
@@ -35,10 +31,10 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(weak, nonatomic) IBOutlet UIView *cameraView;
 @property(weak, nonatomic) IBOutlet UIButton *startButton;
 @property(weak, nonatomic) IBOutlet UILabel *connectionStatusLabel;
-@property (weak, nonatomic) IBOutlet UILabel *altitudeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *satelliteLabel;
-@property (weak, nonatomic) IBOutlet UILabel *batteryLabel;
-@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+@property(weak, nonatomic) IBOutlet UILabel *altitudeLabel;
+@property(weak, nonatomic) IBOutlet UILabel *satelliteLabel;
+@property(weak, nonatomic) IBOutlet UILabel *batteryLabel;
+@property(weak, nonatomic) IBOutlet UILabel *distanceLabel;
 
 @property(weak, nonatomic) IBOutlet UILabel *sequenceLabel;
 
@@ -48,7 +44,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(nonatomic, assign) double currentHeading;
 @property(nonatomic, assign) double yawSpeed;
 @property(nonatomic, assign) double yawDestination;
-@property(nonatomic, assign) NSTimer *yawTimer;
 @property(nonatomic, assign) BOOL panoInProgress;
 @property(nonatomic, assign) BOOL rcInFMode;
 
@@ -60,19 +55,19 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(nonatomic, strong) CameraController *cameraController;
 @property(nonatomic, strong) dispatch_group_t cameraDispatchGroup;
 
-@property (nonatomic, strong) BatteryController *batteryController;
-@property (nonatomic, strong) RemoteController *remoteController;
-@property (nonatomic, strong) PreviewController *previewController;
+@property(nonatomic, strong) BatteryController *batteryController;
+@property(nonatomic, strong) RemoteController *remoteController;
+@property(nonatomic, strong) PreviewController *previewController;
 
-@property (nonatomic, strong) FlightController *flightController;
+@property(nonatomic, strong) FlightController *flightController;
 
-@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
+@property(weak, nonatomic) IBOutlet UIButton *settingsButton;
 
-@property (weak, nonatomic) IBOutlet UIView *infoView;
-@property (weak, nonatomic) IBOutlet UILabel *acYawLabel;
-@property (weak, nonatomic) IBOutlet UILabel *gimbalYawLabel;
-@property (weak, nonatomic) IBOutlet UILabel *gimbalPitchLabel;
-@property (weak, nonatomic) IBOutlet UILabel *gimbalRollLabel;
+@property(weak, nonatomic) IBOutlet UIView *infoView;
+@property(weak, nonatomic) IBOutlet UILabel *acYawLabel;
+@property(weak, nonatomic) IBOutlet UILabel *gimbalYawLabel;
+@property(weak, nonatomic) IBOutlet UILabel *gimbalPitchLabel;
+@property(weak, nonatomic) IBOutlet UILabel *gimbalRollLabel;
 
 - (IBAction)startPano:(id)sender;
 
@@ -82,9 +77,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     DDLogInfo(@"Showing main window");
-    
+
     [self.previewController startWithView:self.cameraView];
 }
 
@@ -111,14 +106,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [super viewDidLoad];
     self.gimbalDispatchGroup = dispatch_group_create();
     self.cameraDispatchGroup = dispatch_group_create();
-    
+
     self.previewController = [[PreviewController alloc] init];
-    
+
     // TODO - this should be tested
 #ifndef DEBUG
     [self.startButton setEnabled:NO];
 #endif
-    
+
     self.rcInFMode = NO;
 
     [self initLabels];
@@ -134,7 +129,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [self altitudeLabel].hidden = YES;
     [self satelliteLabel].hidden = YES;
     [self distanceLabel].hidden = YES;
-    
+
     [[self altitudeLabel] setText:@"Alt: -"];
     [[self satelliteLabel] setText:@"Sats: -"];
     [[self batteryLabel] setText:@"Batt: -"];
@@ -148,24 +143,24 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     // Need to get this all hooked up so we can stop the pano
     if (self.panoInProgress) {
         DDLogInfo(@"Stopping pano from button");
-        
+
         [ControllerUtils displayToastOnApp:@"Stopping pano. Please wait..."];
-        
+
         self.panoInProgress = NO;
-        
+
         return;
     }
-    
+
     long panoCount = [ModelSettings numberOfImagesForCurrentSettings:self.product.model];
-    
+
     if (![self.cameraController hasSpaceForPano:panoCount]) {
         DDLogDebug(@"Not enough space for \(panoCount) images");
 
         [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Not enough space on card for %ld images", panoCount]];
-        
+
         return;
     }
-    
+
     // TODO - update for gimbal yaw for I1
     if ([self productType] == ProductTypeAircraft) {
 
@@ -174,14 +169,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
                 DDLogDebug(@"Not in F mode");
 
                 [ControllerUtils displayToastOnApp:[NSString stringWithFormat:@"Please set RC Flight Mode to F first."]];
-            
+
                 return;
             }
         }
     }
-    
+
     self.panoInProgress = YES;
-    
+
     [ControllerUtils displayToastOnApp:@"Starting pano"];
 
     NSString *model = self.product.model;
@@ -199,18 +194,18 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     if (!self.cameraController) {
         DDLogError(@"Panorama started without camera controller");
         [ControllerUtils displayToastOnApp:@"Unable to find camera"];
-        
+
         self.panoInProgress = NO;
         return;
     }
-    
+
     // Display the aircract model we're connected to
     [self.connectionStatusLabel setText:model];
 
     if ([self productType] == ProductTypeAircraft) {
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
-        
+
         if (self.flightController) {
             [self.flightController setControlModes];
         } else {
@@ -232,16 +227,16 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)updateSequenceLabel {
     NSString *seqText = [NSString stringWithFormat:@"Photo: %ld/%ld", self.currentCount, self.sequenceCount];
-    
+
     DDLogDebug(@"Sequence Text: %@", seqText);
-    
+
     [[self sequenceLabel] setText:seqText];
 }
 
 - (void)doPanoLoop {
     NSArray *pitches = [PanoramaController pitchesForLoopWithSkyRow:[ModelSettings skyRow:self.product.model]
                                                                type:[self productType]
-                                                           rowCount:(int)[ModelSettings numberOfRows:self.product.model]];
+                                                           rowCount:(int) [ModelSettings numberOfRows:self.product.model]];
 
     // Switch from config when available
     bool aircraftYaw = YES;
@@ -250,7 +245,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     } else if ([self productType] == ProductTypeHandheld) {
         // Force gimbal yaw for handheld
         aircraftYaw = NO;
-        
+
         // Osmo has no heading - set to 0
         // TODO - should also be done for gimbal yaw of AC when that is in place
         self.currentHeading = 0;
@@ -261,13 +256,13 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     }
 
     NSArray *yaw = [PanoramaController yawAnglesWithCount:[ModelSettings photosPerRow:self.product.model] heading:[PanoramaController headingTo360:self.currentHeading]];
-    
+
     self.sequenceCount = ([pitches count] * [yaw count]) + 1;
     self.currentCount = 0;
 
     [self updateSequenceLabel];
 
-    droneCmdsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL);
+    droneCommandsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL);
 
     DDLogDebug(@"PanoLoop: START");
 
@@ -286,9 +281,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         // An improvement may be to move the gimbal in a "sawtooth" manner
         for (NSNumber *nYaw in yaw) {
             DDLogDebug(@"PanoLoop: YawLoop: %@", nYaw);
-            
+
             // If the user has stopped the pano we'll break
-            if(!self.panoInProgress) {
+            if (!self.panoInProgress) {
                 DDLogDebug(@"PanoLoop: YawLoop: %@ -  pano not in progress", nYaw);
 
                 break;
@@ -297,14 +292,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             // Loop through the gimbal pitches
             for (NSNumber *nPitch in pitches) {
                 DDLogDebug(@"PanoLoop: YawLoop: %@, PitchLoop: %@", nYaw, nPitch);
-                
+
                 // If the user has stopped the pano we'll break
-                if(!self.panoInProgress) {
+                if (!self.panoInProgress) {
                     DDLogDebug(@"PanoLoop: YawLoop: %@, PitchLoop: %@ - pano not in progress", nYaw, nPitch);
 
                     break;
                 }
-                
+
                 DDLogDebug(@"PanoLoop: YawLoop: %@, PitchLoop: %@ - set pitch", nYaw, nPitch);
                 [self setPitch:[nPitch floatValue]];
 
@@ -320,7 +315,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
                 self.yawDestination = [nYaw floatValue];
 
                 // Calling this on a timer as it improves the accuracy of aircraft yaw
-                dispatch_sync(droneCmdsQueue, ^{
+                dispatch_sync(droneCommandsQueue, ^{
                     NSTimer *sendTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(yawAircraftUsingVelocity:) userInfo:nil repeats:YES];
                     [[NSRunLoop currentRunLoop] addTimer:sendTimer forMode:NSDefaultRunLoopMode];
                     [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
@@ -337,27 +332,27 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
         // Take the final zenith/nadir shot and then reset the gimbal back
         // or we cancel the pano and still reset the gimbal
-        if(self.panoInProgress) {
+        if (self.panoInProgress) {
             DDLogDebug(@"PanoLoop: Zenith/Nadir - set pitch");
             [self setPitch:(float) -90.0];
 
             DDLogDebug(@"PanoLoop: Zenith/Nadir - take photo");
             [self takeASnap];
-            
+
             [ControllerUtils displayToastOnApp:@"Completed pano"];
-            
+
             self.panoInProgress = NO;
-            
+
         } else { // The panorama has been aborted
             DDLogDebug(@"PanoLoop: was stopped OK");
-            
-            [ControllerUtils displayToastOnApp: @"Pano stopped successfully"];
-            
+
+            [ControllerUtils displayToastOnApp:@"Pano stopped successfully"];
+
         }
-        
+
         DDLogDebug(@"PanoLoop: reset gimbal");
         [self resetGimbal];
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [[self sequenceLabel] setText:@"Photo: Done"];
         });
@@ -374,7 +369,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)setPhotoMode {
     DDLogDebug(@"Set photo mode");
-    
+
     if (self.cameraController) {
         dispatch_group_enter(self.cameraDispatchGroup);
         DDLogDebug(@"Set photo mode - send");
@@ -461,7 +456,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 // Override setter
 - (void)setPanoInProgress:(BOOL)panoInProgress {
     self->_panoInProgress = panoInProgress;
-    
+
     if (!panoInProgress) {
         if (self.cameraController) {
             [self.cameraController setStatus:ControllerStatusStopping];
@@ -472,7 +467,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
-            
+
             [UIView animateWithDuration:2 animations:^{
                 [self.infoView setAlpha:0];
             }];
@@ -485,7 +480,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             [self.gimbalYawLabel setText:[NSString stringWithFormat:@"----"]];
             [self.gimbalRollLabel setText:[NSString stringWithFormat:@"----"]];
             [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"----"]];
-            
+
             [UIView animateWithDuration:2 animations:^{
                 [self.infoView setAlpha:0.5];
             }];
@@ -496,7 +491,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #pragma mark - BatteryControllerDelegate
 
 - (void)batteryControllerPercentUpdated:(NSInteger)batteryPercent {
-    [[self batteryLabel] setText:[NSString stringWithFormat: @"Batt: %ld%%", (long)batteryPercent]];
+    [[self batteryLabel] setText:[NSString stringWithFormat:@"Batt: %ld%%", (long) batteryPercent]];
 }
 
 - (void)batteryControllerTemperatureUpdated:(NSInteger)batteryTemperature {
@@ -522,36 +517,36 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 - (void)gimbalControllerCompleted {
     DDLogDebug(@"Gimbal signalled complete");
 
-    dispatch_async(droneCmdsQueue, ^{
+    dispatch_async(droneCommandsQueue, ^{
         dispatch_group_leave(self.gimbalDispatchGroup);
     });
 }
 
-- (void)gimbalControllerAborted:(NSString *) reason {
+- (void)gimbalControllerAborted:(NSString *)reason {
     DDLogWarn(@"Gimbal signalled abort %@", reason);
-    
+
     [ControllerUtils displayToastOnApp:reason];
 
-    dispatch_async(droneCmdsQueue, ^{
+    dispatch_async(droneCommandsQueue, ^{
         self.panoInProgress = NO;
 
         dispatch_group_leave(self.gimbalDispatchGroup);
     });
 }
 
-- (void)gimbalMoveOutOfRange:(NSString *) reason {
+- (void)gimbalMoveOutOfRange:(NSString *)reason {
     DDLogDebug(@"Gimbal signalled out of range %@", reason);
-    
+
     [ControllerUtils displayToastOnApp:reason];
 
     // We signal and ignore - let's try the next move
-    dispatch_async(droneCmdsQueue, ^{
+    dispatch_async(droneCommandsQueue, ^{
         dispatch_group_leave(self.gimbalDispatchGroup);
     });
 }
 
 - (void)gimbalAttitudeChangedWithPitch:(float)pitch yaw:(float)yaw roll:(float)roll {
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"%.1f˚", pitch]];
         [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.1f˚", yaw]];
@@ -574,7 +569,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     // Calculate the yaw speed so we can slow the rotation as the aircraft reaches its destination
     double diff;
-    
+
     if (self.yawDestination > self.currentHeading) {
         diff = fabs(self.yawDestination) - fabs(self.currentHeading);
         self.yawSpeed = diff * 0.5;
@@ -582,78 +577,78 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         diff = fabs(self.currentHeading) - fabs(self.yawDestination);
         self.yawSpeed = fmod(360.0, diff) * 0.5;
     }
-    
+
     [self.acYawLabel setText:[NSString stringWithFormat:@"%.1f˚", self.currentHeading]];
 }
 
 - (void)flightControllerUpdateAltitude:(float)altitude {
-    [[self altitudeLabel] setText: [NSString stringWithFormat: @"Alt: %.0fm", altitude]];
+    [[self altitudeLabel] setText:[NSString stringWithFormat:@"Alt: %.0fm", altitude]];
 }
 
 - (void)flightControllerUpdateSatelliteCount:(NSInteger)satelliteCount {
-    [[self satelliteLabel] setText: [NSString stringWithFormat: @"Sats: %ld", satelliteCount]];
+    [[self satelliteLabel] setText:[NSString stringWithFormat:@"Sats: %ld", satelliteCount]];
 }
 
 - (void)flightControllerUpdateDistance:(CLLocationDistance)distance {
-    [[self distanceLabel] setText: [NSString stringWithFormat: @"Dist: %.0fm", distance]];
+    [[self distanceLabel] setText:[NSString stringWithFormat:@"Dist: %.0fm", distance]];
 }
 
 #pragma mark - CameraControllerDelegate
 
 - (void)cameraControllerReset {
     DDLogDebug(@"Camera signalled reset");
-    
-    dispatch_async(droneCmdsQueue, ^{
+
+    dispatch_async(droneCommandsQueue, ^{
         dispatch_group_leave(self.cameraDispatchGroup);
     });
 }
 
 - (void)cameraControllerCompleted:(BOOL)shotTaken {
     DDLogDebug(@"Camera signalled complete with shot taken %d", shotTaken);
-    
+
     if (shotTaken) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.currentCount = self.currentCount + 1;
             [self updateSequenceLabel];
         });
     }
-    
-    dispatch_async(droneCmdsQueue, ^{
+
+    dispatch_async(droneCommandsQueue, ^{
         dispatch_group_leave(self.cameraDispatchGroup);
     });
 }
 
-- (void)cameraControllerAborted:(NSString *) reason {
+- (void)cameraControllerAborted:(NSString *)reason {
     DDLogWarn(@"Camera signalled abort %@", reason);
-    
+
     [ControllerUtils displayToastOnApp:reason];
-    
-    dispatch_async(droneCmdsQueue, ^{
+
+    dispatch_async(droneCommandsQueue, ^{
         self.panoInProgress = NO;
 
         dispatch_group_leave(self.cameraDispatchGroup);
     });
 }
 
-- (void)cameraControllerInError:(NSString *) reason {
+- (void)cameraControllerInError:(NSString *)reason {
     DDLogWarn(@"Camera signalled error %@", reason);
 
     [ControllerUtils displayToastOnApp:reason];
-    
+
     if (self.panoInProgress) {
-        if (droneCmdsQueue != nil) {
-            dispatch_async(droneCmdsQueue, ^{
+        if (droneCommandsQueue != nil) {
+            dispatch_async(droneCommandsQueue, ^{
                 self.panoInProgress = NO;
             });
         } else {
             self.panoInProgress = NO;
         }
     }
-    
+
     [[self startButton] setEnabled:NO];
 }
 
-- (void)cameraControllerOK:(BOOL) fromError {
+- (void)cameraControllerOK:(BOOL)fromError {
     DDLogDebug(@"Camera signalled OK");
 
     if (fromError) {
@@ -683,36 +678,36 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 #pragma mark - ConnectionControllerDelegate Method
 
--(void)registered {
+- (void)registered {
     DDLogInfo(@"Registered");
 }
 
--(void)failedToRegister:(NSString *)reason {
+- (void)failedToRegister:(NSString *)reason {
     DDLogWarn(@"Failed to register %@", reason);
     [ControllerUtils displayToastOnApp:reason];
 }
 
 - (void)connectedToProduct:(DJIBaseProduct *)product {
     DDLogInfo(@"New product %@", product.model);
-    
+
     self.product = product;
-    
+
     [self.previewController setMode:self.product];
-    
+
     [self initLabels];
-    
+
     [self.connectionStatusLabel setText:self.product.model];
     [self.startButton setEnabled:YES];
-    
+
 #ifndef DEBUG
     [self.settingsButton setEnabled:YES];
 #endif
-    
+
     ProductType pt = [self productType];
-    
+
     [self sequenceLabel].hidden = NO;
     [self batteryLabel].hidden = NO;
-    
+
     if (pt == ProductTypeAircraft) {
         [self altitudeLabel].hidden = NO;
         [self satelliteLabel].hidden = NO;
@@ -730,28 +725,28 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #ifndef DEBUG
     [self.settingsButton setEnabled:NO];
 #endif
-    
+
     self.rcInFMode = NO;
-    
+
     [self initLabels];
-    
+
     self.product = nil;
     self.cameraController = nil;
     self.gimbalController = nil;
-    
+
     self.flightController = nil;
 }
 
--(void)connectedToBattery:(DJIBattery *)battery {
-    self.batteryController = [[BatteryController alloc]initWithBattery:battery];
+- (void)connectedToBattery:(DJIBattery *)battery {
+    self.batteryController = [[BatteryController alloc] initWithBattery:battery];
     self.batteryController.delegate = self;
 }
 
--(void)disconnectedFromBattery {
+- (void)disconnectedFromBattery {
     self.batteryController = nil;
 }
 
--(void)connectedToCamera:(DJICamera *)camera {
+- (void)connectedToCamera:(DJICamera *)camera {
     self.cameraController = [[CameraController alloc] initWithCamera:camera];
     self.cameraController.delegate = self;
     self.cameraController.videoDelegate = self.previewController;
@@ -761,17 +756,17 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     self.cameraController = nil;
 }
 
--(void)connectedToGimbal:(DJIGimbal *)gimbal {
-    self.gimbalController = [[GimbalController alloc]initWithGimbal:gimbal supportsSDKYaw:[ControllerUtils supportsSDKYaw:self.product.model]];
+- (void)connectedToGimbal:(DJIGimbal *)gimbal {
+    self.gimbalController = [[GimbalController alloc] initWithGimbal:gimbal supportsSDKYaw:[ControllerUtils supportsSDKYaw:self.product.model]];
     self.gimbalController.delegate = self;
 }
 
--(void)disconnectedFromGimbal {
+- (void)disconnectedFromGimbal {
     self.gimbalController = nil;
 }
 
--(void)connectedToRemote:(DJIRemoteController *)remote {
-    self.remoteController = [[RemoteController alloc]initWithRemote:remote];
+- (void)connectedToRemote:(DJIRemoteController *)remote {
+    self.remoteController = [[RemoteController alloc] initWithRemote:remote];
     self.remoteController.delegate = self;
 }
 
@@ -779,7 +774,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     self.remoteController = nil;
 }
 
--(void)connectedToFlightController:(DJIFlightController *)flightController {
+- (void)connectedToFlightController:(DJIFlightController *)flightController {
     self.flightController = [[FlightController alloc] initWithFc:flightController];
     self.flightController.delegate = self;
 }

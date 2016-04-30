@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc enum ProductType : Int {
+@objc enum ProductType: Int {
     case Aircraft = 0
     case Handheld = 1
     case Unknown = 2
@@ -27,46 +27,56 @@ import CocoaLumberjackSwift
 
 @objc protocol ConnectionControllerDelegate {
     func registered()
+
     func failedToRegister(reason: String)
-    
+
     func connectedToProduct(product: DJIBaseProduct)
+
     func disconnected()
-    
+
     func connectedToBattery(battery: DJIBattery)
+
     func connectedToCamera(camera: DJICamera)
+
     func connectedToGimbal(gimbal: DJIGimbal)
+
     func connectedToRemote(remote: DJIRemoteController)
+
     func connectedToFlightController(flightController: DJIFlightController)
 
     func disconnectedFromBattery()
+
     func disconnectedFromCamera()
+
     func disconnectedFromGimbal()
+
     func disconnectedFromRemote()
+
     func disconnectedFromFlightController()
 }
 
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
     let connectToSimulator = false
     let bridgeAddress = "10.0.1.18"
-    
+
     let appKey = "d6b78c9337f72fadd85d88e2"
-    
-    var delegate : ConnectionControllerDelegate?
-    
-    var model : String?
-    
+
+    var delegate: ConnectionControllerDelegate?
+
+    var model: String?
+
     func start() {
         DJISDKManager.registerApp(appKey, withDelegate: self)
     }
-    
+
     func sdkManagerDidRegisterAppWithError(error: NSError?) {
         if let error = error {
             DDLogWarn("Registration failed with \(error)")
-            
+
             self.delegate?.failedToRegister(error.description)
         } else {
             DDLogDebug("Connecting to product")
-            
+
             if (connectToSimulator) {
                 DDLogDebug("Connecting to debug bridge")
                 DJISDKManager.enterDebugModeWithDebugId(bridgeAddress)
@@ -76,7 +86,7 @@ import CocoaLumberjackSwift
             }
         }
     }
-    
+
     func sdkManagerProductDidChangeFrom(oldProduct: DJIBaseProduct?, to newProduct: DJIBaseProduct?) {
         self.model = newProduct?.model
 
@@ -97,7 +107,7 @@ import CocoaLumberjackSwift
             self.delegate?.disconnected()
         }
     }
-    
+
     func product(product: DJIBaseProduct, didUpdateDiagnosticsInformation info: [AnyObject]) {
         for diagnostic in info {
             if let d = diagnostic as? DJIDiagnostics {

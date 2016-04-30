@@ -20,31 +20,36 @@ import CocoaLumberjackSwift
 
 @objc protocol FlightControllerDelegate {
     func flightControllerUpdateHeading(compassHeading: Double)
+
     func flightControllerUpdateAltitude(altitude: Float)
+
     func flightControllerUpdateSatelliteCount(satelliteCount: Int)
+
     func flightControllerUpdateDistance(distance: CLLocationDistance)
-    
+
     func flightControllerUnableToSetControlMode()
+
     func flightControllerSetControlMode()
 }
 
 @objc class FlightController: NSObject, DJIFlightControllerDelegate {
-    let fc : DJIFlightController
-    
-    var delegate : FlightControllerDelegate?
-    
+    let fc: DJIFlightController
+
+    var delegate: FlightControllerDelegate?
+
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
-        
+
         self.fc = fc
-        
+
         super.init()
-        
+
         fc.delegate = self
     }
 
     func setControlModes() {
-        self.fc.enableVirtualStickControlModeWithCompletion { (error) in
+        self.fc.enableVirtualStickControlModeWithCompletion {
+            (error) in
             if let error = error {
                 DDLogWarn("Unable to set virtual stick mode \(error)")
                 self.delegate?.flightControllerUnableToSetControlMode()
@@ -56,7 +61,7 @@ import CocoaLumberjackSwift
             }
         }
     }
-    
+
     func yaw(speed: Double) {
         if (self.fc.isVirtualStickControlModeAvailable()) {
             var ctrlData = DJIVirtualStickFlightControlData()
@@ -65,14 +70,15 @@ import CocoaLumberjackSwift
             ctrlData.verticalThrottle = 0
             ctrlData.yaw = Float(speed)
 
-            self.fc.sendVirtualStickFlightControlData(ctrlData, withCompletion: { (error) in
+            self.fc.sendVirtualStickFlightControlData(ctrlData, withCompletion: {
+                (error) in
                 if let error = error {
                     DDLogWarn("Unable to yaw aircraft \(error)")
                 }
             })
         }
     }
-    
+
     func flightController(fc: DJIFlightController, didUpdateSystemState state: DJIFlightControllerCurrentState) {
         DDLogVerbose("FC didUpdateSystemState")
 
@@ -80,13 +86,13 @@ import CocoaLumberjackSwift
         let aircraftLoc = CLLocation(latitude: state.aircraftLocation.latitude, longitude: state.aircraftLocation.longitude)
 
         let dist = homeLoc.distanceFromLocation(aircraftLoc)
-        
+
         self.delegate?.flightControllerUpdateDistance(dist)
 
         if let compass = fc.compass {
             self.delegate?.flightControllerUpdateHeading(compass.heading)
         }
-        
+
         self.delegate?.flightControllerUpdateAltitude(state.altitude)
         self.delegate?.flightControllerUpdateSatelliteCount(Int(state.satelliteCount))
     }

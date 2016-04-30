@@ -22,9 +22,9 @@ import CocoaLumberjackSwift
     func cameraControllerCompleted(shotTaken: Bool)
 
     func cameraControllerAborted(reason: String)
-    
+
     func cameraControllerInError(reason: String)
-    
+
     func cameraControllerOK(fromError: Bool)
 
     func cameraControllerReset()
@@ -39,8 +39,8 @@ import CocoaLumberjackSwift
 
     var delegate: CameraControllerDelegate?
     var videoDelegate: VideoControllerDelegate?
-    
-    var status : ControllerStatus = .Normal
+
+    var status: ControllerStatus = .Normal
 
     let maxCount = 5
 
@@ -51,11 +51,11 @@ import CocoaLumberjackSwift
     var isStoring: Bool = false
 
     var mode: DJICameraMode = .Unknown
-    var availableCaptureCount : Int = 0
+    var availableCaptureCount: Int = 0
 
     init(camera: DJICamera) {
         DDLogInfo("Camera Controller init")
-        
+
         self.camera = camera
 
         super.init()
@@ -67,7 +67,7 @@ import CocoaLumberjackSwift
         DDLogInfo("Camera Controller setPhotoMode")
 
         self.status = .Normal
-        
+
         dispatch_async(self.cameraWorkQueue) {
             self.setPhotoMode(0)
         }
@@ -75,7 +75,7 @@ import CocoaLumberjackSwift
 
     func takeASnap() {
         DDLogInfo("Camera Controller takeASnap")
-        
+
         self.status = .Normal
 
         self.tookShot = false
@@ -83,7 +83,7 @@ import CocoaLumberjackSwift
             self.takeASnap(0)
         }
     }
-    
+
     func hasSpaceForPano(shotCount: Int) -> Bool {
         DDLogDebug("Camera Controller comparing shotCount: \(shotCount) with availableCaptureCount \(availableCaptureCount)")
 
@@ -96,7 +96,7 @@ import CocoaLumberjackSwift
 
             return
         }
-        
+
         if (counter > maxCount) {
             DDLogWarn("Camera Controller setPhotoMode - counter exceeds max count - aborting")
 
@@ -119,7 +119,7 @@ import CocoaLumberjackSwift
         delay(2) {
             if (self.mode == .ShootPhoto) {
                 DDLogDebug("Camera Controller setPhotoMode - OK")
-                
+
                 self.delegate?.cameraControllerCompleted(false)
             } else {
                 DDLogWarn("Camera Controller hasn't completed yet count: \(counter)")
@@ -217,7 +217,7 @@ import CocoaLumberjackSwift
             self.status = .Error
             self.delegate?.cameraControllerAborted("Camera in error state")
         }
-        
+
         self.mode = systemState.mode
 
         self.isShooting = systemState.isShootingSinglePhoto ||
@@ -239,10 +239,10 @@ import CocoaLumberjackSwift
         DDLogVerbose("Camera Controller didUpdateSDCardState")
 
         self.availableCaptureCount = Int(sdCardState.availableCaptureCount)
-        
-        var newState : ControllerStatus = .Normal
+
+        var newState: ControllerStatus = .Normal
         var message = ""
-        
+
         if (sdCardState.hasError) {
             newState = .Error
             message = "SD Card in error state"
@@ -268,7 +268,7 @@ import CocoaLumberjackSwift
             newState = .Error
             message = "SD Card is currently initializing"
         }
-        
+
         if (self.status != newState) {
             DDLogDebug("Camera Controller changing status from \(self.status.rawValue) to \(newState.rawValue)")
 
@@ -283,7 +283,7 @@ import CocoaLumberjackSwift
                     self.delegate?.cameraControllerOK(self.status == .Error)
                 }
             }
-            
+
             self.status = newState
         }
     }

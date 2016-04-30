@@ -29,23 +29,23 @@ import MBProgressHUD
                 queue,
                 closure)
     }
-    
+
 
     class func buildVersion() -> String? {
         let info = NSBundle.mainBundle().infoDictionary
-    
+
         if let version = info?["CFBundleShortVersionString"], build = info?["CFBundleVersion"] {
             return "\(version)(\(build))"
         }
-    
+
         return nil
     }
-    
+
     class func displayToastOnApp(message: String) {
-        dispatch_async(dispatch_get_main_queue()) { 
+        dispatch_async(dispatch_get_main_queue()) {
             if let view = UIApplication.sharedApplication().keyWindow?.rootViewController?.view {
                 let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                hud.color = UIColor(colorLiteralRed: 0, green: 122.0/255.0, blue: 1, alpha: 1)
+                hud.color = UIColor(colorLiteralRed: 0, green: 122.0 / 255.0, blue: 1, alpha: 1)
                 hud.mode = .Text
                 hud.labelText = message
                 hud.margin = 10.0
@@ -54,20 +54,20 @@ import MBProgressHUD
             }
         }
     }
-    
+
     @objc class func isInspire(model: String) -> Bool {
         return model == DJIAircraftModelNameInspire1 ||
-            model == DJIAircraftModelNameInspire1Pro ||
-            model == DJIAircraftModelNameInspire1RAW
+                model == DJIAircraftModelNameInspire1Pro ||
+                model == DJIAircraftModelNameInspire1RAW
     }
-    
+
     @objc class func isPhantom3(model: String) -> Bool {
         return model == DJIAircraftModelNamePhantom34K ||
-            model == DJIAircraftModelNamePhantom3Advanced ||
-            model == DJIAircraftModelNamePhantom3Standard ||
-            model == DJIAircraftModelNamePhantom3Professional
+                model == DJIAircraftModelNamePhantom3Advanced ||
+                model == DJIAircraftModelNamePhantom3Standard ||
+                model == DJIAircraftModelNamePhantom3Professional
     }
-    
+
     @objc class func isPhantom4(model: String) -> Bool {
         return model == DJIAircraftModelNamePhantom4
     }
@@ -75,7 +75,7 @@ import MBProgressHUD
     @objc class func isPhantom(model: String) -> Bool {
         return ControllerUtils.isPhantom3(model) || ControllerUtils.isPhantom4(model)
     }
-    
+
     // TODO - this should be P4 only - https://github.com/dbaldwin/DronePan/issues/48
     @objc class func supportsSDKYaw(model: String) -> Bool {
         return !(ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model))
