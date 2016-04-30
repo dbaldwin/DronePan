@@ -135,7 +135,7 @@ import CocoaLumberjackSwift
         }
     }
 
-    private func inRange(value: Float, range: Range<Int>?, available: Bool) -> Bool {
+    func inRange(value: Float, range: Range<Int>?, available: Bool) -> Bool {
         if (!available) {
             return false
         }
@@ -240,11 +240,11 @@ import CocoaLumberjackSwift
         ControllerUtils.delay(delay, queue: self.gimbalWorkQueue, closure: closure)
     }
 
-    private func valueInRange(adjustable: Bool, value: Float, currentValue: Float) -> Bool {
+    func valueInRange(adjustable: Bool, value: Float, currentValue: Float) -> Bool {
         return !adjustable || ((value - allowedOffset) ... (value + allowedOffset) ~= currentValue)
     }
 
-    private func check(pitch p: Float, yaw y: Float, roll r: Float) -> Bool {
+    func check(pitch p: Float, yaw y: Float, roll r: Float) -> Bool {
         DDLogDebug("Checking PA: \(isPitchAdjustable) P: \(p) CP: \(self.currentPitch)")
         DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw)")
         DDLogDebug("Checking RA: \(isRollAdjustable) R: \(r) CR: \(self.currentRoll)")
