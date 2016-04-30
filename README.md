@@ -1,4 +1,5 @@
 [![Join the chat at https://gitter.im/dbaldwin/DronePan](https://badges.gitter.im/dbaldwin/DronePan.svg)](https://gitter.im/dbaldwin/DronePan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/dbaldwin/DronePan.svg?branch=master)](https://travis-ci.org/dbaldwin/DronePan)
 
 # DronePan
 
