@@ -8,7 +8,9 @@ install:
   - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 
 script:
-  - ./scripts/test-coverage.sh
+  - open -b com.apple.iphonesimulator
+  - set -o pipefail
+  - xcodebuild -scheme DronePan -sdk iphonesimulator9.3 -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' clean build test GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

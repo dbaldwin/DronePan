@@ -24,7 +24,6 @@ import CocoaLumberjackSwift
     case Unknown = 2
 }
 
-
 @objc protocol ConnectionControllerDelegate {
     func registered()
 
