@@ -32,14 +32,10 @@ import CocoaLumberjackSwift
 }
 
 @objc class RemoteController: NSObject, DJIRemoteControllerDelegate {
-    let remote: DJIRemoteController
-    
     var delegate: RemoteControllerDelegate?
     
     init(remote: DJIRemoteController) {
         DDLogInfo("Remote Controller init")
-        
-        self.remote = remote
         
         super.init()
         

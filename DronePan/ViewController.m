@@ -26,7 +26,7 @@
 
 static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
-@interface ViewController () <DJIFlightControllerDelegate, ConnectionControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
+@interface ViewController () <FlightControllerDelegate, ConnectionControllerDelegate, GimbalControllerDelegate, CameraControllerDelegate, BatteryControllerDelegate, RemoteControllerDelegate> {
     dispatch_queue_t droneCmdsQueue;
 }
 
@@ -49,7 +49,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(nonatomic, assign) double yawSpeed;
 @property(nonatomic, assign) double yawDestination;
 @property(nonatomic, assign) NSTimer *yawTimer;
-@property(nonatomic, assign) CLLocationCoordinate2D aircraftLocation;
 @property(nonatomic, assign) BOOL panoInProgress;
 @property(nonatomic, assign) BOOL rcInFMode;
 
@@ -65,7 +64,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property (nonatomic, strong) RemoteController *remoteController;
 @property (nonatomic, strong) PreviewController *previewController;
 
-@property (nonatomic, strong) DJIFlightController *flightController;
+@property (nonatomic, strong) FlightController *flightController;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 
@@ -211,24 +210,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     if ([self productType] == ProductTypeAircraft) {
         /* add if logic for I1 and P3
          here we would do aircraft yaw for P3 and give I1 users the option */
-
+        
         if (self.flightController) {
-            [self.flightController enableVirtualStickControlModeWithCompletion:^(NSError *error) {
-                if (error) {
-                    DDLogWarn(@"Unable to set virtual stick mode %@", error);
-                    [ControllerUtils displayToastOnApp:@"Unable to set virtual stick control mode"];
-                } else {
-                    self.flightController.yawControlMode = DJIVirtualStickYawControlModeAngularVelocity;
-                    self.flightController.rollPitchControlMode = DJIVirtualStickRollPitchControlModeVelocity;
-                    self.flightController.verticalControlMode = DJIVirtualStickVerticalControlModeVelocity;
-
-                    [self doPanoLoop];
-                }
-            }];
+            [self.flightController setControlModes];
         } else {
             DDLogWarn(@"No flight controller found - couldn't initialize");
 
             [ControllerUtils displayToastOnApp:@"Unable to initialize flight controller"];
+
             self.panoInProgress = NO;
 
             return;
@@ -408,15 +397,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 }
 
 - (void)yawAircraftUsingVelocity:(NSTimer *)timer {
-
-    DJIVirtualStickFlightControlData ctrlData = {0};
-    ctrlData.pitch = 0;
-    ctrlData.roll = 0;
-    ctrlData.verticalThrottle = 0;
-    ctrlData.yaw = (float) self.yawSpeed;
-
-    if (self.flightController && self.flightController.isVirtualStickControlModeAvailable) {
-        [self.flightController sendVirtualStickFlightControlData:ctrlData withCompletion:nil];
+    if (self.flightController) {
+        [self.flightController yaw:self.yawSpeed];
     }
 }
 
@@ -575,6 +557,45 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         [self.gimbalYawLabel setText:[NSString stringWithFormat:@"%.1f˚", yaw]];
         [self.gimbalRollLabel setText:[NSString stringWithFormat:@"%.1f˚", roll]];
     });
+}
+
+#pragma mark - FlightControllerDelegate
+
+- (void)flightControllerSetControlMode {
+    [self doPanoLoop];
+}
+
+- (void)flightControllerUnableToSetControlMode {
+    [ControllerUtils displayToastOnApp:@"Unable to set virtual stick control mode"];
+}
+
+- (void)flightControllerUpdateHeading:(double)compassHeading {
+    self.currentHeading = [PanoramaController headingTo360:compassHeading];
+
+    // Calculate the yaw speed so we can slow the rotation as the aircraft reaches its destination
+    double diff;
+    
+    if (self.yawDestination > self.currentHeading) {
+        diff = fabs(self.yawDestination) - fabs(self.currentHeading);
+        self.yawSpeed = diff * 0.5;
+    } else { // This happens when the current heading is 340 and destination is 40, for example
+        diff = fabs(self.currentHeading) - fabs(self.yawDestination);
+        self.yawSpeed = fmod(360.0, diff) * 0.5;
+    }
+    
+    [self.acYawLabel setText:[NSString stringWithFormat:@"%.1f˚", self.currentHeading]];
+}
+
+- (void)flightControllerUpdateAltitude:(float)altitude {
+    [[self altitudeLabel] setText: [NSString stringWithFormat: @"Alt: %.0fm", altitude]];
+}
+
+- (void)flightControllerUpdateSatelliteCount:(NSInteger)satelliteCount {
+    [[self satelliteLabel] setText: [NSString stringWithFormat: @"Sats: %ld", satelliteCount]];
+}
+
+- (void)flightControllerUpdateDistance:(CLLocationDistance)distance {
+    [[self distanceLabel] setText: [NSString stringWithFormat: @"Dist: %.0fm", distance]];
 }
 
 #pragma mark - CameraControllerDelegate
@@ -759,48 +780,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 }
 
 -(void)connectedToFlightController:(DJIFlightController *)flightController {
-    self.flightController = flightController;
+    self.flightController = [[FlightController alloc] initWithFc:flightController];
     self.flightController.delegate = self;
 }
 
 - (void)disconnectedFromFlightController {
     self.flightController = nil;
 }
-
-#pragma mark - DJIFlightControllerDelegate Methods
-
-- (void)flightController:(DJIFlightController *)fc didUpdateSystemState:(DJIFlightControllerCurrentState *)state {
-    DDLogVerbose(@"FC didUpdateSystemState");
-
-    self.aircraftLocation = state.aircraftLocation;
-
-    self.currentHeading = [PanoramaController headingTo360:fc.compass.heading];
-    
-    [[self altitudeLabel] setText: [NSString stringWithFormat: @"Alt: %dm", (int)state.altitude]];
-    
-    [[self satelliteLabel] setText: [NSString stringWithFormat: @"Sats: %d", state.satelliteCount]];
-    
-    // Calculate the distance from home
-    CLLocation *homeLocation = [[CLLocation alloc] initWithLatitude: state.homeLocation.latitude longitude: state.homeLocation.longitude];
-    CLLocation *aircraftLocation = [[CLLocation alloc] initWithLatitude: state.aircraftLocation.latitude longitude: state.aircraftLocation.longitude];
-    CLLocationDistance dist = [homeLocation distanceFromLocation:aircraftLocation];
-    [[self distanceLabel] setText: [NSString stringWithFormat: @"Dist: %dm", (int)dist]];
-    
-    
-    // Calculate the yaw speed so we can slow the rotation as the aircraft reaches its destination
-    double diff;
-
-    if (self.yawDestination > self.currentHeading) {
-        diff = fabs(self.yawDestination) - fabs(self.currentHeading);
-        self.yawSpeed = diff * 0.5;
-    } else { // This happens when the current heading is 340 and destination is 40, for example
-        diff = fabs(self.currentHeading) - fabs(self.yawDestination);
-        self.yawSpeed = fmod(360.0, diff) * 0.5;
-    }
-
-    [self.acYawLabel setText:[NSString stringWithFormat:@"%.1f˚", self.currentHeading]];
-}
-
-
 
 @end

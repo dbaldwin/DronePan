@@ -25,14 +25,10 @@ import CocoaLumberjackSwift
 }
 
 @objc class BatteryController: NSObject, DJIBatteryDelegate {
-    let battery: DJIBattery
-    
     var delegate: BatteryControllerDelegate?
     
     init(battery: DJIBattery) {
         DDLogInfo("Battery Controller init")
-        
-        self.battery = battery
         
         super.init()
 
