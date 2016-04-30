@@ -55,7 +55,7 @@ import CocoaLumberjackSwift
 }
 
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
-    let connectToSimulator = false
+    var connectToSimulator = false
     let bridgeAddress = "10.0.1.18"
 
     let appKey = "d6b78c9337f72fadd85d88e2"
