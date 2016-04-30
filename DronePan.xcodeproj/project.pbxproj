@@ -14,6 +14,7 @@
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
+		157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */; };
 		15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839E931CCE9A40008B7E97 /* BatteryController.swift */; };
 		15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15839F341CCEA224008B7E97 /* libDJIVTH264Decoder.a */; };
 		15839FB11CCEA224008B7E97 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15839F9A1CCEA224008B7E97 /* libavcodec.a */; };
@@ -100,6 +101,7 @@
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionControllerTests.swift; sourceTree = "<group>"; };
 		15839E931CCE9A40008B7E97 /* BatteryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryController.swift; sourceTree = "<group>"; };
 		15839F311CCEA224008B7E97 /* DJIStreamCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIStreamCommon.h; sourceTree = "<group>"; };
 		15839F321CCEA224008B7E97 /* H264VTDecode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = H264VTDecode.h; sourceTree = "<group>"; };
@@ -601,6 +603,7 @@
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
 				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
+				157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = "<group>";
@@ -844,6 +847,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */,
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
@@ -1097,6 +1101,7 @@
 				1521D6A11CD51C96007458D7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		232F6F081C5448320013CCD9 /* Build configuration list for PBXProject "DronePan" */ = {
 			isa = XCConfigurationList;
