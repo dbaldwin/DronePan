@@ -220,13 +220,34 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OY6-b2-w1K">
+                                        <rect key="frame" x="0.0" y="0.0" width="1024" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YJE-2H-rFt">
+                                                <rect key="frame" x="8" y="4.5" width="1008" height="21"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="YJE-2H-rFt" secondAttribute="trailing" constant="8" id="7Sr-d6-6kZ"/>
+                                            <constraint firstAttribute="height" constant="30" id="HkS-lK-wGX"/>
+                                            <constraint firstItem="YJE-2H-rFt" firstAttribute="leading" secondItem="OY6-b2-w1K" secondAttribute="leading" constant="8" id="SaB-QT-Gwe"/>
+                                            <constraint firstItem="YJE-2H-rFt" firstAttribute="centerY" secondItem="OY6-b2-w1K" secondAttribute="centerY" id="ghO-3N-E6R"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="OY6-b2-w1K" firstAttribute="leading" secondItem="kGr-ob-jSa" secondAttribute="leading" id="1wc-e5-MDC"/>
                                     <constraint firstItem="9Id-Gv-WPy" firstAttribute="leading" secondItem="kGr-ob-jSa" secondAttribute="leading" constant="20" symbolic="YES" id="Br2-Xq-FwO"/>
                                     <constraint firstAttribute="bottom" secondItem="ohx-RD-uKh" secondAttribute="bottom" constant="47" id="LnV-bX-qeZ"/>
                                     <constraint firstAttribute="bottom" secondItem="9Id-Gv-WPy" secondAttribute="bottom" constant="20" symbolic="YES" id="S1x-1h-iCm"/>
+                                    <constraint firstAttribute="trailing" secondItem="OY6-b2-w1K" secondAttribute="trailing" id="T4w-7n-yre"/>
                                     <constraint firstItem="ohx-RD-uKh" firstAttribute="centerX" secondItem="kGr-ob-jSa" secondAttribute="centerX" id="hxp-eW-uLr"/>
+                                    <constraint firstItem="OY6-b2-w1K" firstAttribute="top" secondItem="kGr-ob-jSa" secondAttribute="top" id="sej-7E-tMd"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -258,6 +279,8 @@
                         <outlet property="sequenceLabel" destination="jQe-Pe-bik" id="IHw-S9-flK"/>
                         <outlet property="settingsButton" destination="zSI-nh-XHL" id="XFT-qO-Cva"/>
                         <outlet property="startButton" destination="ohx-RD-uKh" id="VDh-yo-ohn"/>
+                        <outlet property="warningLabel" destination="YJE-2H-rFt" id="P8V-LI-YnT"/>
+                        <outlet property="warningView" destination="OY6-b2-w1K" id="EQU-8z-bLS"/>
                         <segue destination="fxj-Bn-uya" kind="presentation" identifier="launchSettings" id="vVQ-rt-O3Q"/>
                     </connections>
                 </viewController>

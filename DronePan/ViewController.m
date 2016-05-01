@@ -69,6 +69,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 @property(weak, nonatomic) IBOutlet UILabel *gimbalPitchLabel;
 @property(weak, nonatomic) IBOutlet UILabel *gimbalRollLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *warningView;
+@property (weak, nonatomic) IBOutlet UILabel *warningLabel;
 - (IBAction)startPano:(id)sender;
 
 @end
@@ -109,6 +111,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     self.previewController = [[PreviewController alloc] init];
 
+    self.warningView.alpha = 0;
+    
     // TODO - this should be tested
 #ifndef DEBUG
     [self.startButton setEnabled:NO];
@@ -231,6 +235,18 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     DDLogDebug(@"Sequence Text: %@", seqText);
 
     [[self sequenceLabel] setText:seqText];
+}
+
+- (void)showWarning:(NSString *)warning {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.warningLabel setText:warning];
+        
+        if (self.warningView.alpha < 1) {
+            [UIView animateWithDuration:2 animations:^{
+                [self.warningView setAlpha:1];
+            }];
+        }
+    });
 }
 
 - (void)doPanoLoop {
@@ -492,6 +508,10 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)batteryControllerPercentUpdated:(NSInteger)batteryPercent {
     [[self batteryLabel] setText:[NSString stringWithFormat:@"Batt: %ld%%", (long) batteryPercent]];
+    
+    if (batteryPercent < 10) {
+        [self showWarning:[NSString stringWithFormat:@"Battery Low: %ld%%", (long) batteryPercent]];
+    }
 }
 
 - (void)batteryControllerTemperatureUpdated:(NSInteger)batteryTemperature {
@@ -509,7 +529,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 }
 
 - (void)remoteControllerBatteryPercentUpdated:(NSInteger)batteryPercent {
-    // TODO
+    if (batteryPercent < 10) {
+        [self showWarning:[NSString stringWithFormat:@"Remote Controller Battery Low: %ld%%", (long) batteryPercent]];
+    }
 }
 
 #pragma mark - GimbalControllerDelegate
@@ -689,6 +711,12 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)connectedToProduct:(DJIBaseProduct *)product {
     DDLogInfo(@"New product %@", product.model);
+
+    if (self.warningView.alpha > 0) {
+        [UIView animateWithDuration:2 animations:^{
+            [self.warningView setAlpha:0];
+        }];
+    }
 
     self.product = product;
 
