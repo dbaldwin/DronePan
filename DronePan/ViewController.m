@@ -71,6 +71,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property (weak, nonatomic) IBOutlet UIView *warningView;
 @property (weak, nonatomic) IBOutlet UILabel *warningLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *warningOffset;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *infoOffset;
+@property (weak, nonatomic) IBOutlet UIView *menuView;
+
 - (IBAction)startPano:(id)sender;
 
 @end
@@ -111,7 +116,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     self.previewController = [[PreviewController alloc] init];
 
-    self.warningView.alpha = 0;
+    self.warningOffset.constant = 0;
     
     // TODO - this should be tested
 #ifndef DEBUG
@@ -241,10 +246,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.warningLabel setText:warning];
         
-        if (self.warningView.alpha < 1) {
-            [UIView animateWithDuration:2 animations:^{
-                [self.warningView setAlpha:1];
-            }];
+        if (self.warningOffset.constant == 0) {
+            [self scrollView:self.cameraView toOffset:-self.warningView.frame.size.height usingConstraint:self.warningOffset];
         }
     });
 }
@@ -484,9 +487,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
 
-            [UIView animateWithDuration:2 animations:^{
-                [self.infoView setAlpha:0];
-            }];
+            [self scrollView:self.infoView toOffset:0 usingConstraint:self.infoOffset];
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -497,9 +498,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             [self.gimbalRollLabel setText:[NSString stringWithFormat:@"----"]];
             [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"----"]];
 
-            [UIView animateWithDuration:2 animations:^{
-                [self.infoView setAlpha:0.5];
-            }];
+            [self scrollView:self.infoView toOffset:-self.infoView.frame.size.height usingConstraint:self.infoOffset];
         });
     }
 }
@@ -712,11 +711,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 - (void)connectedToProduct:(DJIBaseProduct *)product {
     DDLogInfo(@"New product %@", product.model);
 
-    if (self.warningView.alpha > 0) {
-        [UIView animateWithDuration:2 animations:^{
-            [self.warningView setAlpha:0];
-        }];
-    }
+    [self scrollView:self.cameraView toOffset:0 usingConstraint:self.warningOffset];
 
     self.product = product;
 
@@ -809,6 +804,15 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 - (void)disconnectedFromFlightController {
     self.flightController = nil;
+}
+
+- (void)scrollView:(UIView *)view toOffset:(CGFloat)offset usingConstraint:(NSLayoutConstraint *)constraint {
+    constraint.constant = offset;
+    [view setNeedsUpdateConstraints];
+
+    [UIView animateWithDuration:1 animations:^{
+        [view layoutIfNeeded];
+    }];
 }
 
 @end
