@@ -1,2 +1,2 @@
-github "CocoaLumberjack/CocoaLumberjack"
+github "CocoaLumberjack/CocoaLumberjack" ~> 2.3.0
 github "jdg/MBProgressHUD" ~> 0.9.2

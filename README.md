@@ -48,5 +48,5 @@ Apart from XCode we're using [Carthage](https://github.com/Carthage/Carthage) to
 
 After cloning - you'll need to run
 
-    carthage bootstrap
+    carthage bootstrap --platform ios
 
