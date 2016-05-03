@@ -87,7 +87,7 @@ import CocoaLumberjackSwift
     func hasSpaceForPano(shotCount: Int) -> Bool {
         DDLogDebug("Camera Controller comparing shotCount: \(shotCount) with availableCaptureCount \(availableCaptureCount)")
 
-        return availableCaptureCount == 0 || shotCount < availableCaptureCount
+        return availableCaptureCount == 0 || shotCount <= availableCaptureCount
     }
 
     private func setPhotoMode(counter: Int) {

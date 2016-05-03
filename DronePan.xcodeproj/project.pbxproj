@@ -39,6 +39,7 @@
 		15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */; };
 		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
+		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
 		232F6F181C5448320013CCD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F171C5448320013CCD9 /* ViewController.m */; };
 		232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F191C5448320013CCD9 /* Main.storyboard */; };
@@ -225,6 +226,7 @@
 		1583BF541CC26C2100C00C0D /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
+		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
 		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		232F6F161C5448320013CCD9 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -604,6 +606,7 @@
 				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
 				157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */,
+				1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = "<group>";
@@ -849,6 +852,7 @@
 			files = (
 				157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */,
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
+				1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
