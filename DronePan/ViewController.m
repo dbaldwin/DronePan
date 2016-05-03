@@ -608,7 +608,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 }
 
 - (void)flightControllerUpdateSatelliteCount:(NSInteger)satelliteCount {
-    [[self satelliteLabel] setText:[NSString stringWithFormat:@"Sats: %ld", satelliteCount]];
+    [[self satelliteLabel] setText:[NSString stringWithFormat:@"Sats: %ld", (long)satelliteCount]];
 }
 
 - (void)flightControllerUpdateDistance:(CLLocationDistance)distance {
