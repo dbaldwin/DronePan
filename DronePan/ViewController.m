@@ -75,6 +75,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *infoOffset;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
+@property (weak, nonatomic) IBOutlet UIProgressView *panoProgressBar;
 
 - (IBAction)startPano:(id)sender;
 
@@ -128,6 +129,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 #endif
 
     self.rcInFMode = NO;
+    
+    [self.panoProgressBar setProgress:0];
 
     [self initLabels];
 }
@@ -242,6 +245,8 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     NSString *seqText = [NSString stringWithFormat:@"Photo: %ld/%ld", self.currentCount, self.sequenceCount];
 
     DDLogDebug(@"Sequence Text: %@", seqText);
+
+    [self.panoProgressBar setProgress:((float)self.currentCount / (float)self.sequenceCount) animated:YES];
 
     [[self sequenceLabel] setText:seqText];
 }
@@ -490,6 +495,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
+            [self.panoProgressBar setProgress:0];
 
             if (![self infoOverride]) {
                 [self scrollView:self.infoView toOffset:0 usingConstraint:self.infoOffset];
