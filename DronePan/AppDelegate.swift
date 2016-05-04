@@ -51,6 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         //DDLogDebug("Logging to \(fileLogger.currentLogFileInfo().filePath)  \(fileLogger.currentLogFileInfo().fileName)")
 
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let appDefaults = ["infoOverride" : false]
+        defaults.registerDefaults(appDefaults)
+        defaults.synchronize()
+        
         return true
     }
 

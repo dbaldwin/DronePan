@@ -40,6 +40,7 @@
 		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
+		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
 		232F6F181C5448320013CCD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F171C5448320013CCD9 /* ViewController.m */; };
 		232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F191C5448320013CCD9 /* Main.storyboard */; };
@@ -227,6 +228,7 @@
 		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
+		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		232F6F161C5448320013CCD9 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -620,6 +622,7 @@
 				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
 				232F6F1C1C5448320013CCD9 /* Assets.xcassets */,
 				232F6F211C5448320013CCD9 /* Info.plist */,
+				15D284E11CDA4A0B00FD3F52 /* Settings.bundle */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 			files = (
 				15839FB91CCEA224008B7E97 /* Info.plist in Resources */,
 				232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */,
+				15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */,
 				232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */,
 				232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */,
 			);

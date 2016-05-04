@@ -118,6 +118,10 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
 
     self.warningOffset.constant = 0;
     
+    if ([self infoOverride]) {
+        self.infoOffset.constant = -self.infoView.frame.size.height;
+    }
+    
     // TODO - this should be tested
 #ifndef DEBUG
     [self.startButton setEnabled:NO];
@@ -487,7 +491,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.startButton setBackgroundImage:[UIImage imageNamed:@"Start"] forState:UIControlStateNormal];
 
-            [self scrollView:self.infoView toOffset:0 usingConstraint:self.infoOffset];
+            if (![self infoOverride]) {
+                [self scrollView:self.infoView toOffset:0 usingConstraint:self.infoOffset];
+            }
         });
     } else {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -498,7 +504,9 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
             [self.gimbalRollLabel setText:[NSString stringWithFormat:@"----"]];
             [self.gimbalPitchLabel setText:[NSString stringWithFormat:@"----"]];
 
-            [self scrollView:self.infoView toOffset:-self.infoView.frame.size.height usingConstraint:self.infoOffset];
+            if (![self infoOverride]) {
+                [self scrollView:self.infoView toOffset:-self.infoView.frame.size.height usingConstraint:self.infoOffset];
+            }
         });
     }
 }
@@ -712,7 +720,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     DDLogInfo(@"New product %@", product.model);
 
     [self scrollView:self.cameraView toOffset:0 usingConstraint:self.warningOffset];
-
+    
     self.product = product;
 
     [self.previewController setMode:self.product];
@@ -813,6 +821,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
     [UIView animateWithDuration:1 animations:^{
         [view layoutIfNeeded];
     }];
+}
+
+- (BOOL)infoOverride {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults boolForKey:@"infoOverride"];
 }
 
 @end
