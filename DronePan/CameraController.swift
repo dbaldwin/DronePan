@@ -28,6 +28,8 @@ protocol CameraControllerDelegate {
     func cameraControllerOK(fromError: Bool)
 
     func cameraControllerReset()
+    
+    func cameraControllerNewMedia(filename: String)
 }
 
 protocol VideoControllerDelegate {
@@ -230,8 +232,9 @@ class CameraController: NSObject, DJICameraDelegate {
 
     func camera(camera: DJICamera, didGenerateNewMediaFile newMedia: DJIMedia) {
         DDLogDebug("Camera Controller didGenerateNewMediaFile")
-        DDLogInfo("Photo \(newMedia.fileName) (\(newMedia.mediaType)) taken")
 
+        self.delegate?.cameraControllerNewMedia(newMedia.fileName)
+        
         self.tookShot = true
     }
 

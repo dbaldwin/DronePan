@@ -50,6 +50,12 @@ class PanoramaController {
     var gimbalController : GimbalController?
     var flightController : FlightController?
     
+    var lastGimbalPitch : Float = 0.0
+    var lastGimbalYaw : Float = 0.0
+    var lastGimbalRoll : Float = 0.0
+    var lastACYaw : Float = 0.0
+    
+    
     var panoRunning : Bool = false {
         didSet {
             if panoRunning {
@@ -517,6 +523,10 @@ extension PanoramaController : CameraControllerDelegate {
             dispatch_group_leave(self.cameraDispatchGroup)
         }
     }
+    
+    func cameraControllerNewMedia(filename: String) {
+        DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
+    }
 }
 
 extension PanoramaController : RemoteControllerDelegate {
@@ -559,7 +569,8 @@ extension PanoramaController : FlightControllerDelegate {
             self.yawSpeed = fmod(360.0, diff) * 0.5
         }
         
-        self.delegate?.aircraftYawChanged(Float(self.currentHeading))
+        self.lastACYaw = Float(self.currentHeading)
+        self.delegate?.aircraftYawChanged(lastACYaw)
     }
     
     func flightControllerUpdateAltitude(altitude: Float) {
@@ -627,6 +638,10 @@ extension PanoramaController : GimbalControllerDelegate {
     }
     
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
+        lastGimbalPitch = pitch
+        lastGimbalYaw = yaw
+        lastGimbalRoll = roll
+        
         self.delegate?.gimbalAttitudeChanged(pitch: pitch, yaw: yaw, roll: roll)
     }
 }
