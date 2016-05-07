@@ -364,7 +364,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start delay (seconds):" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcZ-Jm-WCn">
-                                        <rect key="frame" x="304.5" y="105" width="415" height="21"/>
+                                        <rect key="frame" x="304.5" y="137" width="415" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="415" id="ZFA-3b-uDr"/>
                                         </constraints>
@@ -372,14 +372,14 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="8Pp-fn-P5T">
-                                        <rect key="frame" x="305" y="160" width="415" height="34"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="8Pp-fn-P5T">
+                                        <rect key="frame" x="305" y="204" width="415" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of photos per row:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wtZ-dc-gsG">
-                                        <rect key="frame" x="304.5" y="226" width="415" height="21"/>
+                                        <rect key="frame" x="304.5" y="286" width="415" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="415" id="GmM-9h-cLt"/>
                                         </constraints>
@@ -388,7 +388,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ums-pl-xF0">
-                                        <rect key="frame" x="381.5" y="56" width="27" height="17"/>
+                                        <rect key="frame" x="369" y="72" width="27" height="17"/>
                                         <attributedString key="attributedText">
                                             <fragment content="180">
                                                 <attributes>
@@ -409,32 +409,32 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total photos:" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iRY-rf-ZYX">
-                                        <rect key="frame" x="602.5" y="56" width="85" height="17"/>
+                                        <rect key="frame" x="615" y="72" width="85" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SQP-KJ-3Jt">
-                                        <rect key="frame" x="695.5" y="56" width="24" height="17"/>
+                                        <rect key="frame" x="708" y="72" width="24" height="17"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="wcu-Bz-lhG">
-                                        <rect key="frame" x="310" y="281" width="405" height="51"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="wcu-Bz-lhG">
+                                        <rect key="frame" x="310" y="353" width="405" height="51"/>
                                         <string key="text">Depending on your camera and FOV you'll need to adjust this setting. By default 6 and 8 work well with the X3. X5 users will need more photos, depending on lens type.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sky row:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYV-z6-RPh">
-                                        <rect key="frame" x="477" y="518" width="71" height="21"/>
+                                        <rect key="frame" x="477" y="634" width="71" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bzI-Gw-2HV">
-                                        <rect key="frame" x="424" y="666" width="176" height="50"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bzI-Gw-2HV" userLabel="Button View">
+                                        <rect key="frame" x="424" y="806" width="176" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Wf-wug">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="50"/>
@@ -487,7 +487,7 @@
                                         </constraints>
                                     </view>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="z1j-Ik-VPo">
-                                        <rect key="frame" x="432" y="547" width="160" height="29"/>
+                                        <rect key="frame" x="432" y="663" width="160" height="29"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="160" id="D23-DO-Pr3"/>
                                             <constraint firstAttribute="width" constant="245" id="WwO-OX-qHj"/>
@@ -506,14 +506,14 @@
                                         </connections>
                                     </segmentedControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="8i3-1a-eMe">
-                                        <rect key="frame" x="308" y="583" width="409" height="51"/>
+                                        <rect key="frame" x="308" y="707" width="409" height="51"/>
                                         <string key="text">If set, DronePan will shoot a "sky row" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting "No" will skip the sky row.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of rows:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dfo-U3-07o">
-                                        <rect key="frame" x="304.5" y="364" width="415" height="21"/>
+                                        <rect key="frame" x="304.5" y="452" width="415" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="415" id="hIx-kz-me5"/>
                                         </constraints>
@@ -521,41 +521,41 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="415" translatesAutoresizingMaskIntoConstraints="NO" id="x4g-Cr-ig7">
-                                        <rect key="frame" x="304" y="419" width="415" height="67"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="x4g-Cr-ig7">
+                                        <rect key="frame" x="304" y="519" width="415" height="67"/>
                                         <string key="text">Depending on your camera and FOV you'll need to adjust this setting. By default 3 works well with the X3. X5 users will need more photos, depending on lens type. This does not include the nadir/zenith shot or sky row.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Yaw angle:" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ExQ-yC-UxC">
-                                        <rect key="frame" x="304.5" y="56" width="69" height="17"/>
+                                        <rect key="frame" x="292" y="72" width="69" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="inJ-Et-FFi">
-                                        <rect key="frame" x="302.5" y="128" width="419" height="31"/>
+                                        <rect key="frame" x="290" y="166" width="444" height="31"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="415" id="NOa-AC-Pgt"/>
+                                            <constraint firstAttribute="width" constant="440" id="NOa-AC-Pgt"/>
                                         </constraints>
                                         <connections>
                                             <action selector="delaySliderChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="FkH-wO-8ii"/>
                                         </connections>
                                     </slider>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="W5a-x2-Y6y">
-                                        <rect key="frame" x="302.5" y="249" width="419" height="31"/>
+                                        <rect key="frame" x="290" y="315" width="444" height="31"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="415" id="wNn-i8-dC6"/>
+                                            <constraint firstAttribute="width" constant="440" id="wNn-i8-dC6"/>
                                         </constraints>
                                         <connections>
                                             <action selector="photosPerRowSliderChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="ofJ-9v-MNb"/>
                                         </connections>
                                     </slider>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="pgm-o6-olD">
-                                        <rect key="frame" x="302.5" y="387" width="419" height="31"/>
+                                        <rect key="frame" x="290" y="481" width="444" height="31"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="415" id="haX-Vy-BaX"/>
+                                            <constraint firstAttribute="width" constant="440" id="haX-Vy-BaX"/>
                                         </constraints>
                                         <connections>
                                             <action selector="rowCountChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="SQj-Wx-r9t"/>
@@ -569,35 +569,35 @@
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="35g-Sb-VDO"/>
                                     <constraint firstAttribute="bottom" secondItem="bzI-Gw-2HV" secondAttribute="bottom" constant="24" id="3kh-C7-geB"/>
                                     <constraint firstItem="x4g-Cr-ig7" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="501-ZF-Tbx"/>
-                                    <constraint firstItem="bzI-Gw-2HV" firstAttribute="top" secondItem="8i3-1a-eMe" secondAttribute="bottom" constant="32" id="BEI-PF-Aar"/>
-                                    <constraint firstItem="wtZ-dc-gsG" firstAttribute="top" secondItem="8Pp-fn-P5T" secondAttribute="bottom" constant="32" id="BrI-CC-mSM"/>
+                                    <constraint firstItem="bzI-Gw-2HV" firstAttribute="top" secondItem="8i3-1a-eMe" secondAttribute="bottom" constant="48" id="BEI-PF-Aar"/>
+                                    <constraint firstItem="wtZ-dc-gsG" firstAttribute="top" secondItem="8Pp-fn-P5T" secondAttribute="bottom" constant="48" id="BrI-CC-mSM"/>
                                     <constraint firstItem="wtZ-dc-gsG" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="BrK-uX-0ZP"/>
-                                    <constraint firstItem="8i3-1a-eMe" firstAttribute="top" secondItem="z1j-Ik-VPo" secondAttribute="bottom" constant="8" id="DU3-vZ-ZHQ"/>
+                                    <constraint firstItem="8i3-1a-eMe" firstAttribute="top" secondItem="z1j-Ik-VPo" secondAttribute="bottom" constant="16" id="DU3-vZ-ZHQ"/>
                                     <constraint firstItem="wcu-Bz-lhG" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="EmG-Z3-AJL"/>
                                     <constraint firstItem="hUh-rC-BBm" firstAttribute="top" secondItem="uZ1-HP-PEj" secondAttribute="top" constant="24" id="GDZ-Lw-erq"/>
                                     <constraint firstItem="z1j-Ik-VPo" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="Ir0-7O-Jt9"/>
                                     <constraint firstItem="Dfo-U3-07o" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="K76-OT-MVV"/>
                                     <constraint firstItem="qcZ-Jm-WCn" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="Kph-iQ-uip"/>
-                                    <constraint firstItem="ExQ-yC-UxC" firstAttribute="top" secondItem="hUh-rC-BBm" secondAttribute="bottom" constant="8" symbolic="YES" id="MCb-Bl-xGo"/>
+                                    <constraint firstItem="ExQ-yC-UxC" firstAttribute="top" secondItem="hUh-rC-BBm" secondAttribute="bottom" constant="24" id="MCb-Bl-xGo"/>
                                     <constraint firstItem="ums-pl-xF0" firstAttribute="leading" secondItem="ExQ-yC-UxC" secondAttribute="trailing" constant="8" id="NRr-FU-AT7"/>
                                     <constraint firstItem="ums-pl-xF0" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="OSe-AG-xIX"/>
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="leading" secondItem="iRY-rf-ZYX" secondAttribute="trailing" constant="8" id="Qc3-80-3Qp"/>
                                     <constraint firstItem="8i3-1a-eMe" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="QgT-5u-BPs"/>
-                                    <constraint firstItem="Dfo-U3-07o" firstAttribute="top" secondItem="wcu-Bz-lhG" secondAttribute="bottom" constant="32" id="RP6-2W-5CU"/>
-                                    <constraint firstItem="qcZ-Jm-WCn" firstAttribute="top" secondItem="ExQ-yC-UxC" secondAttribute="bottom" constant="32" id="Sie-su-sip"/>
+                                    <constraint firstItem="Dfo-U3-07o" firstAttribute="top" secondItem="wcu-Bz-lhG" secondAttribute="bottom" constant="48" id="RP6-2W-5CU"/>
+                                    <constraint firstItem="qcZ-Jm-WCn" firstAttribute="top" secondItem="ExQ-yC-UxC" secondAttribute="bottom" constant="48" id="Sie-su-sip"/>
                                     <constraint firstItem="TYV-z6-RPh" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="TyW-xv-RpK"/>
                                     <constraint firstItem="pgm-o6-olD" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="U5v-Gz-6er"/>
-                                    <constraint firstItem="TYV-z6-RPh" firstAttribute="top" secondItem="x4g-Cr-ig7" secondAttribute="bottom" constant="32" id="XzP-vi-z3k"/>
-                                    <constraint firstItem="inJ-Et-FFi" firstAttribute="top" secondItem="qcZ-Jm-WCn" secondAttribute="bottom" constant="2" id="cDe-18-zMU"/>
+                                    <constraint firstItem="TYV-z6-RPh" firstAttribute="top" secondItem="x4g-Cr-ig7" secondAttribute="bottom" constant="48" id="XzP-vi-z3k"/>
+                                    <constraint firstItem="inJ-Et-FFi" firstAttribute="top" secondItem="qcZ-Jm-WCn" secondAttribute="bottom" constant="8" symbolic="YES" id="cDe-18-zMU"/>
                                     <constraint firstItem="hUh-rC-BBm" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="clN-nR-xTa"/>
                                     <constraint firstItem="z1j-Ik-VPo" firstAttribute="top" secondItem="TYV-z6-RPh" secondAttribute="bottom" constant="8" id="e3U-Oq-FMo"/>
-                                    <constraint firstItem="8Pp-fn-P5T" firstAttribute="top" secondItem="inJ-Et-FFi" secondAttribute="bottom" constant="2" id="f0Z-He-SuT"/>
-                                    <constraint firstItem="pgm-o6-olD" firstAttribute="top" secondItem="Dfo-U3-07o" secondAttribute="bottom" constant="2" id="f4o-Ot-X5z"/>
-                                    <constraint firstItem="W5a-x2-Y6y" firstAttribute="top" secondItem="wtZ-dc-gsG" secondAttribute="bottom" constant="2" id="g8g-DC-X4l"/>
+                                    <constraint firstItem="8Pp-fn-P5T" firstAttribute="top" secondItem="inJ-Et-FFi" secondAttribute="bottom" constant="8" symbolic="YES" id="f0Z-He-SuT"/>
+                                    <constraint firstItem="pgm-o6-olD" firstAttribute="top" secondItem="Dfo-U3-07o" secondAttribute="bottom" constant="8" symbolic="YES" id="f4o-Ot-X5z"/>
+                                    <constraint firstItem="W5a-x2-Y6y" firstAttribute="top" secondItem="wtZ-dc-gsG" secondAttribute="bottom" constant="8" symbolic="YES" id="g8g-DC-X4l"/>
                                     <constraint firstItem="8Pp-fn-P5T" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="olr-4D-eB8"/>
-                                    <constraint firstItem="wcu-Bz-lhG" firstAttribute="top" secondItem="W5a-x2-Y6y" secondAttribute="bottom" constant="2" id="pIG-OQ-H3X"/>
+                                    <constraint firstItem="wcu-Bz-lhG" firstAttribute="top" secondItem="W5a-x2-Y6y" secondAttribute="bottom" constant="8" symbolic="YES" id="pIG-OQ-H3X"/>
                                     <constraint firstItem="iRY-rf-ZYX" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="qIn-2p-U5i"/>
-                                    <constraint firstItem="x4g-Cr-ig7" firstAttribute="top" secondItem="pgm-o6-olD" secondAttribute="bottom" constant="2" id="sSQ-5f-RrF"/>
+                                    <constraint firstItem="x4g-Cr-ig7" firstAttribute="top" secondItem="pgm-o6-olD" secondAttribute="bottom" constant="8" symbolic="YES" id="sSQ-5f-RrF"/>
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="trailing" secondItem="inJ-Et-FFi" secondAttribute="trailing" id="vba-6Y-KMu"/>
                                     <constraint firstItem="inJ-Et-FFi" firstAttribute="leading" secondItem="ExQ-yC-UxC" secondAttribute="leading" id="vl0-x7-tXK"/>
                                 </constraints>
