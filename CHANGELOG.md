@@ -22,6 +22,11 @@ have taken at least one photo or video before running DronePan.
 #### Updates
 
 * Add low battery warning
+* Add ability to keep info window present at all times (iOS Settings App > DronePan)
+* Implement new DJI SDK method - hopefully will make detection of camera/gimbal/etc more reliable
+* Add a thin progress bar
+* Move settings from segment to slider to allow for finer user control
+* Increase max number of rows to 10
 
 ### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b4)
 
