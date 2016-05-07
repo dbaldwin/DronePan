@@ -32,19 +32,23 @@ protocol FlightControllerDelegate {
     func flightControllerSetControlMode()
 }
 
-class FlightController: NSObject, DJIFlightControllerDelegate {
+class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate {
     let fc: DJIFlightController
 
     var delegate: FlightControllerDelegate?
 
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
-
+        
         self.fc = fc
 
         super.init()
 
         fc.delegate = self
+
+        if let simulator = fc.simulator {
+            simulator.delegate = self
+        }
     }
 
     func setControlModes() {
@@ -95,5 +99,9 @@ class FlightController: NSObject, DJIFlightControllerDelegate {
 
         self.delegate?.flightControllerUpdateAltitude(state.altitude)
         self.delegate?.flightControllerUpdateSatelliteCount(Int(state.satelliteCount))
+    }
+    
+    func simulator(simulator: DJISimulator, updateSimulatorState state: DJISimulatorState) {
+        // TODO - it's just possible that state.pitch, state.roll, state.yaw here could help in testing        
     }
 }
