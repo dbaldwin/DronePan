@@ -24,9 +24,6 @@ class SettingsViewController: UIViewController {
 
     @IBOutlet weak var titleLabel: UILabel!
 
-    @IBOutlet weak var startDelayControl: UISegmentedControl!
-    @IBOutlet weak var photosPerRowControl: UISegmentedControl!
-    @IBOutlet weak var numberOfRowsControl: UISegmentedControl!
     @IBOutlet weak var skyRowControl: UISegmentedControl!
 
     @IBOutlet weak var angleLabel: UILabel!
@@ -42,8 +39,16 @@ class SettingsViewController: UIViewController {
 
     @IBOutlet weak var saveButton: UIButton!
     
+    @IBOutlet weak var delayLabel: UILabel!
+    @IBOutlet weak var delaySlider: UISlider!
+    
+    @IBOutlet weak var photosPerRowLabel: UILabel!
+    @IBOutlet weak var photosPerRowSlider: UISlider!
+    
+    @IBOutlet weak var rowCountLabel: UILabel!
+    @IBOutlet weak var rowCountSlider: UISlider!
+    
     override func viewDidLoad() {
-
         super.viewDidLoad()
 
         initSettings()
@@ -82,14 +87,80 @@ class SettingsViewController: UIViewController {
             }
         }
     }
+    
+    private func startDelay(setting: Int, updateSlider: Bool = false) {
+        delayLabel.text = "Start Delay (seconds): \(setting)"
+        
+        if updateSlider {
+            delaySlider.minimumValue = 5
+            delaySlider.maximumValue = 30
+            delaySlider.value = Float(setting)
+        }
+    }
+    
+    @IBAction func delaySliderChanged(sender: UISlider) {
+        let step : Float = 5.0
+        
+        let roundedValue = round(sender.value / step) * step
+        sender.value = roundedValue
+        
+        startDelay(Int(roundedValue))
+    }
 
+    private func photosPerRow(setting: Int, updateSlider: Bool = false) {
+        photosPerRowLabel.text = "Number of photos per row: \(setting)"
+        
+        if updateSlider {
+            photosPerRowSlider.minimumValue = 6
+            photosPerRowSlider.maximumValue = 20
+            photosPerRowSlider.value = Float(setting)
+        }
+    }
+
+    @IBAction func photosPerRowSliderChanged(sender: UISlider) {
+        let step : Float = 1.0
+        
+        let roundedValue = round(sender.value / step) * step
+        sender.value = roundedValue
+        
+        photosPerRow(Int(roundedValue))
+
+        updateCounts()
+    }
+
+    
+    private func rowCount(setting: Int, updateSlider: Bool = false) {
+        rowCountLabel.text = "Number of rows: \(setting)"
+        
+        if updateSlider {
+            rowCountSlider.minimumValue = 3
+            rowCountSlider.maximumValue = 10
+            rowCountSlider.value = Float(setting)
+        }
+    }
+
+    @IBAction func rowCountChanged(sender: UISlider) {
+        let step : Float = 1.0
+        
+        let roundedValue = round(sender.value / step) * step
+        sender.value = roundedValue
+        
+        rowCount(Int(roundedValue))
+        
+        updateCounts()
+    }
+    
     func initSettings() {
         if (self.model == "") {
             titleLabel.attributedText = NSAttributedString(string: "Disconnected", attributes: [
                     NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
             ])
 
-            for control in [startDelayControl, photosPerRowControl, numberOfRowsControl, skyRowControl] {
+            for control in [delaySlider, photosPerRowSlider, rowCountSlider] {
+                control.enabled = false
+            }
+            
+            for control in [skyRowControl] {
                 control.enabled = false
                 control.selectedSegmentIndex = UISegmentedControlNoSegment
             }
@@ -112,18 +183,19 @@ class SettingsViewController: UIViewController {
         ])
 
         if (type == .Handheld) {
-            startDelayControl.enabled = true
+            
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
 
-            let startDelay = ModelSettings.startDelay(model)
-            initSegment(startDelayControl, setting: startDelay)
+            delaySlider.enabled = true
+            startDelay(ModelSettings.startDelay(model), updateSlider: true)
 
             skyRowDescription.text = "Handheld always gets this extra row. Number of rows will be the number selected above +1."
             skyRowControl.enabled = false
             skyRowControl.selectedSegmentIndex = 0
         } else {
-            startDelayControl.selectedSegmentIndex = UISegmentedControlNoSegment
-            startDelayControl.enabled = false
+            delaySlider.enabled = false
+            startDelay(0, updateSlider: true)
+
             startDelayDescription.text = "Only applicable for handheld"
 
             if (ControllerUtils.isPhantom(model)) {
@@ -143,17 +215,17 @@ class SettingsViewController: UIViewController {
             }
         }
 
-        let photosPerRow = ModelSettings.photosPerRow(model)
-        initSegment(photosPerRowControl, setting: photosPerRow)
+        photosPerRow(ModelSettings.photosPerRow(model), updateSlider: true)
 
-        let numberOfRows = ModelSettings.numberOfRows(model)
-        initSegment(numberOfRowsControl, setting: numberOfRows)
+        rowCount(ModelSettings.numberOfRows(model), updateSlider: true)
 
         updateCounts()
     }
 
     private func setAngleLabel(angle: Float) {
-        let angleString = NSMutableAttributedString(string: "\(angle)", attributes: [
+        let roundedString = String(format: "%.2f", angle)
+        
+        let angleString = NSMutableAttributedString(string: "\(roundedString)", attributes: [
                 NSFontAttributeName: UIFont.boldSystemFontOfSize(14)
         ])
 
@@ -198,19 +270,15 @@ class SettingsViewController: UIViewController {
     }
 
     private func selectedPhotosPerRow() -> Int? {
-        return selectedValue(photosPerRowControl)
+        return Int(photosPerRowSlider.value)
     }
 
     private func selectedNumberOfRows() -> Int? {
-        return selectedValue(numberOfRowsControl)
+        return Int(rowCountSlider.value)
     }
 
     private func selectedStartDelay() -> Int? {
-        return selectedValue(startDelayControl)
-    }
-
-    @IBAction func photosPerRowChanged(sender: AnyObject) {
-        updateCounts()
+        return Int(delaySlider.value)
     }
 
     @IBAction func numberOfRowsChanged(sender: AnyObject) {
