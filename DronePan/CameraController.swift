@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc protocol CameraControllerDelegate {
+protocol CameraControllerDelegate {
     func cameraControllerCompleted(shotTaken: Bool)
 
     func cameraControllerAborted(reason: String)
@@ -30,11 +30,11 @@ import CocoaLumberjackSwift
     func cameraControllerReset()
 }
 
-@objc protocol VideoControllerDelegate {
+protocol VideoControllerDelegate {
     func cameraReceivedVideo(videoBuffer: UnsafeMutablePointer<UInt8>, size: Int)
 }
 
-@objc class CameraController: NSObject, DJICameraDelegate {
+class CameraController: NSObject, DJICameraDelegate {
     let camera: DJICamera
 
     var delegate: CameraControllerDelegate?
@@ -198,13 +198,13 @@ import CocoaLumberjackSwift
         ControllerUtils.delay(delay, queue: self.cameraWorkQueue, closure: closure)
     }
 
-    func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {
+    @objc func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {
         DDLogVerbose("Camera Controller didReceiveVideoData")
 
         self.videoDelegate?.cameraReceivedVideo(videoBuffer, size: size)
     }
 
-    func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {
+    @objc func camera(camera: DJICamera, didUpdateSystemState systemState: DJICameraSystemState) {
         DDLogVerbose("Camera Controller didUpdateSystemState")
 
         if (systemState.isCameraOverHeated) {
@@ -270,7 +270,7 @@ import CocoaLumberjackSwift
         }
 
         if (self.status != newState) {
-            DDLogDebug("Camera Controller changing status from \(self.status.rawValue) to \(newState.rawValue)")
+            DDLogDebug("Camera Controller changing status from \(self.status) to \(newState)")
 
             if (newState == .Error) {
                 DDLogWarn("Camera Controller signal error state with message \(message)")

@@ -25,7 +25,7 @@ class LogFormatter: NSObject, DDLogFormatter {
         dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss:SSS"
     }
 
-    @objc func formatLogMessage(logMessage: DDLogMessage!) -> String! {
+    func formatLogMessage(logMessage: DDLogMessage!) -> String! {
         var logPrefix: String
 
         switch (logMessage.flag) {

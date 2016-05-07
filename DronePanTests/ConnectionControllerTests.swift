@@ -28,7 +28,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
 
     var asyncExpectation: XCTestExpectation?
 
-    @objc func failedToRegister(reason: String) {
+    func failedToRegister(reason: String) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -38,7 +38,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func sdkRegistered() {
+    func sdkRegistered() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -48,7 +48,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func connectedToBattery(battery: DJIBattery) {
+    func connectedToBattery(battery: DJIBattery) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -59,7 +59,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     }
 
     
-    @objc func connectedToCamera(camera: DJICamera) {
+    func connectedToCamera(camera: DJICamera) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -69,7 +69,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func connectedToGimbal(gimbal: DJIGimbal) {
+    func connectedToGimbal(gimbal: DJIGimbal) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -79,7 +79,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func connectedToRemote(remote: DJIRemoteController) {
+    func connectedToRemote(remote: DJIRemoteController) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -89,7 +89,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func connectedToFlightController(flightController: DJIFlightController) {
+    func connectedToFlightController(flightController: DJIFlightController) {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -99,7 +99,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func disconnectedFromBattery() {
+    func disconnectedFromBattery() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -109,7 +109,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
     
-    @objc func disconnectedFromCamera() {
+    func disconnectedFromCamera() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -119,7 +119,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
 
-    @objc func disconnectedFromGimbal() {
+    func disconnectedFromGimbal() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -129,7 +129,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
 
-    @objc func disconnectedFromRemote() {
+    func disconnectedFromRemote() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -139,7 +139,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         expectation.fulfill()
     }
 
-    @objc func disconnectedFromFlightController() {
+    func disconnectedFromFlightController() {
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -147,6 +147,14 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
         
         componentRemoved = true
         expectation.fulfill()
+    }
+    
+    func connectedToProduct(product: DJIBaseProduct) {
+        //
+    }
+    
+    func disconnected() {
+        //
     }
 }
 
