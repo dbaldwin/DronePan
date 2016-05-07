@@ -2,3 +2,4 @@ coverage:
   ignore:
     - DronePanTests/*
     - DronePanUITests/*
+    - DronePan/VideoPreviewer/*
