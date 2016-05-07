@@ -15,6 +15,8 @@
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
 		1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */; };
+		156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */; };
+		156F5FE01CDE510B00BAE596 /* BatteryControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */; };
 		157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */; };
 		15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839E931CCE9A40008B7E97 /* BatteryController.swift */; };
 		15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15839F341CCEA224008B7E97 /* libDJIVTH264Decoder.a */; };
@@ -105,6 +107,8 @@
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
 		1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControllerTests.swift; sourceTree = "<group>"; };
+		156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryControllerTests.swift; sourceTree = "<group>"; };
 		157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionControllerTests.swift; sourceTree = "<group>"; };
 		15839E931CCE9A40008B7E97 /* BatteryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryController.swift; sourceTree = "<group>"; };
 		15839F311CCEA224008B7E97 /* DJIStreamCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIStreamCommon.h; sourceTree = "<group>"; };
@@ -603,12 +607,14 @@
 			isa = PBXGroup;
 			children = (
 				8362BB211CC64C8D0071D0BA /* Info.plist */,
-				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
-				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
-				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
-				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
-				157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */,
+				156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */,
 				1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */,
+				157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */,
+				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
+				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
+				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
+				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
+				156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = SOURCE_ROOT;
@@ -857,10 +863,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */,
+				156F5FE01CDE510B00BAE596 /* BatteryControllerTests.swift in Sources */,
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
 				1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
+				156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

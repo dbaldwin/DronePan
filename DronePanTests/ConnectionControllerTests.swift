@@ -23,6 +23,8 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     var failureReason: String? = .None
     var registered: Bool? = .None
+    var product: DJIBaseProduct? = .None
+    var productRemoved: Bool? = .None
     var component: DJIBaseComponent? = .None
     var componentRemoved: Bool? = .None
 
@@ -30,7 +32,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
 
     func failedToRegister(reason: String) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -40,7 +42,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func sdkRegistered() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -50,7 +52,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func connectedToBattery(battery: DJIBattery) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -61,7 +63,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func connectedToCamera(camera: DJICamera) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -71,7 +73,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func connectedToGimbal(gimbal: DJIGimbal) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -81,7 +83,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func connectedToRemote(remote: DJIRemoteController) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -91,7 +93,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func connectedToFlightController(flightController: DJIFlightController) {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -101,7 +103,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func disconnectedFromBattery() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -111,7 +113,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     
     func disconnectedFromCamera() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -121,7 +123,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
 
     func disconnectedFromGimbal() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -131,7 +133,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
 
     func disconnectedFromRemote() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -141,7 +143,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
 
     func disconnectedFromFlightController() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegateSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
         
@@ -150,11 +152,23 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     }
     
     func connectedToProduct(product: DJIBaseProduct) {
-        //
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+
+        self.product = product
+        expectation.fulfill()
     }
     
     func disconnected() {
-        //
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        self.productRemoved = true
+        expectation.fulfill()
     }
 }
 
@@ -253,7 +267,6 @@ class ConnectionControllerTests: XCTestCase {
             
             XCTAssertEqual(component, newComponent, "Didn't see \(key)")
         }
-        
     }
     
     func testBatterySeen() {
@@ -313,5 +326,45 @@ class ConnectionControllerTests: XCTestCase {
     
     func testFlightControllerLost() {
         loseComponent(DJIFlightControllerComponentKey)
+    }
+    
+    func testConnected() {
+        let spyDelegate = getSpy("Expect that a new product will cause connection")
+        
+        let newProduct = DJIBaseProduct()
+        
+        connectionController!.sdkManagerProductDidChangeFrom(nil, to: newProduct)
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let product = spyDelegate.product else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(product, newProduct, "Wasn't told that connection was made")
+        }
+    }
+
+    func testDisconnected() {
+        let spyDelegate = getSpy("Expect that a loss of product will cause disconnection")
+        
+        connectionController!.sdkManagerProductDidChangeFrom(nil, to: nil)
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let productRemoved = spyDelegate.productRemoved else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(productRemoved, "Wasn't told that connection was lost")
+        }
     }
 }
