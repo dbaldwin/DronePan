@@ -1,19 +1,17 @@
 language: objective-c
 osx_image: xcode7.3
-
 before_install:
-  - carthage bootstrap --platform ios
-
+- carthage bootstrap --platform ios
 install:
-  - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-
+- gem install xcpretty --no-rdoc --no-ri --no-document --quiet
 script:
-  - open -b com.apple.iphonesimulator
-  - set -o pipefail
-  - xcodebuild -scheme DronePan -sdk iphonesimulator9.3 -destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3' clean build test GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES | xcpretty
+- open -b com.apple.iphonesimulator
+- set -o pipefail
+- xcodebuild -scheme DronePan -sdk iphonesimulator9.3 -destination 'platform=iOS Simulator,name=iPhone
+  6,OS=9.3' clean build test GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
+  | xcpretty
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  
+- bash <(curl -s https://codecov.io/bash)
 notifications:
   webhooks:
     urls:
@@ -21,3 +19,6 @@ notifications:
     on_success: change
     on_failure: always
     on_start: never
+env:
+  global:
+    secure: dmY+wVyhHp0B/uKKDqwsf1RTPkeRHh3lCeBUxHidvq0Y/vI9DqJ07EtcPoEfdWjro/ljhD3dnfuojLsT4ReD2b0fvYG4OI9IK3K0HLauwm5sufCXn0qc8rCis3EhaG/qqV9xNYVf3/MEYwjBaFMMPmGvW/gARW/9hkI19g13AGPznixUVRyLVwifLfB1d+5mN+dXot3N0pyhQniHy2xh3XFbyJmYeOygOtY12S1kcuQ1JgaLbV1zCZBE3kIIr0BJvgC+PsJfZLxeRMly1xuiuEEMLnSS+VItywvM+zCf4RtmdDutvZYcwKzqSvJEPydV9j11AxlPw5YsTbv+E6GdfwG0Ev/vTAXe2gpDJQrXnK706jmmEAMR35NDbQ3lY9GRkaCpT0XVubchrGR/eywb/nL7hW3S8hQzUeMbFaBs3ZHs/EC9+wlm1L9Ov3/TthtqZTbNEw0TtCO4M5sscYoEtUjhmwvAFArXFK4RZP7QnRrDZBqXxmSECNUue6QQ/tw4hC1pBqdaOM1BwlEI3bZll3hpuXiTKktMwreq//syN2v2qRmnkoGSg+iPXZjVNwlAyDRyeeiHgzI3CjOwL9Wa2EsH4uH5noyIpNjvjUSdoxtO60eiYKr6saL0X1zW9/xVsx+H3lerhWZ9k77zVZPVfJnhqQnhFw/09F5vL0Q6QUg=
