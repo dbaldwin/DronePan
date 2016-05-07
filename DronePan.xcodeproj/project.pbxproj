@@ -1031,6 +1031,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DronePan/VideoPreviewer/ffmpeg/include";
 				INFOPLIST_FILE = DronePan/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1059,6 +1060,7 @@
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DronePan/VideoPreviewer/ffmpeg/include";
 				INFOPLIST_FILE = DronePan/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
