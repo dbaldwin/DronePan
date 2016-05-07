@@ -17,10 +17,10 @@ import UIKit
 
 import CocoaLumberjackSwift
 
-@objc class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController {
 
     var model: String = ""
-    var productType: ProductType = .Aircraft
+    var type: ProductType = .Aircraft
 
     @IBOutlet weak var titleLabel: UILabel!
 
@@ -41,6 +41,7 @@ import CocoaLumberjackSwift
     @IBOutlet weak var scrollView: UIScrollView!
 
     @IBOutlet weak var saveButton: UIButton!
+    
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -63,6 +64,10 @@ import CocoaLumberjackSwift
         DDLogInfo("Settings VC Showing settings view")
 
         self.scrollView.flashScrollIndicators()
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 
     private func initSegment(control: UISegmentedControl, setting: Int) {
@@ -106,7 +111,7 @@ import CocoaLumberjackSwift
                 NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
         ])
 
-        if (productType == .Handheld) {
+        if (type == .Handheld) {
             startDelayControl.enabled = true
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
 

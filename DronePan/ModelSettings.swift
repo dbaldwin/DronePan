@@ -22,7 +22,7 @@ enum SettingsKeys: String {
     case SkyRow = "sky_row"
 }
 
-@objc class ModelSettings: NSObject {
+class ModelSettings {
     private class func settingForKey(model: String, key: SettingsKeys) -> AnyObject? {
         return NSUserDefaults.standardUserDefaults().dictionaryForKey(model)?[key.rawValue]
     }

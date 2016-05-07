@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc class PreviewController: NSObject, VideoControllerDelegate {
+class PreviewController: VideoControllerDelegate {
 
     func startWithView(view: UIView) {
         VideoPreviewer.instance().start()

@@ -14,6 +14,7 @@
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
+		1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */; };
 		157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */; };
 		15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839E931CCE9A40008B7E97 /* BatteryController.swift */; };
 		15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15839F341CCEA224008B7E97 /* libDJIVTH264Decoder.a */; };
@@ -39,10 +40,10 @@
 		15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */; };
 		1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF541CC26C2100C00C0D /* CameraController.swift */; };
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
+		158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158606451CDB26F500C5DF95 /* MainViewController.swift */; };
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
 		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
-		232F6F181C5448320013CCD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 232F6F171C5448320013CCD9 /* ViewController.m */; };
 		232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F191C5448320013CCD9 /* Main.storyboard */; };
 		232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1C1C5448320013CCD9 /* Assets.xcassets */; };
 		232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */; };
@@ -103,6 +104,7 @@
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionControllerTests.swift; sourceTree = "<group>"; };
 		15839E931CCE9A40008B7E97 /* BatteryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryController.swift; sourceTree = "<group>"; };
 		15839F311CCEA224008B7E97 /* DJIStreamCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIStreamCommon.h; sourceTree = "<group>"; };
@@ -226,13 +228,12 @@
 		15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaControllerTests.swift; sourceTree = "<group>"; };
 		1583BF541CC26C2100C00C0D /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtils.swift; sourceTree = "<group>"; };
+		158606451CDB26F500C5DF95 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
 		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		232F6F161C5448320013CCD9 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		232F6F171C5448320013CCD9 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		232F6F1A1C5448320013CCD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		232F6F1C1C5448320013CCD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		232F6F1F1C5448320013CCD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -592,9 +593,8 @@
 				83EBB1651CD0DA6C00F381A8 /* Device Controllers */,
 				83EBB1641CD0DA3E00F381A8 /* Storyboards */,
 				83EBB1631CD0DA1A00F381A8 /* Supporting files */,
+				158606451CDB26F500C5DF95 /* MainViewController.swift */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
-				232F6F161C5448320013CCD9 /* ViewController.h */,
-				232F6F171C5448320013CCD9 /* ViewController.m */,
 			);
 			path = DronePan;
 			sourceTree = "<group>";
@@ -611,7 +611,7 @@
 				1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */,
 			);
 			path = DronePanTests;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 		83EBB1631CD0DA1A00F381A8 /* Supporting files */ = {
 			isa = PBXGroup;
@@ -619,6 +619,7 @@
 				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
 				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
 				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
+				1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */,
 				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
 				232F6F1C1C5448320013CCD9 /* Assets.xcassets */,
 				232F6F211C5448320013CCD9 /* Info.plist */,
@@ -827,6 +828,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */,
 				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				15839FC71CD487BB008B7E97 /* ConnectionController.swift in Sources */,
 				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
@@ -836,8 +838,8 @@
 				154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */,
 				15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */,
 				15839FBD1CCEA224008B7E97 /* VideoFrameExtractor.m in Sources */,
-				232F6F181C5448320013CCD9 /* ViewController.m in Sources */,
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
+				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
 				15839FBC1CCEA224008B7E97 /* SoftwareDecodeProcessor.m in Sources */,
 				15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */,
@@ -1027,6 +1029,7 @@
 					"$(PROJECT_DIR)/DronePan/VideoPreviewer/DJIH264Decoder/lib",
 					"$(PROJECT_DIR)/DronePan/VideoPreviewer/ffmpeg/lib",
 				);
+				OTHER_SWIFT_FLAGS = "-DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "DronePan/DronePan-Bridging-Header.h";

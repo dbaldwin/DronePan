@@ -18,17 +18,17 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc protocol GimbalControllerDelegate {
+protocol GimbalControllerDelegate {
     func gimbalControllerCompleted()
 
     func gimbalControllerAborted(reason: String)
 
     func gimbalMoveOutOfRange(reason: String)
 
-    optional func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
+    func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 }
 
-@objc class GimbalController: NSObject, DJIGimbalDelegate {
+class GimbalController: NSObject, DJIGimbalDelegate {
     let gimbal: DJIGimbal
 
     var delegate: GimbalControllerDelegate?
@@ -361,7 +361,7 @@ import CocoaLumberjackSwift
         }
     }
 
-    func gimbal(controller: DJIGimbal, didUpdateGimbalState gimbalState: DJIGimbalState) {
+    @objc func gimbal(controller: DJIGimbal, didUpdateGimbalState gimbalState: DJIGimbalState) {
         let atti = gimbalState.attitudeInDegrees
 
         DDLogVerbose("Gimbal Controller didUpdateGimbalState P:\(atti.pitch) Y:\(atti.yaw) R:\(atti.roll)")
@@ -370,7 +370,7 @@ import CocoaLumberjackSwift
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll
 
-        self.delegate?.gimbalAttitudeChanged?(pitch: atti.pitch, yaw: atti.yaw, roll: atti.roll)
+        self.delegate?.gimbalAttitudeChanged(pitch: atti.pitch, yaw: atti.yaw, roll: atti.roll)
     }
 
 }

@@ -18,7 +18,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc protocol FlightControllerDelegate {
+protocol FlightControllerDelegate {
     func flightControllerUpdateHeading(compassHeading: Double)
 
     func flightControllerUpdateAltitude(altitude: Float)
@@ -32,7 +32,7 @@ import CocoaLumberjackSwift
     func flightControllerSetControlMode()
 }
 
-@objc class FlightController: NSObject, DJIFlightControllerDelegate {
+class FlightController: NSObject, DJIFlightControllerDelegate {
     let fc: DJIFlightController
 
     var delegate: FlightControllerDelegate?
@@ -79,7 +79,7 @@ import CocoaLumberjackSwift
         }
     }
 
-    func flightController(fc: DJIFlightController, didUpdateSystemState state: DJIFlightControllerCurrentState) {
+    @objc func flightController(fc: DJIFlightController, didUpdateSystemState state: DJIFlightControllerCurrentState) {
         DDLogVerbose("FC didUpdateSystemState")
 
         let homeLoc = CLLocation(latitude: state.homeLocation.latitude, longitude: state.homeLocation.longitude)

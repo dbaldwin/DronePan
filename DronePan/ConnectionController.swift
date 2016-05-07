@@ -18,40 +18,40 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-@objc enum ProductType: Int {
-    case Aircraft = 0
-    case Handheld = 1
-    case Unknown = 2
+enum ProductType {
+    case Aircraft
+    case Handheld
+    case Unknown
 }
 
-@objc protocol ConnectionControllerDelegate {
-    optional func sdkRegistered()
+protocol ConnectionControllerDelegate {
+    func sdkRegistered()
 
-    optional func failedToRegister(reason: String)
+    func failedToRegister(reason: String)
 
-    optional func connectedToProduct(product: DJIBaseProduct)
+    func connectedToProduct(product: DJIBaseProduct)
 
-    optional func disconnected()
+    func disconnected()
 
-    optional func connectedToBattery(battery: DJIBattery)
+    func connectedToBattery(battery: DJIBattery)
 
-    optional func connectedToCamera(camera: DJICamera)
+    func connectedToCamera(camera: DJICamera)
 
-    optional func connectedToGimbal(gimbal: DJIGimbal)
+    func connectedToGimbal(gimbal: DJIGimbal)
 
-    optional func connectedToRemote(remote: DJIRemoteController)
+    func connectedToRemote(remote: DJIRemoteController)
 
-    optional func connectedToFlightController(flightController: DJIFlightController)
+    func connectedToFlightController(flightController: DJIFlightController)
 
-    optional func disconnectedFromBattery()
+    func disconnectedFromBattery()
 
-    optional func disconnectedFromCamera()
+    func disconnectedFromCamera()
 
-    optional func disconnectedFromGimbal()
+    func disconnectedFromGimbal()
 
-    optional func disconnectedFromRemote()
+    func disconnectedFromRemote()
 
-    optional func disconnectedFromFlightController()
+    func disconnectedFromFlightController()
 }
 
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
@@ -68,15 +68,15 @@ import CocoaLumberjackSwift
         DJISDKManager.registerApp(appKey, withDelegate: self)
     }
 
-    func sdkManagerDidRegisterAppWithError(error: NSError?) {
+    @objc func sdkManagerDidRegisterAppWithError(error: NSError?) {
         if let error = error {
             DDLogWarn("Registration failed with \(error)")
 
-            self.delegate?.failedToRegister?("Unable to register application - make sure you run at least once with internet access")
+            self.delegate?.failedToRegister("Unable to register application - make sure you run at least once with internet access")
         } else {
             DDLogDebug("Connecting to product")
 
-            self.delegate?.sdkRegistered?()
+            self.delegate?.sdkRegistered()
             
             if (connectToSimulator) {
                 DDLogDebug("Connecting to debug bridge")
@@ -94,7 +94,7 @@ import CocoaLumberjackSwift
         if let product = newProduct {
             DDLogInfo("Connected to \(self.model)")
             product.delegate = self
-            self.delegate?.connectedToProduct?(product)
+            self.delegate?.connectedToProduct(product)
 
             if let components = product.components {
                 for (key, component) in components {
@@ -105,7 +105,7 @@ import CocoaLumberjackSwift
             }
         } else {
             DDLogInfo("Disconnected")
-            self.delegate?.disconnected?()
+            self.delegate?.disconnected()
         }
     }
 
@@ -122,42 +122,42 @@ import CocoaLumberjackSwift
         case DJIBatteryComponentKey:
             if let battery = newComponent as? DJIBattery {
                 DDLogDebug("New battery")
-                self.delegate?.connectedToBattery?(battery)
+                self.delegate?.connectedToBattery(battery)
             } else {
                 DDLogDebug("No battery")
-                self.delegate?.disconnectedFromBattery?()
+                self.delegate?.disconnectedFromBattery()
             }
         case DJICameraComponentKey:
             if let camera = newComponent as? DJICamera {
                 DDLogDebug("New camera")
-                self.delegate?.connectedToCamera?(camera)
+                self.delegate?.connectedToCamera(camera)
             } else {
                 DDLogDebug("No camera")
-                self.delegate?.disconnectedFromCamera?()
+                self.delegate?.disconnectedFromCamera()
             }
         case DJIGimbalComponentKey:
             if let gimbal = newComponent as? DJIGimbal {
                 DDLogDebug("New gimbal")
-                self.delegate?.connectedToGimbal?(gimbal)
+                self.delegate?.connectedToGimbal(gimbal)
             } else {
                 DDLogDebug("No gimbal")
-                self.delegate?.disconnectedFromGimbal?()
+                self.delegate?.disconnectedFromGimbal()
             }
         case DJIRemoteControllerComponentKey:
             if let remote = newComponent as? DJIRemoteController {
                 DDLogDebug("New remote")
-                self.delegate?.connectedToRemote?(remote)
+                self.delegate?.connectedToRemote(remote)
             } else {
                 DDLogDebug("No remote")
-                self.delegate?.disconnectedFromRemote?()
+                self.delegate?.disconnectedFromRemote()
             }
         case DJIFlightControllerComponentKey:
             if let fc = newComponent as? DJIFlightController {
                 DDLogDebug("New flight controller")
-                self.delegate?.connectedToFlightController?(fc)
+                self.delegate?.connectedToFlightController(fc)
             } else {
                 DDLogDebug("No flight controller")
-                self.delegate?.disconnectedFromFlightController?()
+                self.delegate?.disconnectedFromFlightController()
             }
         default:
             DDLogDebug("Not handling \(key)")
