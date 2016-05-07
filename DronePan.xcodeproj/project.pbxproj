@@ -46,6 +46,9 @@
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
 		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
+		15FD80DB1CDE92610073B1DA /* AnalyticsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */; };
+		15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */; };
+		15FD80E11CDF14EB0073B1DA /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */; };
 		232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F191C5448320013CCD9 /* Main.storyboard */; };
 		232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1C1C5448320013CCD9 /* Assets.xcassets */; };
 		232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */; };
@@ -237,6 +240,9 @@
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
 		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsUtils.swift; sourceTree = "<group>"; };
+		15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
+		15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		232F6F1A1C5448320013CCD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		232F6F1C1C5448320013CCD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -275,8 +281,10 @@
 				232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */,
 				154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */,
 				15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */,
+				15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */,
 				154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */,
 				232F6FD31C54498E0013CCD9 /* VideoToolbox.framework in Frameworks */,
+				15FD80E11CDF14EB0073B1DA /* DeviceKit.framework in Frameworks */,
 				83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */,
 				15839FB71CCEA224008B7E97 /* libswresample.a in Frameworks */,
 				15839FB41CCEA224008B7E97 /* libavformat.a in Frameworks */,
@@ -314,6 +322,8 @@
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */,
+				15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */,
 				83A558591CD08FE7000BB6C6 /* DJISDK.framework */,
 				836F73381CCF513700233FF3 /* MBProgressHUD.framework */,
 				232F6FD21C54498E0013CCD9 /* VideoToolbox.framework */,
@@ -622,6 +632,7 @@
 		83EBB1631CD0DA1A00F381A8 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */,
 				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
 				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
 				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
@@ -799,6 +810,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/CocoaLumberjackSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/CocoaLumberjack.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DeviceKit.framework",
 			);
 			outputPaths = (
 			);
@@ -834,6 +847,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15FD80DB1CDE92610073B1DA /* AnalyticsUtils.swift in Sources */,
 				158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */,
 				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				15839FC71CD487BB008B7E97 /* ConnectionController.swift in Sources */,

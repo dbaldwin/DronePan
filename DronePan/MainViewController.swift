@@ -85,6 +85,7 @@ class MainViewController: UIViewController {
         super.viewWillAppear(animated)
         
         DDLogInfo("Showing main window")
+        trackScreenView("MainViewController")
         
         self.previewController?.startWithView(self.cameraView)
     }

@@ -118,6 +118,18 @@ class GimbalController: NSObject, DJIGimbalDelegate {
 
         gimbal.completionTimeForControlAngleAction = 0.5
         gimbal.delegate = self
+
+        for (key, val) in gimbal.gimbalCapability {
+            if let range = val as? DJIParamCapabilityMinMax {
+                DDLogDebug("Logging \(key) as range")
+                trackEvent(category: "Gimbal Capability", action: key as! String, label: "\(range.isSupported) \(range.min) - \(range.max)")
+            } else if let capability = val as? DJIParamCapability {
+                DDLogDebug("Logging \(key) as cap")
+                trackEvent(category: "Gimbal Capability", action: key as! String, label: "\(capability.isSupported)")
+            } else {
+                DDLogDebug("Not logging \(key)")
+            }
+        }
     }
 
     func reset() {
