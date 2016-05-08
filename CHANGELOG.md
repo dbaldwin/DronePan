@@ -27,6 +27,7 @@ have taken at least one photo or video before running DronePan.
 * Add a thin progress bar
 * Move settings from segment to slider to allow for finer user control
 * Increase max number of rows to 10
+* Opt-in analytics. You'll be asked at start and can always change your mind later (via System Settings > DronePan)
 
 ### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b4)
 
