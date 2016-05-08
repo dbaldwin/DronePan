@@ -93,6 +93,11 @@ protocol ConnectionControllerDelegate {
 
         if let product = newProduct {
             DDLogInfo("Connected to \(self.model)")
+            
+            if let model = product.model {
+                trackEvent(category: "Connection", action: "New Product", label: model)
+            }
+            
             product.delegate = self
             self.delegate?.connectedToProduct(product)
 
@@ -130,6 +135,9 @@ protocol ConnectionControllerDelegate {
         case DJICameraComponentKey:
             if let camera = newComponent as? DJICamera {
                 DDLogDebug("New camera")
+
+                trackEvent(category: "Connection", action: "New Camera", label: camera.displayName)
+
                 self.delegate?.connectedToCamera(camera)
             } else {
                 DDLogDebug("No camera")

@@ -65,6 +65,13 @@ class SettingsViewController: UIViewController {
         }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        DDLogInfo("Showing settings window")
+        trackScreenView("SettingsViewController")
+    }
+    
     override func viewDidAppear(animated: Bool) {
         DDLogInfo("Settings VC Showing settings view")
 
