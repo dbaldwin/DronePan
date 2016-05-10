@@ -30,6 +30,8 @@ protocol FlightControllerDelegate {
     func flightControllerUnableToSetControlMode()
 
     func flightControllerSetControlMode()
+    
+    func flightControllerUnableToYaw(reason: String)
 }
 
 class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate {
@@ -78,6 +80,8 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
                 (error) in
                 if let error = error {
                     DDLogWarn("Unable to yaw aircraft \(error)")
+                    
+                    self.delegate?.flightControllerUnableToYaw("Unable to yaw: \(error)")
                 }
             })
         }

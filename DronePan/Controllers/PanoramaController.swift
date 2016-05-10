@@ -610,6 +610,10 @@ extension PanoramaController : FlightControllerDelegate {
     func flightControllerSetControlMode() {
         self.doPanoLoop()
     }
+    
+    func flightControllerUnableToYaw(reason: String) {
+        self.delegate?.postUserMessage(reason)
+    }
 }
 
 // MARK: - Gimbal Controller Delegate
