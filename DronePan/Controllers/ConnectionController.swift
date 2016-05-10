@@ -54,6 +54,10 @@ protocol ConnectionControllerDelegate {
     func disconnectedFromFlightController()
 }
 
+protocol ConnectionControllerDiagnosticsDelegate {
+    func diagnosticsSeen(code code: Int, reason: String, solution: String?)
+}
+
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
     var connectToSimulator = false
     let bridgeAddress = "10.0.1.18"
@@ -61,6 +65,7 @@ protocol ConnectionControllerDelegate {
     let appKey = "d6b78c9337f72fadd85d88e2"
 
     var delegate: ConnectionControllerDelegate?
+    var diagnosticsDelegate: ConnectionControllerDiagnosticsDelegate?
 
     var model: String?
 
@@ -118,6 +123,8 @@ protocol ConnectionControllerDelegate {
         for diagnostic in info {
             if let d = diagnostic as? DJIDiagnostics {
                 DDLogDebug("Diagnostic for \(model): Code: \(d.code), Reason: \(d.reason), Solution: \(d.solution)")
+                
+                self.diagnosticsDelegate?.diagnosticsSeen(code: d.code, reason: d.reason, solution: d.solution)
             }
         }
     }

@@ -172,6 +172,28 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     }
 }
 
+class ConnectionControllerDiagnosticsSpyDelegate: ConnectionControllerDiagnosticsDelegate {
+
+    var code : Int? = .None
+    var reason : String? = .None
+    var solution: String? = .None
+    
+    var asyncExpectation: XCTestExpectation?
+    
+    func diagnosticsSeen(code code: Int, reason: String, solution: String?) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        self.code = code
+        self.reason = reason
+        self.solution = solution
+
+        expectation.fulfill()
+    }
+}
+
 class ConnectionControllerTests: XCTestCase {
     var connectionController : ConnectionController?
     
@@ -365,6 +387,63 @@ class ConnectionControllerTests: XCTestCase {
             }
             
             XCTAssertTrue(productRemoved, "Wasn't told that connection was lost")
+        }
+    }
+    
+    func testDiagnostic() {
+        let spyDelegate = ConnectionControllerDiagnosticsSpyDelegate()
+        connectionController!.diagnosticsDelegate = spyDelegate
+        
+        let expectation = expectationWithDescription("Diagnostics should be passed on")
+        spyDelegate.asyncExpectation = expectation
+
+        class DiagnosticMock : DJIDiagnostics {
+            override var code : Int {
+                get {
+                    return 1
+                }
+            }
+            
+            override var reason: String {
+                get {
+                    return "Test Reason"
+                }
+            }
+            
+            override var solution: String? {
+                get {
+                    return "Test Solution"
+                }
+            }
+        }
+        
+        connectionController!.product(DJIBaseProduct(), didUpdateDiagnosticsInformation: [DiagnosticMock()])
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let code = spyDelegate.code else {
+                XCTFail("Expected delegate to be called with code")
+                return
+            }
+            
+            XCTAssertEqual(code, 1, "Code was incorrect, \(code)")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual(reason, "Test Reason", "Reason was incorrect \(reason)")
+            
+            guard let solution = spyDelegate.solution else {
+                XCTFail("Expected delegate to be called with solution")
+                return
+            }
+            
+            XCTAssertEqual(solution, "Test Solution", "Solution was incorrect \(solution)")
         }
     }
 }
