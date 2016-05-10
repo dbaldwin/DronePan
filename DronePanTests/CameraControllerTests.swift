@@ -18,6 +18,44 @@ import DJISDK
 
 @testable import DronePan
 
+class CameraControllerSpyDelegate: CameraControllerDelegate {
+    
+    var completed: Bool? = .None
+    
+    var asyncExpectation: XCTestExpectation?
+
+    func cameraControllerReset() {
+        // NOP
+    }
+    
+    func cameraControllerOK(fromError: Bool) {
+        // NOP
+    }
+    
+    func cameraControllerAborted(reason: String) {
+        // NOP
+    }
+    
+    func cameraControllerInError(reason: String) {
+        // NOP
+    }
+    
+    func cameraControllerCompleted(shotTaken: Bool) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        completed = true
+        expectation.fulfill()
+    }
+    
+    func cameraControllerNewMedia(filename: String) {
+        // NOP
+    }
+}
+
+
 class CameraControllerTests: XCTestCase {
     func testSpaceForShotOK() {
         let controller = CameraController(camera: DJICamera())
@@ -55,5 +93,53 @@ class CameraControllerTests: XCTestCase {
         let value = controller.hasSpaceForPano(20)
         
         XCTAssertTrue(value, "No space for shot when available count unknown")
+    }
+    
+    func testSetPhotoMode() {
+        class CameraMock : DJICamera {
+            override func setCameraMode(mode: DJICameraMode, withCompletion block: DJICompletionBlock?) {
+                class StateMock : DJICameraSystemState {
+
+                    var internalMode : DJICameraMode
+                    
+                    init(mode: DJICameraMode) {
+                        self.internalMode = mode
+                    }
+                    
+                    override var mode: DJICameraMode {
+                        get {
+                            return internalMode
+                        }
+                    }
+                }
+                
+                let state = StateMock(mode: mode)
+
+                self.delegate?.camera?(self, didUpdateSystemState: state)
+            }
+        }
+        
+        let controller = CameraController(camera: CameraMock())
+        
+        let spyDelegate = CameraControllerSpyDelegate()
+        controller.delegate = spyDelegate
+            
+        let expectation = expectationWithDescription("Setting mode should complete")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.setPhotoMode()
+        
+        waitForExpectationsWithTimeout(3) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let completed = spyDelegate.completed else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(completed, "Mode not set")
+        }
     }
 }
