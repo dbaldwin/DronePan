@@ -18,6 +18,24 @@ import DJISDK
 
 @testable import DronePan
 
+class CameraControllerVideoSpyDelegate : VideoControllerDelegate {
+
+    var videoReceived: Bool? = .None
+
+    var asyncExpectation: XCTestExpectation?
+    
+    func cameraReceivedVideo(videoBuffer: UnsafeMutablePointer<UInt8>, size: Int) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("CameraControllerVideoSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        videoReceived = true
+        
+        expectation.fulfill()
+    }
+}
+
 class CameraControllerSpyDelegate: CameraControllerDelegate {
     
     var completed: Bool? = .None
@@ -25,6 +43,10 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
     var aborted: Bool? = .None
     var abortReason : String? = .None
     var stopped : Bool? = .None
+    var errored : Bool? = .None
+    var errorReason : String? = .None
+    var ok : Bool? = .None
+    var okFromError : Bool? = .None
     
     var asyncExpectation: XCTestExpectation?
 
@@ -33,12 +55,18 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
     }
     
     func cameraControllerOK(fromError: Bool) {
-        // NOP
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        ok = true
+        okFromError = fromError
+        
+        expectation.fulfill()
     }
     
     func cameraControllerAborted(reason: String) {
-        NSLog("ABORT \(reason)")
-
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -51,8 +79,6 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
     }
 
     func cameraControllerStopped() {
-        NSLog("STOP")
-        
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -64,12 +90,18 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
     }
     
     func cameraControllerInError(reason: String) {
-        // NOP
+        guard let expectation = asyncExpectation else {
+            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        errored = true
+        errorReason = reason
+        
+        expectation.fulfill()
     }
     
     func cameraControllerCompleted(shotTaken: Bool) {
-        NSLog("COMPLETE \(shotTaken)")
-
         guard let expectation = asyncExpectation else {
             XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
@@ -77,6 +109,7 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
         
         completed = true
         self.shotTaken = shotTaken
+        
         expectation.fulfill()
     }
     
@@ -100,18 +133,39 @@ class ModeStateMock : DJICameraSystemState {
     }
 }
 
+class StoringStateMock : DJICameraSystemState {
+    var internalStoring : Bool
+    
+    init(storing: Bool) {
+        self.internalStoring = storing
+    }
+    
+    override var isStoringPhoto: Bool {
+        get {
+            return internalStoring
+        }
+    }
+}
 
 class CameraErrorStateMock : DJICameraSystemState {
     
     var internalError : Bool
+    var internalOverheated : Bool
     
-    init(error: Bool) {
+    init(error: Bool, overheated : Bool) {
         self.internalError = error
+        self.internalOverheated = overheated
     }
 
     override var isCameraError: Bool {
         get {
             return internalError
+        }
+    }
+    
+    override var isCameraOverHeated: Bool {
+        get {
+            return internalOverheated
         }
     }
 }
@@ -349,7 +403,7 @@ class CameraControllerTests: XCTestCase {
     func testSetPhotoModeCameraError() {
         class CameraMock : DJICamera {
             override func setCameraMode(mode: DJICameraMode, withCompletion block: DJICompletionBlock?) {
-                let state = CameraErrorStateMock(error: true)
+                let state = CameraErrorStateMock(error: true, overheated: false)
                 
                 self.delegate?.camera?(self, didUpdateSystemState: state)
             }
@@ -497,6 +551,40 @@ class CameraControllerTests: XCTestCase {
             XCTAssertTrue(aborted, "Photo taken")
         }
     }
+
+    func testTakeASnapSlowSDCard() {
+        class CameraMock : DJICamera {
+            override func startShootPhoto(shootMode: DJICameraShootPhotoMode, withCompletion block: DJICompletionBlock?) {
+                let state = StoringStateMock(storing: true)
+                
+                self.delegate?.camera?(self, didUpdateSystemState: state)
+            }
+        }
+        
+        let controller = CameraController(camera: CameraMock())
+        
+        let spyDelegate = CameraControllerSpyDelegate()
+        controller.delegate = spyDelegate
+        
+        let expectation = expectationWithDescription("Taking a photo should not complete if SD card takes too long")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.takeASnap()
+        
+        waitForExpectationsWithTimeout(13) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(aborted, "Photo taken when SD card taking too long")
+        }
+    }
+
     
     func testTakeASnapStopping() {
         class CameraMock : DJICamera {
@@ -567,7 +655,7 @@ class CameraControllerTests: XCTestCase {
     func testTaleASnapCameraError() {
         class CameraMock : DJICamera {
             override func startShootPhoto(shootMode: DJICameraShootPhotoMode, withCompletion block: DJICompletionBlock?) {
-                let state = CameraErrorStateMock(error: true)
+                let state = CameraErrorStateMock(error: false, overheated: true)
                 
                 self.delegate?.camera?(self, didUpdateSystemState: state)
             }
@@ -597,4 +685,236 @@ class CameraControllerTests: XCTestCase {
         }
     }
 
+    func testVideo() {
+        let camera = DJICamera()
+        let controller = CameraController(camera: camera)
+        
+        let spyDelegate = CameraControllerVideoSpyDelegate()
+        controller.videoDelegate = spyDelegate
+        
+        let expectation = expectationWithDescription("Video should be passed on")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.camera(camera, didReceiveVideoData: nil, length: 0)
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let videoReceived = spyDelegate.videoReceived else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(videoReceived, "Video data was not passed on")
+        }
+    }
+    
+    func cameraControllerSDError(state : DJICameraSDCardState, reason: String) {
+        let camera = DJICamera()
+
+        let controller = CameraController(camera: camera)
+        
+        controller.status = .Normal
+        
+        let spyDelegate = CameraControllerSpyDelegate()
+        controller.delegate = spyDelegate
+        
+        let expectation = expectationWithDescription("SD Card State change to error should be signalled")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.camera(camera, didUpdateSDCardState: state)
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let errored = spyDelegate.errored else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            guard let errorReason = spyDelegate.errorReason else {
+                XCTFail("Expected reason not available")
+                return
+            }
+            
+            XCTAssertTrue(errored, "Error state was not passed on")
+            XCTAssertEqual(errorReason, reason, "Error reason was not passed on")
+            XCTAssertEqual(controller.status, ControllerStatus.Error, "Controller not in Error status \(controller.status)")
+        }
+    }
+    
+    func testSDCardError() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var hasError: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card in error state")
+    }
+
+    func testSDCardReadOnly() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isReadOnly: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card is read only")
+    }
+
+    func testSDCardInvalidFormat() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isInvalidFormat: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card has invalid format")
+    }
+
+    func testSDCardFull() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isFull: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card full")
+    }
+    
+    func testSDCardMissing() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isInserted: Bool {
+                get {
+                    return false
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card missing")
+    }
+    
+    func testSDCardUnformatted() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isInserted: Bool {
+                get {
+                    return true
+                }
+            }
+
+            override var isFormatted: Bool {
+                get {
+                    return false
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card requires formatting")
+    }
+    
+    func testSDCardFormatting() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isInserted: Bool {
+                get {
+                    return true
+                }
+            }
+            
+            override var isFormatted: Bool {
+                get {
+                    return true
+                }
+            }
+
+            override var isFormatting: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card is currently formatting")
+    }
+
+    func testSDCardInitializing() {
+        class MockSDCardState : DJICameraSDCardState {
+            override var isInserted: Bool {
+                get {
+                    return true
+                }
+            }
+            
+            override var isFormatted: Bool {
+                get {
+                    return true
+                }
+            }
+            
+            override var isInitializing: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        cameraControllerSDError(MockSDCardState(), reason: "SD Card is currently initializing")
+    }
+
+    
+    func cameraControllerSDOK() {
+        let camera = DJICamera()
+        
+        let controller = CameraController(camera: camera)
+        
+        controller.status = .Error
+        
+        let spyDelegate = CameraControllerSpyDelegate()
+        controller.delegate = spyDelegate
+        
+        let expectation = expectationWithDescription("SD Card State change to error should be signalled")
+        spyDelegate.asyncExpectation = expectation
+        
+        class MockSDCardState : DJICameraSDCardState {
+            override var isFormatted: Bool {
+                get {
+                    return true
+                }
+            }
+        }
+        
+        controller.camera(camera, didUpdateSDCardState: MockSDCardState())
+        
+        waitForExpectationsWithTimeout(1) { error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let ok = spyDelegate.ok else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            guard let okFromError = spyDelegate.okFromError else {
+                XCTFail("Expected reason not available")
+                return
+            }
+            
+            XCTAssertTrue(ok, "Camera did not return to OK")
+            XCTAssertTrue(okFromError, "Camera didn't state that it was changing back from Error")
+            XCTAssertEqual(controller.status, ControllerStatus.Normal, "Controller not in Normal status \(controller.status)")
+        }
+    }
 }
