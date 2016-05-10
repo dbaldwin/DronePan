@@ -96,6 +96,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller setPhotoMode - status was \(status) - returning")
 
+            self.delegate?.cameraControllerAborted("Tried to set photo mode but was in status: \(self.status)")
             return
         }
 
@@ -108,16 +109,24 @@ class CameraController: NSObject, DJICameraDelegate {
 
         let nextCount = counter + 1
 
+        var errorSeen = false
+        
         self.camera.setCameraMode(.ShootPhoto) {
             (error) in
 
             if let e = error {
                 DDLogWarn("Camera Controller setPhotoMode - error seen - \(e)")
 
+                errorSeen = true
+                
                 self.setPhotoMode(nextCount)
             }
         }
 
+        if errorSeen {
+            return
+        }
+        
         delay(2) {
             if (self.mode == .ShootPhoto) {
                 DDLogDebug("Camera Controller setPhotoMode - OK")
@@ -135,6 +144,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
 
+            self.delegate?.cameraControllerAborted("Tried to take a photo but was in status: \(self.status)")
             return
         }
 
@@ -163,6 +173,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller checkTakeASnap - status was \(status) - returning")
 
+            self.delegate?.cameraControllerAborted("Tried to check if a photo was taken but was in status: \(self.status)")
             return
         }
 
@@ -194,6 +205,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller delay - status was \(status) - returning")
 
+            self.delegate?.cameraControllerAborted("Tried to wait but was in status: \(self.status)")
             return
         }
 
