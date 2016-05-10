@@ -600,7 +600,7 @@ extension PanoramaController : FlightControllerDelegate {
 extension PanoramaController : GimbalControllerDelegate {
     func setGimbal(gimbal: DJIGimbal?) {
         if let gimbal = gimbal {
-            self.gimbalController = GimbalController(gimbal: gimbal)
+            self.gimbalController = GimbalController(gimbal: gimbal, supportsSDKYaw: ControllerUtils.supportsSDKYaw(self.model))
             self.gimbalController!.delegate = self
         } else {
             self.gimbalController = nil
