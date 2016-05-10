@@ -18,22 +18,35 @@ class ActiveAwareDispatchGroup {
         dispatch_group_enter(group)
     }
     
-    func leave() {
+    func leave() -> Bool {
         DDLogDebug("Leaving dispatch group \(name)")
+        
+        var result = true
         
         if !active {
             DDLogError("Warning - leaving dispatch group \(name) while not active")
+            
+            result = false
         }
         
         active = false
         dispatch_group_leave(group)
+        
+        return result
     }
     
-    func leaveIfActive() {
+    func leaveIfActive() -> Bool {
         DDLogDebug("Leaving dispatch group if active: \(active) - \(name)")
-        if !active {
+        
+        var result = false
+        
+        if active {
             self.leave()
+            
+            result = true
         }
+        
+        return result
     }
     
     func wait() {
