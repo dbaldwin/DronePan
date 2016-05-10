@@ -70,7 +70,7 @@ class MainViewController: UIViewController {
         }
 
         /*
-        // TODO - this should be tested
+        // TODO: this should be tested
         #ifndef DEBUG
         [self.startButton setEnabled:NO];
     #endif
@@ -112,7 +112,7 @@ class MainViewController: UIViewController {
     }
 
     func showWarning(text: String) {
-        // TODO - this view should be a custom class that has a set of messages that rotate
+        // TODO: this view should be a custom class that has a set of messages that rotate
         if (self.warningOffset.constant == 0) {
             dispatch_async(dispatch_get_main_queue()) {
                 self.warningLabel.text = text
@@ -268,6 +268,8 @@ class MainViewController: UIViewController {
     }
 }
 
+// MARK: - Connection Controller Delegate
+
 extension MainViewController : ConnectionControllerDelegate {
     func sdkRegistered() {
         DDLogInfo("Registered")
@@ -361,6 +363,7 @@ extension MainViewController : ConnectionControllerDelegate {
     }
 }
 
+// MARK: - Battery Controller Delegate
 
 extension MainViewController : BatteryControllerDelegate {
 
@@ -373,9 +376,11 @@ extension MainViewController : BatteryControllerDelegate {
     }
     
     func batteryControllerTemperatureUpdated(batteryTemperature: Int) {
-        // TODO
+        // TODO: Battery temperature
     }
 }
+
+// MARK: - Panorama Controller Delegate
 
 extension MainViewController : PanoramaControllerDelegate {
     func postUserMessage(message: String) {

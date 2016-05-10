@@ -134,6 +134,8 @@ class PanoramaController {
     }
 }
 
+// MARK: - Main Logic
+
 extension PanoramaController {
     private func checkProduct() -> Bool {
         if let _ = self.product, _ = self.model, _ = self.type {
@@ -279,11 +281,11 @@ extension PanoramaController {
             
             let pitches = self.pitchesForLoop(skyRow: ModelSettings.skyRow(self.model!), type: self.type!, rowCount: ModelSettings.numberOfRows(self.model!))
             
-            // TODO - needs fixing when we enable AC to have gimbal yaw
+            // TODO: needs fixing when we enable AC to have gimbal yaw
             let aircraftYaw = type == .Aircraft
             
             if type == .Handheld {
-                // TODO - should also be done for gimbal yaw of AC when that is in place
+                // TODO: should also be done for gimbal yaw of AC when that is in place
                 self.currentHeading = 0
             }
             
@@ -454,6 +456,8 @@ extension PanoramaController {
     }
 }
 
+// MARK: - Camera Controller Delegate
+
 extension PanoramaController : CameraControllerDelegate {
     func setCamera(camera: DJICamera?, preview: VideoControllerDelegate? = nil) {
         if let camera = camera {
@@ -529,6 +533,8 @@ extension PanoramaController : CameraControllerDelegate {
     }
 }
 
+// MARK: - Remote Controller Delegate
+
 extension PanoramaController : RemoteControllerDelegate {
     func setRemote(remote: DJIRemoteController?) {
         if let remote = remote {
@@ -545,6 +551,8 @@ extension PanoramaController : RemoteControllerDelegate {
         }
     }
 }
+
+// MARK: - Flight Controller Delegate
 
 extension PanoramaController : FlightControllerDelegate {
     func setFC(fc: DJIFlightController?) {
@@ -596,6 +604,8 @@ extension PanoramaController : FlightControllerDelegate {
         self.doPanoLoop()
     }
 }
+
+// MARK: - Gimbal Controller Delegate
 
 extension PanoramaController : GimbalControllerDelegate {
     func setGimbal(gimbal: DJIGimbal?) {

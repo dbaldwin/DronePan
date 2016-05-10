@@ -102,6 +102,6 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
     }
     
     func simulator(simulator: DJISimulator, updateSimulatorState state: DJISimulatorState) {
-        // TODO - it's just possible that state.pitch, state.roll, state.yaw here could help in testing        
+        // TODO: it's just possible that state.pitch, state.roll, state.yaw here could help in testing        
     }
 }

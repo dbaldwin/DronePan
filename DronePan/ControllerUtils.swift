@@ -62,7 +62,7 @@ class ControllerUtils {
         return ControllerUtils.isPhantom3(model) || ControllerUtils.isPhantom4(model)
     }
 
-    // TODO - this should be P4 only - https://github.com/dbaldwin/DronePan/issues/48
+    // TODO: this should be P4 only - https://github.com/dbaldwin/DronePan/issues/48
     class func supportsSDKYaw(model: String?) -> Bool {
         if let model = model {
             return !(ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model))
