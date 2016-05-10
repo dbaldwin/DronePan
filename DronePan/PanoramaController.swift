@@ -89,8 +89,8 @@ class PanoramaController {
     
     let droneCommandsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL)
     
-    let gimbalDispatchGroup = dispatch_group_create()
-    let cameraDispatchGroup = dispatch_group_create()
+    let gimbalDispatchGroup = ActiveAwareDispatchGroup(name: "gimbal")
+    let cameraDispatchGroup = ActiveAwareDispatchGroup(name: "camera")
     
     var totalCount = 0
     
@@ -392,10 +392,10 @@ extension PanoramaController {
         DDLogDebug("Set photo mode")
         
         if let c = self.cameraController {
-            dispatch_group_enter(self.cameraDispatchGroup)
+            self.cameraDispatchGroup.enter()
             DDLogDebug("Set photo mode - send")
             c.setPhotoMode()
-            dispatch_group_wait(self.cameraDispatchGroup, DISPATCH_TIME_FOREVER)
+            self.cameraDispatchGroup.wait()
             DDLogDebug("Set photo mode - done")
         }
     }
@@ -404,10 +404,10 @@ extension PanoramaController {
         DDLogDebug("Reset gimbal")
         
         if let c = self.gimbalController {
-            dispatch_group_enter(self.gimbalDispatchGroup)
+            self.gimbalDispatchGroup.enter()
             DDLogDebug("Reset gimbal - send")
             c.reset()
-            dispatch_group_wait(self.gimbalDispatchGroup, DISPATCH_TIME_FOREVER)
+            self.gimbalDispatchGroup.wait()
             DDLogDebug("Reset gimbal - done")
         }
     }
@@ -416,10 +416,10 @@ extension PanoramaController {
         DDLogDebug("Set pitch \(pitch)")
 
         if let c = self.gimbalController {
-            dispatch_group_enter(self.gimbalDispatchGroup)
+            self.gimbalDispatchGroup.enter()
             DDLogDebug("Set pitch \(pitch) - send")
             c.setPitch(Float(pitch))
-            dispatch_group_wait(self.gimbalDispatchGroup, DISPATCH_TIME_FOREVER)
+            self.gimbalDispatchGroup.wait()
             DDLogDebug("Set pitch \(pitch) - done")
         }
     }
@@ -429,10 +429,10 @@ extension PanoramaController {
         DDLogDebug("Set yaw \(yaw)")
         
         if let c = self.gimbalController {
-            dispatch_group_enter(self.gimbalDispatchGroup)
+            self.gimbalDispatchGroup.enter()
             DDLogDebug("Set yaw \(yaw) - send")
             c.setYaw(Float(yaw))
-            dispatch_group_wait(self.gimbalDispatchGroup, DISPATCH_TIME_FOREVER)
+            self.gimbalDispatchGroup.wait()
             DDLogDebug("Set yaw \(yaw) - done")
         }
     }
@@ -447,10 +447,10 @@ extension PanoramaController {
         DDLogDebug("Take a snap");
     
         if let c = self.cameraController {
-            dispatch_group_enter(self.cameraDispatchGroup)
+            self.cameraDispatchGroup.enter()
             DDLogDebug("Take a snap - send")
             c.takeASnap()
-            dispatch_group_wait(self.cameraDispatchGroup, DISPATCH_TIME_FOREVER)
+            self.cameraDispatchGroup.wait()
             DDLogDebug("Take a snap - done")
         }
     }
@@ -480,7 +480,7 @@ extension PanoramaController : CameraControllerDelegate {
         }
         
         dispatch_async(droneCommandsQueue) {
-            dispatch_group_leave(self.cameraDispatchGroup)
+            self.cameraDispatchGroup.leave()
         }
     }
     
@@ -492,9 +492,16 @@ extension PanoramaController : CameraControllerDelegate {
         dispatch_async(droneCommandsQueue) {
             self.panoRunning = false
             
-            dispatch_group_leave(self.cameraDispatchGroup)
+            self.cameraDispatchGroup.leave()
         }
     }
+    
+    func cameraControllerStopped() {
+        dispatch_async(droneCommandsQueue) {
+            self.cameraDispatchGroup.leaveIfActive()
+        }
+    }
+    
     
     func cameraControllerInError(reason: String) {
         DDLogWarn("Camera signalled error \(reason)")
@@ -524,7 +531,7 @@ extension PanoramaController : CameraControllerDelegate {
         DDLogDebug("Camera signalled reset")
         
         dispatch_async(droneCommandsQueue) {
-            dispatch_group_leave(self.cameraDispatchGroup)
+            self.cameraDispatchGroup.leave()
         }
     }
     
@@ -620,8 +627,8 @@ extension PanoramaController : GimbalControllerDelegate {
     func gimbalControllerCompleted() {
         DDLogDebug("Gimbal signalled complete")
         
-        dispatch_async(droneCommandsQueue) { 
-            dispatch_group_leave(self.gimbalDispatchGroup)
+        dispatch_async(droneCommandsQueue) {
+            self.gimbalDispatchGroup.leave()
         }
     }
     
@@ -633,7 +640,7 @@ extension PanoramaController : GimbalControllerDelegate {
         dispatch_async(droneCommandsQueue) {
             self.panoRunning = false
             
-            dispatch_group_leave(self.gimbalDispatchGroup)
+            self.gimbalDispatchGroup.leave()
         }
     }
     
@@ -643,7 +650,7 @@ extension PanoramaController : GimbalControllerDelegate {
         self.delegate?.postUserMessage(reason)
         
         dispatch_async(droneCommandsQueue) {
-            dispatch_group_leave(self.gimbalDispatchGroup)
+            self.gimbalDispatchGroup.leave()
         }
     }
     

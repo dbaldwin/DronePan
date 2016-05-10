@@ -23,6 +23,8 @@ protocol CameraControllerDelegate {
 
     func cameraControllerAborted(reason: String)
 
+    func cameraControllerStopped()
+    
     func cameraControllerInError(reason: String)
 
     func cameraControllerOK(fromError: Bool)
@@ -96,7 +98,10 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller setPhotoMode - status was \(status) - returning")
 
-            self.delegate?.cameraControllerAborted("Tried to set photo mode but was in status: \(self.status)")
+            if (status == .Stopping) {
+                self.delegate?.cameraControllerStopped()
+            }
+            
             return
         }
 
@@ -128,14 +133,22 @@ class CameraController: NSObject, DJICameraDelegate {
         }
         
         delay(2) {
-            if (self.mode == .ShootPhoto) {
-                DDLogDebug("Camera Controller setPhotoMode - OK")
+            if (self.status == .Normal) {
+                if (self.mode == .ShootPhoto) {
+                    DDLogDebug("Camera Controller setPhotoMode - OK")
 
-                self.delegate?.cameraControllerCompleted(false)
+                    self.delegate?.cameraControllerCompleted(false)
+                } else {
+                    DDLogWarn("Camera Controller hasn't completed yet count: \(counter)")
+
+                    self.setPhotoMode(nextCount)
+                }
             } else {
-                DDLogWarn("Camera Controller hasn't completed yet count: \(counter)")
+                DDLogDebug("Status changed to \(self.status) while waiting for mode to change")
 
-                self.setPhotoMode(nextCount)
+                if (self.status == .Stopping) {
+                    self.delegate?.cameraControllerStopped()
+                }
             }
         }
     }
@@ -144,7 +157,10 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
 
-            self.delegate?.cameraControllerAborted("Tried to take a photo but was in status: \(self.status)")
+            if (status == .Stopping) {
+                self.delegate?.cameraControllerStopped()
+            }
+
             return
         }
 
@@ -157,15 +173,23 @@ class CameraController: NSObject, DJICameraDelegate {
 
         let nextCount = counter + 1
 
+        var errorSeen = false
+        
         self.camera.startShootPhoto(.Single) {
             (error) in
             if let e = error {
                 DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
+                
+                errorSeen = true
 
                 self.takeASnap(nextCount)
             }
         }
 
+        if errorSeen {
+            return
+        }
+        
         self.checkTakeASnap(0, counter: counter)
     }
 
@@ -173,7 +197,10 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller checkTakeASnap - status was \(status) - returning")
 
-            self.delegate?.cameraControllerAborted("Tried to check if a photo was taken but was in status: \(self.status)")
+            if (status == .Stopping) {
+                self.delegate?.cameraControllerStopped()
+            }
+
             return
         }
 
@@ -185,18 +212,27 @@ class CameraController: NSObject, DJICameraDelegate {
         }
 
         delay(2) {
-            if (self.tookShot) {
-                DDLogDebug("Camera Controller checkTakeASnap - OK")
+            if (self.status == .Normal) {
+                if (self.tookShot) {
+                    DDLogDebug("Camera Controller checkTakeASnap - OK")
 
-                self.delegate?.cameraControllerCompleted(true)
-            } else if (self.isShooting || self.isStoring) {
-                DDLogDebug("Camera Controller checkTakeASnap - busy - retry")
+                    self.delegate?.cameraControllerCompleted(true)
+                } else if (self.isShooting || self.isStoring) {
+                    DDLogDebug("Camera Controller checkTakeASnap - busy - retry")
 
-                self.checkTakeASnap(checkCounter + 1, counter: counter)
+                    self.checkTakeASnap(checkCounter + 1, counter: counter)
+                } else {
+                    DDLogWarn("Camera Controller checkTakeASnap hasn't completed yet count: \(counter)")
+
+                    self.takeASnap(counter + 1)
+                }
             } else {
-                DDLogWarn("Camera Controller checkTakeASnap hasn't completed yet count: \(counter)")
+                DDLogDebug("Status changed to \(self.status) while waiting for photo")
 
-                self.takeASnap(counter + 1)
+                if (self.status == .Stopping) {
+                    self.delegate?.cameraControllerStopped()
+                }
+
             }
         }
     }
@@ -205,7 +241,6 @@ class CameraController: NSObject, DJICameraDelegate {
         if (status != .Normal) {
             DDLogDebug("Camera Controller delay - status was \(status) - returning")
 
-            self.delegate?.cameraControllerAborted("Tried to wait but was in status: \(self.status)")
             return
         }
 
