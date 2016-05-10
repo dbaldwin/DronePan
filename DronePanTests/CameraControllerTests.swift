@@ -874,7 +874,7 @@ class CameraControllerTests: XCTestCase {
     }
 
     
-    func cameraControllerSDOK() {
+    func testCameraControllerSDOK() {
         let camera = DJICamera()
         
         let controller = CameraController(camera: camera)
@@ -884,10 +884,16 @@ class CameraControllerTests: XCTestCase {
         let spyDelegate = CameraControllerSpyDelegate()
         controller.delegate = spyDelegate
         
-        let expectation = expectationWithDescription("SD Card State change to error should be signalled")
+        let expectation = expectationWithDescription("SD Card State change to normal should be signalled")
         spyDelegate.asyncExpectation = expectation
         
         class MockSDCardState : DJICameraSDCardState {
+            override var isInserted: Bool {
+                get {
+                    return true
+                }
+            }
+            
             override var isFormatted: Bool {
                 get {
                     return true
