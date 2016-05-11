@@ -256,7 +256,7 @@ class MainViewController: UIViewController {
                 settings.type = .Aircraft
             }
 #else
-            if let model = self.model, type = self.type {
+            if let model = self.panoramaController?.model, type = self.panoramaController?.type {
                 settings.model = model
                 settings.type = type
             }
