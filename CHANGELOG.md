@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.4.2
+## 1.4.3
 
 ### Known issues
 
@@ -17,17 +17,21 @@ have taken at least one photo or video before running DronePan.
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 * Gimbal yaw reset for P4 and I1 is currently disabled - you will have to make sure the gimbal is pointing forwards yourself [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
 
-### [1.4.2b5](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b5)
+### [1.4.3b7](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b7)
 
 #### Updates
 
 * Add low battery warning
-* Add ability to keep info window present at all times (iOS Settings App > DronePan)
+* Add ability to keep info window present at all times (iOS System Settings App > DronePan)
 * Implement new DJI SDK method - hopefully will make detection of camera/gimbal/etc more reliable
 * Add a thin progress bar
 * Move settings from segment to slider to allow for finer user control
 * Increase max number of rows to 10
-* Opt-in analytics. You'll be asked at start and can always change your mind later (via System Settings > DronePan)
+* Opt-in analytics. You'll be asked at start and can always change your mind later (iOS System Settings App > DronePan)
+
+## 1.4.2 released
+
+1.4.2b4 was released as 1.4.2 to the App Store
 
 ### [1.4.2b4](https://github.com/dbaldwin/DronePan/releases/tag/1.4.2b4)
 
