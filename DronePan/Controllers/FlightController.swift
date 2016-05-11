@@ -30,7 +30,7 @@ protocol FlightControllerDelegate {
     func flightControllerUnableToSetControlMode()
 
     func flightControllerSetControlMode()
-    
+
     func flightControllerUnableToYaw(reason: String)
 }
 
@@ -41,7 +41,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
 
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
-        
+
         self.fc = fc
 
         super.init()
@@ -80,7 +80,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
                 (error) in
                 if let error = error {
                     DDLogWarn("Unable to yaw aircraft \(error)")
-                    
+
                     self.delegate?.flightControllerUnableToYaw("Unable to yaw: \(error)")
                 }
             })
@@ -104,7 +104,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         self.delegate?.flightControllerUpdateAltitude(state.altitude)
         self.delegate?.flightControllerUpdateSatelliteCount(Int(state.satelliteCount))
     }
-    
+
     func simulator(simulator: DJISimulator, updateSimulatorState state: DJISimulatorState) {
         // TODO: it's just possible that state.pitch, state.roll, state.yaw here could help in testing        
     }

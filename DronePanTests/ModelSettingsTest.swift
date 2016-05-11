@@ -106,19 +106,19 @@ class ModelSettingsTest: XCTestCase {
 
         XCTAssertTrue(value, "Incorrect sky row \(value)")
     }
-    
+
     func skyRowWithModel(model: String) {
         let settings: [SettingsKeys:AnyObject] = [
-            .SkyRow: true
+                .SkyRow: true
         ]
-        
+
         ModelSettings.updateSettings(model, settings: settings)
-        
+
         let value = ModelSettings.skyRow(model)
-        
+
         XCTAssertFalse(value, "\(model) had sky row true")
     }
-    
+
     func testSkyRowPhantom4() {
         skyRowWithModel(DJIAircraftModelNamePhantom4)
     }
@@ -129,36 +129,36 @@ class ModelSettingsTest: XCTestCase {
         skyRowWithModel(DJIAircraftModelNamePhantom3Standard)
         skyRowWithModel(DJIAircraftModelNamePhantom3Professional)
     }
-    
+
     func testNumberOfImagesForCurrentSettingsDefault() {
         let value = ModelSettings.numberOfImagesForCurrentSettings(model)
-        
+
         XCTAssertEqual(25, value, "Incorrect default number of images \(value)")
     }
 
     func testNumberOfImagesForCurrentSettingsSkyRowFalse() {
         let settings: [SettingsKeys:AnyObject] = [
-            .SkyRow: false
+                .SkyRow: false
         ]
-        
+
         ModelSettings.updateSettings(model, settings: settings)
 
         let value = ModelSettings.numberOfImagesForCurrentSettings(model)
-        
+
         XCTAssertEqual(19, value, "Incorrect sky row false number of images \(value)")
     }
 
     func testNumberOfImagesForCurrentSettings() {
         let settings: [SettingsKeys:AnyObject] = [
-            .SkyRow: false,
-            .NumberOfRows: 5,
-            .PhotosPerRow: 12
+                .SkyRow: false,
+                .NumberOfRows: 5,
+                .PhotosPerRow: 12
         ]
-        
+
         ModelSettings.updateSettings(model, settings: settings)
-        
+
         let value = ModelSettings.numberOfImagesForCurrentSettings(model)
-        
+
         XCTAssertEqual(61, value, "Incorrect sky row false number of images \(value)")
     }
 }

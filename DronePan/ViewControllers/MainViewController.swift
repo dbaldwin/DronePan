@@ -19,43 +19,43 @@ import DJISDK
 import CocoaLumberjackSwift
 
 class MainViewController: UIViewController {
-    @IBOutlet weak var batteryLabel : UILabel!
-    
-    @IBOutlet weak var cameraView : UIView!
-    
-    @IBOutlet weak var warningLabel : UILabel!
-    @IBOutlet weak var warningView : UIView!
-    @IBOutlet weak var warningOffset : NSLayoutConstraint!
+    @IBOutlet weak var batteryLabel: UILabel!
 
-    @IBOutlet weak var infoView : UIView!
-    @IBOutlet weak var infoOffset : NSLayoutConstraint!
+    @IBOutlet weak var cameraView: UIView!
 
-    @IBOutlet weak var sequenceLabel : UILabel!
-    @IBOutlet weak var altitudeLabel : UILabel!
-    @IBOutlet weak var satelliteLabel : UILabel!
-    @IBOutlet weak var distanceLabel : UILabel!
-    
-    @IBOutlet weak var acYawLabel : UILabel!
-    @IBOutlet weak var gimbalYawLabel : UILabel!
-    @IBOutlet weak var gimbalPitchLabel : UILabel!
-    @IBOutlet weak var gimbalRollLabel : UILabel!
-    
-    @IBOutlet weak var connectionStatusLabel : UILabel!
-    
-    @IBOutlet weak var startButton : UIButton!
-    
-    @IBOutlet weak var panoProgressBar : UIProgressView!
-    
+    @IBOutlet weak var warningLabel: UILabel!
+    @IBOutlet weak var warningView: UIView!
+    @IBOutlet weak var warningOffset: NSLayoutConstraint!
+
+    @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var infoOffset: NSLayoutConstraint!
+
+    @IBOutlet weak var sequenceLabel: UILabel!
+    @IBOutlet weak var altitudeLabel: UILabel!
+    @IBOutlet weak var satelliteLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+
+    @IBOutlet weak var acYawLabel: UILabel!
+    @IBOutlet weak var gimbalYawLabel: UILabel!
+    @IBOutlet weak var gimbalPitchLabel: UILabel!
+    @IBOutlet weak var gimbalRollLabel: UILabel!
+
+    @IBOutlet weak var connectionStatusLabel: UILabel!
+
+    @IBOutlet weak var startButton: UIButton!
+
+    @IBOutlet weak var panoProgressBar: UIProgressView!
+
     var rcInFMode = false
-    
-    var product : DJIBaseProduct?
-    
-    var connectionController : ConnectionController?
-    var previewController : PreviewController?
 
-    var batteryController : BatteryController?
-    var panoramaController : PanoramaController?
-    
+    var product: DJIBaseProduct?
+
+    var connectionController: ConnectionController?
+    var previewController: PreviewController?
+
+    var batteryController: BatteryController?
+    var panoramaController: PanoramaController?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -64,7 +64,7 @@ class MainViewController: UIViewController {
         self.panoramaController!.delegate = self
 
         hideWarning()
-        
+
         if (infoOverride()) {
             showInfo()
         }
@@ -75,32 +75,32 @@ class MainViewController: UIViewController {
         [self.startButton setEnabled:NO];
     #endif
  */
-    
+
         self.rcInFMode = false
-        
+
         self.resetLabels()
     }
-    
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         DDLogInfo("Showing main window")
         trackScreenView("MainViewController")
-        
+
         self.previewController?.startWithView(self.cameraView)
     }
-    
+
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         DDLogInfo("Hiding main window")
 
         self.previewController?.removeFromView()
     }
-    
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         self.connectionController = ConnectionController()
         self.connectionController!.delegate = self
         self.connectionController!.start()
@@ -137,7 +137,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
+
     func hideInfo() {
         if (!infoOverride()) {
             if (self.infoOffset.constant > 0) {
@@ -148,25 +148,25 @@ class MainViewController: UIViewController {
         }
     }
 
-    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint : NSLayoutConstraint) {
+    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint: NSLayoutConstraint) {
         constraint.constant = offset
-        
+
         view.setNeedsUpdateConstraints()
-        
-        UIView.animateWithDuration(1) { 
+
+        UIView.animateWithDuration(1) {
             view.layoutIfNeeded()
         }
     }
-    
+
     func infoOverride() -> Bool {
         return NSUserDefaults.standardUserDefaults().boolForKey("infoOverride")
     }
-    
+
     func setSequence(current: Int? = nil, count: Int? = nil) {
         if let current = current, count = count {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
-            
+
             self.panoProgressBar.setProgress(Float(current) / Float(count), animated: true)
         } else {
             self.sequenceLabel.text = "Photo: -/-"
@@ -174,7 +174,7 @@ class MainViewController: UIViewController {
             self.panoProgressBar.setProgress(0, animated: false)
         }
     }
-    
+
     func setAltitude(altitude: Int? = nil) {
         if let altitude = altitude {
             self.altitudeLabel.hidden = false
@@ -183,8 +183,8 @@ class MainViewController: UIViewController {
             self.altitudeLabel.text = "Alt: -"
         }
     }
-    
-    func setSatellites(satellites : Int? = nil) {
+
+    func setSatellites(satellites: Int? = nil) {
         if let satellites = satellites {
             self.satelliteLabel.hidden = false
             self.satelliteLabel.text = "Sats: \(satellites)"
@@ -193,7 +193,7 @@ class MainViewController: UIViewController {
         }
     }
 
-    func setDistance(distance : Int? = nil) {
+    func setDistance(distance: Int? = nil) {
         if let distance = distance {
             self.distanceLabel.hidden = false
             self.distanceLabel.text = "Dist: \(distance)m"
@@ -201,8 +201,8 @@ class MainViewController: UIViewController {
             self.distanceLabel.text = "Dist: -"
         }
     }
-    
-    func setBattery(batteryPercent : Int? = nil ){
+
+    func setBattery(batteryPercent: Int? = nil) {
         if let batteryPercent = batteryPercent {
             self.batteryLabel.hidden = false
             self.batteryLabel.text = "Batt: \(batteryPercent)%"
@@ -210,9 +210,10 @@ class MainViewController: UIViewController {
             self.batteryLabel.text = "Batt: -"
         }
     }
-    
+
     func resetLabels() {
-        [self.sequenceLabel, self.batteryLabel, self.altitudeLabel, self.satelliteLabel, self.distanceLabel].forEach { (label) in
+        [self.sequenceLabel, self.batteryLabel, self.altitudeLabel, self.satelliteLabel, self.distanceLabel].forEach {
+            (label) in
             label.hidden = true
         }
 
@@ -222,14 +223,14 @@ class MainViewController: UIViewController {
         setDistance()
         setBattery()
     }
-    
+
     func resetInfoLabels() {
         self.acYawLabel.text = "----"
         self.gimbalYawLabel.text = "----"
         self.gimbalPitchLabel.text = "----"
         self.gimbalRollLabel.text = "----"
     }
-    
+
     @IBAction func startPanorama(sender: UIButton) {
         if let panoramaController = self.panoramaController {
             if (panoramaController.panoRunning) {
@@ -238,31 +239,31 @@ class MainViewController: UIViewController {
                 panoramaController.stop()
             } else {
                 DDLogInfo("Starting pano from button")
-                
+
                 panoramaController.start()
             }
         }
     }
-    
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let settings = segue.destinationViewController as? SettingsViewController {
-            #if DEBUG
-                if let model = self.panoramaController?.model, type = self.panoramaController?.type {
-                    settings.model = model
-                    settings.type = type
-                } else {
-                    settings.model = "Simulator"
-                    settings.type = .Aircraft
-                }
-            #else
-                if let model = self.model, type = self.type {
-                    settings.model = model
-                    settings.type = type
-                }
-            #endif
+#if DEBUG
+            if let model = self.panoramaController?.model, type = self.panoramaController?.type {
+                settings.model = model
+                settings.type = type
+            } else {
+                settings.model = "Simulator"
+                settings.type = .Aircraft
+            }
+#else
+            if let model = self.model, type = self.type {
+                settings.model = model
+                settings.type = type
+            }
+#endif
         }
     }
-    
+
     @IBAction func launchSettingsView(sender: AnyObject) {
         self.performSegueWithIdentifier("launchSettings", sender: sender)
     }
@@ -270,14 +271,14 @@ class MainViewController: UIViewController {
 
 // MARK: - Connection Controller Delegate
 
-extension MainViewController : ConnectionControllerDelegate {
+extension MainViewController: ConnectionControllerDelegate {
     func sdkRegistered() {
         DDLogInfo("Registered")
     }
 
     func failedToRegister(reason: String) {
         DDLogWarn("Failed to register \(reason)")
-        
+
         displayToastOnApp(reason)
     }
 
@@ -285,31 +286,31 @@ extension MainViewController : ConnectionControllerDelegate {
         DDLogInfo("New product \(product.model)")
 
         hideWarning()
-        
+
         self.product = product
-    
+
         self.previewController?.setMode(product)
-        
+
         self.panoramaController?.product = product
-        
+
         self.resetLabels()
-        
+
         self.connectionStatusLabel.text = product.model
-        
+
         self.startButton.enabled = true
-        
+
         self.rcInFMode = false
     }
 
     func disconnected() {
         DDLogInfo("Disconnected")
-        
+
         self.resetLabels()
-        
+
         self.connectionStatusLabel.text = "Disconnected"
-        
+
         self.startButton.enabled = false
-        
+
         self.rcInFMode = false
 
         self.product = nil
@@ -320,7 +321,7 @@ extension MainViewController : ConnectionControllerDelegate {
         self.panoramaController?.setGimbal(nil)
         self.panoramaController?.setRemote(nil)
     }
-    
+
     func connectedToBattery(battery: DJIBattery) {
         self.batteryController = BatteryController(battery: battery)
         self.batteryController!.delegate = self
@@ -357,7 +358,7 @@ extension MainViewController : ConnectionControllerDelegate {
     func connectedToFlightController(flightController: DJIFlightController) {
         self.panoramaController?.setFC(flightController)
     }
-    
+
     func disconnectedFromFlightController() {
         self.panoramaController?.setFC(nil)
     }
@@ -365,16 +366,16 @@ extension MainViewController : ConnectionControllerDelegate {
 
 // MARK: - Battery Controller Delegate
 
-extension MainViewController : BatteryControllerDelegate {
+extension MainViewController: BatteryControllerDelegate {
 
     func batteryControllerPercentUpdated(batteryPercent: Int) {
         setBattery(batteryPercent)
-    
+
         if (batteryPercent < 10) {
             showWarning("Battery Low: \(batteryPercent)%")
         }
     }
-    
+
     func batteryControllerTemperatureUpdated(batteryTemperature: Int) {
         // TODO: Battery temperature
     }
@@ -382,35 +383,35 @@ extension MainViewController : BatteryControllerDelegate {
 
 // MARK: - Panorama Controller Delegate
 
-extension MainViewController : PanoramaControllerDelegate {
+extension MainViewController: PanoramaControllerDelegate {
     func postUserMessage(message: String) {
         displayToastOnApp(message)
     }
-    
+
     func postUserWarning(warning: String) {
         showWarning(warning)
     }
-    
+
     func panoStarting() {
-        dispatch_async(dispatch_get_main_queue()) { 
+        dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Stop"), forState: .Normal)
             self.panoProgressBar.setProgress(0, animated: false)
-            
+
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
 
                 self.scrollView(self.infoView, toOffset: -self.infoView.frame.size.height, usingConstraint: self.infoOffset)
             }
-            
+
         }
-        
+
     }
-    
+
     func panoStopping() {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Start"), forState: .Normal)
             self.panoProgressBar.setProgress(0, animated: false)
-            
+
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
 
@@ -418,47 +419,47 @@ extension MainViewController : PanoramaControllerDelegate {
             }
         }
     }
-    
+
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
-        dispatch_async(dispatch_get_main_queue()) { 
+        dispatch_async(dispatch_get_main_queue()) {
             self.gimbalPitchLabel.text = String(format: "%.1f˚", pitch)
             self.gimbalYawLabel.text = String(format: "%.1f˚", yaw)
             self.gimbalRollLabel.text = String(format: "%.1f˚", roll)
         }
     }
-    
+
     func aircraftYawChanged(yaw: Float) {
         dispatch_async(dispatch_get_main_queue()) {
             self.acYawLabel.text = String(format: "%.1f˚", yaw)
         }
     }
-    
+
     func aircraftSatellitesChanged(count: Int) {
         dispatch_async(dispatch_get_main_queue()) {
             self.setSatellites(count)
         }
     }
-    
+
     func aircraftAltitudeChanged(altitude: Float) {
         dispatch_async(dispatch_get_main_queue()) {
             self.setAltitude(Int(altitude))
         }
     }
-    
+
     func aircraftDistanceChanged(distance: CLLocationDistance) {
         dispatch_async(dispatch_get_main_queue()) {
             self.setDistance(Int(distance))
         }
     }
-    
+
     func panoCountChanged(count: Int, total: Int) {
         dispatch_async(dispatch_get_main_queue()) {
             self.setSequence(count, count: total)
         }
     }
-    
+
     func panoAvailable(available: Bool) {
-        dispatch_async(dispatch_get_main_queue()) { 
+        dispatch_async(dispatch_get_main_queue()) {
             self.startButton.enabled = available
         }
     }

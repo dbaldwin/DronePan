@@ -23,48 +23,48 @@ class ActiveAwareDispatchGroupTests: XCTestCase {
 
     func testSetsName() {
         let group = ActiveAwareDispatchGroup(name: "Testing")
-        
+
         XCTAssertEqual(group.name, "Testing", "Incorrect name \(group.name)")
-        
+
     }
 
     func testEnterLeave() {
         let group = ActiveAwareDispatchGroup(name: "Testing")
 
         group.enter()
-        
+
         XCTAssertTrue(group.active, "Enter didn't set active")
-        
+
         let result = group.leave()
 
         XCTAssertFalse(group.active, "Leave didn't reset")
-        
+
         XCTAssertTrue(result, "Leave didn't actually leave")
     }
-    
+
     func testEnterLeaveIfActive() {
         let group = ActiveAwareDispatchGroup(name: "Testing")
-        
+
         group.enter()
-        
+
         XCTAssertTrue(group.active, "Enter didn't set active")
-        
+
         let result = group.leaveIfActive()
-        
+
         XCTAssertFalse(group.active, "Leave didn't reset")
-        
+
         XCTAssertTrue(result, "Leave didn't actually leave")
     }
 
     func testLeaveIfActive() {
         let group = ActiveAwareDispatchGroup(name: "Testing")
-        
+
         dispatch_group_enter(group.group)
-        
+
         XCTAssertFalse(group.active, "Active without enter")
-        
+
         let result = group.leave()
-        
+
         XCTAssertFalse(result, "Leave reset active")
     }
 
@@ -72,11 +72,11 @@ class ActiveAwareDispatchGroupTests: XCTestCase {
         let group = ActiveAwareDispatchGroup(name: "Testing")
 
         dispatch_group_enter(group.group)
-        
+
         XCTAssertFalse(group.active, "Active without enter")
-        
+
         let result = group.leaveIfActive()
-        
+
         XCTAssertFalse(result, "Leave reset active")
 
         dispatch_group_leave(group.group)
@@ -86,25 +86,26 @@ class ActiveAwareDispatchGroupTests: XCTestCase {
         let group = ActiveAwareDispatchGroup(name: "Testing")
 
         group.enter()
-        
+
         let expectation = expectationWithDescription("wait should exit when leave called")
 
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             group.wait()
-        
+
             expectation.fulfill()
         })
 
         group.leave()
-        
-        waitForExpectationsWithTimeout(2) { error in
+
+        waitForExpectationsWithTimeout(2) {
+            error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")
             }
-            
+
             XCTAssertFalse(group.active, "Group left in active state")
 
         }
     }
-    
+
 }

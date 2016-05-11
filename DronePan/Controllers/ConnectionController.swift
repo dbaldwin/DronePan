@@ -82,7 +82,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
             DDLogDebug("Connecting to product")
 
             self.delegate?.sdkRegistered()
-            
+
             if (connectToSimulator) {
                 DDLogDebug("Connecting to debug bridge")
                 DJISDKManager.enterDebugModeWithDebugId(bridgeAddress)
@@ -98,11 +98,11 @@ protocol ConnectionControllerDiagnosticsDelegate {
 
         if let product = newProduct {
             DDLogInfo("Connected to \(self.model)")
-            
+
             if let model = product.model {
                 trackEvent(category: "Connection", action: "New Product", label: model)
             }
-            
+
             product.delegate = self
             self.delegate?.connectedToProduct(product)
 
@@ -123,7 +123,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
         for diagnostic in info {
             if let d = diagnostic as? DJIDiagnostics {
                 DDLogDebug("Diagnostic for \(model): Code: \(d.code), Reason: \(d.reason), Solution: \(d.solution)")
-                
+
                 self.diagnosticsDelegate?.diagnosticsSeen(code: d.code, reason: d.reason, solution: d.solution)
             }
         }

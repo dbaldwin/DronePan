@@ -19,7 +19,7 @@ import XCTest
 
 class PanoramaControllerTests: XCTestCase {
     let panoramaController = PanoramaController()
-    
+
     func testPitchesForTypeNoSkyRowAircraft() {
         let value = panoramaController.pitchesForLoop(skyRow: false, type: .Aircraft, rowCount: 3)
 
@@ -76,7 +76,7 @@ class PanoramaControllerTests: XCTestCase {
 
     func testHeadingTo360() {
         let value = panoramaController.headingTo360(0)
-        
+
         XCTAssertEqual(0, value, "Incorrect heading for 0 \(value)")
     }
 

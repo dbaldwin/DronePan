@@ -38,16 +38,16 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
 
     @IBOutlet weak var saveButton: UIButton!
-    
+
     @IBOutlet weak var delayLabel: UILabel!
     @IBOutlet weak var delaySlider: UISlider!
-    
+
     @IBOutlet weak var photosPerRowLabel: UILabel!
     @IBOutlet weak var photosPerRowSlider: UISlider!
-    
+
     @IBOutlet weak var rowCountLabel: UILabel!
     @IBOutlet weak var rowCountSlider: UISlider!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -67,17 +67,17 @@ class SettingsViewController: UIViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         DDLogInfo("Showing settings window")
         trackScreenView("SettingsViewController")
     }
-    
+
     override func viewDidAppear(animated: Bool) {
         DDLogInfo("Settings VC Showing settings view")
 
         self.scrollView.flashScrollIndicators()
     }
-    
+
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
@@ -94,29 +94,29 @@ class SettingsViewController: UIViewController {
             }
         }
     }
-    
+
     private func startDelay(setting: Int, updateSlider: Bool = false) {
         delayLabel.text = "Start Delay (seconds): \(setting)"
-        
+
         if updateSlider {
             delaySlider.minimumValue = 5
             delaySlider.maximumValue = 30
             delaySlider.value = Float(setting)
         }
     }
-    
+
     @IBAction func delaySliderChanged(sender: UISlider) {
-        let step : Float = 5.0
-        
+        let step: Float = 5.0
+
         let roundedValue = round(sender.value / step) * step
         sender.value = roundedValue
-        
+
         startDelay(Int(roundedValue))
     }
 
     private func photosPerRow(setting: Int, updateSlider: Bool = false) {
         photosPerRowLabel.text = "Number of photos per row: \(setting)"
-        
+
         if updateSlider {
             photosPerRowSlider.minimumValue = 6
             photosPerRowSlider.maximumValue = 20
@@ -125,20 +125,20 @@ class SettingsViewController: UIViewController {
     }
 
     @IBAction func photosPerRowSliderChanged(sender: UISlider) {
-        let step : Float = 1.0
-        
+        let step: Float = 1.0
+
         let roundedValue = round(sender.value / step) * step
         sender.value = roundedValue
-        
+
         photosPerRow(Int(roundedValue))
 
         updateCounts()
     }
 
-    
+
     private func rowCount(setting: Int, updateSlider: Bool = false) {
         rowCountLabel.text = "Number of rows: \(setting)"
-        
+
         if updateSlider {
             rowCountSlider.minimumValue = 3
             rowCountSlider.maximumValue = 10
@@ -147,16 +147,16 @@ class SettingsViewController: UIViewController {
     }
 
     @IBAction func rowCountChanged(sender: UISlider) {
-        let step : Float = 1.0
-        
+        let step: Float = 1.0
+
         let roundedValue = round(sender.value / step) * step
         sender.value = roundedValue
-        
+
         rowCount(Int(roundedValue))
-        
+
         updateCounts()
     }
-    
+
     func initSettings() {
         if (self.model == "") {
             titleLabel.attributedText = NSAttributedString(string: "Disconnected", attributes: [
@@ -166,7 +166,7 @@ class SettingsViewController: UIViewController {
             for control in [delaySlider, photosPerRowSlider, rowCountSlider] {
                 control.enabled = false
             }
-            
+
             for control in [skyRowControl] {
                 control.enabled = false
                 control.selectedSegmentIndex = UISegmentedControlNoSegment
@@ -190,7 +190,7 @@ class SettingsViewController: UIViewController {
         ])
 
         if (type == .Handheld) {
-            
+
             startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
 
             delaySlider.enabled = true
@@ -231,7 +231,7 @@ class SettingsViewController: UIViewController {
 
     private func setAngleLabel(angle: Float) {
         let roundedString = String(format: "%.2f", angle)
-        
+
         let angleString = NSMutableAttributedString(string: "\(roundedString)", attributes: [
                 NSFontAttributeName: UIFont.boldSystemFontOfSize(14)
         ])

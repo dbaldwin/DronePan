@@ -32,7 +32,7 @@ protocol RemoteControllerDelegate {
 
 class RemoteController: NSObject, DJIRemoteControllerDelegate {
     var delegate: RemoteControllerDelegate?
-    
+
     var mode = FlightMode.Unknown
 
     init(remote: DJIRemoteController) {

@@ -24,13 +24,13 @@ protocol CameraControllerDelegate {
     func cameraControllerAborted(reason: String)
 
     func cameraControllerStopped()
-    
+
     func cameraControllerInError(reason: String)
 
     func cameraControllerOK(fromError: Bool)
 
     func cameraControllerReset()
-    
+
     func cameraControllerNewMedia(filename: String)
 }
 
@@ -101,7 +101,7 @@ class CameraController: NSObject, DJICameraDelegate {
             if (status == .Stopping) {
                 self.delegate?.cameraControllerStopped()
             }
-            
+
             return
         }
 
@@ -115,7 +115,7 @@ class CameraController: NSObject, DJICameraDelegate {
         let nextCount = counter + 1
 
         var errorSeen = false
-        
+
         self.camera.setCameraMode(.ShootPhoto) {
             (error) in
 
@@ -123,7 +123,7 @@ class CameraController: NSObject, DJICameraDelegate {
                 DDLogWarn("Camera Controller setPhotoMode - error seen - \(e)")
 
                 errorSeen = true
-                
+
                 self.setPhotoMode(nextCount)
             }
         }
@@ -131,7 +131,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if errorSeen {
             return
         }
-        
+
         delay(2) {
             if (self.status == .Normal) {
                 if (self.mode == .ShootPhoto) {
@@ -174,12 +174,12 @@ class CameraController: NSObject, DJICameraDelegate {
         let nextCount = counter + 1
 
         var errorSeen = false
-        
+
         self.camera.startShootPhoto(.Single) {
             (error) in
             if let e = error {
                 DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
-                
+
                 errorSeen = true
 
                 self.takeASnap(nextCount)
@@ -189,7 +189,7 @@ class CameraController: NSObject, DJICameraDelegate {
         if errorSeen {
             return
         }
-        
+
         self.checkTakeASnap(0, counter: counter)
     }
 
@@ -281,7 +281,7 @@ class CameraController: NSObject, DJICameraDelegate {
         DDLogDebug("Camera Controller didGenerateNewMediaFile")
 
         self.delegate?.cameraControllerNewMedia(newMedia.fileName)
-        
+
         self.tookShot = true
     }
 

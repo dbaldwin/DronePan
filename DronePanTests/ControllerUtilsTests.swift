@@ -85,7 +85,7 @@ class ControllerUtilsTests: XCTestCase {
 
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmo), "\(DJIHandheldModelNameOsmo) didn't support SDK yaw")
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmoPro), "\(DJIHandheldModelNameOsmoPro) didn't support SDK yaw")
-        
+
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(nil), "Missing model supports SDK yaw")
     }
 }

@@ -19,64 +19,64 @@ import DJISDK
 import CocoaLumberjackSwift
 
 protocol PanoramaControllerDelegate {
-    func postUserMessage(message : String)
-    
+    func postUserMessage(message: String)
+
     func postUserWarning(warning: String)
-    
+
     func panoStarting()
-    
+
     func panoStopping()
-    
+
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
-    
+
     func aircraftYawChanged(yaw: Float)
-    
+
     func aircraftSatellitesChanged(count: Int)
-    
+
     func aircraftDistanceChanged(distance: CLLocationDistance)
-    
+
     func aircraftAltitudeChanged(altitude: Float)
-    
+
     func panoCountChanged(count: Int, total: Int)
-    
-    func panoAvailable(available : Bool)
+
+    func panoAvailable(available: Bool)
 }
 
 class PanoramaController {
-    var delegate : PanoramaControllerDelegate?
-    
-    var cameraController : CameraController?
-    var remoteController : RemoteController?
-    var gimbalController : GimbalController?
-    var flightController : FlightController?
-    
-    var lastGimbalPitch : Float = 0.0
-    var lastGimbalYaw : Float = 0.0
-    var lastGimbalRoll : Float = 0.0
-    var lastACYaw : Float = 0.0
-    
-    
-    var panoRunning : Bool = false {
+    var delegate: PanoramaControllerDelegate?
+
+    var cameraController: CameraController?
+    var remoteController: RemoteController?
+    var gimbalController: GimbalController?
+    var flightController: FlightController?
+
+    var lastGimbalPitch: Float = 0.0
+    var lastGimbalYaw: Float = 0.0
+    var lastGimbalRoll: Float = 0.0
+    var lastACYaw: Float = 0.0
+
+
+    var panoRunning: Bool = false {
         didSet {
             if panoRunning {
                 self.delegate?.panoStarting()
             } else {
                 self.gimbalController?.status = .Stopping
-                
+
                 self.cameraController?.status = .Stopping
-                
+
                 self.delegate?.panoStopping()
             }
         }
     }
-    
-    var model : String?
-    var type : ProductType?
-    
+
+    var model: String?
+    var type: ProductType?
+
     var product: DJIBaseProduct? {
         didSet {
             self.model = product!.model
-         
+
             if product! is DJIAircraft {
                 self.type = .Aircraft
             } else if product! is DJIHandheld {
@@ -86,20 +86,20 @@ class PanoramaController {
             }
         }
     }
-    
+
     let droneCommandsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL)
-    
+
     let gimbalDispatchGroup = ActiveAwareDispatchGroup(name: "gimbal")
     let cameraDispatchGroup = ActiveAwareDispatchGroup(name: "camera")
-    
+
     var totalCount = 0
-    
+
     var currentCount = 0 {
         didSet {
             self.delegate?.panoCountChanged(currentCount, total: totalCount)
         }
     }
-    
+
     var currentHeading = 0.0
     var yawDestination = 0.0
     var yawSpeed = 0.0
@@ -139,43 +139,43 @@ class PanoramaController {
 extension PanoramaController {
     private func checkProduct() -> Bool {
         if let _ = self.product, _ = self.model, _ = self.type {
-           return true
+            return true
         } else {
             DDLogWarn("Pano started without product")
-            
+
             self.delegate?.postUserMessage("Unable to find DJI Product")
         }
-        
+
         return false
     }
-    
+
     private func checkSpace() -> Bool {
         if let cameraController = self.cameraController, model = self.model {
             let panoCount = ModelSettings.numberOfImagesForCurrentSettings(model)
-            
+
             if (!cameraController.hasSpaceForPano(panoCount)) {
                 DDLogDebug("Not enough space for \(panoCount) images")
-                
+
                 self.delegate?.postUserMessage("Not enough space on card for \(panoCount) images")
-                
+
                 return false
             }
-            
+
             return true
         }
-        
+
         return false
     }
-    
+
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
                 if (!ControllerUtils.isPhantom4(model)) {
                     if (!(remoteController.mode == .Function)) {
                         DDLogDebug("Not in F mode")
-                        
+
                         self.delegate?.postUserMessage("Please set RC Flight Mode to F first")
-                        
+
                         return false
                     }
                 }
@@ -184,19 +184,19 @@ extension PanoramaController {
 
         return true
     }
-    
+
     private func checkGimbal() -> Bool {
         if let _ = self.gimbalController {
             return true
         } else {
             DDLogWarn("Pano started without gimbal")
-            
+
             self.delegate?.postUserMessage("Unable to find a gimbal")
         }
 
         return false
     }
-    
+
     private func checkCamera() -> Bool {
         if let _ = self.cameraController {
             return true
@@ -205,10 +205,10 @@ extension PanoramaController {
 
             self.delegate?.postUserMessage("Unable to find a camera")
         }
-        
+
         return false
     }
-    
+
     private func checkFC() -> Bool {
         if let type = self.type {
             if (type == .Aircraft) {
@@ -216,14 +216,14 @@ extension PanoramaController {
                     return true
                 } else {
                     DDLogWarn("Pano started without FC")
-                    
+
                     self.delegate?.postUserMessage("Unable to find a flight controller")
                 }
-                
+
                 return false
             }
         }
-        
+
         return true
     }
 
@@ -231,31 +231,31 @@ extension PanoramaController {
         if (!checkProduct()) {
             return
         }
-        
+
         if (!checkSpace()) {
             return
         }
-        
+
         if (!checkCamera()) {
             return
         }
-        
+
         if (!checkGimbal()) {
             return
         }
-        
+
         if (!checkFC()) {
             return
         }
-        
+
         if (!checkRCMode()) {
             return
         }
 
         self.panoRunning = true
-        
+
         self.delegate?.postUserMessage("Panorama starting")
-        
+
         if (self.type! == .Aircraft) {
             self.flightController?.setControlModes()
         } else {
@@ -264,38 +264,38 @@ extension PanoramaController {
             }
         }
     }
-    
+
     func stop() {
         self.delegate?.postUserMessage("Panorama stopping. Please wait ...")
-        
+
         self.panoRunning = false
     }
-    
+
     func doPanoLoop() {
         if let model = self.model, type = self.type {
             if type == .Unknown {
                 DDLogError("Panorama started with unknown type")
-                
+
                 return
             }
-            
+
             let pitches = self.pitchesForLoop(skyRow: ModelSettings.skyRow(self.model!), type: self.type!, rowCount: ModelSettings.numberOfRows(self.model!))
-            
+
             // TODO: needs fixing when we enable AC to have gimbal yaw
             let aircraftYaw = type == .Aircraft
-            
+
             if type == .Handheld {
                 // TODO: should also be done for gimbal yaw of AC when that is in place
                 self.currentHeading = 0
             }
-            
+
             let yaws = self.yawAngles(count: ModelSettings.photosPerRow(model), heading: self.headingTo360(self.currentHeading))
-            
+
             self.totalCount = (pitches.count * yaws.count) + 1
             self.currentCount = 0
-            
+
             DDLogDebug("PanoLoop: starting")
-            
+
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                 // Set camera mode
                 DDLogDebug("PanoLoop: setPhotoMode")
@@ -312,24 +312,24 @@ extension PanoramaController {
                     // If the user has stopped the pano we'll break
                     if !self.panoRunning {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw) -  pano not in progress")
-                        
+
                         break
                     }
-                    
+
                     // Loop through the gimbal pitches
                     for pitch in pitches {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)")
-                        
+
                         // If the user has stopped the pano we'll break
                         if !self.panoRunning {
                             DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch) - pano not in progress")
-                            
+
                             break
                         }
-                        
+
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- set pitch")
                         self.setPitch(pitch)
-                        
+
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
                         self.takeASnap()
                     }
@@ -338,17 +338,17 @@ extension PanoramaController {
                     // Now we yaw after a column of photos has been taken
                     if (aircraftYaw) {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw) - AC yaw")
-                        
+
                         self.yawSpeed = 30 // This represents 30m/sec
                         self.yawDestination = yaw
-                        
+
                         // Calling this on a timer as it improves the accuracy of aircraft yaw
                         dispatch_sync(self.droneCommandsQueue, {
                             let timer = NSTimer.scheduledTimerWithTimeInterval(0.1,
-                                target: self,
-                                selector: #selector(PanoramaController.yawAircraftUsingVelocity(_:)),
-                                userInfo: nil,
-                                repeats: true)
+                                    target: self,
+                                    selector: #selector(PanoramaController.yawAircraftUsingVelocity(_:)),
+                            userInfo: nil,
+                            repeats: true)
 
                             NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
                             NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 5))
@@ -360,29 +360,29 @@ extension PanoramaController {
                         self.setYaw(yaw)
                     }
                 } // End yaw loop
-                
+
                 // Take the final zenith/nadir shot and then reset the gimbal back
                 // or we cancel the pano and still reset the gimbal
                 if (self.panoRunning) {
                     DDLogDebug("PanoLoop: Zenith/Nadir - set pitch")
                     self.setPitch(-90.0)
-                    
+
                     DDLogDebug("PanoLoop: Zenith/Nadir - take photo")
                     self.takeASnap()
-                    
+
                     self.delegate?.postUserMessage("Completed pano")
-                    
+
                     self.panoRunning = false
                 } else {
                     // The panorama has been aborted
                     DDLogDebug("PanoLoop: was stopped OK");
-                    
+
                     self.delegate?.postUserMessage("Pano stopped successfully")
                 }
-                
+
                 DDLogDebug("PanoLoop: reset gimbal")
                 self.resetGimbal()
-                
+
                 DDLogDebug("PanoLoop: END")
             })
         }
@@ -390,7 +390,7 @@ extension PanoramaController {
 
     func setPhotoMode() {
         DDLogDebug("Set photo mode")
-        
+
         if let c = self.cameraController {
             self.cameraDispatchGroup.enter()
             DDLogDebug("Set photo mode - send")
@@ -399,10 +399,10 @@ extension PanoramaController {
             DDLogDebug("Set photo mode - done")
         }
     }
-    
+
     func resetGimbal() {
         DDLogDebug("Reset gimbal")
-        
+
         if let c = self.gimbalController {
             self.gimbalDispatchGroup.enter()
             DDLogDebug("Reset gimbal - send")
@@ -411,8 +411,8 @@ extension PanoramaController {
             DDLogDebug("Reset gimbal - done")
         }
     }
-    
-    func setPitch(pitch : Double) {
+
+    func setPitch(pitch: Double) {
         DDLogDebug("Set pitch \(pitch)")
 
         if let c = self.gimbalController {
@@ -423,11 +423,11 @@ extension PanoramaController {
             DDLogDebug("Set pitch \(pitch) - done")
         }
     }
-    
-    
+
+
     func setYaw(yaw: Double) {
         DDLogDebug("Set yaw \(yaw)")
-        
+
         if let c = self.gimbalController {
             self.gimbalDispatchGroup.enter()
             DDLogDebug("Set yaw \(yaw) - send")
@@ -437,15 +437,15 @@ extension PanoramaController {
         }
     }
 
-    @objc func yawAircraftUsingVelocity(timer : NSTimer) {
+    @objc func yawAircraftUsingVelocity(timer: NSTimer) {
         if let c = self.flightController {
             c.yaw(self.yawSpeed)
         }
     }
-    
+
     func takeASnap() {
         DDLogDebug("Take a snap");
-    
+
         if let c = self.cameraController {
             self.cameraDispatchGroup.enter()
             DDLogDebug("Take a snap - send")
@@ -458,12 +458,12 @@ extension PanoramaController {
 
 // MARK: - Camera Controller Delegate
 
-extension PanoramaController : CameraControllerDelegate {
+extension PanoramaController: CameraControllerDelegate {
     func setCamera(camera: DJICamera?, preview: VideoControllerDelegate? = nil) {
         if let camera = camera {
             self.cameraController = CameraController(camera: camera)
             self.cameraController!.delegate = self
-            
+
             if let preview = preview {
                 self.cameraController!.videoDelegate = preview
             }
@@ -471,19 +471,19 @@ extension PanoramaController : CameraControllerDelegate {
             self.cameraController = nil
         }
     }
-    
+
     func cameraControllerCompleted(shotTaken: Bool) {
         DDLogDebug("Camera signalled complete with shot taken \(shotTaken)")
-        
+
         if (shotTaken) {
             self.currentCount += 1
         }
-        
+
         dispatch_async(droneCommandsQueue) {
             self.cameraDispatchGroup.leave()
         }
     }
-    
+
     func cameraControllerAborted(reason: String) {
         DDLogWarn("Camera signalled abort \(reason)")
 
@@ -491,50 +491,50 @@ extension PanoramaController : CameraControllerDelegate {
 
         dispatch_async(droneCommandsQueue) {
             self.panoRunning = false
-            
+
             self.cameraDispatchGroup.leave()
         }
     }
-    
+
     func cameraControllerStopped() {
         dispatch_async(droneCommandsQueue) {
             self.cameraDispatchGroup.leaveIfActive()
         }
     }
-    
-    
+
+
     func cameraControllerInError(reason: String) {
         DDLogWarn("Camera signalled error \(reason)")
-        
+
         self.delegate?.postUserMessage(reason)
-        
+
         if panoRunning {
-            dispatch_async(self.droneCommandsQueue, { 
+            dispatch_async(self.droneCommandsQueue, {
                 self.panoRunning = false
             })
         }
 
         self.delegate?.panoAvailable(false)
     }
-    
+
     func cameraControllerOK(fromError: Bool) {
         DDLogDebug("Camera signalled OK")
-        
+
         if (fromError) {
             self.delegate?.postUserMessage("Camera is ready")
         }
 
         self.delegate?.panoAvailable(true)
     }
-    
+
     func cameraControllerReset() {
         DDLogDebug("Camera signalled reset")
-        
+
         dispatch_async(droneCommandsQueue) {
             self.cameraDispatchGroup.leave()
         }
     }
-    
+
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
     }
@@ -542,7 +542,7 @@ extension PanoramaController : CameraControllerDelegate {
 
 // MARK: - Remote Controller Delegate
 
-extension PanoramaController : RemoteControllerDelegate {
+extension PanoramaController: RemoteControllerDelegate {
     func setRemote(remote: DJIRemoteController?) {
         if let remote = remote {
             self.remoteController = RemoteController(remote: remote)
@@ -561,7 +561,7 @@ extension PanoramaController : RemoteControllerDelegate {
 
 // MARK: - Flight Controller Delegate
 
-extension PanoramaController : FlightControllerDelegate {
+extension PanoramaController: FlightControllerDelegate {
     func setFC(fc: DJIFlightController?) {
         if let fc = fc {
             self.flightController = FlightController(fc: fc)
@@ -573,44 +573,45 @@ extension PanoramaController : FlightControllerDelegate {
 
     func flightControllerUpdateHeading(compassHeading: Double) {
         self.currentHeading = self.headingTo360(compassHeading)
-       
+
         var diff = 0.0
-        
+
         if (self.yawDestination > self.currentHeading) {
             diff = fabs(self.yawDestination) - fabs(self.currentHeading)
             self.yawSpeed = diff * 0.5
-        } else { // This happens when the current heading is 340 and destination is 40, for example
+        } else {
+            // This happens when the current heading is 340 and destination is 40, for example
             diff = fabs(self.currentHeading) - fabs(self.yawDestination)
             self.yawSpeed = fmod(360.0, diff) * 0.5
         }
-        
+
         self.lastACYaw = Float(self.currentHeading)
         self.delegate?.aircraftYawChanged(lastACYaw)
     }
-    
+
     func flightControllerUpdateAltitude(altitude: Float) {
         self.delegate?.aircraftAltitudeChanged(altitude)
     }
-    
+
     func flightControllerUpdateSatelliteCount(satelliteCount: Int) {
         self.delegate?.aircraftSatellitesChanged(satelliteCount)
-        
+
     }
-    
+
     func flightControllerUpdateDistance(distance: CLLocationDistance) {
         self.delegate?.aircraftDistanceChanged(distance)
     }
-    
+
     func flightControllerUnableToSetControlMode() {
         self.delegate?.postUserMessage("Unable to set virtual stick control mode")
-        
+
         self.panoRunning = false
     }
-    
+
     func flightControllerSetControlMode() {
         self.doPanoLoop()
     }
-    
+
     func flightControllerUnableToYaw(reason: String) {
         self.delegate?.postUserMessage(reason)
     }
@@ -618,7 +619,7 @@ extension PanoramaController : FlightControllerDelegate {
 
 // MARK: - Gimbal Controller Delegate
 
-extension PanoramaController : GimbalControllerDelegate {
+extension PanoramaController: GimbalControllerDelegate {
     func setGimbal(gimbal: DJIGimbal?) {
         if let gimbal = gimbal {
             self.gimbalController = GimbalController(gimbal: gimbal, supportsSDKYaw: ControllerUtils.supportsSDKYaw(self.model))
@@ -630,39 +631,39 @@ extension PanoramaController : GimbalControllerDelegate {
 
     func gimbalControllerCompleted() {
         DDLogDebug("Gimbal signalled complete")
-        
+
         dispatch_async(droneCommandsQueue) {
             self.gimbalDispatchGroup.leave()
         }
     }
-    
+
     func gimbalControllerAborted(reason: String) {
         DDLogWarn("Gimbal signalled abort \(reason)")
-        
+
         self.delegate?.postUserMessage(reason)
 
         dispatch_async(droneCommandsQueue) {
             self.panoRunning = false
-            
+
             self.gimbalDispatchGroup.leave()
         }
     }
-    
+
     func gimbalMoveOutOfRange(reason: String) {
         DDLogDebug("Gimbal signalled out of range \(reason)")
-        
+
         self.delegate?.postUserMessage(reason)
-        
+
         dispatch_async(droneCommandsQueue) {
             self.gimbalDispatchGroup.leave()
         }
     }
-    
+
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
         lastGimbalPitch = pitch
         lastGimbalYaw = yaw
         lastGimbalRoll = roll
-        
+
         self.delegate?.gimbalAttitudeChanged(pitch: pitch, yaw: yaw, roll: roll)
     }
 }

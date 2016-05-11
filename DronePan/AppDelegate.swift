@@ -54,60 +54,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let defaults = NSUserDefaults.standardUserDefaults()
         let appDefaults = [
-            "infoOverride" : false,
-            "analyticsOK"  : false
+                "infoOverride": false,
+                "analyticsOK": false
         ]
         defaults.registerDefaults(appDefaults)
         defaults.synchronize()
-        
+
         let hasOpted = defaults.boolForKey("hasOptedAnayltics")
-        
+
         if !hasOpted {
             showAnalyticsOpt()
         } else {
             startAnalytics()
         }
-        
+
         return true
     }
-    
+
     func showAnalyticsOpt() {
         let alert = UIAlertController(title: "Analytics", message: "Will you help development by allowing us to collect some anonymous usage analytics?", preferredStyle: .Alert)
 
         let defaults = NSUserDefaults.standardUserDefaults()
-        
-        let okAction = UIAlertAction(title: "Yes", style: .Default) { (action) in
+
+        let okAction = UIAlertAction(title: "Yes", style: .Default) {
+            (action) in
             defaults.setBool(true, forKey: "hasOptedAnayltics")
             defaults.setBool(true, forKey: "analyticsOK")
-            
+
             self.responseAlert("Thank you", message: "Thank you for helping us make DronePan better")
-            
+
             self.startAnalytics()
         }
-        
-        let notOkAction = UIAlertAction(title: "No", style: .Cancel) { (action) in
+
+        let notOkAction = UIAlertAction(title: "No", style: .Cancel) {
+            (action) in
             defaults.setBool(true, forKey: "hasOptedAnayltics")
             defaults.setBool(false, forKey: "analyticsOK")
 
             self.responseAlert("That's OK", message: "If you change your mind later - you can change this under iOS > Settings > DronePan")
         }
-        
+
         alert.addAction(okAction)
         alert.addAction(notOkAction)
 
         popAlert(alert)
     }
-    
+
     func responseAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        
+
         let action = UIAlertAction(title: "OK", style: .Default, handler: nil)
-        
+
         alert.addAction(action)
-        
+
         self.popAlert(alert)
     }
-    
+
     func popAlert(alert: UIAlertController) {
         dispatch_async(dispatch_get_main_queue(), {
             self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)

@@ -20,60 +20,61 @@ import DJISDK
 
 
 class RemoteControllerSpyDelegate: RemoteControllerDelegate {
-    
+
     var percent: Int? = .None
-    
+
     var asyncExpectation: XCTestExpectation?
-    
+
     func remoteControllerBatteryPercentUpdated(batteryPercent: Int) {
         guard let expectation = asyncExpectation else {
             XCTFail("RemoteControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
- 
+
         percent = batteryPercent
         expectation.fulfill()
     }
 }
 
 class RemoteControllerTests: XCTestCase {
-    var remoteController : RemoteController?
+    var remoteController: RemoteController?
     var remote = DJIRemoteController()
-    
+
     override func setUp() {
         super.setUp()
-        
+
         self.remoteController = RemoteController(remote: remote)
     }
-    
+
     func getSpy(reason: String) -> RemoteControllerSpyDelegate {
         let spyDelegate = RemoteControllerSpyDelegate()
         remoteController!.delegate = spyDelegate
-        
+
         let expectation = expectationWithDescription(reason)
         spyDelegate.asyncExpectation = expectation
-        
+
         return spyDelegate
     }
-    
+
     func testBatteryChange() {
         let spyDelegate = getSpy("Expect that change in battery is passed on")
-        
+
         var info = DJIRCBatteryInfo()
         info.remainingEnergyInPercent = 30
-        
+
         remoteController!.remoteController(remote, didUpdateBatteryState: info)
-        
-        waitForExpectationsWithTimeout(1) { error in
+
+        waitForExpectationsWithTimeout(1) {
+            error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")
             }
-            
+
             guard let percent = spyDelegate.percent else {
                 XCTFail("Expected delegate to be called")
                 return
             }
-            
+
             XCTAssertEqual(30, percent, "Incorrect battery percent")
         }
     }
@@ -82,12 +83,12 @@ class RemoteControllerTests: XCTestCase {
         var state = DJIRCHardwareState()
         state.flightModeSwitch.mode = mode
         remoteController!.remoteController(remote, didUpdateHardwareState: state)
-        
+
         let value = remoteController!.mode
-        
+
         XCTAssertEqual(result, value, "\(mode) returned \(value) instead of \(result)")
     }
-    
+
     func testModeF() {
         modeChange(.F, result: .Function)
     }
@@ -104,5 +105,5 @@ class RemoteControllerTests: XCTestCase {
         modeChange(.S, result: .Sport)
     }
 
-    
+
 }
