@@ -53,6 +53,25 @@ class PreviewControllerTests: XCTestCase {
         XCTAssertTrue(previewer.startCalled!, "Previewer didn't start")
         XCTAssertEqual(previewer.viewSeen!, view, "Previewer didn't see view")
     }
+    
+    func testHide() {
+        
+        class VideoPreviewerMock: VideoPreviewer {
+            var unsetCalled: Bool?
+            
+            override func unSetView() {
+                unsetCalled = true
+            }
+        }
+        
+        let previewer = VideoPreviewerMock()
+        
+        let controller = TestablePreviewController(previewer: previewer)
+        
+        controller.removeFromView()
+        
+        XCTAssertTrue(previewer.unsetCalled!, "Previewer didn't remove itself from view")
+    }
 
     func testHardwareDecoder() {
 
