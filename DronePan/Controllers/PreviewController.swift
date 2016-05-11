@@ -18,37 +18,54 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
+enum DecoderType {
+    case Hardware
+    case Software
+    case Unknown
+}
+
 class PreviewController: VideoControllerDelegate {
+    var previewer: VideoPreviewer {
+        get {
+            return VideoPreviewer.instance()
+        }
+    }
 
     func startWithView(view: UIView) {
-        VideoPreviewer.instance().start()
-        VideoPreviewer.instance().setView(view)
+        previewer.start()
+        previewer.setView(view)
     }
 
     func removeFromView() {
-        VideoPreviewer.instance().unSetView()
+        previewer.unSetView()
     }
 
 
-    func setMode(product: DJIBaseProduct) {
+    func setMode(product: DJIBaseProduct) -> DecoderType {
         DDLogDebug("Trying to set hardware decoding")
 
-        let hardwareDecodeSupported = VideoPreviewer.instance().setDecoderWithProduct(product, andDecoderType: .HardwareDecoder)
+        let hardwareDecodeSupported = previewer.setDecoderWithProduct(product, andDecoderType: .HardwareDecoder)
 
         if (!hardwareDecodeSupported) {
             DDLogDebug("Hardware decoding failed - try to set software decoding")
 
-            let softwareDecodeSupported = VideoPreviewer.instance().setDecoderWithProduct(product, andDecoderType: .SoftwareDecoder)
+            let softwareDecodeSupported = previewer.setDecoderWithProduct(product, andDecoderType: .SoftwareDecoder)
 
             if (!softwareDecodeSupported) {
                 DDLogError("OK - so it doesn't support hardware or software - no idea what to do now")
+            } else {
+                return .Software
             }
+        } else {
+            return .Hardware
         }
+
+        return .Unknown
     }
 
     func cameraReceivedVideo(videoBuffer: UnsafeMutablePointer<UInt8>, size: Int) {
         let pBuffer = UnsafeMutablePointer<UInt8>.alloc(size)
         memcpy(pBuffer, videoBuffer, size)
-        VideoPreviewer.instance().push(pBuffer, length: Int32(size))
+        previewer.push(pBuffer, length: Int32(size))
     }
 }
