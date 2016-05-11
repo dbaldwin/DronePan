@@ -17,7 +17,7 @@ have taken at least one photo or video before running DronePan.
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 * Gimbal yaw reset for P4 and I1 is currently disabled - you will have to make sure the gimbal is pointing forwards yourself [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
 
-### [1.4.3b7](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b7)
+### [1.4.3b8](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b8)
 
 #### Updates
 
