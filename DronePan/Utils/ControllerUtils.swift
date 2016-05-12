@@ -70,4 +70,21 @@ class ControllerUtils {
             return false
         }
     }
+
+    class func setMetricUnits(metric: Bool) {
+        NSUserDefaults.standardUserDefaults().setBool(!metric, forKey: "unitsInFeet")
+    }
+
+    class func metricUnits() -> Bool {
+        return !NSUserDefaults.standardUserDefaults().boolForKey("unitsInFeet")
+    }
+
+    class func displayDistance(distance: Int) -> String {
+        if (metricUnits()) {
+            return "\(distance)m"
+        } else {
+            return "\(Int(round(Double(distance) * 3.280839895)))'"
+        }
+    }
+
 }

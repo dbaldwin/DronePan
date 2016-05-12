@@ -19,6 +19,13 @@ import DJISDK
 @testable import DronePan
 
 class ControllerUtilsTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+    }
 
     func testIsInspire() {
         XCTAssertTrue(ControllerUtils.isInspire(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was not inspire")
@@ -87,5 +94,27 @@ class ControllerUtilsTests: XCTestCase {
         XCTAssertTrue(ControllerUtils.supportsSDKYaw(DJIHandheldModelNameOsmoPro), "\(DJIHandheldModelNameOsmoPro) didn't support SDK yaw")
 
         XCTAssertFalse(ControllerUtils.supportsSDKYaw(nil), "Missing model supports SDK yaw")
+    }
+
+    func testDefaultDisplayIsInMeters() {
+        let value = ControllerUtils.displayDistance(10)
+
+        XCTAssertEqual(value, "10m", "Incorrect display \(value)")
+    }
+
+    func testDisplayIsInMeters() {
+        ControllerUtils.setMetricUnits(true)
+
+        let value = ControllerUtils.displayDistance(10)
+
+        XCTAssertEqual(value, "10m", "Incorrect display \(value)")
+    }
+
+    func testDisplayIsInFeet() {
+        ControllerUtils.setMetricUnits(false)
+
+        let value = ControllerUtils.displayDistance(10)
+
+        XCTAssertEqual(value, "33'", "Incorrect display \(value)")
     }
 }

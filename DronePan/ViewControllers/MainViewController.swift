@@ -104,7 +104,6 @@ class MainViewController: UIViewController {
         self.connectionController = ConnectionController()
         self.connectionController!.delegate = self
         self.connectionController!.start()
-
     }
 
     override func prefersStatusBarHidden() -> Bool {
@@ -178,7 +177,7 @@ class MainViewController: UIViewController {
     func setAltitude(altitude: Int? = nil) {
         if let altitude = altitude {
             self.altitudeLabel.hidden = false
-            self.altitudeLabel.text = "Alt: \(altitude)m"
+            self.altitudeLabel.text = "Alt: \(ControllerUtils.displayDistance(altitude))"
         } else {
             self.altitudeLabel.text = "Alt: -"
         }
@@ -196,7 +195,7 @@ class MainViewController: UIViewController {
     func setDistance(distance: Int? = nil) {
         if let distance = distance {
             self.distanceLabel.hidden = false
-            self.distanceLabel.text = "Dist: \(distance)m"
+            self.distanceLabel.text = "Dist: \(ControllerUtils.displayDistance(distance))"
         } else {
             self.distanceLabel.text = "Dist: -"
         }

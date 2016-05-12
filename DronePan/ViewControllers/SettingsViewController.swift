@@ -25,6 +25,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
 
     @IBOutlet weak var skyRowControl: UISegmentedControl!
+    @IBOutlet weak var unitsControl: UISegmentedControl!
 
     @IBOutlet weak var angleLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
@@ -227,6 +228,8 @@ class SettingsViewController: UIViewController {
         rowCount(ModelSettings.numberOfRows(model), updateSlider: true)
 
         updateCounts()
+
+        unitsControl.selectedSegmentIndex = ControllerUtils.metricUnits() ? 0 : 1
     }
 
     private func setAngleLabel(angle: Float) {
@@ -314,6 +317,8 @@ class SettingsViewController: UIViewController {
         }
 
         ModelSettings.updateSettings(model, settings: settings)
+
+        ControllerUtils.setMetricUnits(unitsControl.selectedSegmentIndex == 0)
 
         // Dismiss the VC
         self.dismissViewControllerAnimated(true, completion: {})

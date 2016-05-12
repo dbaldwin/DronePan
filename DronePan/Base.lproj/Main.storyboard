@@ -371,8 +371,8 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="8Pp-fn-P5T">
-                                        <rect key="frame" x="305" y="204" width="415" height="34"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="8Pp-fn-P5T">
+                                        <rect key="frame" x="303" y="204" width="418" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -419,8 +419,8 @@
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="wcu-Bz-lhG">
-                                        <rect key="frame" x="310" y="353" width="405" height="51"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="wcu-Bz-lhG">
+                                        <rect key="frame" x="292" y="353" width="440" height="51"/>
                                         <string key="text">Depending on your camera and FOV you'll need to adjust this setting. By default 6 and 8 work well with the X3. X5 users will need more photos, depending on lens type.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -432,8 +432,14 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Units:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5JB-mz-KHx">
+                                        <rect key="frame" x="488" y="806" width="49" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bzI-Gw-2HV" userLabel="Button View">
-                                        <rect key="frame" x="424" y="806" width="176" height="50"/>
+                                        <rect key="frame" x="424" y="911" width="176" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4Y-Wf-wug">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="50"/>
@@ -520,8 +526,8 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="x4g-Cr-ig7">
-                                        <rect key="frame" x="304" y="519" width="415" height="67"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="440" translatesAutoresizingMaskIntoConstraints="NO" id="x4g-Cr-ig7">
+                                        <rect key="frame" x="292" y="519" width="440" height="67"/>
                                         <string key="text">Depending on your camera and FOV you'll need to adjust this setting. By default 3 works well with the X3. X5 users will need more photos, depending on lens type. This does not include the nadir/zenith shot or sky row.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -560,6 +566,22 @@
                                             <action selector="rowCountChanged:" destination="fxj-Bn-uya" eventType="valueChanged" id="SQj-Wx-r9t"/>
                                         </connections>
                                     </slider>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BlK-hm-2Dh" userLabel="Units Control">
+                                        <rect key="frame" x="432" y="835" width="160" height="29"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="160" id="ZPN-b5-jS8"/>
+                                            <constraint firstAttribute="width" constant="245" id="mPc-el-M7e"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Metric"/>
+                                            <segment title="Imperial"/>
+                                        </segments>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="mPc-el-M7e"/>
+                                            </mask>
+                                        </variation>
+                                    </segmentedControl>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="W5a-x2-Y6y" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="0t3-5C-epY"/>
@@ -568,12 +590,14 @@
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="35g-Sb-VDO"/>
                                     <constraint firstAttribute="bottom" secondItem="bzI-Gw-2HV" secondAttribute="bottom" constant="24" id="3kh-C7-geB"/>
                                     <constraint firstItem="x4g-Cr-ig7" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="501-ZF-Tbx"/>
-                                    <constraint firstItem="bzI-Gw-2HV" firstAttribute="top" secondItem="8i3-1a-eMe" secondAttribute="bottom" constant="48" id="BEI-PF-Aar"/>
+                                    <constraint firstItem="BlK-hm-2Dh" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="5o9-k2-RhI"/>
+                                    <constraint firstItem="5JB-mz-KHx" firstAttribute="top" secondItem="8i3-1a-eMe" secondAttribute="bottom" constant="48" id="AFn-Pl-xGW"/>
                                     <constraint firstItem="wtZ-dc-gsG" firstAttribute="top" secondItem="8Pp-fn-P5T" secondAttribute="bottom" constant="48" id="BrI-CC-mSM"/>
                                     <constraint firstItem="wtZ-dc-gsG" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="BrK-uX-0ZP"/>
                                     <constraint firstItem="8i3-1a-eMe" firstAttribute="top" secondItem="z1j-Ik-VPo" secondAttribute="bottom" constant="16" id="DU3-vZ-ZHQ"/>
                                     <constraint firstItem="wcu-Bz-lhG" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="EmG-Z3-AJL"/>
                                     <constraint firstItem="hUh-rC-BBm" firstAttribute="top" secondItem="uZ1-HP-PEj" secondAttribute="top" constant="24" id="GDZ-Lw-erq"/>
+                                    <constraint firstItem="5JB-mz-KHx" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="HlP-oX-fWs"/>
                                     <constraint firstItem="z1j-Ik-VPo" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="Ir0-7O-Jt9"/>
                                     <constraint firstItem="Dfo-U3-07o" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="K76-OT-MVV"/>
                                     <constraint firstItem="qcZ-Jm-WCn" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="Kph-iQ-uip"/>
@@ -593,8 +617,10 @@
                                     <constraint firstItem="8Pp-fn-P5T" firstAttribute="top" secondItem="inJ-Et-FFi" secondAttribute="bottom" constant="8" symbolic="YES" id="f0Z-He-SuT"/>
                                     <constraint firstItem="pgm-o6-olD" firstAttribute="top" secondItem="Dfo-U3-07o" secondAttribute="bottom" constant="8" symbolic="YES" id="f4o-Ot-X5z"/>
                                     <constraint firstItem="W5a-x2-Y6y" firstAttribute="top" secondItem="wtZ-dc-gsG" secondAttribute="bottom" constant="8" symbolic="YES" id="g8g-DC-X4l"/>
+                                    <constraint firstItem="BlK-hm-2Dh" firstAttribute="top" secondItem="5JB-mz-KHx" secondAttribute="bottom" constant="8" symbolic="YES" id="mmM-07-QJB"/>
                                     <constraint firstItem="8Pp-fn-P5T" firstAttribute="centerX" secondItem="uZ1-HP-PEj" secondAttribute="centerX" id="olr-4D-eB8"/>
                                     <constraint firstItem="wcu-Bz-lhG" firstAttribute="top" secondItem="W5a-x2-Y6y" secondAttribute="bottom" constant="8" symbolic="YES" id="pIG-OQ-H3X"/>
+                                    <constraint firstItem="bzI-Gw-2HV" firstAttribute="top" secondItem="BlK-hm-2Dh" secondAttribute="bottom" constant="48" id="q50-Hl-ypJ"/>
                                     <constraint firstItem="iRY-rf-ZYX" firstAttribute="centerY" secondItem="ExQ-yC-UxC" secondAttribute="centerY" id="qIn-2p-U5i"/>
                                     <constraint firstItem="x4g-Cr-ig7" firstAttribute="top" secondItem="pgm-o6-olD" secondAttribute="bottom" constant="8" symbolic="YES" id="sSQ-5f-RrF"/>
                                     <constraint firstItem="SQP-KJ-3Jt" firstAttribute="trailing" secondItem="inJ-Et-FFi" secondAttribute="trailing" id="vba-6Y-KMu"/>
@@ -633,6 +659,7 @@
                         <outlet property="skyRowDescription" destination="8i3-1a-eMe" id="gZX-mK-FvQ"/>
                         <outlet property="startDelayDescription" destination="8Pp-fn-P5T" id="mIW-6K-gMT"/>
                         <outlet property="titleLabel" destination="hUh-rC-BBm" id="Xew-cb-Kej"/>
+                        <outlet property="unitsControl" destination="BlK-hm-2Dh" id="sYC-J3-MzI"/>
                         <outlet property="versionLabel" destination="7sO-LJ-HZd" id="2t9-3K-e9Z"/>
                     </connections>
                 </viewController>
