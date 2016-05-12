@@ -20,20 +20,6 @@
                ReferencedContainer = "container:DronePan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1521D6971CD51C96007458D7"
-               BuildableName = "DronePanUITests.xctest"
-               BlueprintName = "DronePanUITests"
-               ReferencedContainer = "container:DronePan.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

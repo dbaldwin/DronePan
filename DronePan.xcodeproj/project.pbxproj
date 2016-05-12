@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508FEEC1CCD4237000CE953 /* LogFormatter.swift */; };
 		1521D6931CD4CF29007458D7 /* FlightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521D6921CD4CF29007458D7 /* FlightController.swift */; };
-		1521D69B1CD51C96007458D7 /* DronePanUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521D69A1CD51C96007458D7 /* DronePanUITests.swift */; };
 		1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */; };
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
@@ -73,13 +72,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1521D69D1CD51C96007458D7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 232F6F051C5448320013CCD9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 232F6F0C1C5448320013CCD9;
-			remoteInfo = DronePan;
-		};
 		8362BB221CC64C8D0071D0BA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 232F6F051C5448320013CCD9 /* Project object */;
@@ -106,9 +98,6 @@
 /* Begin PBXFileReference section */
 		1508FEEC1CCD4237000CE953 /* LogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFormatter.swift; sourceTree = "<group>"; };
 		1521D6921CD4CF29007458D7 /* FlightController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightController.swift; sourceTree = "<group>"; };
-		1521D6981CD51C96007458D7 /* DronePanUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DronePanUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1521D69A1CD51C96007458D7 /* DronePanUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DronePanUITests.swift; sourceTree = "<group>"; };
-		1521D69C1CD51C96007458D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtilsTests.swift; sourceTree = "<group>"; };
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -272,13 +261,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1521D6951CD51C96007458D7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		232F6F0A1C5448320013CCD9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -318,15 +300,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1521D6991CD51C96007458D7 /* DronePanUITests */ = {
-			isa = PBXGroup;
-			children = (
-				1521D69A1CD51C96007458D7 /* DronePanUITests.swift */,
-				1521D69C1CD51C96007458D7 /* Info.plist */,
-			);
-			path = DronePanUITests;
-			sourceTree = "<group>";
-		};
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,7 +588,6 @@
 				232F6FD41C5449980013CCD9 /* libiconv.tbd */,
 				232F6F0F1C5448320013CCD9 /* DronePan */,
 				8362BB1E1CC64C8D0071D0BA /* DronePanTests */,
-				1521D6991CD51C96007458D7 /* DronePanUITests */,
 				232F6F0E1C5448320013CCD9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -625,7 +597,6 @@
 			children = (
 				232F6F0D1C5448320013CCD9 /* DronePan.app */,
 				8362BB1D1CC64C8D0071D0BA /* DronePanTests.xctest */,
-				1521D6981CD51C96007458D7 /* DronePanUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -701,24 +672,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1521D6971CD51C96007458D7 /* DronePanUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1521D69F1CD51C96007458D7 /* Build configuration list for PBXNativeTarget "DronePanUITests" */;
-			buildPhases = (
-				1521D6941CD51C96007458D7 /* Sources */,
-				1521D6951CD51C96007458D7 /* Frameworks */,
-				1521D6961CD51C96007458D7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1521D69E1CD51C96007458D7 /* PBXTargetDependency */,
-			);
-			name = DronePanUITests;
-			productName = DronePanUITests;
-			productReference = 1521D6981CD51C96007458D7 /* DronePanUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		232F6F0C1C5448320013CCD9 /* DronePan */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 232F6F3A1C5448320013CCD9 /* Build configuration list for PBXNativeTarget "DronePan" */;
@@ -767,10 +720,6 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Unmanned Airlines, LLC";
 				TargetAttributes = {
-					1521D6971CD51C96007458D7 = {
-						CreatedOnToolsVersion = 7.3;
-						TestTargetID = 232F6F0C1C5448320013CCD9;
-					};
 					232F6F0C1C5448320013CCD9 = {
 						CreatedOnToolsVersion = 7.2;
 					};
@@ -795,19 +744,11 @@
 			targets = (
 				232F6F0C1C5448320013CCD9 /* DronePan */,
 				8362BB1C1CC64C8D0071D0BA /* DronePanTests */,
-				1521D6971CD51C96007458D7 /* DronePanUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1521D6961CD51C96007458D7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		232F6F0B1C5448320013CCD9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -864,14 +805,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1521D6941CD51C96007458D7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1521D69B1CD51C96007458D7 /* DronePanUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		232F6F091C5448320013CCD9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -923,11 +856,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1521D69E1CD51C96007458D7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 232F6F0C1C5448320013CCD9 /* DronePan */;
-			targetProxy = 1521D69D1CD51C96007458D7 /* PBXContainerItemProxy */;
-		};
 		8362BB231CC64C8D0071D0BA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 232F6F0C1C5448320013CCD9 /* DronePan */;
@@ -955,33 +883,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1521D6A01CD51C96007458D7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				INFOPLIST_FILE = DronePanUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePanUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_TARGET_NAME = DronePan;
-			};
-			name = Debug;
-		};
-		1521D6A11CD51C96007458D7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				INFOPLIST_FILE = DronePanUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.unmannedairlines.DronePanUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = DronePan;
-			};
-			name = Release;
-		};
 		232F6F381C5448320013CCD9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1164,15 +1065,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1521D69F1CD51C96007458D7 /* Build configuration list for PBXNativeTarget "DronePanUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1521D6A01CD51C96007458D7 /* Debug */,
-				1521D6A11CD51C96007458D7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		232F6F081C5448320013CCD9 /* Build configuration list for PBXProject "DronePan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
