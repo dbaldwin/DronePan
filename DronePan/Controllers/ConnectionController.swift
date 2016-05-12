@@ -145,6 +145,19 @@ protocol ConnectionControllerDiagnosticsDelegate {
 
                 trackEvent(category: "Connection", action: "New Camera", label: camera.displayName)
 
+                if (camera.isChangeableLensSupported()) {
+                    camera.getLensInformationWithCompletion({
+                        (info, error) in
+                        if let error = error {
+                            DDLogError("Unable to get lens information \(error)")
+                        } else {
+                            if let info = info {
+                                self.trackEvent(category: "Connection", action: "New Lens", label: info)
+                            }
+                        }
+                    })
+                }
+
                 self.delegate?.connectedToCamera(camera)
             } else {
                 DDLogDebug("No camera")
