@@ -263,10 +263,6 @@ class MainViewController: UIViewController {
 #endif
         }
     }
-
-    @IBAction func launchSettingsView(sender: AnyObject) {
-        self.performSegueWithIdentifier("launchSettings", sender: sender)
-    }
 }
 
 // MARK: - Connection Controller Delegate
