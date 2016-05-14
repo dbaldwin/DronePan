@@ -590,6 +590,7 @@ extension PanoramaController: FlightControllerDelegate {
 
         self.lastACYaw = Float(self.currentHeading)
         self.delegate?.aircraftYawChanged(lastACYaw)
+        self.gimbalController?.setACYaw(self.lastACYaw)
     }
 
     func flightControllerUpdateAltitude(altitude: Float) {

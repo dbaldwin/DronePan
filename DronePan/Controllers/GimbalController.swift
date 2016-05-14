@@ -41,6 +41,8 @@ class GimbalController: NSObject, DJIGimbalDelegate {
     var currentYaw: Float = 0
     var currentRoll: Float = 0
 
+    var currentACYaw: Float = 0
+
     var lastSetPitch: Float = 0
     var lastSetYaw: Float = 0
     var lastSetRoll: Float = 0
@@ -130,6 +132,10 @@ class GimbalController: NSObject, DJIGimbalDelegate {
                 DDLogDebug("Not logging \(key)")
             }
         }
+    }
+
+    func setACYaw(acYaw: Float) {
+        self.currentACYaw = acYaw
     }
 
     func reset() {
@@ -258,7 +264,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
 
     func check(pitch p: Float, yaw y: Float, roll r: Float) -> Bool {
         DDLogDebug("Checking PA: \(isPitchAdjustable) P: \(p) CP: \(self.currentPitch)")
-        DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw)")
+        DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw) CACY: \(self.currentACYaw)")
         DDLogDebug("Checking RA: \(isRollAdjustable) R: \(r) CR: \(self.currentRoll)")
 
         return valueInRange(isPitchAdjustable, value: p, currentValue: self.currentPitch) &&
