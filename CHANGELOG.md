@@ -21,7 +21,11 @@ have taken at least one photo or video before running DronePan.
 
 #### Updates
 
-* Distances (distance/altitude) in metric or imperial units
+* Distances (distance/altitude) in metric or imperial units - toggle under settings
+
+#### Fixes
+
+* Possible crash in gimbal handling
 
 ### [1.4.3b8](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b8)
 
