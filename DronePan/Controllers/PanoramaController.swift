@@ -505,7 +505,6 @@ extension PanoramaController: CameraControllerDelegate {
         }
     }
 
-
     func cameraControllerInError(reason: String) {
         DDLogWarn("Camera signalled error \(reason)")
 
@@ -669,5 +668,11 @@ extension PanoramaController: GimbalControllerDelegate {
         lastGimbalRoll = roll
 
         self.delegate?.gimbalAttitudeChanged(pitch: pitch, yaw: yaw, roll: roll)
+    }
+
+    func gimbalControllerStopped() {
+        dispatch_async(droneCommandsQueue) {
+            self.gimbalDispatchGroup.leaveIfActive()
+        }
     }
 }

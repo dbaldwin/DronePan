@@ -31,6 +31,9 @@ class GimbalControllerAdapterSpyDelegate: GimbalControllerDelegate {
 
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
     }
+
+    func gimbalControllerStopped() {
+    }
 }
 
 class GimbalControllerCompletedSpyDelegate: GimbalControllerAdapterSpyDelegate {
@@ -40,11 +43,96 @@ class GimbalControllerCompletedSpyDelegate: GimbalControllerAdapterSpyDelegate {
 
     override func gimbalControllerCompleted() {
         guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            XCTFail("GimbalControllerCompletedSpyDelegate was not setup correctly. Missing XCTExpectation reference")
             return
         }
 
         completed = true
+
+        expectation.fulfill()
+    }
+}
+
+class GimbalControllerAbortedSpyDelegate: GimbalControllerAdapterSpyDelegate {
+    var aborted: Bool? = .None
+    var reason: String? = .None
+
+    var asyncExpectation: XCTestExpectation?
+
+    override func gimbalControllerCompleted() {
+        XCTFail("Completed when expecting abort")
+    }
+
+    override func gimbalControllerAborted(reason: String) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("GimbalControllerAbortedSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+
+        self.aborted = true
+        self.reason = reason
+
+        expectation.fulfill()
+    }
+}
+
+class GimbalControllerRangeSpyDelegate: GimbalControllerAdapterSpyDelegate {
+    var aborted: Bool? = .None
+    var reason: String? = .None
+
+    var asyncExpectation: XCTestExpectation?
+
+    override func gimbalMoveOutOfRange(reason: String) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("GimbalControllerRangeSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+
+        self.aborted = true
+        self.reason = reason
+
+        expectation.fulfill()
+    }
+}
+
+class GimbalControllerStoppedSpyDelegate: GimbalControllerAdapterSpyDelegate {
+    var stopped: Bool? = .None
+
+    var asyncExpectation: XCTestExpectation?
+
+    override func gimbalControllerCompleted() {
+        XCTFail("Completed when expecting stop")
+    }
+
+    override func gimbalControllerStopped() {
+        guard let expectation = asyncExpectation else {
+            XCTFail("GimbalControllerStoppedSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+
+        self.stopped = true
+
+        expectation.fulfill()
+    }
+}
+
+class GimbalControllerAttitudeSpyDelegate: GimbalControllerAdapterSpyDelegate {
+
+    var pitch: Float? = .None
+    var roll: Float? = .None
+    var yaw: Float? = .None
+
+    var asyncExpectation: XCTestExpectation?
+
+    override func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
+        guard let expectation = asyncExpectation else {
+            XCTFail("GimbalControllerAttitudeSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+
+        self.pitch = pitch
+        self.roll = roll
+        self.yaw = yaw
 
         expectation.fulfill()
     }
@@ -238,6 +326,57 @@ class GimbalControllerTests: XCTestCase {
         }
     }
 
+    class GimbalAttitudeMock: DJIGimbal {
+        let firstState: DJIGimbalState
+        let secondState: DJIGimbalState
+
+        var firstStateRun = false
+
+        init(first: DJIGimbalState, second: DJIGimbalState) {
+            firstState = first
+            secondState = second
+        }
+
+        override var gimbalCapability: [NSObject:AnyObject] {
+            get {
+                return [
+                        DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
+                        DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
+                        DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
+                ]
+            }
+        }
+
+        override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
+
+            if !firstStateRun {
+                firstStateRun = true
+
+                self.delegate?.gimbal?(self, didUpdateGimbalState: firstState)
+            } else {
+                self.delegate?.gimbal?(self, didUpdateGimbalState: secondState)
+            }
+        }
+    }
+
+
+    class GimbalErrorMock: DJIGimbal {
+        override var gimbalCapability: [NSObject:AnyObject] {
+            get {
+                return [
+                        DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
+                        DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
+                        DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
+                ]
+            }
+        }
+
+        override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
+            let error = NSError(domain: "Test", code: 1001, userInfo: nil)
+            block?(error)
+        }
+    }
+
     func testPitchCapabilities() {
         let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustPitch, supported: true)
 
@@ -328,25 +467,9 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testReset() {
+        let state = StateMock(p: 0, r: 0, y: 0)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
-
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 0, y: 0))
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -383,34 +506,10 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowReset() {
+        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state2 = StateMock(p: 0, r: 0, y: 0)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            var firstRunComplete = false
-
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
-
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                if (!self.firstRunComplete) {
-                    firstRunComplete = true
-
-                    // Current gimbal allowed offset is 2.5
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 2.6, r: -2.6, y: 2.6))
-                } else {
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 0, y: 0))
-                }
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state1, second: state2)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -446,28 +545,129 @@ class GimbalControllerTests: XCTestCase {
 
     }
 
-    func testSetPitch() {
+    func testTooSlowReset() {
 
-        class GimbalAttitudeMock: DJIGimbal {
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
+        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
 
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 15.6, r: 0, y: 0))
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
 
         let controller = GimbalController(gimbal: gimbal)
+
+        controller.currentPitch = 20.3
+        controller.currentYaw = 19.3
+        controller.currentRoll = -2.8
+
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Reset should give up")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.reset()
+
+        waitForExpectationsWithTimeout(6.5) {
+            error in
+
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Reset did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+
+    }
+
+    func testErrorReset() {
+
+        let gimbal = GimbalErrorMock()
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Reset should abort on error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.reset()
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Reset did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testResetStopping() {
+
+        let state = StateMock(p: 0, r: 0, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerStoppedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Reset should not complete if stopping")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.reset()
+        controller.status = .Stopping
+
+        waitForExpectationsWithTimeout(3) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let stopped = spyDelegate.stopped else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(stopped, "Reset completed while stopping")
+        }
+    }
+
+    func testSetPitch() {
+        let state = StateMock(p: 15.6, r: 10, y: -10)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        controller.lastSetYaw = -10
+        controller.lastSetRoll = 10
 
         let spyDelegate = GimbalControllerCompletedSpyDelegate()
         controller.delegate = spyDelegate
@@ -488,43 +688,19 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
-            XCTAssertEqual(controller.currentYaw, 0, "Incorrect yaw after set pitch \(controller.currentYaw)")
-            XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after set pitch \(controller.currentRoll)")
+            XCTAssertTrue(completed, "Set pitch did not complete")
+            XCTAssertEqual(controller.currentYaw, -10, "Incorrect yaw after set pitch \(controller.currentYaw)")
+            XCTAssertEqual(controller.currentRoll, 10, "Incorrect roll after set pitch \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 15.6, "Incorrect pitch after set pitch \(controller.currentPitch)")
         }
 
     }
 
     func testSlowSetPitch() {
+        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state2 = StateMock(p: 15.6, r: 0, y: 0)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            var firstRunComplete = false
-
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
-
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                if (!self.firstRunComplete) {
-                    firstRunComplete = true
-
-                    // Current gimbal allowed offset is 2.5
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 2.6, r: -2.6, y: 2.6))
-                } else {
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 15.6, r: 0, y: 0))
-                }
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state1, second: state2)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -547,7 +723,7 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertTrue(completed, "Set pitch did not complete")
             XCTAssertEqual(controller.currentYaw, 0, "Incorrect yaw after set pitch \(controller.currentYaw)")
             XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after set pitch \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 15.6, "Incorrect pitch after set pitch \(controller.currentPitch)")
@@ -555,26 +731,116 @@ class GimbalControllerTests: XCTestCase {
 
     }
 
-    func testSetYaw() {
+    func testTooSlowSetPitch() {
 
-        class GimbalAttitudeMock: DJIGimbal {
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
+        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set pitch should abort")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setPitch(15.6)
+
+        waitForExpectationsWithTimeout(6.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
             }
 
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 0, y: 15.6))
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
             }
+
+            XCTAssertTrue(aborted, "Set pitch did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
         }
+    }
 
-        let gimbal = GimbalAttitudeMock()
+    func testErrorPitch() {
+
+        let gimbal = GimbalErrorMock()
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Pitch should abort on error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setPitch(0)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Pitch did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testPitchStopping() {
+        let state = StateMock(p: 0, r: 0, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerStoppedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set pitch should not complete if stopping")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setPitch(0)
+        controller.status = .Stopping
+
+        waitForExpectationsWithTimeout(3) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let stopped = spyDelegate.stopped else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(stopped, "Set pitch completed while stopping")
+        }
+    }
+
+    func testSetYaw() {
+        let state = StateMock(p: 0, r: 0, y: 15.6)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -597,7 +863,7 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertTrue(completed, "Set yaw did not complete")
             XCTAssertEqual(controller.currentYaw, 15.6, "Incorrect yaw after set yaw \(controller.currentYaw)")
             XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after set yaw \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after set yaw \(controller.currentPitch)")
@@ -606,34 +872,10 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowSetYaw() {
+        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state2 = StateMock(p: 0, r: 0, y: 15.6)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            var firstRunComplete = false
-
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
-
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                if (!self.firstRunComplete) {
-                    firstRunComplete = true
-
-                    // Current gimbal allowed offset is 2.5
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 2.6, r: -2.6, y: 2.6))
-                } else {
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 0, y: 15.6))
-                }
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state1, second: state2)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -656,7 +898,7 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertTrue(completed, "Set yaw did not complete")
             XCTAssertEqual(controller.currentYaw, 15.6, "Incorrect yaw after set yaw \(controller.currentYaw)")
             XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after set yaw \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after set yaw \(controller.currentPitch)")
@@ -664,26 +906,117 @@ class GimbalControllerTests: XCTestCase {
 
     }
 
-    func testSetRoll() {
+    func testTooSlowSetYaw() {
+        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set yaw should abort")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setYaw(15.6)
+
+        waitForExpectationsWithTimeout(6.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
             }
 
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 15.6, y: 0))
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
             }
+
+            XCTAssertTrue(aborted, "Set yaw did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
         }
 
-        let gimbal = GimbalAttitudeMock()
+    }
+
+    func testErrorYaw() {
+
+        let gimbal = GimbalErrorMock()
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Yaw should abort on error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setYaw(0)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Yaw did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testYawStopping() {
+
+        let state = StateMock(p: 0, r: 0, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerStoppedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set yaw should not complete if stopping")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setYaw(0)
+        controller.status = .Stopping
+
+        waitForExpectationsWithTimeout(3) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let stopped = spyDelegate.stopped else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(stopped, "Set yaw completed while stopping")
+        }
+    }
+
+    func testSetRoll() {
+        let state = StateMock(p: 0, r: 15.6, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -706,7 +1039,7 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertTrue(completed, "Set roll did not complete")
             XCTAssertEqual(controller.currentYaw, 0, "Incorrect yaw after set roll \(controller.currentYaw)")
             XCTAssertEqual(controller.currentRoll, 15.6, "Incorrect roll after set roll \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after set roll \(controller.currentPitch)")
@@ -715,34 +1048,10 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowSetRoll() {
+        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state2 = StateMock(p: 0, r: 15.6, y: 0)
 
-        class GimbalAttitudeMock: DJIGimbal {
-            var firstRunComplete = false
-
-            override var gimbalCapability: [NSObject:AnyObject] {
-                get {
-                    return [
-                            DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                            DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
-                    ]
-                }
-            }
-
-            override func rotateGimbalWithAngleMode(angleMode: DJIGimbalRotateAngleMode, pitch: DJIGimbalAngleRotation, roll: DJIGimbalAngleRotation, yaw: DJIGimbalAngleRotation, withCompletion block: DJICompletionBlock?) {
-
-                if (!self.firstRunComplete) {
-                    firstRunComplete = true
-
-                    // Current gimbal allowed offset is 2.5
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 2.6, r: -2.6, y: 2.6))
-                } else {
-                    self.delegate?.gimbal!(self, didUpdateGimbalState: StateMock(p: 0, r: 15.6, y: 0))
-                }
-            }
-        }
-
-        let gimbal = GimbalAttitudeMock()
+        let gimbal = GimbalAttitudeMock(first: state1, second: state2)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -765,12 +1074,250 @@ class GimbalControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertTrue(completed, "Set roll did not complete")
             XCTAssertEqual(controller.currentYaw, 0, "Incorrect yaw after set roll \(controller.currentYaw)")
             XCTAssertEqual(controller.currentRoll, 15.6, "Incorrect roll after set roll \(controller.currentRoll)")
             XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after set roll \(controller.currentPitch)")
         }
 
     }
-}
 
+    func testTooSlowSetRoll() {
+        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set roll should abort")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setRoll(15.6)
+
+        waitForExpectationsWithTimeout(6.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Set roll did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testErrorRoll() {
+
+        let gimbal = GimbalErrorMock()
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAbortedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Roll should abort on error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setRoll(0)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Roll did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called with reason")
+                return
+            }
+
+            XCTAssertEqual("Unable to set gimbal attitude", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testRollStopping() {
+
+        let state = StateMock(p: 0, r: 0, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerStoppedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set roll should not complete if stopping")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setRoll(0)
+        controller.status = .Stopping
+
+        waitForExpectationsWithTimeout(3) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let stopped = spyDelegate.stopped else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(stopped, "Set roll completed while stopping")
+        }
+    }
+
+    func testPitchRange() {
+        let controller = GimbalController(gimbal: DJIGimbal())
+
+        let spyDelegate = GimbalControllerRangeSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Pitch range should error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setPitch(200)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Set pitch out of range did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Pitch -160.0 was out of range", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testYawRange() {
+        let controller = GimbalController(gimbal: DJIGimbal())
+
+        let spyDelegate = GimbalControllerRangeSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Yaw range should error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setYaw(210)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Set yaw out of range did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Yaw -150.0 was out of range", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testRollRange() {
+        let controller = GimbalController(gimbal: DJIGimbal())
+
+        let spyDelegate = GimbalControllerRangeSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Roll range should error")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setRoll(-200)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let aborted = spyDelegate.aborted else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(aborted, "Set roll out of range did not abort")
+
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual("Roll 160.0 was out of range", reason, "Incorrect reason given \(reason)")
+        }
+    }
+
+    func testAttitude() {
+        let state = StateMock(p: 0, r: 0, y: 0)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal)
+
+        let spyDelegate = GimbalControllerAttitudeSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Attitude information should be passed on")
+        spyDelegate.asyncExpectation = expectation
+
+        let targetState = StateMock(p: 12.3, r: 45.6, y: -78.9)
+
+        controller.gimbal(gimbal, didUpdateGimbalState: targetState)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let pitch = spyDelegate.pitch, roll = spyDelegate.roll, yaw = spyDelegate.yaw else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertEqual(12.3, pitch, "Incorrect pitch seen \(pitch)")
+            XCTAssertEqual(45.6, roll, "Incorrect roll seen \(roll)")
+            XCTAssertEqual(-78.9, yaw, "Incorrect yaw seen \(yaw)")
+        }
+    }
+}
