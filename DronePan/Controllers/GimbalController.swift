@@ -55,6 +55,8 @@ class GimbalController: NSObject, DJIGimbalDelegate {
     let yawRange: Range<Int>?
     let rollRange: Range<Int>?
 
+    var supportsRangeExtension = false
+
     let gimbalWorkQueue = dispatch_queue_create("com.dronepan.queue.gimbal", DISPATCH_QUEUE_CONCURRENT)
 
     init(gimbal: DJIGimbal, supportsSDKYaw: Bool = true) {
@@ -104,6 +106,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
         if let rangeExtension = gimbal.gimbalCapability[DJIGimbalKeyPitchRangeExtension] as? DJIParamCapability {
             DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
 
+            self.supportsRangeExtension = rangeExtension.isSupported
             // TOOD - we should now be able to check and set sky row. Testing on all devices needed.
             /*
             if rangeExtension.isSupported {
@@ -272,6 +275,8 @@ class GimbalController: NSObject, DJIGimbalDelegate {
                 valueInRange(isRollAdjustable, value: r, currentValue: self.currentRoll)
     }
 
+    // This seems to have a bug in the API which fails without error
+    /*
     private func reset(counter: Int) {
         if (status != .Normal) {
             DDLogDebug("Gimbal Controller reset - status was \(status) - returning")
@@ -312,6 +317,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
             }
         }
     }
+ */
 
     private func setAttitude(counter: Int, pitch: Float, yaw: Float, roll: Float) {
         if (status != .Normal) {
@@ -356,6 +362,8 @@ class GimbalController: NSObject, DJIGimbalDelegate {
             rollRotation.angle = roll
         }
 
+        var errorSeen = false
+
         gimbal.rotateGimbalWithAngleMode(.AngleModeAbsoluteAngle, pitch: pitchRotation, roll: rollRotation, yaw: yawRotation, withCompletion: {
             (error) in
 
@@ -363,8 +371,15 @@ class GimbalController: NSObject, DJIGimbalDelegate {
                 DDLogWarn("Gimbal Controller setAttitude - error seen - \(e)")
 
                 self.setAttitude(nextCount, pitch: pitch, yaw: yaw, roll: roll)
+
+                errorSeen = true
             }
         })
+
+        if errorSeen {
+            return
+        }
+
 
         delay(gimbal.completionTimeForControlAngleAction + 0.5) {
             if !self.check(pitch: pitch, yaw: yaw, roll: roll) {
