@@ -65,10 +65,13 @@ class MainViewController: UIViewController {
 
         hideWarning()
 
-        if (infoOverride()) {
-            showInfo()
-        }
-
+        initializeInfo()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+                                                         selector: #selector(MainViewController.initializeInfo),
+                                                         name: UIApplicationWillEnterForegroundNotification,
+                                                         object: nil)
+        
         /*
         // TODO: this should be tested
         #ifndef DEBUG
@@ -79,6 +82,10 @@ class MainViewController: UIViewController {
         self.rcInFMode = false
 
         self.resetLabels()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -110,9 +117,20 @@ class MainViewController: UIViewController {
         return true
     }
 
+    func initializeInfo() {
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        if (infoOverride()) {
+            showInfo()
+        } else {
+            hideInfo()
+        }
+    }
+    
     func showWarning(text: String) {
         // TODO: this view should be a custom class that has a set of messages that rotate
         if (self.warningOffset.constant == 0) {
+            self.warningView.alpha = 1
             dispatch_async(dispatch_get_main_queue()) {
                 self.warningLabel.text = text
 
@@ -122,15 +140,18 @@ class MainViewController: UIViewController {
     }
 
     func hideWarning() {
-        if (self.warningOffset.constant > 0) {
+        if (self.warningOffset.constant != 0) {
             dispatch_async(dispatch_get_main_queue()) {
-                self.scrollView(self.cameraView, toOffset: 0, usingConstraint: self.warningOffset)
+                self.scrollView(self.cameraView, toOffset: 0, usingConstraint: self.warningOffset) {
+                    self.warningView.alpha = 0
+                }
             }
         }
     }
 
     func showInfo() {
         if (self.infoOffset.constant == 0) {
+            self.infoView.alpha = 1
             dispatch_async(dispatch_get_main_queue()) {
                 self.scrollView(self.infoView, toOffset: -self.infoView.frame.size.height, usingConstraint: self.infoOffset)
             }
@@ -139,21 +160,25 @@ class MainViewController: UIViewController {
 
     func hideInfo() {
         if (!infoOverride()) {
-            if (self.infoOffset.constant > 0) {
+            if (self.infoOffset.constant != 0) {
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.scrollView(self.infoView, toOffset: 0, usingConstraint: self.infoOffset)
+                    self.scrollView(self.infoView, toOffset: 0, usingConstraint: self.infoOffset) {
+                        self.infoView.alpha = 0
+                    }
                 }
             }
         }
     }
 
-    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint: NSLayoutConstraint) {
+    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint: NSLayoutConstraint, completion : (() -> Void)? = nil) {
         constraint.constant = offset
 
         view.setNeedsUpdateConstraints()
 
-        UIView.animateWithDuration(1) {
+        UIView.animateWithDuration(1, animations: { 
             view.layoutIfNeeded()
+            }) { (completed) in
+                completion?()
         }
     }
 
