@@ -55,10 +55,9 @@ class PanoramaController {
     var lastGimbalRoll: Float = 0.0
     var lastACYaw: Float = 0.0
 
-
-    var panoRunning: Bool = false {
+    var panoRunning: (state:Bool, ok:Bool) = (state: false, ok: true) {
         didSet {
-            if panoRunning {
+            if panoRunning.state {
                 self.delegate?.panoStarting()
             } else {
                 self.gimbalController?.status = .Stopping
@@ -252,7 +251,7 @@ extension PanoramaController {
             return
         }
 
-        self.panoRunning = true
+        self.panoRunning = (state: true, ok: true)
 
         self.delegate?.postUserMessage("Panorama starting")
 
@@ -268,7 +267,7 @@ extension PanoramaController {
     func stop() {
         self.delegate?.postUserMessage("Panorama stopping. Please wait ...")
 
-        self.panoRunning = false
+        self.panoRunning = (state: false, ok: true)
     }
 
     func doPanoLoop() {
@@ -310,7 +309,7 @@ extension PanoramaController {
                     DDLogDebug("PanoLoop: YawLoop: \(yaw)")
 
                     // If the user has stopped the pano we'll break
-                    if !self.panoRunning {
+                    if !self.panoRunning.state {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw) -  pano not in progress")
 
                         break
@@ -321,7 +320,7 @@ extension PanoramaController {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)")
 
                         // If the user has stopped the pano we'll break
-                        if !self.panoRunning {
+                        if !self.panoRunning.state {
                             DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch) - pano not in progress")
 
                             break
@@ -363,7 +362,7 @@ extension PanoramaController {
 
                 // Take the final zenith/nadir shot and then reset the gimbal back
                 // or we cancel the pano and still reset the gimbal
-                if (self.panoRunning) {
+                if (self.panoRunning.state) {
                     DDLogDebug("PanoLoop: Zenith/Nadir - set pitch")
                     self.setPitch(-90.0)
 
@@ -372,12 +371,16 @@ extension PanoramaController {
 
                     self.delegate?.postUserMessage("Completed pano")
 
-                    self.panoRunning = false
+                    self.panoRunning = (state: false, ok: true)
                 } else {
                     // The panorama has been aborted
                     DDLogDebug("PanoLoop: was stopped OK");
 
-                    self.delegate?.postUserMessage("Pano stopped successfully")
+                    if (self.panoRunning.ok) {
+                        self.delegate?.postUserMessage("Pano stopped successfully")
+                    } else {
+                        self.delegate?.postUserMessage("Pano stopped")
+                    }
                 }
 
                 DDLogDebug("PanoLoop: reset gimbal")
@@ -490,7 +493,7 @@ extension PanoramaController: CameraControllerDelegate {
         self.delegate?.postUserMessage(reason)
 
         dispatch_async(droneCommandsQueue) {
-            self.panoRunning = false
+            self.panoRunning = (state: false, ok: false)
 
             self.cameraDispatchGroup.leave()
         }
@@ -508,9 +511,9 @@ extension PanoramaController: CameraControllerDelegate {
 
         self.delegate?.postUserMessage(reason)
 
-        if panoRunning {
+        if panoRunning.state {
             dispatch_async(self.droneCommandsQueue, {
-                self.panoRunning = false
+                self.panoRunning = (state: false, ok: false)
             })
         }
 
@@ -605,7 +608,7 @@ extension PanoramaController: FlightControllerDelegate {
     func flightControllerUnableToSetControlMode() {
         self.delegate?.postUserMessage("Unable to set virtual stick control mode")
 
-        self.panoRunning = false
+        self.panoRunning = (state: false, ok: false)
     }
 
     func flightControllerSetControlMode() {
@@ -643,7 +646,7 @@ extension PanoramaController: GimbalControllerDelegate {
         self.delegate?.postUserMessage(reason)
 
         dispatch_async(droneCommandsQueue) {
-            self.panoRunning = false
+            self.panoRunning = (state: false, ok: false)
 
             self.gimbalDispatchGroup.leave()
         }

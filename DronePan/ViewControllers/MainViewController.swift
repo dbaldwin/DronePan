@@ -66,12 +66,12 @@ class MainViewController: UIViewController {
         hideWarning()
 
         initializeInfo()
-        
+
         NSNotificationCenter.defaultCenter().addObserver(self,
-                                                         selector: #selector(MainViewController.initializeInfo),
-                                                         name: UIApplicationWillEnterForegroundNotification,
-                                                         object: nil)
-        
+                selector: #selector(MainViewController.initializeInfo),
+        name: UIApplicationWillEnterForegroundNotification,
+        object: nil)
+
         /*
         // TODO: this should be tested
         #ifndef DEBUG
@@ -83,7 +83,7 @@ class MainViewController: UIViewController {
 
         self.resetLabels()
     }
-    
+
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
@@ -119,14 +119,14 @@ class MainViewController: UIViewController {
 
     func initializeInfo() {
         NSUserDefaults.standardUserDefaults().synchronize()
-        
+
         if (infoOverride()) {
             showInfo()
         } else {
             hideInfo()
         }
     }
-    
+
     func showWarning(text: String) {
         // TODO: this view should be a custom class that has a set of messages that rotate
         if (self.warningOffset.constant == 0) {
@@ -170,15 +170,16 @@ class MainViewController: UIViewController {
         }
     }
 
-    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint: NSLayoutConstraint, completion : (() -> Void)? = nil) {
+    func scrollView(view: UIView, toOffset offset: CGFloat, usingConstraint constraint: NSLayoutConstraint, completion: (() -> Void)? = nil) {
         constraint.constant = offset
 
         view.setNeedsUpdateConstraints()
 
-        UIView.animateWithDuration(1, animations: { 
+        UIView.animateWithDuration(1, animations: {
             view.layoutIfNeeded()
-            }) { (completed) in
-                completion?()
+        }) {
+            (completed) in
+            completion?()
         }
     }
 
@@ -257,7 +258,7 @@ class MainViewController: UIViewController {
 
     @IBAction func startPanorama(sender: UIButton) {
         if let panoramaController = self.panoramaController {
-            if (panoramaController.panoRunning) {
+            if (panoramaController.panoRunning.state) {
                 DDLogInfo("Stopping pano from button")
 
                 panoramaController.stop()
