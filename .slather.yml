@@ -1,0 +1,7 @@
+coverage_service: html
+xcodeproj: DronePan.xcodeproj
+scheme: DronePan
+ignore:
+  - DronePan/VideoPreviewer/*
+  - DronePanTests
+  - ../*

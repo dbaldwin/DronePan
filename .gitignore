@@ -49,3 +49,9 @@ Carthage/Build
 
 fastlane/report.xml
 fastlane/screenshots
+
+# slather
+html
+*gcov
+DronePan.app.coverage.txt
+DronePanTests.xctest.coverage.txt
