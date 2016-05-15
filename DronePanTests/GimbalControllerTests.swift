@@ -404,13 +404,13 @@ class GimbalControllerTests: XCTestCase {
         XCTAssertEqual(controller.yawRange, -30 ... 30, "Incorrect range seen for yaw \(controller.yawRange)")
     }
 
-    func testYawCapabilitiesOverride() {
+    func testYawCapabilitiesRelative() {
         let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustYaw, supported: true)
 
-        let controller = GimbalController(gimbal: gimbal, supportsSDKYaw: false)
+        let controller = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: true)
 
-        XCTAssertFalse(controller.isYawAdjustable, "Yaw was adjustable when sdk support was set false")
-        XCTAssertNil(controller.yawRange, "Range was not nil for yaw when sdk support was set false \(controller.yawRange)")
+        XCTAssertTrue(controller.isYawAdjustable, "Yaw was not adjustable")
+        XCTAssertEqual(controller.yawRange, -30 ... 30, "Incorrect range seen for yaw \(controller.yawRange)")
     }
 
     func testNoYawCapabilities() {
@@ -505,6 +505,50 @@ class GimbalControllerTests: XCTestCase {
 
     }
 
+    func testResetRelative() {
+        // GC works with 0-360 AC yaw but -180-180 Gimbal yaw - so - this test should pass by setting the gimbal to the same angle
+        // as the aircraft but adjusted to those ranges
+        let acYaw = Float(230)
+        let gimbalYaw = Float(-130)
+
+        let state = StateMock(p: 0, r: 0, y: gimbalYaw)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: true)
+
+        controller.currentPitch = 20.3
+        controller.currentYaw = 19.3
+        controller.currentRoll = -2.8
+        controller.setACYaw(acYaw)
+
+        let spyDelegate = GimbalControllerCompletedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Reset should complete")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.reset()
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let completed = spyDelegate.completed else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(completed, "Reset did not complete")
+            XCTAssertEqual(controller.currentYaw, gimbalYaw, "Incorrect yaw after reset \(controller.currentYaw)")
+            XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after reset \(controller.currentRoll)")
+            XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after reset \(controller.currentPitch)")
+        }
+
+    }
+
     func testSlowReset() {
         let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
         let state2 = StateMock(p: 0, r: 0, y: 0)
@@ -566,7 +610,7 @@ class GimbalControllerTests: XCTestCase {
 
         controller.reset()
 
-        waitForExpectationsWithTimeout(6.5) {
+        waitForExpectationsWithTimeout(7.5) {
             error in
 
             if let error = error {
@@ -747,7 +791,7 @@ class GimbalControllerTests: XCTestCase {
 
         controller.setPitch(15.6)
 
-        waitForExpectationsWithTimeout(6.5) {
+        waitForExpectationsWithTimeout(7.5) {
             error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")
@@ -871,6 +915,47 @@ class GimbalControllerTests: XCTestCase {
 
     }
 
+    func testSetYawRelative() {
+        // GC works with 0-360 AC yaw but -180-180 Gimbal yaw - so - this test should pass by setting the gimbal to the same angle
+        // as the aircraft but adjusted to those ranges
+        let acYaw = Float(230)
+        let gimbalYaw = Float(-130 - 15.6)
+
+        let state = StateMock(p: 0, r: 0, y: gimbalYaw)
+
+        let gimbal = GimbalAttitudeMock(first: state, second: state)
+
+        let controller = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: true)
+
+        let spyDelegate = GimbalControllerCompletedSpyDelegate()
+        controller.delegate = spyDelegate
+
+        let expectation = expectationWithDescription("Set yaw should complete")
+        spyDelegate.asyncExpectation = expectation
+
+        controller.setACYaw(acYaw)
+
+        controller.setYaw(15.6)
+
+        waitForExpectationsWithTimeout(1.5) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+
+            guard let completed = spyDelegate.completed else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            XCTAssertTrue(completed, "Set yaw did not complete")
+            XCTAssertEqual(controller.currentYaw, gimbalYaw, "Incorrect yaw after set yaw \(controller.currentYaw)")
+            XCTAssertEqual(controller.currentRoll, 0, "Incorrect roll after set yaw \(controller.currentRoll)")
+            XCTAssertEqual(controller.currentPitch, 0, "Incorrect pitch after set yaw \(controller.currentPitch)")
+        }
+
+    }
+
     func testSlowSetYaw() {
         let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
         let state2 = StateMock(p: 0, r: 0, y: 15.6)
@@ -921,7 +1006,7 @@ class GimbalControllerTests: XCTestCase {
 
         controller.setYaw(15.6)
 
-        waitForExpectationsWithTimeout(6.5) {
+        waitForExpectationsWithTimeout(7.5) {
             error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")
@@ -1097,7 +1182,7 @@ class GimbalControllerTests: XCTestCase {
 
         controller.setRoll(15.6)
 
-        waitForExpectationsWithTimeout(6.5) {
+        waitForExpectationsWithTimeout(7.5) {
             error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")

@@ -590,7 +590,7 @@ class CameraControllerTests: XCTestCase {
 
         controller.takeASnap()
 
-        waitForExpectationsWithTimeout(13) {
+        waitForExpectationsWithTimeout(15) {
             error in
             if let error = error {
                 XCTFail("waitForExpectationsWithTimeout errored: \(error)")

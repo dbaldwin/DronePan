@@ -57,14 +57,18 @@ class GimbalController: NSObject, DJIGimbalDelegate {
     let yawRange: Range<Int>?
     let rollRange: Range<Int>?
 
+    let relativeGimbalYaw: Bool
+
     var supportsRangeExtension = false
 
     let gimbalWorkQueue = dispatch_queue_create("com.dronepan.queue.gimbal", DISPATCH_QUEUE_CONCURRENT)
 
-    init(gimbal: DJIGimbal, supportsSDKYaw: Bool = true) {
+    init(gimbal: DJIGimbal, gimbalYawIsRelativeToAircraft: Bool = false) {
         DDLogInfo("Gimbal Controller init")
 
         self.gimbal = gimbal
+
+        self.relativeGimbalYaw = gimbalYawIsRelativeToAircraft
 
         if let pitchInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustPitch] as? DJIParamCapabilityMinMax {
             isPitchAdjustable = pitchInfo.isSupported
@@ -80,7 +84,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
         }
 
         if let yawInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustYaw] as? DJIParamCapabilityMinMax {
-            isYawAdjustable = yawInfo.isSupported && supportsSDKYaw
+            isYawAdjustable = yawInfo.isSupported
 
             if (isYawAdjustable) {
                 yawRange = yawInfo.min.integerValue ... yawInfo.max.integerValue
@@ -248,7 +252,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
 
         let newAngle = angleInRange * sign
 
-        DDLogDebug("Gimbal Controller angle \(angle) adjusted to \(newAngle)")
+        DDLogVerbose("Gimbal Controller angle \(angle) adjusted to \(newAngle)")
 
         return newAngle
     }
@@ -267,13 +271,21 @@ class GimbalController: NSObject, DJIGimbalDelegate {
         return !adjustable || ((value - allowedOffset) ... (value + allowedOffset) ~= currentValue)
     }
 
+    func adjustedYaw(yaw: Float) -> Float {
+        if (!relativeGimbalYaw) {
+            return yaw
+        } else {
+            return gimbalAngleForHeading(self.currentACYaw) - yaw
+        }
+    }
+
     func check(pitch p: Float, yaw y: Float, roll r: Float) -> Bool {
         DDLogDebug("Checking PA: \(isPitchAdjustable) P: \(p) CP: \(self.currentPitch)")
-        DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw) CACY: \(self.currentACYaw)")
+        DDLogDebug("Checking YA: \(isYawAdjustable) Y: \(y) CY: \(self.currentYaw) CACY: \(self.currentACYaw) ACY: \(adjustedYaw(self.currentYaw))")
         DDLogDebug("Checking RA: \(isRollAdjustable) R: \(r) CR: \(self.currentRoll)")
 
         return valueInRange(isPitchAdjustable, value: p, currentValue: self.currentPitch) &&
-                valueInRange(isYawAdjustable, value: y, currentValue: self.currentYaw) &&
+                valueInRange(isYawAdjustable, value: y, currentValue: adjustedYaw(self.currentYaw)) &&
                 valueInRange(isRollAdjustable, value: r, currentValue: self.currentRoll)
     }
 
@@ -421,7 +433,7 @@ class GimbalController: NSObject, DJIGimbalDelegate {
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll
 
-        self.delegate?.gimbalAttitudeChanged(pitch: atti.pitch, yaw: atti.yaw, roll: atti.roll)
+        self.delegate?.gimbalAttitudeChanged(pitch: atti.pitch, yaw: adjustedYaw(atti.yaw), roll: atti.roll)
     }
 
 }
