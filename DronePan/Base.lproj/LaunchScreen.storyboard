@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -17,42 +17,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qsg-tk-7ej">
-                                <rect key="frame" x="0.0" y="225" width="600" height="150"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JhI-tp-Mlz" userLabel="MenuView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="52"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="Settings2" translatesAutoresizingMaskIntoConstraints="NO" id="0oT-ES-fEI">
+                                        <rect key="frame" x="550" y="11" width="30" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="KR3-BV-lcR"/>
+                                            <constraint firstAttribute="height" constant="30" id="Yc0-H0-1eI"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Disconnected" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dld-IY-PNR">
+                                        <rect key="frame" x="373" y="20" width="165" height="15"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="165" id="1RN-mf-VUe"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="vpG-I9-jjJ"/>
+                                    <constraint firstItem="dld-IY-PNR" firstAttribute="centerY" secondItem="JhI-tp-Mlz" secondAttribute="centerY" id="Emb-4r-ZzQ"/>
+                                    <constraint firstItem="0oT-ES-fEI" firstAttribute="centerY" secondItem="JhI-tp-Mlz" secondAttribute="centerY" constant="-2" id="tEh-al-RyN"/>
+                                    <constraint firstAttribute="height" constant="52" id="try-rW-SI5"/>
+                                    <constraint firstAttribute="trailing" secondItem="0oT-ES-fEI" secondAttribute="trailing" constant="18" id="xQL-X3-gKh"/>
+                                    <constraint firstItem="0oT-ES-fEI" firstAttribute="leading" secondItem="dld-IY-PNR" secondAttribute="trailing" constant="15" id="yZD-1i-64w"/>
                                 </constraints>
-                                <attributedString key="attributedText">
-                                    <fragment content="DronePan Beta Test">
-                                        <attributes>
-                                            <font key="NSFont" size="24" name="HelveticaNeue-Bold"/>
-                                            <font key="NSOriginalFont" size="24" name="HelveticaNeue-Bold"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment>
-                                        <string key="content">
-
-Repo: https://github.com/dbaldwin/DronePan
-
-Issues: https://github.com/dbaldwin/DronePan/issues
-
-Change Log: https://github.com/dbaldwin/DronePan/blob/master/CHANGELOG.md</string>
-                                        <attributes>
-                                            <font key="NSFont" size="14" name="HelveticaNeue"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Start" translatesAutoresizingMaskIntoConstraints="NO" id="vg0-tu-9eT">
+                                <rect key="frame" x="236" y="452" width="128" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="7F8-cm-8cW"/>
+                                    <constraint firstAttribute="width" constant="128" id="Fb5-I4-Y1Z"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Qsg-tk-7ej" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="QTj-Fl-zjF"/>
-                            <constraint firstItem="Qsg-tk-7ej" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="TTm-yc-gTx"/>
-                            <constraint firstAttribute="trailing" secondItem="Qsg-tk-7ej" secondAttribute="trailing" id="Xkx-OD-rkS"/>
+                            <constraint firstItem="JhI-tp-Mlz" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="Ud6-rZ-3H9"/>
+                            <constraint firstItem="vg0-tu-9eT" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="f2b-xG-f6b"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="vg0-tu-9eT" secondAttribute="bottom" constant="47" id="v1c-8s-oPW"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -61,4 +67,8 @@ Change Log: https://github.com/dbaldwin/DronePan/blob/master/CHANGELOG.md</strin
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Settings2" width="32" height="32"/>
+        <image name="Start" width="128" height="128"/>
+    </resources>
 </document>
