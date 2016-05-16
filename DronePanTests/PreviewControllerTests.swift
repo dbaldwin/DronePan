@@ -76,6 +76,10 @@ class PreviewControllerTests: XCTestCase {
     func testHardwareDecoder() {
 
         class VideoPreviewerMock: VideoPreviewer {
+            override init() {
+                // Block parent
+            }
+            
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return true
@@ -97,6 +101,10 @@ class PreviewControllerTests: XCTestCase {
     func testSoftwareDecoder() {
 
         class VideoPreviewerMock: VideoPreviewer {
+            override init() {
+                // Block parent
+            }
+            
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return false
@@ -118,6 +126,10 @@ class PreviewControllerTests: XCTestCase {
     func testUnknownDecoder() {
 
         class VideoPreviewerMock: VideoPreviewer {
+            override init() {
+                // Block parent
+            }
+            
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 return false
             }
