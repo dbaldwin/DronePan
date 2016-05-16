@@ -22,6 +22,7 @@ have taken at least one photo or video before running DronePan.
 #### Updates
 
 * Distances (distance/altitude) in metric or imperial units - toggle under settings
+* Updated launch screen
 
 #### Fixes
 
