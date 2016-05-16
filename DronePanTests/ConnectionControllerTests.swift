@@ -256,7 +256,7 @@ class ConnectionControllerTests: XCTestCase {
     func testRegisterSimulator() {
         let spyDelegate = getSpy("Expect that registration will call registered")
 
-        connectionController!.connectToSimulator = true
+        connectionController!.runInBridgeMode = true
 
         connectionController!.sdkManagerDidRegisterAppWithError(nil)
 
@@ -453,5 +453,13 @@ class ConnectionControllerTests: XCTestCase {
 
             XCTAssertEqual(solution, "Test Solution", "Solution was incorrect \(solution)")
         }
+    }
+    
+    func testBridgeModeSetting() {
+        // This test is to flag if we commit the ConnectionController with bridge mode set true after testing
+        
+        let controller = ConnectionController()
+        
+        XCTAssertFalse(controller.runInBridgeMode, "Connection Controller is set up for bridge mode")
     }
 }

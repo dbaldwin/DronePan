@@ -59,7 +59,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
 }
 
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
-    var connectToSimulator = false
+    var runInBridgeMode = false
     let bridgeAddress = "10.0.1.18"
 
     let appKey = "d6b78c9337f72fadd85d88e2"
@@ -83,7 +83,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
 
             self.delegate?.sdkRegistered()
 
-            if (connectToSimulator) {
+            if (runInBridgeMode) {
                 DDLogDebug("Connecting to debug bridge")
                 DJISDKManager.enterDebugModeWithDebugId(bridgeAddress)
             } else {
