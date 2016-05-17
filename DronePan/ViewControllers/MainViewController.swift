@@ -59,7 +59,7 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.previewController = PreviewController()
+        self.previewController = PreviewController(previewer: VideoPreviewerInstance())
         self.panoramaController = PanoramaController()
         self.panoramaController!.delegate = self
 

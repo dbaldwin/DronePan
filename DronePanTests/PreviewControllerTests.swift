@@ -11,33 +11,30 @@ import DJISDK
 
 @testable import DronePan
 
-class TestablePreviewController: PreviewController {
-    var internalPreviewer: VideoPreviewer
-
-    init(previewer: VideoPreviewer) {
-        self.internalPreviewer = previewer
-    }
-
-    override var previewer: VideoPreviewer {
-        return internalPreviewer
-    }
-}
-
-class BasicVideoPreviewerMock: VideoPreviewer {
-    override init() {
-        // Block parent
+class VideoPreviewerAdapter : VideoPreviewerWrapper {
+    func start() -> Bool {
+        return true
     }
     
-    deinit {
-        // Block parent
+    func setView(view : UIView) -> Bool {
+        return true
+    }
+    
+    func unSetView() {
+    }
+    
+    func setDecoderWithProduct(product: DJIBaseProduct, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
+        return true
+    }
+    
+    func push(videoData: UnsafeMutablePointer<UInt8>, length len: Int32) {
     }
 }
-
 
 class PreviewControllerTests: XCTestCase {
     func testStart() {
 
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             var startCalled: Bool?
             var viewSeen: UIView?
 
@@ -57,7 +54,7 @@ class PreviewControllerTests: XCTestCase {
         let previewer = VideoPreviewerMock()
         let view = UIView()
 
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
 
         controller.startWithView(view)
 
@@ -67,7 +64,7 @@ class PreviewControllerTests: XCTestCase {
     
     func testHide() {
         
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             var unsetCalled: Bool?
             
             override func unSetView() {
@@ -77,7 +74,7 @@ class PreviewControllerTests: XCTestCase {
         
         let previewer = VideoPreviewerMock()
         
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
         
         controller.removeFromView()
         
@@ -86,7 +83,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testHardwareDecoder() {
 
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return true
@@ -98,7 +95,7 @@ class PreviewControllerTests: XCTestCase {
 
         let previewer = VideoPreviewerMock()
 
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
 
         let type = controller.setMode(DJIBaseProduct())
 
@@ -107,7 +104,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testSoftwareDecoder() {
 
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return false
@@ -119,7 +116,7 @@ class PreviewControllerTests: XCTestCase {
 
         let previewer = VideoPreviewerMock()
 
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
 
         let type = controller.setMode(DJIBaseProduct())
 
@@ -128,7 +125,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testUnknownDecoder() {
 
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 return false
             }
@@ -136,7 +133,7 @@ class PreviewControllerTests: XCTestCase {
 
         let previewer = VideoPreviewerMock()
 
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
 
         let type = controller.setMode(DJIBaseProduct())
 
@@ -145,7 +142,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testVideo() {
 
-        class VideoPreviewerMock: BasicVideoPreviewerMock {
+        class VideoPreviewerMock: VideoPreviewerAdapter {
             var seenData: UnsafeMutablePointer<UInt8>?
             var seenLength: Int32?
 
@@ -157,7 +154,7 @@ class PreviewControllerTests: XCTestCase {
 
         let previewer = VideoPreviewerMock()
 
-        let controller = TestablePreviewController(previewer: previewer)
+        let controller = PreviewController(previewer: previewer)
 
         let length = 20
         let buffer = UnsafeMutablePointer<UInt8>.alloc(length)

@@ -25,12 +25,12 @@ enum DecoderType {
 }
 
 class PreviewController: VideoControllerDelegate {
-    var previewer: VideoPreviewer {
-        get {
-            return VideoPreviewer.instance()
-        }
-    }
+    let previewer: VideoPreviewerWrapper
 
+    init(previewer : VideoPreviewerWrapper) {
+        self.previewer = previewer
+    }
+    
     func startWithView(view: UIView) {
         previewer.start()
         previewer.setView(view)

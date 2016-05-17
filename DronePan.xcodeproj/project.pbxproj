@@ -16,6 +16,7 @@
 		1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */; };
 		156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */; };
 		156F5FE01CDE510B00BAE596 /* BatteryControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */; };
+		1574A1C21CEAF058008CFEE7 /* VideoPreviewerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */; };
 		157A71671CD53DB40074EAF8 /* ConnectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */; };
 		15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15839E931CCE9A40008B7E97 /* BatteryController.swift */; };
 		15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15839F341CCEA224008B7E97 /* libDJIVTH264Decoder.a */; };
@@ -105,6 +106,7 @@
 		1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControllerTests.swift; sourceTree = "<group>"; };
 		156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryControllerTests.swift; sourceTree = "<group>"; };
+		1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPreviewerWrapper.swift; sourceTree = "<group>"; };
 		157A71661CD53DB40074EAF8 /* ConnectionControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionControllerTests.swift; sourceTree = "<group>"; };
 		15839E931CCE9A40008B7E97 /* BatteryController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryController.swift; sourceTree = "<group>"; };
 		15839F311CCEA224008B7E97 /* DJIStreamCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIStreamCommon.h; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
 				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
 				1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */,
+				1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -832,6 +835,7 @@
 				15839FBB1CCEA224008B7E97 /* MovieGLView.m in Sources */,
 				4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */,
 				1521D6931CD4CF29007458D7 /* FlightController.swift in Sources */,
+				1574A1C21CEAF058008CFEE7 /* VideoPreviewerWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
