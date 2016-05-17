@@ -23,10 +23,21 @@ class TestablePreviewController: PreviewController {
     }
 }
 
+class BasicVideoPreviewerMock: VideoPreviewer {
+    override init() {
+        // Block parent
+    }
+    
+    deinit {
+        // Block parent
+    }
+}
+
+
 class PreviewControllerTests: XCTestCase {
     func testStart() {
 
-        class VideoPreviewerMock: VideoPreviewer {
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             var startCalled: Bool?
             var viewSeen: UIView?
 
@@ -56,7 +67,7 @@ class PreviewControllerTests: XCTestCase {
     
     func testHide() {
         
-        class VideoPreviewerMock: VideoPreviewer {
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             var unsetCalled: Bool?
             
             override func unSetView() {
@@ -75,11 +86,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testHardwareDecoder() {
 
-        class VideoPreviewerMock: VideoPreviewer {
-            override init() {
-                // Block parent
-            }
-            
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return true
@@ -100,11 +107,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testSoftwareDecoder() {
 
-        class VideoPreviewerMock: VideoPreviewer {
-            override init() {
-                // Block parent
-            }
-            
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 if decoder == .HardwareDecoder {
                     return false
@@ -125,11 +128,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testUnknownDecoder() {
 
-        class VideoPreviewerMock: VideoPreviewer {
-            override init() {
-                // Block parent
-            }
-            
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             override func setDecoderWithProduct(product: DJIBaseProduct!, andDecoderType decoder: VideoPreviewerDecoderType) -> Bool {
                 return false
             }
@@ -146,7 +145,7 @@ class PreviewControllerTests: XCTestCase {
 
     func testVideo() {
 
-        class VideoPreviewerMock: VideoPreviewer {
+        class VideoPreviewerMock: BasicVideoPreviewerMock {
             var seenData: UnsafeMutablePointer<UInt8>?
             var seenLength: Int32?
 
