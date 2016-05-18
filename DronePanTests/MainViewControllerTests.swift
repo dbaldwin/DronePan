@@ -144,6 +144,26 @@ class MainViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.currentProgress, 0.0, "Incorrect progress \(viewController.currentProgress)")
     }
 
+    func testSetSatellites() {
+        buildView()
+        
+        viewController.setSatellites(5)
+        
+        XCTAssertFalse(viewController.satelliteLabel.hidden, "Satellite label was hidden after setting")
+        XCTAssertEqual(viewController.satelliteLabel.text, "Sats: 5", "Incorrect satellite label seen \(viewController.satelliteLabel.text)")
+    }
+    
+    func testResetSatellites() {
+        ControllerUtils.setMetricUnits(true)
+        
+        buildView()
+        
+        viewController.setSatellites(5)
+        viewController.setSatellites()
+        
+        XCTAssertEqual(viewController.satelliteLabel.text, "Sats: -", "Incorrect satellite label seen \(viewController.satelliteLabel.text)")
+    }
+
     func testSetAltitude() {
         ControllerUtils.setMetricUnits(true)
         
