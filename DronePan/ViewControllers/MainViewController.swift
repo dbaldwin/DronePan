@@ -500,12 +500,12 @@ extension MainViewController: PanoramaControllerDelegate {
 
 extension MainViewController : UIAdaptivePresentationControllerDelegate {
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            return .OverFullScreen
-        } else if (traitCollection.horizontalSizeClass == .Compact) {
-            return .OverFullScreen
-        } else {
+        if (traitCollection.horizontalSizeClass == .Regular && traitCollection.verticalSizeClass == .Regular) {
+            // Large enough - don't adapt
             return .None
+        } else {
+            // Too small - go full screen
+            return .OverFullScreen
         }
     }
 }
