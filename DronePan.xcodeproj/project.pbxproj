@@ -632,10 +632,10 @@
 				1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */,
 				15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */,
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
+				83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */,
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
 				83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */,
-				83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = SOURCE_ROOT;
@@ -1036,6 +1036,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",
@@ -1056,6 +1057,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",

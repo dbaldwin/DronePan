@@ -55,6 +55,11 @@ class MainViewController: UIViewController {
 
     var batteryController: BatteryController?
     var panoramaController: PanoramaController?
+    
+    var animationDuration = 1.0
+    
+    var currentWarning = ""
+    var currentProgress = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,12 +132,14 @@ class MainViewController: UIViewController {
         }
     }
 
-    func showWarning(text: String) {
+    func showWarning(warning : String) {
+        currentWarning = warning
+        
         // TODO: this view should be a custom class that has a set of messages that rotate
         if (self.warningOffset.constant == 0) {
             self.warningView.alpha = 1
             dispatch_async(dispatch_get_main_queue()) {
-                self.warningLabel.text = text
+                self.warningLabel.text = self.currentWarning
 
                 self.scrollView(self.cameraView, toOffset: -self.warningView.frame.size.height, usingConstraint: self.warningOffset)
             }
@@ -140,6 +147,8 @@ class MainViewController: UIViewController {
     }
 
     func hideWarning() {
+        currentWarning = ""
+        
         if (self.warningOffset.constant != 0) {
             dispatch_async(dispatch_get_main_queue()) {
                 self.scrollView(self.cameraView, toOffset: 0, usingConstraint: self.warningOffset) {
@@ -175,7 +184,7 @@ class MainViewController: UIViewController {
 
         view.setNeedsUpdateConstraints()
 
-        UIView.animateWithDuration(1, animations: {
+        UIView.animateWithDuration(animationDuration, animations: {
             view.layoutIfNeeded()
         }) {
             (completed) in
@@ -192,12 +201,14 @@ class MainViewController: UIViewController {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
 
-            self.panoProgressBar.setProgress(Float(current) / Float(count), animated: true)
+            self.currentProgress = Double(current) / Double(count)
         } else {
             self.sequenceLabel.text = "Photo: -/-"
 
-            self.panoProgressBar.setProgress(0, animated: false)
+            self.currentProgress = 0.0
         }
+
+        self.panoProgressBar.setProgress(Float(currentProgress), animated: true)
     }
 
     func setAltitude(altitude: Int? = nil) {
