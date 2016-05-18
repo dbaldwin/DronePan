@@ -70,6 +70,7 @@
 		839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */; };
 		83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; };
 		83A5585B1CD08FEE000BB6C6 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83B5A1C41CEC4A180080A4B3 /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -260,6 +261,7 @@
 		836F73381CCF513700233FF3 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
 		839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettings.swift; sourceTree = "<group>"; };
 		83A558591CD08FE7000BB6C6 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
+		83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -633,6 +635,7 @@
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
 				83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */,
+				83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */,
 			);
 			path = DronePanTests;
 			sourceTree = SOURCE_ROOT;
@@ -854,6 +857,7 @@
 				15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */,
 				156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
+				83B5A1C41CEC4A180080A4B3 /* MainViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

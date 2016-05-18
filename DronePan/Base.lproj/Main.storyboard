@@ -53,8 +53,8 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="----" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egU-C7-Z7T">
-                                                <rect key="frame" x="380.5" y="6" width="40" height="12"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="----" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egU-C7-Z7T">
+                                                <rect key="frame" x="381" y="6" width="40" height="12"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="jwZ-pc-AGj"/>
                                                 </constraints>
@@ -63,7 +63,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="----" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FMz-LT-Qcl">
-                                                <rect key="frame" x="675.5" y="6" width="40" height="12"/>
+                                                <rect key="frame" x="676" y="6" width="40" height="12"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="hek-bW-KHs"/>
                                                 </constraints>
@@ -72,13 +72,13 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gimbal Pitch:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Py2-45-HoP">
-                                                <rect key="frame" x="602.5" y="6" width="69" height="12"/>
+                                                <rect key="frame" x="603" y="6" width="69" height="12"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gimbal Yaw:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbS-Nw-6Pa">
-                                                <rect key="frame" x="313.5" y="6" width="63" height="12"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Gimbal Yaw:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbS-Nw-6Pa">
+                                                <rect key="frame" x="314" y="6" width="63" height="12"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -92,22 +92,22 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uEe-WA-yXC" userLabel="Spacer 1">
-                                                <rect key="frame" x="131" y="7" width="182.5" height="10"/>
+                                            <view alpha="0.0" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uEe-WA-yXC" userLabel="Spacer 1">
+                                                <rect key="frame" x="131" y="7" width="183" height="10"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="10" id="m4d-ki-EWR"/>
                                                 </constraints>
                                             </view>
-                                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sRG-rz-hge" userLabel="Spacer 2">
-                                                <rect key="frame" x="420.5" y="7" width="182" height="10"/>
+                                            <view alpha="0.0" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sRG-rz-hge" userLabel="Spacer 2">
+                                                <rect key="frame" x="421" y="7" width="182" height="10"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="10" id="RC8-7n-Ohp"/>
                                                 </constraints>
                                             </view>
                                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bg1-zP-Koj" userLabel="Spacer 3">
-                                                <rect key="frame" x="715.5" y="7" width="182.5" height="10"/>
+                                                <rect key="frame" x="716" y="7" width="182" height="10"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="10" id="01D-Ju-Ed3"/>
