@@ -283,6 +283,7 @@ class MainViewController: UIViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let settings = segue.destinationViewController as? SettingsViewController {
+            settings.presentationController!.delegate = self
 #if DEBUG
             if let model = self.panoramaController?.model, type = self.panoramaController?.type {
                 settings.model = model
@@ -493,6 +494,18 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoAvailable(available: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.enabled = available
+        }
+    }
+}
+
+extension MainViewController : UIAdaptivePresentationControllerDelegate {
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
+            return .OverFullScreen
+        } else if (traitCollection.horizontalSizeClass == .Compact) {
+            return .OverFullScreen
+        } else {
+            return .None
         }
     }
 }
