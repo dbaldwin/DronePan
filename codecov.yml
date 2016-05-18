@@ -3,3 +3,4 @@ coverage:
     - DronePanTests/*
     - DronePanUITests/*
     - DronePan/VideoPreviewer/*
+    - DronePan/Utils/VideoPreviewerWrapper*
