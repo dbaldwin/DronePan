@@ -83,19 +83,6 @@ class SettingsViewController: UIViewController {
         return true
     }
 
-    private func initSegment(control: UISegmentedControl, setting: Int) {
-        for i in 0 ..< control.numberOfSegments {
-
-            if let title = control.titleForSegmentAtIndex(i) {
-                if let segment = Int(title) {
-                    if (segment == setting) {
-                        control.selectedSegmentIndex = Int(i)
-                    }
-                }
-            }
-        }
-    }
-
     private func startDelay(setting: Int, updateSlider: Bool = false) {
         delayLabel.text = "Start Delay (seconds): \(setting)"
 
@@ -265,18 +252,6 @@ class SettingsViewController: UIViewController {
 
     private func isSkyRow() -> Bool {
         return skyRowControl.selectedSegmentIndex == 0
-    }
-
-    private func selectedValue(control: UISegmentedControl) -> Int? {
-        if (control.selectedSegmentIndex == UISegmentedControlNoSegment) {
-            return nil
-        }
-
-        if let title = control.titleForSegmentAtIndex(control.selectedSegmentIndex) {
-            return Int(title)
-        } else {
-            return nil
-        }
     }
 
     private func selectedPhotosPerRow() -> Int? {
