@@ -29,7 +29,6 @@ class MainViewControllerTests: XCTestCase {
 
         UIApplication.sharedApplication().keyWindow!.rootViewController = viewController
 
-        // The One Weird Trick!
         let _ = viewController.view
     }
 
