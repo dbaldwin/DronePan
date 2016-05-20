@@ -38,7 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DDLog.addLogger(DDASLLogger.sharedInstance(), withLevel: .Debug) // ASL = Apple System Logs
 
         fileLogger = DDFileLogger()
-        fileLogger!.rollingFrequency = 60 * 60 * 24
+        fileLogger!.rollingFrequency = 60 * 60 * 24 * 5 // 5 days
+        fileLogger!.maximumFileSize = 1024 * 1024 * 2 // 2 Mb
         fileLogger!.logFileManager.maximumNumberOfLogFiles = 2
         fileLogger!.logFormatter = logFormatter
 
