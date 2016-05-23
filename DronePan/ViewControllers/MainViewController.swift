@@ -433,7 +433,7 @@ extension MainViewController: PanoramaControllerDelegate {
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
 
-                self.scrollView(self.infoView, toOffset: -self.infoView.frame.size.height, usingConstraint: self.infoOffset)
+                self.showInfo()
             }
 
         }
@@ -448,7 +448,7 @@ extension MainViewController: PanoramaControllerDelegate {
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
 
-                self.scrollView(self.infoView, toOffset: 0, usingConstraint: self.infoOffset)
+                self.hideInfo()
             }
         }
     }
