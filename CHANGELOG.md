@@ -15,7 +15,34 @@ have taken at least one photo or video before running DronePan.
 
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
-* Gimbal yaw reset for P4 and I1 is currently disabled - you will have to make sure the gimbal is pointing forwards yourself [Issue 48](https://github.com/dbaldwin/DronePan/issues/48)
+
+### [1.4.3b11](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
+
+#### Updates
+
+**Sky row has changed!**
+
+Previously - sky row would do two things (on models that support it). It would move the maximum pitch up from 0 to 30 and would add an extra row. But - if you add more extra rows - you get more than one row above the horizon.
+
+So - the settings have changed - you no longer set "Sky row" - instead you will be offered the choice of setting the maximum pitch level "Horizon" or "30˚" (again - for models that can pitch upwards).
+
+If you do not see this setting under the settings window then your device has reported that it can't handle upwards pitch (we know that some devices may need this enabled - and this is being worked on - see [Issue #53](https://github.com/dbaldwin/DronePan/issues/24)).
+
+* Settings window will now only show relevant options - start delay for Osmo only, max pitch for aircraft (that support it) only (Osmo will always choose the extended range).
+* Settings window - show the pitch angle as well as the yaw angle for the current settings.
+* If you choose a combination of row count and max pitch that gives a pitch angle more than 30˚ it will allow it but will show the angle in red - you may wish to consider fewer rows or not enabling max pitch in this situation.
+
+
+#### Fixes
+
+* When we work out the row pitch angles - it was always doing a 30 degree change between 60 down and straight down - causing stitching issues for X5 users towards the bottom of the pano image. Fixed!
+
+### [1.4.3b10](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
+
+#### Fixes
+
+* Keep logs for up to 5 days instead of just 24 hours
+* Gimbal reset at start back in place for I1 and P4
 
 ### [1.4.3b9](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b9)
 

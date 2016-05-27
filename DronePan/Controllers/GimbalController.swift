@@ -147,6 +147,10 @@ class GimbalController: NSObject, DJIGimbalDelegate {
         self.currentACYaw = acYaw
     }
 
+    func getMaxPitch() -> Int? {
+        return pitchRange?.last
+    }
+    
     func reset() {
         DDLogInfo("Gimbal Controller reset")
 

@@ -19,7 +19,9 @@ enum SettingsKeys: String {
     case StartDelay = "delay"
     case PhotosPerRow = "photos_per_row"
     case NumberOfRows = "row_count"
-    case SkyRow = "sky_row"
+    case NadirCount = "nadir_count"
+    case MaxPitch = "max_pitch"
+    case MaxPitchEnabled = "max_pitch_enabled"
 }
 
 class ModelSettings {
@@ -47,34 +49,54 @@ class ModelSettings {
         return ModelSettings.intSettingForKey(model, key: .NumberOfRows, defaultValue: 3)
     }
 
-    class func skyRow(model: String) -> Bool {
-        if (ControllerUtils.isPhantom(model)) {
-            return false
-        }
-
-        return ModelSettings.boolSettingForKey(model, key: .SkyRow, defaultValue: true)
+    class func nadirCount(model: String) -> Int {
+        return ModelSettings.intSettingForKey(model, key: .NadirCount, defaultValue: 1)
     }
 
+    class func maxPitch(model: String) -> Int {
+        return ModelSettings.intSettingForKey(model, key: .MaxPitch, defaultValue: 0)
+    }
+
+    class func maxPitchEnabled(model: String) -> Bool {
+        return ModelSettings.boolSettingForKey(model, key: .MaxPitchEnabled, defaultValue: true)
+    }
+    
     class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
         var settings: [String:AnyObject] = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) ?? [:]
 
+        var minRowCount : Int?
+        
         for (key, val) in newSettings {
+            if (key == .MaxPitch) {
+                if (val as! Int > 0) {
+                    minRowCount = 4
+                }
+            }
             settings[key.rawValue] = val
         }
 
         NSUserDefaults.standardUserDefaults().setObject(settings, forKey: model)
+        
+        if let minRowCount = minRowCount {
+            let currentRowCount = numberOfRows(model)
+            
+            if currentRowCount < minRowCount {
+                settings[SettingsKeys.NumberOfRows.rawValue] = minRowCount
+                
+                NSUserDefaults.standardUserDefaults().setObject(settings, forKey: model)
+            }
+        }
+
         NSUserDefaults.standardUserDefaults().synchronize()
     }
-
+    
     class func numberOfImagesForCurrentSettings(model: String) -> Int {
-        var numberOfRows = ModelSettings.numberOfRows(model)
-
-        if (ModelSettings.skyRow(model)) {
-            numberOfRows += 1
-        }
+        let numberOfRows = ModelSettings.numberOfRows(model)
 
         let photosPerRow = ModelSettings.photosPerRow(model)
 
-        return (numberOfRows * photosPerRow) + 1
+        let nadirCount = ModelSettings.nadirCount(model)
+        
+        return (numberOfRows * photosPerRow) + nadirCount
     }
 }

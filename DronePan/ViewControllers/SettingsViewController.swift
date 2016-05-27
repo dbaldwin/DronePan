@@ -17,43 +17,43 @@ import UIKit
 
 import CocoaLumberjackSwift
 
+enum SettingsViewKey {
+    case StartDelay
+    case PerRow
+    case RowCount
+    case NadirCount
+    case MaxPitchEnabled
+    case MetricSelected
+}
+
 class SettingsViewController: UIViewController {
 
     var model: String = ""
     var type: ProductType = .Aircraft
 
     @IBOutlet weak var titleLabel: UILabel!
-
-    @IBOutlet weak var skyRowControl: UISegmentedControl!
-    @IBOutlet weak var unitsControl: UISegmentedControl!
-
-    @IBOutlet weak var angleLabel: UILabel!
-    @IBOutlet weak var countLabel: UILabel!
-
-    @IBOutlet weak var startDelayDescription: UILabel!
-    @IBOutlet weak var numberOfPhotosPerRowDescription: UILabel!
-    @IBOutlet weak var numberOfRowsDescription: UILabel!
-    @IBOutlet weak var skyRowDescription: UILabel!
-
     @IBOutlet weak var versionLabel: UILabel!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var yawAngleLabel: UILabel!
+    @IBOutlet weak var pitchAngleLabel: UILabel!
+    @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var helpView: UIView!
+    @IBOutlet weak var helpTitle: UILabel!
+    @IBOutlet weak var helpText: UILabel!
 
-    @IBOutlet weak var saveButton: UIButton!
-
-    @IBOutlet weak var delayLabel: UILabel!
-    @IBOutlet weak var delaySlider: UISlider!
-
-    @IBOutlet weak var photosPerRowLabel: UILabel!
-    @IBOutlet weak var photosPerRowSlider: UISlider!
-
-    @IBOutlet weak var rowCountLabel: UILabel!
-    @IBOutlet weak var rowCountSlider: UISlider!
+    var startDelay = 0
+    var perRow = 0
+    var rowCount = 0
+    var nadirCount = 0
+    var maxPitchEnabled = true
+    var maxPitch = 0
+    var metricSelected = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        initSettings()
-
+        helpView.alpha = 0
+        
         if let version = ControllerUtils.buildVersion() {
             self.versionLabel.hidden = false
             self.versionLabel.text = "Version \(version)"
@@ -69,239 +69,85 @@ class SettingsViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
+        initSettings()
+
         DDLogInfo("Showing settings window")
         trackScreenView("SettingsViewController")
     }
 
     override func viewDidAppear(animated: Bool) {
         DDLogInfo("Settings VC Showing settings view")
-
-        self.scrollView.flashScrollIndicators()
     }
 
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
 
-    private func startDelay(setting: Int, updateSlider: Bool = false) {
-        delayLabel.text = "Start Delay (seconds): \(setting)"
-
-        if updateSlider {
-            delaySlider.minimumValue = 5
-            delaySlider.maximumValue = 30
-            delaySlider.value = Float(setting)
+    func stringForAngle(angle: Double, color: UIColor = UIColor.whiteColor()) -> NSAttributedString {
+        let roundedString = String(format: "%.2f", angle)
+        
+        let angleString = NSMutableAttributedString(string: "\(roundedString)", attributes: [
+            NSFontAttributeName: UIFont.boldSystemFontOfSize(14),
+            NSForegroundColorAttributeName: color
+            ])
+        
+        
+        angleString.appendAttributedString(NSAttributedString(string: "˚", attributes: [
+            NSFontAttributeName: UIFont.systemFontOfSize(14),
+            NSForegroundColorAttributeName: color
+            ]))
+        
+        return angleString
+    }
+    
+    func setYawAngle(angle: Double) {
+        self.yawAngleLabel.attributedText = stringForAngle(angle)
+    }
+    
+    func setPitchAngle(angle: Double) {
+        if angle > 30 {
+            self.pitchAngleLabel.attributedText = stringForAngle(angle, color: UIColor(red: 1, green: 0.5, blue: 0.5, alpha: 1))
+        } else {
+            self.pitchAngleLabel.attributedText = stringForAngle(angle)
         }
     }
 
-    @IBAction func delaySliderChanged(sender: UISlider) {
-        let step: Float = 5.0
-
-        let roundedValue = round(sender.value / step) * step
-        sender.value = roundedValue
-
-        startDelay(Int(roundedValue))
+    func setCount(count: Int) {
+        self.countLabel.text = "\(count)"
     }
+    
+    func updateCounts() {
+        if self.rowCount > 0 && self.perRow > 0 {
+            self.setYawAngle(360.0 / Double(self.perRow))
 
-    private func photosPerRow(setting: Int, updateSlider: Bool = false) {
-        photosPerRowLabel.text = "Number of photos per row: \(setting)"
+            let maxP = self.maxPitchEnabled ? Double(self.maxPitch) : Double(0)
 
-        if updateSlider {
-            photosPerRowSlider.minimumValue = 6
-            photosPerRowSlider.maximumValue = 20
-            photosPerRowSlider.value = Float(setting)
+            self.setPitchAngle((maxP + 90.0) / Double(self.rowCount))
+
+            self.setCount((self.rowCount * self.perRow) + self.nadirCount)
         }
     }
-
-    @IBAction func photosPerRowSliderChanged(sender: UISlider) {
-        let step: Float = 1.0
-
-        let roundedValue = round(sender.value / step) * step
-        sender.value = roundedValue
-
-        photosPerRow(Int(roundedValue))
-
-        updateCounts()
-    }
-
-
-    private func rowCount(setting: Int, updateSlider: Bool = false) {
-        rowCountLabel.text = "Number of rows: \(setting)"
-
-        if updateSlider {
-            rowCountSlider.minimumValue = 3
-            rowCountSlider.maximumValue = 10
-            rowCountSlider.value = Float(setting)
-        }
-    }
-
-    @IBAction func rowCountChanged(sender: UISlider) {
-        let step: Float = 1.0
-
-        let roundedValue = round(sender.value / step) * step
-        sender.value = roundedValue
-
-        rowCount(Int(roundedValue))
-
-        updateCounts()
-    }
-
+    
     func initSettings() {
         if (self.model == "") {
-            titleLabel.attributedText = NSAttributedString(string: "Disconnected", attributes: [
-                    NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
-            ])
-
-            for control in [delaySlider, photosPerRowSlider, rowCountSlider] {
-                control.enabled = false
-            }
-
-            for control in [skyRowControl] {
-                control.enabled = false
-                control.selectedSegmentIndex = UISegmentedControlNoSegment
-            }
-
-            for label in [startDelayDescription, numberOfPhotosPerRowDescription, numberOfRowsDescription, skyRowDescription] {
-                label.text = "Disconnected"
-            }
-
-            setAngleLabel(0)
-            countLabel.text = "--"
-
-            saveButton.enabled = false
-
-            return
-        }
-
-
-        titleLabel.attributedText = NSAttributedString(string: "\(model) Settings", attributes: [
-                NSFontAttributeName: UIFont.boldSystemFontOfSize(20)
-        ])
-
-        if (type == .Handheld) {
-
-            startDelayDescription.text = "Specify a delay before starting your pano. The pano process will delay this amount of time after clicking the start button."
-
-            delaySlider.enabled = true
-            startDelay(ModelSettings.startDelay(model), updateSlider: true)
-
-            skyRowDescription.text = "Handheld always gets this extra row. Number of rows will be the number selected above +1."
-            skyRowControl.enabled = false
-            skyRowControl.selectedSegmentIndex = 0
+            titleLabel.text = "Disconnected"
         } else {
-            delaySlider.enabled = false
-            startDelay(0, updateSlider: true)
-
-            startDelayDescription.text = "Only applicable for handheld"
-
-            if (ControllerUtils.isPhantom(model)) {
-                skyRowControl.enabled = false
-                skyRowDescription.text = "Phantom models do not support sky row"
-                skyRowControl.selectedSegmentIndex = 1
-            } else {
-                skyRowControl.enabled = true
-                skyRowDescription.text = "If set, DronePan will shoot a \"sky row\" with the gimbal at +30˚. Then it will take a row of shots at 0˚, -30˚ and -60˚ and one nadir. Selecting \"No\" will skip the sky row."
-                let skyRow = ModelSettings.skyRow(model)
-
-                if (skyRow) {
-                    skyRowControl.selectedSegmentIndex = 0
-                } else {
-                    skyRowControl.selectedSegmentIndex = 1
-                }
-            }
+            titleLabel.text = "\(model) Settings"
         }
 
-        photosPerRow(ModelSettings.photosPerRow(model), updateSlider: true)
+        setYawAngle(0)
+        setPitchAngle(0)
+        setCount(0)
 
-        rowCount(ModelSettings.numberOfRows(model), updateSlider: true)
+        self.startDelay = ModelSettings.startDelay(model)
+        self.perRow = ModelSettings.photosPerRow(model)
+        self.rowCount = ModelSettings.numberOfRows(model)
+        self.nadirCount = ModelSettings.nadirCount(model)
+        self.maxPitchEnabled = ModelSettings.maxPitchEnabled(model)
+        self.maxPitch = ModelSettings.maxPitch(model)
+        self.metricSelected = ControllerUtils.metricUnits()
 
         updateCounts()
-
-        unitsControl.selectedSegmentIndex = ControllerUtils.metricUnits() ? 0 : 1
-    }
-
-    private func setAngleLabel(angle: Float) {
-        let roundedString = String(format: "%.2f", angle)
-
-        let angleString = NSMutableAttributedString(string: "\(roundedString)", attributes: [
-                NSFontAttributeName: UIFont.boldSystemFontOfSize(14)
-        ])
-
-
-        angleString.appendAttributedString(NSAttributedString(string: "˚", attributes: [
-                NSFontAttributeName: UIFont.systemFontOfSize(14)
-        ]))
-
-        angleLabel.attributedText = angleString
-    }
-
-    private func updateCounts() {
-        if var numberOfRows = selectedNumberOfRows() {
-            if (isSkyRow()) {
-                numberOfRows += 1
-            }
-
-            if let photosPerRow = selectedPhotosPerRow() {
-                self.setAngleLabel(360.0 / Float(photosPerRow))
-                self.countLabel.text = "\((numberOfRows * photosPerRow) + 1)"
-            } else {
-                self.setAngleLabel(0)
-                self.countLabel.text = "--"
-            }
-        }
-    }
-
-    private func isSkyRow() -> Bool {
-        return skyRowControl.selectedSegmentIndex == 0
-    }
-
-    private func selectedPhotosPerRow() -> Int? {
-        return Int(photosPerRowSlider.value)
-    }
-
-    private func selectedNumberOfRows() -> Int? {
-        return Int(rowCountSlider.value)
-    }
-
-    private func selectedStartDelay() -> Int? {
-        return Int(delaySlider.value)
-    }
-
-    @IBAction func numberOfRowsChanged(sender: AnyObject) {
-        updateCounts()
-    }
-
-    @IBAction func skyRowChanged(sender: AnyObject) {
-        updateCounts()
-    }
-
-    @IBAction func saveSettings(sender: AnyObject) {
-        var settings: [SettingsKeys:AnyObject] = [
-                .SkyRow: isSkyRow()
-        ]
-
-        if let startDelay = selectedStartDelay() {
-            settings[.StartDelay] = startDelay
-        }
-
-        if let photoCount = selectedPhotosPerRow() {
-            settings[.PhotosPerRow] = photoCount
-        }
-
-        if let rowCount = selectedNumberOfRows() {
-            settings[.NumberOfRows] = rowCount
-        }
-
-        ModelSettings.updateSettings(model, settings: settings)
-
-        ControllerUtils.setMetricUnits(unitsControl.selectedSegmentIndex == 0)
-
-        // Dismiss the VC
-        self.dismissViewControllerAnimated(true, completion: {})
-    }
-
-    @IBAction func cancelSettings(sender: AnyObject) {
-        // Dismiss the VC
-        self.dismissViewControllerAnimated(true, completion: {})
     }
 
     @IBAction func copyLogToClipboard(sender: UIButton) {
@@ -323,4 +169,263 @@ class SettingsViewController: UIViewController {
 
         self.presentViewController(alert, animated: true, completion: nil)
     }
+
+    func displayMessage(title: String, message: String) {
+        helpTitle.text = title
+        helpText.text = message
+
+        UIView.animateWithDuration(0.5, animations: {
+            self.helpView.alpha = 1
+        })
+    }
+    
+    @IBAction func clearHelpWindow(sender: UIButton) {
+        UIView.animateWithDuration(0.5, animations: {
+            self.helpView.alpha = 0
+        })
+    }
 }
+
+extension SettingsViewController : UITableViewDelegate {
+    
+}
+
+extension SettingsViewController : UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch (self.type) {
+        case .Handheld:
+            return 6
+        case .Aircraft:
+            if maxPitch > 0 {
+                return 6
+            } else {
+                return 5
+            }
+        default:
+            return 0
+        }
+    }
+    
+    func unitsCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SegmentViewCell", forIndexPath: indexPath) as! SegmentTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Units:"
+        cell.values = ["Metric", "Imperial"]
+        cell.helpText = "Distances (distance of aircraft from you and altitude) can be shown in metres or feet"
+        cell.key = .MetricSelected
+
+        cell.prepareForDisplay(self.metricSelected ? "Metric" : "Imperial")
+        
+        return cell
+    }
+    
+    func startDelayCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
+
+        cell.delegate = self
+        
+        cell.title = "Start Delay (seconds):"
+        cell.min = 0
+        cell.max = 30
+        cell.step = 5
+        cell.helpText = "The Osmo will wait this many seconds after you start the panorama before it starts the sequence. This is your chance to get out of shot"
+        cell.key = .StartDelay
+        
+        cell.prepareForDisplay(self.startDelay)
+
+        return cell
+    }
+
+    func photosPerRowCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Number of photos per row:"
+        cell.min = 6
+        cell.max = 20
+        cell.step = 1
+        cell.helpText = "How many photos do you want in one row? X3/Phantom should be good with 6-8, X5 will need more - depending on what lens they are using"
+        cell.key = .PerRow
+        
+        cell.prepareForDisplay(self.perRow)
+        
+        return cell
+    }
+    
+    func rowCountCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Number of rows:"
+        cell.min = 3
+        cell.max = 10
+        cell.step = 1
+        cell.helpText = "How many rows to take? X3/Phantom should be fairly good with 3-5 (3 is not enough if you set max pitch so that a column crosses the horizontal). This does not include the nadir/zenith shot (straight down/straight up)"
+        cell.key = .RowCount
+        
+        cell.prepareForDisplay(self.rowCount)
+        
+        return cell
+    }
+    
+    func nadirCountCell(tableView: UITableView, indexPath: NSIndexPath, nadir: Bool = true) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
+
+        cell.delegate = self
+        
+        if (nadir) {
+            cell.title = "Number of nadir shots:"
+            cell.helpText = "How many nadir (straight down) photos to take at the end of the sequence. X3/Phantom users should be good with 1 - X5 may need more"
+        } else {
+            cell.title = "Number of zenith shots:"
+            cell.helpText = "How many zenith (straight up) photos to take at the end of the sequence. X3/Phantom users should be good with 1 - X5 may need more"
+        }
+        
+        cell.min = 1
+        cell.max = 4
+        cell.step = 1
+        cell.key = .NadirCount
+        
+        cell.prepareForDisplay(self.nadirCount)
+
+        return cell
+    }
+    
+    func pitchMaxCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SegmentViewCell", forIndexPath: indexPath) as! SegmentTableViewCell
+
+        cell.delegate = self
+        
+        let max = "\(self.maxPitch)˚"
+        
+        cell.title = "Maximum Upward Pitch:"
+        cell.values = [max, "Horizon"]
+        cell.helpText = "You can choose to take from the horizon (0˚) to nadir (90˚ down) or from \(self.maxPitch)˚ above the horizon to nadir. Rows will be evenly spaced across this range"
+        cell.key = .MaxPitchEnabled
+
+
+        cell.prepareForDisplay(self.maxPitchEnabled ? max : "Horizon")
+        
+        return cell
+    }
+    
+    func buttonCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("ButtonViewCell", forIndexPath: indexPath) as! ButtonViewCell
+        
+        cell.delegate = self
+        
+        return cell
+    }
+
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        var cell : UITableViewCell
+        
+        switch (self.type) {
+        case .Handheld:
+            switch (indexPath.row) {
+            case 0:
+                cell = startDelayCell(tableView, indexPath: indexPath)
+            case 1:
+                cell = photosPerRowCell(tableView, indexPath: indexPath)
+            case 2:
+                cell = rowCountCell(tableView, indexPath: indexPath)
+            case 3:
+                cell = nadirCountCell(tableView, indexPath: indexPath, nadir: false)
+            case 4:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            default:
+                cell = buttonCell(tableView, indexPath: indexPath)
+            }
+        case .Aircraft:
+            var row = indexPath.row
+            
+            if row > 2 {
+                if maxPitch == 0 {
+                    // Need to skip if no max pitch
+                    row = row + 1
+                }
+            }
+            
+            switch (row) {
+            case 0:
+                cell = photosPerRowCell(tableView, indexPath: indexPath)
+            case 1:
+                cell = rowCountCell(tableView, indexPath: indexPath)
+            case 2:
+                cell = nadirCountCell(tableView, indexPath: indexPath)
+            case 3:
+                cell = pitchMaxCell(tableView, indexPath: indexPath)
+            case 4:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            default:
+                cell = buttonCell(tableView, indexPath: indexPath)
+            }
+        default:
+            cell = unitsCell(tableView, indexPath: indexPath)
+        }
+        
+        // Workaround for iPad ignoring IB clear color
+        cell.backgroundColor = cell.contentView.backgroundColor
+        
+        return cell
+    }
+}
+
+extension SettingsViewController : SegmentTableViewCellDelegate {
+    func newValueForKey(key: SettingsViewKey, value: String) {
+        switch key {
+        case .MaxPitchEnabled:
+            self.maxPitchEnabled = value != "Horizon"
+        case .MetricSelected:
+            self.metricSelected = value == "Metric"
+        default:
+            DDLogWarn("Segment control tríed to update a non-segment setting \(key)")
+        }
+        
+        updateCounts()
+    }
+}
+
+extension SettingsViewController : SliderTableViewCellDelegate {
+    func newValueForKey(key: SettingsViewKey, value: Int) {
+        switch key {
+        case .StartDelay:
+            self.startDelay = value
+        case .PerRow:
+            self.perRow = value
+        case .RowCount:
+            self.rowCount = value
+        case .NadirCount:
+            self.nadirCount = value
+        default:
+            DDLogWarn("Slider control tríed to update a non-slider setting \(key)")
+        }
+        
+        updateCounts()
+    }
+}
+
+extension SettingsViewController : ButtonViewCellDelegate {
+    func buttonClicked(save: Bool) {
+        if (save) {
+            ControllerUtils.setMetricUnits(self.metricSelected)
+
+            let settings : [SettingsKeys:AnyObject] = [
+                .StartDelay: self.startDelay,
+                .PhotosPerRow: self.perRow,
+                .NumberOfRows: self.rowCount,
+                .NadirCount: self.nadirCount,
+                .MaxPitchEnabled: self.maxPitchEnabled
+            ]
+
+            ModelSettings.updateSettings(model, settings: settings)
+        }
+        
+        self.dismissViewControllerAnimated(true, completion: {})
+    }
+}
+

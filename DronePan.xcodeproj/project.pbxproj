@@ -71,6 +71,9 @@
 		839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */; };
 		83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; };
 		83A5585B1CD08FEE000BB6C6 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83A558591CD08FE7000BB6C6 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83A713271CF82571005194BA /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A713261CF82571005194BA /* SliderTableViewCell.swift */; };
+		83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A713281CF8258B005194BA /* SegmentTableViewCell.swift */; };
+		83A7132B1CF83034005194BA /* ButtonViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A7132A1CF83034005194BA /* ButtonViewCell.swift */; };
 		83B5A1C41CEC4A180080A4B3 /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -263,6 +266,9 @@
 		836F73381CCF513700233FF3 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = Carthage/Build/iOS/MBProgressHUD.framework; sourceTree = "<group>"; };
 		839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSettings.swift; sourceTree = "<group>"; };
 		83A558591CD08FE7000BB6C6 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
+		83A713261CF82571005194BA /* SliderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
+		83A713281CF8258B005194BA /* SegmentTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentTableViewCell.swift; sourceTree = "<group>"; };
+		83A7132A1CF83034005194BA /* ButtonViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonViewCell.swift; sourceTree = "<group>"; };
 		83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -567,6 +573,9 @@
 			children = (
 				158606451CDB26F500C5DF95 /* MainViewController.swift */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
+				83A713261CF82571005194BA /* SliderTableViewCell.swift */,
+				83A713281CF8258B005194BA /* SegmentTableViewCell.swift */,
+				83A7132A1CF83034005194BA /* ButtonViewCell.swift */,
 			);
 			name = "View Controllers";
 			path = ViewControllers;
@@ -822,16 +831,19 @@
 				158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */,
 				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				15839FC71CD487BB008B7E97 /* ConnectionController.swift in Sources */,
+				83A713271CF82571005194BA /* SliderTableViewCell.swift in Sources */,
 				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
 				15839FBE1CCEA224008B7E97 /* VideoPreviewer.m in Sources */,
 				15839FC41CD3EC56008B7E97 /* PreviewController.swift in Sources */,
 				15839FBA1CCEA224008B7E97 /* LB2AUDHackParser.m in Sources */,
 				154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */,
 				15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */,
+				83A7132B1CF83034005194BA /* ButtonViewCell.swift in Sources */,
 				15839FBD1CCEA224008B7E97 /* VideoFrameExtractor.m in Sources */,
 				83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */,
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
+				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
 				15839FBC1CCEA224008B7E97 /* SoftwareDecodeProcessor.m in Sources */,
 				15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */,

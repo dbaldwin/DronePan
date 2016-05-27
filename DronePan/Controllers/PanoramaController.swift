@@ -103,13 +103,13 @@ class PanoramaController {
     var yawDestination = 0.0
     var yawSpeed = 0.0
 
-    func pitchesForLoop(skyRow skyRow: Bool, type: ProductType, rowCount: Int) -> Array<Double> {
-        let min: Double = -60
-        let max: Double = skyRow ? 30 : 0
-        let count = skyRow ? rowCount + 1 : rowCount
+    func pitchesForLoop(maxPitch maxPitch: Double, maxPitchEnabled: Bool, type: ProductType, rowCount: Int) -> Array<Double> {
+        let min: Double = -90
+        let max: Double = maxPitchEnabled ? maxPitch : 0
+        let count = rowCount
 
-        let interval = Double(max - min) / Double(count - 1)
-
+        let interval = (max - min) / Double(count)
+        
         let values = (0 ..< count).map({
             max - (Double($0) * interval)
         })
@@ -126,6 +126,10 @@ class PanoramaController {
             (angle: Double) -> Double in
             angle > 360 ? angle - 360.0 : angle
         })
+    }
+
+    func yawAnglesForNadir(count count: Int, heading: Double) {
+        
     }
 
     func headingTo360(heading: Double) -> Double {
@@ -278,7 +282,9 @@ extension PanoramaController {
                 return
             }
 
-            let pitches = self.pitchesForLoop(skyRow: ModelSettings.skyRow(self.model!), type: self.type!, rowCount: ModelSettings.numberOfRows(self.model!))
+            let pitches = self.pitchesForLoop(maxPitch: Double(ModelSettings.maxPitch(model)),
+                                              maxPitchEnabled: ModelSettings.maxPitchEnabled(model),
+                                              type: type, rowCount: ModelSettings.numberOfRows(model))
 
             // TODO: needs fixing when we enable AC to have gimbal yaw
             let aircraftYaw = type == .Aircraft
@@ -289,8 +295,9 @@ extension PanoramaController {
             }
 
             let yaws = self.yawAngles(count: ModelSettings.photosPerRow(model), heading: self.headingTo360(self.currentHeading))
+            let nadirYaws = self.yawAngles(count: ModelSettings.nadirCount(model), heading:  self.headingTo360(self.currentHeading))
 
-            self.totalCount = (pitches.count * yaws.count) + 1
+            self.totalCount = (pitches.count * yaws.count) + nadirYaws.count
             self.currentCount = 0
 
             DDLogDebug("PanoLoop: starting")
@@ -360,14 +367,41 @@ extension PanoramaController {
                     }
                 } // End yaw loop
 
-                // Take the final zenith/nadir shot and then reset the gimbal back
+                // Take the final zenith/nadir shots and then reset the gimbal back
                 // or we cancel the pano and still reset the gimbal
                 if (self.panoRunning.state) {
                     DDLogDebug("PanoLoop: Zenith/Nadir - set pitch")
                     self.setPitch(-90.0)
 
-                    DDLogDebug("PanoLoop: Zenith/Nadir - take photo")
-                    self.takeASnap()
+                    for yaw in nadirYaws {
+                        // Now we yaw after a column of photos has been taken
+                        if (aircraftYaw) {
+                            DDLogDebug("PanoLoop: NadirYawLoop: \(yaw) - AC yaw")
+                            
+                            self.yawSpeed = 30 // This represents 30m/sec
+                            self.yawDestination = yaw
+                            
+                            // Calling this on a timer as it improves the accuracy of aircraft yaw
+                            dispatch_sync(self.droneCommandsQueue, {
+                                let timer = NSTimer.scheduledTimerWithTimeInterval(0.1,
+                                    target: self,
+                                    selector: #selector(PanoramaController.yawAircraftUsingVelocity(_:)),
+                                    userInfo: nil,
+                                    repeats: true)
+                                
+                                NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
+                                NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 5))
+                                
+                                timer.invalidate()
+                            })
+                        } else {
+                            DDLogDebug("PanoLoop: NadirYawLoop: \(yaw) - gimbal yaw")
+                            self.setYaw(yaw)
+                        }
+
+                        DDLogDebug("PanoLoop: NadirYawLoop: \(yaw) - take photo")
+                        self.takeASnap()
+                    }
 
                     self.delegate?.postUserMessage("Completed pano")
 
@@ -627,6 +661,10 @@ extension PanoramaController: GimbalControllerDelegate {
         if let gimbal = gimbal {
             self.gimbalController = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: ControllerUtils.gimbalYawIsRelativeToAircraft(self.model))
             self.gimbalController!.delegate = self
+            
+            if let model = self.model, maxPitch = self.gimbalController?.getMaxPitch() {
+                ModelSettings.updateSettings(model, settings: [.MaxPitch: maxPitch])
+            }
         } else {
             self.gimbalController = nil
         }

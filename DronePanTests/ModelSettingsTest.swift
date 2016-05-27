@@ -53,10 +53,17 @@ class ModelSettingsTest: XCTestCase {
         XCTAssertEqual(3, value, "Incorrect default number of rows \(value)")
     }
 
-    func testDefaultSkyRow() {
-        let value = ModelSettings.skyRow(model)
+    func testDefaultMaxPitch() {
+        let value = ModelSettings.maxPitch(model)
+        
+        XCTAssertEqual(0, value, "Incorrect default max pitch \(value)")
+        
+    }
+    
+    func testDefaultMaxPitchEnabled() {
+        let value = ModelSettings.maxPitchEnabled(model)
 
-        XCTAssertTrue(value, "Incorrect default sky row \(value)")
+        XCTAssertTrue(value, "Incorrect default max pitch enabled \(value)")
     }
 
     func testStoreStartDelay() {
@@ -95,62 +102,38 @@ class ModelSettingsTest: XCTestCase {
         XCTAssertEqual(20, value, "Incorrect number of rows \(value)")
     }
 
-    func testStoreSkyRow() {
+    func testStoreMaxPitch() {
         let settings: [SettingsKeys:AnyObject] = [
-                .SkyRow: true
+            .MaxPitch: 30
+        ]
+        
+        ModelSettings.updateSettings(model, settings: settings)
+        
+        let value = ModelSettings.maxPitch(model)
+        
+        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+    }
+    
+    func testStoreMaxPitchEnabled() {
+        let settings: [SettingsKeys:AnyObject] = [
+                .MaxPitchEnabled: true
         ]
 
         ModelSettings.updateSettings(model, settings: settings)
 
-        let value = ModelSettings.skyRow(model)
+        let value = ModelSettings.maxPitchEnabled(model)
 
-        XCTAssertTrue(value, "Incorrect sky row \(value)")
-    }
-
-    func skyRowWithModel(model: String) {
-        let settings: [SettingsKeys:AnyObject] = [
-                .SkyRow: true
-        ]
-
-        ModelSettings.updateSettings(model, settings: settings)
-
-        let value = ModelSettings.skyRow(model)
-
-        XCTAssertFalse(value, "\(model) had sky row true")
-    }
-
-    func testSkyRowPhantom4() {
-        skyRowWithModel(DJIAircraftModelNamePhantom4)
-    }
-
-    func testSkyRowPhantom3() {
-        skyRowWithModel(DJIAircraftModelNamePhantom34K)
-        skyRowWithModel(DJIAircraftModelNamePhantom3Advanced)
-        skyRowWithModel(DJIAircraftModelNamePhantom3Standard)
-        skyRowWithModel(DJIAircraftModelNamePhantom3Professional)
+        XCTAssertTrue(value, "Incorrect max pitch enabled \(value)")
     }
 
     func testNumberOfImagesForCurrentSettingsDefault() {
         let value = ModelSettings.numberOfImagesForCurrentSettings(model)
 
-        XCTAssertEqual(25, value, "Incorrect default number of images \(value)")
-    }
-
-    func testNumberOfImagesForCurrentSettingsSkyRowFalse() {
-        let settings: [SettingsKeys:AnyObject] = [
-                .SkyRow: false
-        ]
-
-        ModelSettings.updateSettings(model, settings: settings)
-
-        let value = ModelSettings.numberOfImagesForCurrentSettings(model)
-
-        XCTAssertEqual(19, value, "Incorrect sky row false number of images \(value)")
+        XCTAssertEqual(19, value, "Incorrect default number of images \(value)")
     }
 
     func testNumberOfImagesForCurrentSettings() {
         let settings: [SettingsKeys:AnyObject] = [
-                .SkyRow: false,
                 .NumberOfRows: 5,
                 .PhotosPerRow: 12
         ]
@@ -160,6 +143,40 @@ class ModelSettingsTest: XCTestCase {
         let value = ModelSettings.numberOfImagesForCurrentSettings(model)
 
         XCTAssertEqual(61, value, "Incorrect sky row false number of images \(value)")
+    }
+    
+    func testStoreMaxPitchNumberOfRowsOK() {
+        let settings: [SettingsKeys:AnyObject] = [
+            .MaxPitch: 30,
+            .NumberOfRows: 5
+        ]
+        
+        ModelSettings.updateSettings(model, settings: settings)
+        
+        let value = ModelSettings.maxPitch(model)
+        
+        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+        
+        let rowValue = ModelSettings.numberOfRows(model)
+
+        XCTAssertEqual(5, rowValue, "Incorrect number of rows \(value)")
+    }
+    
+    func testStoreMaxPitchNumberOfRowsNotOK() {
+        let settings: [SettingsKeys:AnyObject] = [
+            .MaxPitch: 30,
+            .NumberOfRows: 3
+        ]
+        
+        ModelSettings.updateSettings(model, settings: settings)
+        
+        let value = ModelSettings.maxPitch(model)
+        
+        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+        
+        let rowValue = ModelSettings.numberOfRows(model)
+        
+        XCTAssertEqual(4, rowValue, "Incorrect number of rows \(value)")
     }
 }
 

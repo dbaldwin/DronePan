@@ -17,9 +17,9 @@ import UIKit
 import MBProgressHUD
 
 extension UIViewController {
-    func displayToastOnApp(message: String) {
+    func displayToastOnApp(message: String, view : UIView? = UIApplication.sharedApplication().keyWindow?.rootViewController?.view) {
         dispatch_async(dispatch_get_main_queue()) {
-            if let view = UIApplication.sharedApplication().keyWindow?.rootViewController?.view {
+            if let view = view {
                 let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
                 hud.color = UIColor(colorLiteralRed: 0, green: 122.0 / 255.0, blue: 1, alpha: 1)
                 hud.mode = .Text

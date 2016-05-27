@@ -20,34 +20,40 @@ import XCTest
 class PanoramaControllerTests: XCTestCase {
     let panoramaController = PanoramaController()
 
-    func testPitchesForTypeNoSkyRowAircraft() {
-        let value = panoramaController.pitchesForLoop(skyRow: false, type: .Aircraft, rowCount: 3)
+    func testPitchesForAircraftMaxPitch0False() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 0, maxPitchEnabled: false, type: .Aircraft, rowCount: 3)
 
-        XCTAssertEqual([0, -30, -60], value, "Incorrect pitches for no sky row for aircraft \(value)")
+        XCTAssertEqual([0, -30, -60], value, "Incorrect pitches for max pitch 0 ac false \(value)")
     }
 
-    func testPitchesForTypeSkyRowAircraft() {
-        let value = panoramaController.pitchesForLoop(skyRow: true, type: .Aircraft, rowCount: 3)
-
-        XCTAssertEqual([30, 0, -30, -60], value, "Incorrect pitches for sky row for aircraft \(value)")
+    func testPitchesForAircraftMaxPitch0True() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 0, maxPitchEnabled: true, type: .Aircraft, rowCount: 3)
+        
+        XCTAssertEqual([0, -30, -60], value, "Incorrect pitches for max pitch 0 ac true \(value)")
     }
 
-    func testPitchesForTypeSkyRowAircraft5Rows() {
-        let value = panoramaController.pitchesForLoop(skyRow: true, type: .Aircraft, rowCount: 5)
-
-        XCTAssertEqual([30, 12, -6, -24, -42, -60], value, "Incorrect pitches for sky row for aircraft row count 5 \(value)")
+    func testPitchesForAircraftMaxPitch30False() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 30, maxPitchEnabled: false, type: .Aircraft, rowCount: 3)
+        
+        XCTAssertEqual([0, -30, -60], value, "Incorrect pitches for max pitch 30 ac false \(value)")
     }
 
-    func testPitchesForTypeNoSkyRowHandheld() {
-        let value = panoramaController.pitchesForLoop(skyRow: false, type: .Handheld, rowCount: 3)
-
-        XCTAssertEqual([-60, -30, 0], value, "Incorrect pitches for no sky row for handheld \(value)")
+    func testPitchesForAircraftMaxPitch30True() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 30, maxPitchEnabled: true, type: .Aircraft, rowCount: 3)
+        
+        XCTAssertEqual([30, -10, -50], value, "Incorrect pitches for max pitch 30 ac true \(value)")
     }
 
-    func testPitchesForTypeSkyRowHandheld() {
-        let value = panoramaController.pitchesForLoop(skyRow: true, type: .Handheld, rowCount: 3)
+    func testPitchesForAircraftMaxPitch305Rows() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 30, maxPitchEnabled: true, type: .Aircraft, rowCount: 5)
 
-        XCTAssertEqual([-60, -30, 0, 30], value, "Incorrect pitches for sky row for handheld \(value)")
+        XCTAssertEqual([30, 6, -18, -42, -66], value, "Incorrect pitches for max pitch 30 row count 5 ac \(value)")
+    }
+
+    func testPitchesForHandheldMaxPitch30() {
+        let value = panoramaController.pitchesForLoop(maxPitch: 30, maxPitchEnabled: true, type: .Handheld, rowCount: 4)
+
+        XCTAssertEqual([-60, -30, 0, 30], value, "Incorrect pitches for max pitch 30 handheld \(value)")
     }
 
     func testYawAnglesForCount10WithHeading0() {

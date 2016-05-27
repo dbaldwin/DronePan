@@ -34,6 +34,9 @@ class GimbalControllerAdapterSpyDelegate: GimbalControllerDelegate {
 
     func gimbalControllerStopped() {
     }
+    
+    func gimbalMaxPitchSeen(pitch: Int) {
+    }
 }
 
 class GimbalControllerCompletedSpyDelegate: GimbalControllerAdapterSpyDelegate {
