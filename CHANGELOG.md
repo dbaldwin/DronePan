@@ -17,6 +17,7 @@ have taken at least one photo or video before running DronePan.
 
 ### [1.4.3b11](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
 
+...
 
 ### [1.4.3b10](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b10)
 
@@ -59,6 +60,8 @@ It won’t automatically add an extra row - you can set whatever row count you w
 * Gimbal reset at start back in place for I1 and P4
 
 ### [1.4.3b9](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b9)
+
+1.4.3b9 was only released to internal testers.
 
 #### Updates
 
