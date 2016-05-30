@@ -18,7 +18,7 @@ import DJISDK
 
 import CocoaLumberjackSwift
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, Analytics {
     @IBOutlet weak var batteryLabel: UILabel!
 
     @IBOutlet weak var cameraView: UIView!
@@ -272,9 +272,13 @@ class MainViewController: UIViewController {
             if (panoramaController.panoRunning.state) {
                 DDLogInfo("Stopping pano from button")
 
+                self.trackEvent(category: "Panorama", action: "Running", label: "Started by user")
+
                 panoramaController.stop()
             } else {
                 DDLogInfo("Starting pano from button")
+
+                self.trackEvent(category: "Panorama", action: "Running", label: "Stopped by user")
 
                 panoramaController.start()
             }

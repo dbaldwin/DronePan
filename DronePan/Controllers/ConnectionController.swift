@@ -58,7 +58,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
     func diagnosticsSeen(code code: Int, reason: String, solution: String?)
 }
 
-@objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate {
+@objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate, Analytics {
     var runInBridgeMode = false
     let bridgeAddress = "10.0.1.18"
 

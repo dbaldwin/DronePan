@@ -42,7 +42,7 @@ protocol PanoramaControllerDelegate {
     func panoAvailable(available: Bool)
 }
 
-class PanoramaController {
+class PanoramaController: Analytics {
     var delegate: PanoramaControllerDelegate?
 
     var cameraController: CameraController?
@@ -255,6 +255,8 @@ extension PanoramaController {
             return
         }
 
+        trackEvent(category: "Panorama", action: "Range Extension", label: "Starting panoarama with model \(self.model), camera \(self.cameraController?.camera.displayName) range extension \(self.gimbalController?.supportsRangeExtension) and max pitch \(self.gimbalController?.getMaxPitch())")
+        
         self.panoRunning = (state: true, ok: true)
 
         self.delegate?.postUserMessage("Panorama starting")
@@ -413,6 +415,8 @@ extension PanoramaController {
                     if (self.panoRunning.ok) {
                         self.delegate?.postUserMessage("Pano stopped successfully")
                     } else {
+                        self.trackEvent(category: "Panorama", action: "Running", label: "Stopped by system")
+
                         self.delegate?.postUserMessage("Pano stopped")
                     }
                 }
@@ -527,6 +531,8 @@ extension PanoramaController: CameraControllerDelegate {
         self.delegate?.postUserMessage(reason)
 
         dispatch_async(droneCommandsQueue) {
+            self.trackEvent(category: "Panorama", action: "Camera", label: "Aborted \(reason)")
+
             self.panoRunning = (state: false, ok: false)
 
             self.cameraDispatchGroup.leave()
@@ -541,6 +547,8 @@ extension PanoramaController: CameraControllerDelegate {
 
     func cameraControllerInError(reason: String) {
         DDLogWarn("Camera signalled error \(reason)")
+
+        self.trackEvent(category: "Panorama", action: "Camera", label: "Error \(reason)")
 
         self.delegate?.postUserMessage(reason)
 
@@ -681,6 +689,8 @@ extension PanoramaController: GimbalControllerDelegate {
     func gimbalControllerAborted(reason: String) {
         DDLogWarn("Gimbal signalled abort \(reason)")
 
+        self.trackEvent(category: "Panorama", action: "Gimbal", label: "Aborted \(reason)")
+
         self.delegate?.postUserMessage(reason)
 
         dispatch_async(droneCommandsQueue) {
@@ -692,6 +702,8 @@ extension PanoramaController: GimbalControllerDelegate {
 
     func gimbalMoveOutOfRange(reason: String) {
         DDLogDebug("Gimbal signalled out of range \(reason)")
+
+        self.trackEvent(category: "Panorama", action: "Gimbal", label: "Out of range \(reason)")
 
         self.delegate?.postUserMessage(reason)
 

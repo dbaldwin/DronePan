@@ -26,7 +26,7 @@ enum SettingsViewKey {
     case MetricSelected
 }
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UIViewController, Analytics {
 
     var model: String = ""
     var type: ProductType = .Aircraft

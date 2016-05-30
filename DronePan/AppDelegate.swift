@@ -20,7 +20,7 @@ import GoogleAnalytics
 let ddloglevel = DDLogLevel.Debug
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
 
     var window: UIWindow?
 

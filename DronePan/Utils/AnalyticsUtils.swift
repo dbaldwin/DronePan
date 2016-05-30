@@ -18,7 +18,14 @@ import GoogleAnalytics
 import CocoaLumberjackSwift
 import DeviceKit
 
-extension NSObject {
+protocol Analytics {
+    func optedIn() -> Bool
+    func startAnalytics()
+    func trackScreenView(name: String)
+    func trackEvent(category category: String, action: String, label: String)
+}
+
+extension Analytics {
     func optedIn() -> Bool {
         return NSUserDefaults.standardUserDefaults().boolForKey("analyticsOK")
     }

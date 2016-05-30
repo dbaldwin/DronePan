@@ -30,7 +30,7 @@ protocol GimbalControllerDelegate {
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 }
 
-class GimbalController: NSObject, DJIGimbalDelegate {
+class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
     let gimbal: DJIGimbal
 
     var delegate: GimbalControllerDelegate?
