@@ -297,7 +297,7 @@ extension PanoramaController {
             let yaws = self.yawAngles(count: ModelSettings.photosPerRow(model), heading: self.headingTo360(self.currentHeading))
             let nadirYaws = self.yawAngles(count: ModelSettings.nadirCount(model), heading:  self.headingTo360(self.currentHeading))
 
-            self.totalCount = (pitches.count * yaws.count) + nadirYaws.count
+            self.totalCount = ModelSettings.numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
 
             DDLogDebug("PanoLoop: starting")
