@@ -4,7 +4,6 @@
 
 ### Known issues
 
-
 #### DJI Issues
 
 SDK 3.2 does not tell us when a photo or video is taken the first time after the SD card is formatted. DJI
@@ -18,29 +17,44 @@ have taken at least one photo or video before running DronePan.
 
 ### [1.4.3b11](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
 
+
+### [1.4.3b10](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b10)
+
+#### Sky Row -> Max Pitch
+
+##### Sky Row
+
+A normal drone panorama with DronePan runs from a start pitch of 0˚ down to the nadir at -90˚.
+
+Originally we supported only 0˚, -30˚, -60˚ then the nadir at -90˚.
+
+But the Inspire 1 allows you to point above the horizon - to a maximum pitch of +30˚. So we added a “Sky Row” concept that meant “if you choose sky row then we’ll add a row at +30˚”.
+
+##### Max Pitch
+
+But here’s the issue with that - we also added the ability to add more rows. And so - you can get more rows in the 30˚-0˚ than just one.
+
+So - this is a change - we’re removing “Sky Row” - and adding instead “Max Pitch” if the gimbal we see tells us it can go above 0˚.
+
+You can therefore choose the max pitch (for all known DJI drones right now that’s a +30˚ setting) or “Horizon”.
+
+It won’t automatically add an extra row - you can set whatever row count you want and that will be the row count instead of having to remember “oh - I chose sky row - that means it’s this number + 1”.
+
+##### Notes
+
+* Osmo - we will always use Max Pitch. For the Osmo - positive pitch is down instead of up (DJI basically took the I1 gimbal and turned it upside-down). But this setting will always be used and does not appear on the settings page
+* Phantom models - these require a setting in DJI Go to be allowed to go above the horizon. You may be able to set that setting and test if you can set a Max Pitch. I don’t have a Phantom to test with - so I can’t tell if it will work or not. There is a new setting in the latest SDK which talks about pitch extension - we’re going to look at that - but haven’t got there yet - see [Issue #53](https://github.com/dbaldwin/DronePan/issues/53).
+
 #### Updates
-
-**Sky row has changed!**
-
-Previously - sky row would do two things (on models that support it). It would move the maximum pitch up from 0 to 30 and would add an extra row. But - if you add more extra rows - you get more than one row above the horizon.
-
-So - the settings have changed - you no longer set "Sky row" - instead you will be offered the choice of setting the maximum pitch level "Horizon" or "30˚" (again - for models that can pitch upwards).
-
-If you do not see this setting under the settings window then your device has reported that it can't handle upwards pitch (we know that some devices may need this enabled - and this is being worked on - see [Issue #53](https://github.com/dbaldwin/DronePan/issues/24)).
 
 * Settings window will now only show relevant options - start delay for Osmo only, max pitch for aircraft (that support it) only (Osmo will always choose the extended range).
 * Settings window - show the pitch angle as well as the yaw angle for the current settings.
 * If you choose a combination of row count and max pitch that gives a pitch angle more than 30˚ it will allow it but will show the angle in red - you may wish to consider fewer rows or not enabling max pitch in this situation.
-
+* Choose how many nadir/zenith shots
 
 #### Fixes
 
 * When we work out the row pitch angles - it was always doing a 30 degree change between 60 down and straight down - causing stitching issues for X5 users towards the bottom of the pano image. Fixed!
-
-### [1.4.3b10](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
-
-#### Fixes
-
 * Keep logs for up to 5 days instead of just 24 hours
 * Gimbal reset at start back in place for I1 and P4
 
