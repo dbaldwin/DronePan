@@ -41,6 +41,9 @@ class FlightControllerDelegateAdapter: FlightControllerDelegate {
 
     func flightControllerSetControlMode() {
     }
+    
+    func flightControllerDidYaw() {
+    }
 }
 
 class FlightControllerSpyDelegate: FlightControllerDelegateAdapter {
@@ -49,6 +52,8 @@ class FlightControllerSpyDelegate: FlightControllerDelegateAdapter {
     var modeNotSet: Bool? = .None
 
     var yawFailure: String? = .None
+    
+    var didYaw: Bool? = .None
 
     override func flightControllerSetControlMode() {
         guard let expectation = asyncExpectation else {
@@ -80,6 +85,17 @@ class FlightControllerSpyDelegate: FlightControllerDelegateAdapter {
 
         yawFailure = reason
 
+        expectation.fulfill()
+    }
+    
+    override func flightControllerDidYaw() {
+        guard let expectation = asyncExpectation else {
+            XCTFail("CameraControllerVideoSpyDelegate was not setup correctly. Missing XCTExpectation reference")
+            return
+        }
+        
+        didYaw = true
+        
         expectation.fulfill()
     }
 }
@@ -174,6 +190,18 @@ class CompassMock: DJICompass {
     override var heading: Double {
         get {
             return 12.3
+        }
+    }
+}
+
+class CompassProgressiveMock: DJICompass {
+    var headingCount = 30.0
+    
+    override var heading: Double {
+        get {
+            self.headingCount -= 1.0
+            
+            return 12.3 - self.headingCount
         }
     }
 }
@@ -293,10 +321,146 @@ class FlightControllerTests: XCTestCase {
                 return
             }
 
-            XCTAssertEqual(yawFailure, "Unable to yaw: Error Domain=Test Code=1001 \"(null)\"", "Incorrect yaw failure reason \(yawFailure)")
+            XCTAssertEqual(yawFailure, "Unable to yaw: Error Domain=Test Code=1001 \"(null)\"", "Incorrect yaw failure reason")
+        }
+    }
+    
+    func testYawTimeout() {
+        
+        class FlightControllerMock: DJIFlightController {
+            override func isVirtualStickControlModeAvailable() -> Bool {
+                return true
+            }
+            
+            override func sendVirtualStickFlightControlData(controlData: DJIVirtualStickFlightControlData, withCompletion completion: DJICompletionBlock?) {
+                self.delegate?.flightController?(self, didUpdateSystemState: FlightControllerStateMock())
+            }
+            
+            override var compass: DJICompass? {
+                get {
+                    return CompassMock()
+                }
+            }
+        }
+        
+        let controller = FlightController(fc: FlightControllerMock())
+        
+        let spyDelegate = FlightControllerSpyDelegate()
+        
+        let expectation = expectationWithDescription("Yaw should not succeed")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.delegate = spyDelegate
+        
+        controller.yawTo(35.3)
+        
+        waitForExpectationsWithTimeout(6) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let yawFailure = spyDelegate.yawFailure else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(yawFailure, "Yaw did not complete", "Incorrect yaw failure reason")
         }
     }
 
+    
+    func testYaw() {
+        
+        class FlightControllerMock: DJIFlightController {
+            override func isVirtualStickControlModeAvailable() -> Bool {
+                return true
+            }
+            
+            override func sendVirtualStickFlightControlData(controlData: DJIVirtualStickFlightControlData, withCompletion completion: DJICompletionBlock?) {
+                self.delegate?.flightController?(self, didUpdateSystemState: FlightControllerStateMock())
+            }
+            
+            override var compass: DJICompass? {
+                get {
+                    return CompassMock()
+                }
+            }
+        }
+        
+        let controller = FlightController(fc: FlightControllerMock())
+        
+        let spyDelegate = FlightControllerSpyDelegate()
+        
+        let expectation = expectationWithDescription("Yaw should succeed")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.delegate = spyDelegate
+        
+        controller.yawTo(12.3)
+        
+        waitForExpectationsWithTimeout(6) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let didYaw = spyDelegate.didYaw else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(didYaw, "Did not yaw")
+        }
+    }
+
+    func testProgressiveYaw() {
+        
+        class FlightControllerMock: DJIFlightController {
+            let testCompass = CompassProgressiveMock()
+            
+            override func isVirtualStickControlModeAvailable() -> Bool {
+                return true
+            }
+            
+            override func sendVirtualStickFlightControlData(controlData: DJIVirtualStickFlightControlData, withCompletion completion: DJICompletionBlock?) {
+                self.delegate?.flightController?(self, didUpdateSystemState: FlightControllerStateMock())
+            }
+            
+            override var compass: DJICompass? {
+                get {
+                    return testCompass
+                }
+            }
+        }
+        
+        let controller = FlightController(fc: FlightControllerMock())
+        
+        let spyDelegate = FlightControllerSpyDelegate()
+        
+        let expectation = expectationWithDescription("Yaw should succeed")
+        spyDelegate.asyncExpectation = expectation
+        
+        controller.delegate = spyDelegate
+        
+        controller.yawTo(12.3)
+        
+        waitForExpectationsWithTimeout(6) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let didYaw = spyDelegate.didYaw else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertTrue(didYaw, "Did not yaw")
+        }
+    }
+    
+    
     func testAltitude() {
         let fc = DJIFlightController()
 

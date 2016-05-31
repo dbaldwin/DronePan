@@ -38,7 +38,7 @@ protocol VideoControllerDelegate {
     func cameraReceivedVideo(videoBuffer: UnsafeMutablePointer<UInt8>, size: Int)
 }
 
-class CameraController: NSObject, DJICameraDelegate {
+class CameraController: NSObject, DJICameraDelegate, SystemUtils {
     let camera: DJICamera
 
     var delegate: CameraControllerDelegate?
@@ -132,7 +132,7 @@ class CameraController: NSObject, DJICameraDelegate {
             return
         }
 
-        delay(2) {
+        delayIfNormal(2) {
             if (self.status == .Normal) {
                 if (self.mode == .ShootPhoto) {
                     DDLogDebug("Camera Controller setPhotoMode - OK")
@@ -211,7 +211,7 @@ class CameraController: NSObject, DJICameraDelegate {
             return
         }
 
-        delay(2) {
+        delayIfNormal(2) {
             if (self.status == .Normal) {
                 if (self.tookShot) {
                     DDLogDebug("Camera Controller checkTakeASnap - OK")
@@ -237,14 +237,14 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
 
-    private func delay(delay: Double, closure: () -> ()) {
+    private func delayIfNormal(delaySeconds: Double, closure: () -> ()) {
         if (status != .Normal) {
             DDLogDebug("Camera Controller delay - status was \(status) - returning")
 
             return
         }
 
-        ControllerUtils.delay(delay, queue: self.cameraWorkQueue, closure: closure)
+        delay(delaySeconds, queue: self.cameraWorkQueue, closure: closure)
     }
 
     @objc func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {

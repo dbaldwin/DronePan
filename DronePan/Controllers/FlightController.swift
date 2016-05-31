@@ -32,12 +32,19 @@ protocol FlightControllerDelegate {
     func flightControllerSetControlMode()
 
     func flightControllerUnableToYaw(reason: String)
+    
+    func flightControllerDidYaw()
 }
 
-class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate {
+class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate, SystemUtils {
     let fc: DJIFlightController
 
+    let yawSpeedThreshold = 0.5
+
     var delegate: FlightControllerDelegate?
+
+    var yawDestination : Double?
+    var yawSpeed = 0.0
 
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
@@ -87,6 +94,46 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         }
     }
 
+    func yawTo(yaw: Double) {
+        DDLogDebug("Yaw to \(yaw)")
+
+        self.yawSpeed = 30 // This represents 30m/sec
+        self.yawDestination = yaw
+        
+        // Calling this on a timer as it improves the accuracy of aircraft yaw
+        dispatch_sync(droneCommandsQueue(), {
+            let timer = NSTimer.scheduledTimerWithTimeInterval(0.1,
+                target: self,
+                selector: #selector(FlightController.yawAircraftUsingVelocity(_:)),
+                userInfo: nil,
+                repeats: true)
+            
+            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
+            NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 5))
+            
+            if timer.valid {
+                timer.invalidate()
+                self.delegate?.flightControllerUnableToYaw("Yaw did not complete")
+            }
+        })
+    }
+
+    @objc func yawAircraftUsingVelocity(timer: NSTimer) {
+        DDLogDebug("Yawing speed \(self.yawSpeed) target \(self.yawDestination)")
+
+        if let _ = self.yawDestination {
+            if (self.yawSpeed < yawSpeedThreshold) {
+                self.delegate?.flightControllerDidYaw()
+                self.yawSpeed = 0
+                self.yawDestination = nil
+                
+                timer.invalidate()
+            } else {
+                self.yaw(self.yawSpeed)
+            }
+        }
+    }
+    
     @objc func flightController(fc: DJIFlightController, didUpdateSystemState state: DJIFlightControllerCurrentState) {
         DDLogVerbose("FC didUpdateSystemState")
 
@@ -98,7 +145,31 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         self.delegate?.flightControllerUpdateDistance(dist)
 
         if let compass = fc.compass {
-            self.delegate?.flightControllerUpdateHeading(compass.heading)
+            let currentHeading = headingTo360(compass.heading)
+            
+            DDLogDebug("Current heading \(currentHeading)")
+
+            if let yawDestination = self.yawDestination {
+                var diff = 0.0
+
+                DDLogDebug("Current heading \(currentHeading) target \(yawDestination)")
+                if (yawDestination > currentHeading) {
+                    diff = fabs(yawDestination) - fabs(currentHeading)
+                    self.yawSpeed = diff * 0.5
+                } else {
+                    // This happens when the current heading is 340 and destination is 40, for example
+                    diff = fabs(currentHeading) - fabs(yawDestination)
+                    self.yawSpeed = fmod(360.0, diff) * 0.5
+                }
+
+                if self.yawSpeed.isNaN {
+                    self.yawSpeed = 0.00000001
+                }
+                
+                DDLogDebug("Current heading \(currentHeading) target \(yawDestination) diff \(diff) yawSpeed \(self.yawSpeed)")
+            }
+            
+            self.delegate?.flightControllerUpdateHeading(currentHeading)
         }
 
         self.delegate?.flightControllerUpdateAltitude(state.altitude)

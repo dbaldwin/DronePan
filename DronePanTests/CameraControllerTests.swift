@@ -676,7 +676,7 @@ class CameraControllerTests: XCTestCase {
         }
     }
 
-    func testTaleASnapCameraError() {
+    func testTakeASnapCameraError() {
 
         class CameraMock: DJICamera {
             override func startShootPhoto(shootMode: DJICameraShootPhotoMode, withCompletion block: DJICompletionBlock?) {

@@ -1,7 +1,6 @@
 [![Join the chat at https://gitter.im/dbaldwin/DronePan](https://img.shields.io/gitter/room/dbaldwin/DronePan.svg)](https://gitter.im/dbaldwin/DronePan?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://img.shields.io/travis/dbaldwin/DronePan.svg)](https://travis-ci.org/dbaldwin/DronePan)
 [![codecov](https://img.shields.io/codecov/c/github/dbaldwin/DronePan.svg)](https://codecov.io/gh/dbaldwin/DronePan)
-![Tag](https://img.shields.io/github/tag/dbaldwin/DronePan.svg)
 [![Issues](https://img.shields.io/github/issues/dbaldwin/DronePan.svg)](https://github.com/dbaldwin/DronePan/issues)
 [![GPLv3](https://img.shields.io/github/license/dbaldwin/DronePan.svg)](https://github.com/dbaldwin/DronePan/blob/master/LICENSE.md)
 

@@ -18,7 +18,7 @@ import DJISDK
 
 @testable import DronePan
 
-class ModelSettingsTest: XCTestCase {
+class ModelSettingsTest: XCTestCase, ModelSettings {
 
     let model = "TestModel"
 
@@ -36,46 +36,51 @@ class ModelSettingsTest: XCTestCase {
     }
 
     func testDefaultStartDelay() {
-        let value = ModelSettings.startDelay(model)
+        let value = startDelay(model)
 
-        XCTAssertEqual(5, value, "Incorrect default start delay \(value)")
+        XCTAssertEqual(5, value, "Incorrect default start delay")
     }
 
     func testDefaultPhotosPerRow() {
-        let value = ModelSettings.photosPerRow(model)
+        let value = photosPerRow(model)
 
-        XCTAssertEqual(6, value, "Incorrect default photos per row \(value)")
+        XCTAssertEqual(6, value, "Incorrect default photos per row")
     }
 
     func testDefaultNumberOfRows() {
-        let value = ModelSettings.numberOfRows(model)
+        let value = numberOfRows(model)
 
-        XCTAssertEqual(3, value, "Incorrect default number of rows \(value)")
+        XCTAssertEqual(3, value, "Incorrect default number of rows")
     }
 
     func testDefaultMaxPitch() {
-        let value = ModelSettings.maxPitch(model)
+        let value = maxPitch(model)
         
-        XCTAssertEqual(0, value, "Incorrect default max pitch \(value)")
+        XCTAssertEqual(0, value, "Incorrect default max pitch")
         
     }
     
     func testDefaultMaxPitchEnabled() {
-        let value = ModelSettings.maxPitchEnabled(model)
+        let value = maxPitchEnabled(model)
 
-        XCTAssertTrue(value, "Incorrect default max pitch enabled \(value)")
+        XCTAssertTrue(value, "Incorrect default max pitch enabled")
     }
 
+    func testDefaultACGimbalYaw() {
+        let value = acGimbalYaw(model)
+        
+        XCTAssertFalse(value, "Incorrect default ac gimbal yaw")
+    }
     func testStoreStartDelay() {
         let settings: [SettingsKeys:AnyObject] = [
                 .StartDelay: 10
         ]
 
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
 
-        let value = ModelSettings.startDelay(model)
+        let value = startDelay(model)
 
-        XCTAssertEqual(10, value, "Incorrect start delay \(value)")
+        XCTAssertEqual(10, value, "Incorrect start delay")
     }
 
     func testStorePhotosPerRow() {
@@ -83,11 +88,11 @@ class ModelSettingsTest: XCTestCase {
                 .PhotosPerRow: 15
         ]
 
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
 
-        let value = ModelSettings.photosPerRow(model)
+        let value = photosPerRow(model)
 
-        XCTAssertEqual(15, value, "Incorrect photos per row \(value)")
+        XCTAssertEqual(15, value, "Incorrect photos per row")
     }
 
     func testStoreNumberOfRows() {
@@ -95,11 +100,11 @@ class ModelSettingsTest: XCTestCase {
                 .NumberOfRows: 20
         ]
 
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
 
-        let value = ModelSettings.numberOfRows(model)
+        let value = numberOfRows(model)
 
-        XCTAssertEqual(20, value, "Incorrect number of rows \(value)")
+        XCTAssertEqual(20, value, "Incorrect number of rows")
     }
 
     func testStoreMaxPitch() {
@@ -107,11 +112,11 @@ class ModelSettingsTest: XCTestCase {
             .MaxPitch: 30
         ]
         
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
         
-        let value = ModelSettings.maxPitch(model)
+        let value = maxPitch(model)
         
-        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+        XCTAssertEqual(30, value, "Incorrect max pitch")
     }
     
     func testStoreMaxPitchEnabled() {
@@ -119,17 +124,17 @@ class ModelSettingsTest: XCTestCase {
                 .MaxPitchEnabled: true
         ]
 
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
 
-        let value = ModelSettings.maxPitchEnabled(model)
+        let value = maxPitchEnabled(model)
 
-        XCTAssertTrue(value, "Incorrect max pitch enabled \(value)")
+        XCTAssertTrue(value, "Incorrect max pitch enabled")
     }
 
     func testNumberOfImagesForCurrentSettingsDefault() {
-        let value = ModelSettings.numberOfImagesForCurrentSettings(model)
+        let value = numberOfImagesForCurrentSettings(model)
 
-        XCTAssertEqual(19, value, "Incorrect default number of images \(value)")
+        XCTAssertEqual(19, value, "Incorrect default number of images")
     }
 
     func testNumberOfImagesForCurrentSettings() {
@@ -138,11 +143,11 @@ class ModelSettingsTest: XCTestCase {
                 .PhotosPerRow: 12
         ]
 
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
 
-        let value = ModelSettings.numberOfImagesForCurrentSettings(model)
+        let value = numberOfImagesForCurrentSettings(model)
 
-        XCTAssertEqual(61, value, "Incorrect sky row false number of images \(value)")
+        XCTAssertEqual(61, value, "Incorrect sky row false number of images")
     }
     
     func testStoreMaxPitchNumberOfRowsOK() {
@@ -151,15 +156,15 @@ class ModelSettingsTest: XCTestCase {
             .NumberOfRows: 5
         ]
         
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
         
-        let value = ModelSettings.maxPitch(model)
+        let value = maxPitch(model)
         
-        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+        XCTAssertEqual(30, value, "Incorrect max pitch")
         
-        let rowValue = ModelSettings.numberOfRows(model)
+        let rowValue = numberOfRows(model)
 
-        XCTAssertEqual(5, rowValue, "Incorrect number of rows \(value)")
+        XCTAssertEqual(5, rowValue, "Incorrect number of rows")
     }
     
     func testStoreMaxPitchNumberOfRowsNotOK() {
@@ -168,15 +173,27 @@ class ModelSettingsTest: XCTestCase {
             .NumberOfRows: 3
         ]
         
-        ModelSettings.updateSettings(model, settings: settings)
+        updateSettings(model, settings: settings)
         
-        let value = ModelSettings.maxPitch(model)
+        let value = maxPitch(model)
         
-        XCTAssertEqual(30, value, "Incorrect max pitch \(value)")
+        XCTAssertEqual(30, value, "Incorrect max pitch")
         
-        let rowValue = ModelSettings.numberOfRows(model)
+        let rowValue = numberOfRows(model)
         
-        XCTAssertEqual(4, rowValue, "Incorrect number of rows \(value)")
+        XCTAssertEqual(4, rowValue, "Incorrect number of rows")
+    }
+
+    func testStoreACGimbalYaw() {
+        let settings: [SettingsKeys:AnyObject] = [
+            .ACGimbalYaw: true
+        ]
+        
+        updateSettings(model, settings: settings)
+        
+        let value = acGimbalYaw(model)
+        
+        XCTAssertTrue(value, "Incorrect stored ac gimbal yaw")
     }
 }
 

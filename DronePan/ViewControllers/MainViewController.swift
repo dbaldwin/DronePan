@@ -18,7 +18,7 @@ import DJISDK
 
 import CocoaLumberjackSwift
 
-class MainViewController: UIViewController, Analytics {
+class MainViewController: UIViewController, Analytics, SystemUtils {
     @IBOutlet weak var batteryLabel: UILabel!
 
     @IBOutlet weak var cameraView: UIView!
@@ -214,7 +214,7 @@ class MainViewController: UIViewController, Analytics {
     func setAltitude(altitude: Int? = nil) {
         if let altitude = altitude {
             self.altitudeLabel.hidden = false
-            self.altitudeLabel.text = "Alt: \(ControllerUtils.displayDistance(altitude))"
+            self.altitudeLabel.text = "Alt: \(displayDistance(altitude))"
         } else {
             self.altitudeLabel.text = "Alt: -"
         }
@@ -232,7 +232,7 @@ class MainViewController: UIViewController, Analytics {
     func setDistance(distance: Int? = nil) {
         if let distance = distance {
             self.distanceLabel.hidden = false
-            self.distanceLabel.text = "Dist: \(ControllerUtils.displayDistance(distance))"
+            self.distanceLabel.text = "Dist: \(displayDistance(distance))"
         } else {
             self.distanceLabel.text = "Dist: -"
         }

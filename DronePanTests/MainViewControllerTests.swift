@@ -18,7 +18,7 @@ import XCTest
 @testable import DronePan
 
 
-class MainViewControllerTests: XCTestCase {
+class MainViewControllerTests: XCTestCase, SystemUtils {
     var viewController: MainViewController!
 
     // Need to run some different things before building view - so can't be in setup
@@ -153,7 +153,7 @@ class MainViewControllerTests: XCTestCase {
     }
     
     func testResetSatellites() {
-        ControllerUtils.setMetricUnits(true)
+        setMetricUnits(true)
         
         buildView()
         
@@ -164,7 +164,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testSetAltitude() {
-        ControllerUtils.setMetricUnits(true)
+        setMetricUnits(true)
         
         buildView()
 
@@ -175,7 +175,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testResetAltitude() {
-        ControllerUtils.setMetricUnits(true)
+        setMetricUnits(true)
         
         buildView()
 
@@ -186,7 +186,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testSetAltitudeFeet() {
-        ControllerUtils.setMetricUnits(false)
+        setMetricUnits(false)
         
         buildView()
 
@@ -197,7 +197,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testResetAltitudeFeet() {
-        ControllerUtils.setMetricUnits(false)
+        setMetricUnits(false)
         
         buildView()
 
@@ -208,7 +208,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testSetDistance() {
-        ControllerUtils.setMetricUnits(true)
+        setMetricUnits(true)
         
         buildView()
 
@@ -219,7 +219,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testResetDistance() {
-        ControllerUtils.setMetricUnits(true)
+        setMetricUnits(true)
         
         buildView()
 
@@ -231,7 +231,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testSetDistanceFeet() {
-        ControllerUtils.setMetricUnits(false)
+        setMetricUnits(false)
         
         buildView()
 
@@ -243,7 +243,7 @@ class MainViewControllerTests: XCTestCase {
     }
 
     func testResetDistanceFeet() {
-        ControllerUtils.setMetricUnits(false)
+        setMetricUnits(false)
         
         buildView()
 
@@ -284,5 +284,3 @@ class MainViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.currentWarning, "Battery Low: 5%", "Warning not correct on low battery \(viewController.currentWarning)")
     }
 }
-
-
