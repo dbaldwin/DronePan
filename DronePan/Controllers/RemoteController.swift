@@ -31,6 +31,8 @@ protocol RemoteControllerDelegate {
 }
 
 class RemoteController: NSObject, DJIRemoteControllerDelegate {
+    let remote: DJIRemoteController
+
     var delegate: RemoteControllerDelegate?
 
     var mode = FlightMode.Unknown
@@ -38,6 +40,8 @@ class RemoteController: NSObject, DJIRemoteControllerDelegate {
     init(remote: DJIRemoteController) {
         DDLogInfo("Remote Controller init")
 
+        self.remote = remote
+        
         super.init()
 
         remote.delegate = self

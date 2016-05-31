@@ -19,7 +19,7 @@ import DJISDK
 @testable import DronePan
 
 
-class SettingsViewControllerTests: XCTestCase {
+class SettingsViewControllerTests: XCTestCase, ModelSettings {
     var vc: SettingsViewController!
 
     // Need to run some different things before building view - so can't be in setup
@@ -129,13 +129,30 @@ class SettingsViewControllerTests: XCTestCase {
         XCTAssertEqual(unitsCell.titleLabel.text, "Units:", "Incorrect units title")
         XCTAssertEqual(unitsCell.segmentControl.selectedSegmentIndex, 0, "Incorrect units")
     }
-    
+
+    func testInitWithModelGimbalYaw() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        buildView(DJIAircraftModelNameInspire1, productType: .Aircraft)
+        
+        XCTAssertEqual(vc.tableView.numberOfSections, 1, "Incorrect number of sections")
+        
+        XCTAssertEqual(vc.tableView.numberOfRowsInSection(0), 6, "Incorrect number of rows")
+        
+        let gimbalYawCell = vc.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) as! SegmentTableViewCell
+        
+        XCTAssertEqual(gimbalYawCell.titleLabel.text, "Aircraft or Gimbal Yaw:", "Incorrect title")
+        XCTAssertEqual(gimbalYawCell.segmentControl.selectedSegmentIndex, 0, "Incorrect default")
+    }
+
     func testInitWithModelAircraftMaxPitch() {
         let appDomain = NSBundle.mainBundle().bundleIdentifier!
         
         NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
         
-        ModelSettings.updateSettings("Test", settings: [
+        updateSettings("Test", settings: [
             .MaxPitch: 30,
             .MaxPitchEnabled: true
         ])
@@ -186,18 +203,47 @@ class SettingsViewControllerTests: XCTestCase {
         XCTAssertEqual(unitsCell.titleLabel.text, "Units:", "Incorrect units title")
         XCTAssertEqual(unitsCell.segmentControl.selectedSegmentIndex, 0, "Incorrect units")
     }
+    
+    func testInitWithModelAircraftMaxPitchAndGimbalYaw() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        updateSettings(DJIAircraftModelNameInspire1 , settings: [
+            .MaxPitch: 30,
+            .MaxPitchEnabled: true
+            ])
+        
+        buildView(DJIAircraftModelNameInspire1, productType: .Aircraft)
+        
+        XCTAssertEqual(vc.tableView.numberOfSections, 1, "Incorrect number of sections")
+        
+        XCTAssertEqual(vc.tableView.numberOfRowsInSection(0), 7, "Incorrect number of rows")
+        
+        let pitchCell = vc.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) as! SegmentTableViewCell
+        
+        XCTAssertEqual(pitchCell.titleLabel.text, "Maximum Upward Pitch:", "Incorrect max pitch title")
+        XCTAssertEqual(pitchCell.segmentControl.selectedSegmentIndex, 0, "Incorrect pitch set")
+        XCTAssertEqual(pitchCell.segmentControl.titleForSegmentAtIndex(0), "30˚", "Incorrect max pitch")
+        
+        let gimbalYawCell = vc.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 4, inSection: 0)) as! SegmentTableViewCell
+        
+        XCTAssertEqual(gimbalYawCell.titleLabel.text, "Aircraft or Gimbal Yaw:", "Incorrect title")
+        XCTAssertEqual(gimbalYawCell.segmentControl.selectedSegmentIndex, 0, "Incorrect default")
+    }
 
     func testInitWithModelAircraftMaxPitchBadPitchAngle() {
         let appDomain = NSBundle.mainBundle().bundleIdentifier!
         
         NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
         
-        ModelSettings.updateSettings("Test", settings: [
+        updateSettings("Test", settings: [
             .MaxPitch: 30,
             .MaxPitchEnabled: true
             ])
 
-        ModelSettings.updateSettings("Test", settings: [
+        // Second update - the first one would have sanity checked and forced 4 rows
+        updateSettings("Test", settings: [
             .NumberOfRows: 3
             ])
         
@@ -342,12 +388,29 @@ class SettingsViewControllerTests: XCTestCase {
         XCTAssertFalse(vc.metricSelected, "Incorrect units after update")
     }
 
+    func testUpdateGimbalYawCellWithModelAircraft() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        buildView(DJIAircraftModelNameInspire1, productType: .Aircraft)
+        
+        XCTAssertFalse(vc.acGimbalYaw, "Incorrect gimbal yaw")
+
+        let cell = vc.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 3, inSection: 0)) as! SegmentTableViewCell
+        
+        cell.segmentControl.selectedSegmentIndex = 1
+        cell.segmentValueChanged(cell.segmentControl)
+        
+        XCTAssertTrue(vc.acGimbalYaw, "Incorrect gimbal yaw after update")
+    }
+
     func testUpdateMaxPitchCellWithModelAircraft() {
         let appDomain = NSBundle.mainBundle().bundleIdentifier!
         
         NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
         
-        ModelSettings.updateSettings("Test", settings: [
+        updateSettings("Test", settings: [
             .MaxPitch: 30,
             .MaxPitchEnabled: true
             ])

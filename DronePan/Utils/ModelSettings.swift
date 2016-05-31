@@ -22,46 +22,71 @@ enum SettingsKeys: String {
     case NadirCount = "nadir_count"
     case MaxPitch = "max_pitch"
     case MaxPitchEnabled = "max_pitch_enabled"
+    case ACGimbalYaw = "ac_gimbal_yaw"
 }
 
-class ModelSettings {
-    private class func settingForKey(model: String, key: SettingsKeys) -> AnyObject? {
+protocol ModelSettings {
+    func startDelay(model: String) -> Int
+
+    func photosPerRow(model: String) -> Int
+
+    func numberOfRows(model: String) -> Int
+
+    func nadirCount(model: String) -> Int
+
+    func maxPitch(model: String) -> Int
+
+    func maxPitchEnabled(model: String) -> Bool
+
+    func acGimbalYaw(model: String) -> Bool
+
+    func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject])
+
+    func numberOfImagesForCurrentSettings(model: String) -> Int
+}
+
+extension ModelSettings {
+    private func settingForKey(model: String, key: SettingsKeys) -> AnyObject? {
         return NSUserDefaults.standardUserDefaults().dictionaryForKey(model)?[key.rawValue]
     }
 
-    private class func intSettingForKey(model: String, key: SettingsKeys, defaultValue: Int) -> Int {
-        return ModelSettings.settingForKey(model, key: key) as? Int ?? defaultValue
+    private func intSettingForKey(model: String, key: SettingsKeys, defaultValue: Int) -> Int {
+        return settingForKey(model, key: key) as? Int ?? defaultValue
     }
 
-    private class func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
-        return ModelSettings.settingForKey(model, key: key) as? Bool ?? defaultValue
+    private func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
+        return settingForKey(model, key: key) as? Bool ?? defaultValue
     }
 
-    class func startDelay(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .StartDelay, defaultValue: 5)
+    func startDelay(model: String) -> Int {
+        return intSettingForKey(model, key: .StartDelay, defaultValue: 5)
     }
 
-    class func photosPerRow(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
+    func photosPerRow(model: String) -> Int {
+        return intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
     }
 
-    class func numberOfRows(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .NumberOfRows, defaultValue: 3)
+    func numberOfRows(model: String) -> Int {
+        return intSettingForKey(model, key: .NumberOfRows, defaultValue: 3)
     }
 
-    class func nadirCount(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .NadirCount, defaultValue: 1)
+    func nadirCount(model: String) -> Int {
+        return intSettingForKey(model, key: .NadirCount, defaultValue: 1)
     }
 
-    class func maxPitch(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .MaxPitch, defaultValue: 0)
+    func maxPitch(model: String) -> Int {
+        return intSettingForKey(model, key: .MaxPitch, defaultValue: 0)
     }
 
-    class func maxPitchEnabled(model: String) -> Bool {
-        return ModelSettings.boolSettingForKey(model, key: .MaxPitchEnabled, defaultValue: true)
+    func maxPitchEnabled(model: String) -> Bool {
+        return boolSettingForKey(model, key: .MaxPitchEnabled, defaultValue: true)
+    }
+
+    func acGimbalYaw(model: String) -> Bool {
+        return boolSettingForKey(model, key: .ACGimbalYaw, defaultValue: false)
     }
     
-    class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
+    func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
         var settings: [String:AnyObject] = NSUserDefaults.standardUserDefaults().dictionaryForKey(model) ?? [:]
 
         var minRowCount : Int?
@@ -90,13 +115,13 @@ class ModelSettings {
         NSUserDefaults.standardUserDefaults().synchronize()
     }
     
-    class func numberOfImagesForCurrentSettings(model: String) -> Int {
-        let numberOfRows = ModelSettings.numberOfRows(model)
+    func numberOfImagesForCurrentSettings(model: String) -> Int {
+        let rows = numberOfRows(model)
 
-        let photosPerRow = ModelSettings.photosPerRow(model)
+        let photos = photosPerRow(model)
 
-        let nadirCount = ModelSettings.nadirCount(model)
+        let nadir = nadirCount(model)
         
-        return (numberOfRows * photosPerRow) + nadirCount
+        return (rows * photos) + nadir
     }
 }

@@ -20,11 +20,13 @@ import GoogleAnalytics
 let ddloglevel = DDLogLevel.Debug
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
+class AppDelegate: UIResponder, UIApplicationDelegate, Analytics, SystemUtils {
 
     var window: UIWindow?
 
     var fileLogger: DDFileLogger?
+    
+    var droneCommandsQueue: dispatch_queue_t!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool {
         UIApplication.sharedApplication().idleTimerDisabled = true
@@ -47,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
 
         DDLogInfo("DronePan launched")
 
-        if let version = ControllerUtils.buildVersion() {
+        if let version = buildVersion() {
             DDLogInfo("Running version \(version)")
         }
 
@@ -68,6 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
         } else {
             startAnalytics()
         }
+        
+        droneCommandsQueue = dispatch_queue_create("com.dronepan.queue", DISPATCH_QUEUE_SERIAL)
 
         return true
     }

@@ -6,9 +6,9 @@
 
 #### DJI Issues
 
-SDK 3.2 does not tell us when a photo or video is taken the first time after the SD card is formatted. DJI
-have said that this will be fixed in a later version of the SDK. Please make sure that after formatting you
+* SDK 3.2 does not tell us when a photo or video is taken the first time after the SD card is formatted. DJI have said that this will be fixed in a later version of the SDK. Please make sure that after formatting you
 have taken at least one photo or video before running DronePan.
+* DJI managed to turn off drift protection when yawing in the aircraft firmware. Yawing by angle drifts badly - so we use the other option (yaw with velocity). This is better but still suffers. We keep pushing them for when drift protection will be added back.
 
 #### App Issues
 

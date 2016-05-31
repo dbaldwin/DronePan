@@ -553,7 +553,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowReset() {
-        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state1 = StateMock(p: 5.1, r: -5.1, y: 5.1)
         let state2 = StateMock(p: 0, r: 0, y: 0)
 
         let gimbal = GimbalAttitudeMock(first: state1, second: state2)
@@ -594,7 +594,7 @@ class GimbalControllerTests: XCTestCase {
 
     func testTooSlowReset() {
 
-        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state = StateMock(p: 5.1, r: -5.1, y: 5.1)
 
         let gimbal = GimbalAttitudeMock(first: state, second: state)
 
@@ -744,7 +744,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowSetPitch() {
-        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state1 = StateMock(p: 5.1, r: -5.1, y: 5.1)
         let state2 = StateMock(p: 15.6, r: 0, y: 0)
 
         let gimbal = GimbalAttitudeMock(first: state1, second: state2)
@@ -780,7 +780,7 @@ class GimbalControllerTests: XCTestCase {
 
     func testTooSlowSetPitch() {
 
-        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state = StateMock(p: 5.1, r: -5.1, y: 5.1)
 
         let gimbal = GimbalAttitudeMock(first: state, second: state)
 
@@ -960,7 +960,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowSetYaw() {
-        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state1 = StateMock(p: 5.1, r: -5.1, y: 5.1)
         let state2 = StateMock(p: 0, r: 0, y: 15.6)
 
         let gimbal = GimbalAttitudeMock(first: state1, second: state2)
@@ -995,7 +995,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testTooSlowSetYaw() {
-        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state = StateMock(p: 5.1, r: -5.1, y: 5.1)
 
         let gimbal = GimbalAttitudeMock(first: state, second: state)
 
@@ -1136,7 +1136,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testSlowSetRoll() {
-        let state1 = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state1 = StateMock(p: 5.1, r: -5.1, y: 5.1)
         let state2 = StateMock(p: 0, r: 15.6, y: 0)
 
         let gimbal = GimbalAttitudeMock(first: state1, second: state2)
@@ -1171,7 +1171,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testTooSlowSetRoll() {
-        let state = StateMock(p: 2.6, r: -2.6, y: 2.6)
+        let state = StateMock(p: 5.1, r: -5.1, y: 5.1)
 
         let gimbal = GimbalAttitudeMock(first: state, second: state)
 

@@ -30,14 +30,14 @@ protocol GimbalControllerDelegate {
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 }
 
-class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
+class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     let gimbal: DJIGimbal
 
     var delegate: GimbalControllerDelegate?
     var status: ControllerStatus = .Normal
 
     let maxCount = 5
-    let allowedOffset: Float = 2.5
+    let allowedOffset: Float = 5
 
     var currentPitch: Float = 0
     var currentYaw: Float = 0
@@ -261,14 +261,14 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
         return newAngle
     }
 
-    private func delay(delay: Double, closure: () -> ()) {
+    private func delayIfNormal(delaySeconds: Double, closure: () -> ()) {
         if (status != .Normal) {
             DDLogDebug("Gimbal Controller delay - status was \(status) - returning")
 
             return
         }
 
-        ControllerUtils.delay(delay, queue: self.gimbalWorkQueue, closure: closure)
+        delay(delaySeconds, queue: self.gimbalWorkQueue, closure: closure)
     }
 
     func valueInRange(adjustable: Bool, value: Float, currentValue: Float) -> Bool {
@@ -335,7 +335,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             return
         }
      
-        delay(gimbal.completionTimeForControlAngleAction + 0.5) {
+        delayIfNormal(gimbal.completionTimeForControlAngleAction + 0.5) {
             if !self.check(pitch: 0, yaw: 0, roll: 0) {
                 NSLog("Gimbal not reset count: \(counter)")
 
@@ -363,6 +363,8 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
         DDLogDebug("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
 
         if (counter > maxCount) {
+            trackEvent(category: "Gimbal", action: "Abort", label: "Count: \(counter), IPA: \(isPitchAdjustable), P: \(pitch), CP: \(currentPitch), IYA: \(isYawAdjustable), Y: \(yaw), CY: \(currentYaw), CACY: \(currentACYaw), ACY: \(adjustedYaw(currentYaw)), IRA: \(isRollAdjustable), R: \(roll), CR: \(self.currentRoll)")
+
             DDLogWarn("Gimbal Controller setAttitude - counter exceeds max count - aborting")
 
             self.delegate?.gimbalControllerAborted("Unable to set gimbal attitude")
@@ -415,7 +417,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             return
         }
 
-        delay(gimbal.completionTimeForControlAngleAction + 0.5) {
+        delayIfNormal(gimbal.completionTimeForControlAngleAction + 0.5) {
             if !self.check(pitch: pitch, yaw: yaw, roll: roll) {
                 DDLogWarn("Gimbal Controller setAttitude hasn't completed yet count: \(counter)")
 

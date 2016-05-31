@@ -24,9 +24,10 @@ enum SettingsViewKey {
     case NadirCount
     case MaxPitchEnabled
     case MetricSelected
+    case GimbalYaw
 }
 
-class SettingsViewController: UIViewController, Analytics {
+class SettingsViewController: UIViewController, Analytics, SystemUtils, ModelSettings, ModelUtils {
 
     var model: String = ""
     var type: ProductType = .Aircraft
@@ -48,13 +49,14 @@ class SettingsViewController: UIViewController, Analytics {
     var maxPitchEnabled = true
     var maxPitch = 0
     var metricSelected = true
+    var acGimbalYaw = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         helpView.alpha = 0
         
-        if let version = ControllerUtils.buildVersion() {
+        if let version = buildVersion() {
             self.versionLabel.hidden = false
             self.versionLabel.text = "Version \(version)"
 
@@ -139,13 +141,14 @@ class SettingsViewController: UIViewController, Analytics {
         setPitchAngle(0)
         setCount(0)
 
-        self.startDelay = ModelSettings.startDelay(model)
-        self.perRow = ModelSettings.photosPerRow(model)
-        self.rowCount = ModelSettings.numberOfRows(model)
-        self.nadirCount = ModelSettings.nadirCount(model)
-        self.maxPitchEnabled = ModelSettings.maxPitchEnabled(model)
-        self.maxPitch = ModelSettings.maxPitch(model)
-        self.metricSelected = ControllerUtils.metricUnits()
+        self.startDelay = startDelay(model)
+        self.perRow = photosPerRow(model)
+        self.rowCount = numberOfRows(model)
+        self.nadirCount = nadirCount(model)
+        self.maxPitchEnabled = maxPitchEnabled(model)
+        self.maxPitch = maxPitch(model)
+        self.metricSelected = metricUnits()
+        self.acGimbalYaw = acGimbalYaw(model)
 
         updateCounts()
     }
@@ -196,11 +199,17 @@ extension SettingsViewController : UITableViewDataSource {
         case .Handheld:
             return 6
         case .Aircraft:
-            if maxPitch > 0 {
-                return 6
-            } else {
-                return 5
+            var rowCount = 7
+            
+            if maxPitch <= 0 {
+                rowCount -= 1
             }
+            
+            if !isInspire(model) {
+                rowCount -= 1
+            }
+            
+            return rowCount
         default:
             return 0
         }
@@ -312,6 +321,21 @@ extension SettingsViewController : UITableViewDataSource {
         
         return cell
     }
+
+    func gimbalYawCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SegmentViewCell", forIndexPath: indexPath) as! SegmentTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Aircraft or Gimbal Yaw:"
+        cell.values = ["Aircraft", "Gimbal"]
+        cell.helpText = "You can choose to yaw the entire aircraft or the gimbal only"
+        cell.key = .GimbalYaw
+        
+        cell.prepareForDisplay(self.acGimbalYaw ? "Gimbal" : "Aircraft")
+        
+        return cell
+    }
     
     func buttonCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ButtonViewCell", forIndexPath: indexPath) as! ButtonViewCell
@@ -350,6 +374,13 @@ extension SettingsViewController : UITableViewDataSource {
                 }
             }
             
+            if row > 3 {
+                if !isInspire(model) {
+                    // Need to skip if no gimbal yaw
+                    row = row + 1
+                }
+            }
+            
             switch (row) {
             case 0:
                 cell = photosPerRowCell(tableView, indexPath: indexPath)
@@ -360,6 +391,8 @@ extension SettingsViewController : UITableViewDataSource {
             case 3:
                 cell = pitchMaxCell(tableView, indexPath: indexPath)
             case 4:
+                cell = gimbalYawCell(tableView, indexPath: indexPath)
+            case 5:
                 cell = unitsCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
@@ -382,6 +415,8 @@ extension SettingsViewController : SegmentTableViewCellDelegate {
             self.maxPitchEnabled = value != "Horizon"
         case .MetricSelected:
             self.metricSelected = value == "Metric"
+        case .GimbalYaw:
+            self.acGimbalYaw = value == "Gimbal"
         default:
             DDLogWarn("Segment control tríed to update a non-segment setting \(key)")
         }
@@ -412,17 +447,18 @@ extension SettingsViewController : SliderTableViewCellDelegate {
 extension SettingsViewController : ButtonViewCellDelegate {
     func buttonClicked(save: Bool) {
         if (save) {
-            ControllerUtils.setMetricUnits(self.metricSelected)
+            setMetricUnits(self.metricSelected)
 
             let settings : [SettingsKeys:AnyObject] = [
                 .StartDelay: self.startDelay,
                 .PhotosPerRow: self.perRow,
                 .NumberOfRows: self.rowCount,
                 .NadirCount: self.nadirCount,
-                .MaxPitchEnabled: self.maxPitchEnabled
+                .MaxPitchEnabled: self.maxPitchEnabled,
+                .ACGimbalYaw: self.acGimbalYaw
             ]
 
-            ModelSettings.updateSettings(model, settings: settings)
+            updateSettings(model, settings: settings)
         }
         
         self.dismissViewControllerAnimated(true, completion: {})
