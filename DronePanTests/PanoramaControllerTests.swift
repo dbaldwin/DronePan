@@ -806,5 +806,242 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         XCTAssertNil(panoramaController.flightController, "FC found")
     }
     
+    func testFCBatteryLow() {
+        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
+            var reason: String? = .None
+            
+            override func postUserWarning(warning: String) {
+                guard let expectation = asyncExpectation else {
+                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
+                    return
+                }
+                
+                self.reason = warning
+                
+                expectation.fulfill()
+            }
+        }
+
+        let spyDelegate = PanoramaDelegateMock()
+        
+        let expectation = expectationWithDescription("Low battery should trigger a warning")
+        spyDelegate.asyncExpectation = expectation
+        
+        panoramaController.delegate = spyDelegate
+        
+        panoramaController.remoteControllerBatteryPercentUpdated(9)
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(reason, "Remote Controller Battery Low: 9%", "No warning on low battery")
+        }
+    }
+    
+    func testCameraAbort() {
+        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
+            var reason: String? = .None
+            
+            override func postUserMessage(message: String) {
+                guard let expectation = asyncExpectation else {
+                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
+                    return
+                }
+                
+                self.reason = message
+                
+                expectation.fulfill()
+            }
+        }
+        
+        let spyDelegate = PanoramaDelegateMock()
+        
+        let expectation = expectationWithDescription("Camera abort should pass on reason")
+        spyDelegate.asyncExpectation = expectation
+        
+        panoramaController.delegate = spyDelegate
+        
+        panoramaController.cameraDispatchGroup.enter()
+        
+        panoramaController.panoRunning = (state: true, ok: true)
+        
+        panoramaController.cameraControllerAborted("Test")
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(reason, "Test", "Message not passed on")
+        }
+
+        XCTAssertFalse(panoramaController.cameraDispatchGroup.active, "Camera dispatch group still active")
+        
+        XCTAssertFalse(panoramaController.panoRunning.state, "Pano still running")
+        XCTAssertFalse(panoramaController.panoRunning.ok, "Pano still marked as OK")
+    }
+    
+    func testCameraStopped() {
+        panoramaController.cameraDispatchGroup.enter()
+        
+        panoramaController.cameraControllerStopped()
+
+        // This should give just enough time for the dispatch_async in the code to call
+        let expectation = expectationWithDescription("Stopping camera should ensure that we don't have a hanging dispatch group")
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+
+            XCTAssertFalse(self.panoramaController.cameraDispatchGroup.active, "Camera dispatch group still active")
+        }
+    }
+
+    func testCameraReset() {
+        panoramaController.cameraDispatchGroup.enter()
+        
+        panoramaController.cameraControllerReset()
+        
+        // This should give just enough time for the dispatch_async in the code to call
+        let expectation = expectationWithDescription("Completing a reset on the camera should ensure that we don't have a hanging dispatch group")
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            expectation.fulfill()
+        }
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+            
+            XCTAssertFalse(self.panoramaController.cameraDispatchGroup.active, "Camera dispatch group still active")
+        }
+    }
+
+    func testCameraError() {
+        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
+            var reason: String? = .None
+            var available: Bool? = .None
+            
+            override func postUserMessage(message: String) {
+                guard let expectation = asyncExpectation else {
+                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
+                    return
+                }
+                
+                self.reason = message
+                
+                expectation.fulfill()
+            }
+            
+            override func panoAvailable(available: Bool) {
+                self.available = available
+            }
+        }
+        
+        let spyDelegate = PanoramaDelegateMock()
+        
+        let expectation = expectationWithDescription("Camera error should pass on reason")
+        spyDelegate.asyncExpectation = expectation
+        
+        panoramaController.delegate = spyDelegate
+        
+        panoramaController.cameraDispatchGroup.enter()
+        
+        panoramaController.panoRunning = (state: true, ok: true)
+
+        panoramaController.cameraControllerInError("Test")
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+
+            guard let available = spyDelegate.available else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(reason, "Test", "Message not passed on")
+            XCTAssertFalse(available, "Still available")
+            XCTAssertFalse(self.panoramaController.panoRunning.state, "Pano still running")
+            XCTAssertFalse(self.panoramaController.panoRunning.ok, "Pano still marked as OK")
+        }
+    }
+    
+    func testCameraOK() {
+        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
+            var reason: String? = .None
+            var available: Bool? = .None
+            
+            override func postUserMessage(message: String) {
+                guard let expectation = asyncExpectation else {
+                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
+                    return
+                }
+                
+                self.reason = message
+                
+                expectation.fulfill()
+            }
+            
+            override func panoAvailable(available: Bool) {
+                self.available = available
+            }
+        }
+        
+        let spyDelegate = PanoramaDelegateMock()
+        
+        let expectation = expectationWithDescription("Camera ok should inform if coming back from error")
+        spyDelegate.asyncExpectation = expectation
+        
+        panoramaController.delegate = spyDelegate
+        
+        panoramaController.cameraDispatchGroup.enter()
+        
+        panoramaController.cameraControllerOK(true)
+        
+        waitForExpectationsWithTimeout(1) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let reason = spyDelegate.reason else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            guard let available = spyDelegate.available else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(reason, "Camera is ready", "Message not passed on")
+            XCTAssertTrue(available, "Not available")
+        }
+    }
     
 }
