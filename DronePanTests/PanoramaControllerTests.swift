@@ -18,6 +18,43 @@ import DJISDK
 
 @testable import DronePan
 
+class PanoramaControllerDelegateAdapter : PanoramaControllerDelegate {
+    var asyncExpectation: XCTestExpectation?
+
+    func panoStarting() {
+    }
+    
+    func panoStopping() {
+    }
+    
+    func panoCountChanged(count: Int, total: Int) {
+    }
+    
+    func panoAvailable(available: Bool) {
+    }
+    
+    func postUserMessage(message: String) {
+    }
+    
+    func postUserWarning(warning: String) {
+    }
+
+    func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
+    }
+    
+    func aircraftYawChanged(yaw: Float) {
+    }
+    
+    func aircraftSatellitesChanged(count: Int) {
+    }
+    
+    func aircraftDistanceChanged(distance: CLLocationDistance) {
+    }
+    
+    func aircraftAltitudeChanged(altitude: Float) {
+    }
+}
+
 class PanoramaControllerTests: XCTestCase, ModelSettings {
     let panoramaController = PanoramaController()
 
@@ -161,12 +198,28 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
     }
 
     func testSetTakeASnap() {
+        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
+            
+            var count: Int? = .None
+            
+            override func panoCountChanged(count: Int, total: Int) {
+                guard let expectation = asyncExpectation else {
+                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
+                    return
+                }
+                
+                self.count = count
+                
+                expectation.fulfill()
+            }
+        }
+        
         class CameraControllerTest : CameraController {
             var done = false
             
             override func takeASnap() {
                 done = true
-                self.delegate?.cameraControllerCompleted(false)
+                self.delegate?.cameraControllerCompleted(true)
             }
         }
         
@@ -175,8 +228,29 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         
         panoramaController.cameraController = controller
         
+        let spyDelegate = PanoramaDelegateMock()
+        
+        let expectation = expectationWithDescription("Taking a snap should set count")
+        spyDelegate.asyncExpectation = expectation
+
+        panoramaController.delegate = spyDelegate
+        
         panoramaController.takeASnap()
         
+        waitForExpectationsWithTimeout(1) {
+            error in
+            if let error = error {
+                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
+            }
+            
+            guard let count = spyDelegate.count else {
+                XCTFail("Expected delegate to be called")
+                return
+            }
+            
+            XCTAssertEqual(count, 1, "Snap wasn't counted")
+        }
+
         XCTAssertTrue(controller.done, "Action not performed")
         XCTAssertFalse(panoramaController.cameraDispatchGroup.active, "Camera group was still active after completion")
     }
