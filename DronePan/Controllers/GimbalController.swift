@@ -37,7 +37,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     var status: ControllerStatus = .Normal
 
     let maxCount = 5
-    let allowedOffset: Float = 2.5
+    let allowedOffset: Float = 5
 
     var currentPitch: Float = 0
     var currentYaw: Float = 0
@@ -363,6 +363,8 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
         DDLogDebug("Setting attitude: count \(counter), pitch \(pitch), yaw \(yaw), roll \(roll)")
 
         if (counter > maxCount) {
+            trackEvent(category: "Gimbal", action: "Abort", label: "Count: \(counter), IPA: \(isPitchAdjustable), P: \(pitch), CP: \(currentPitch), IYA: \(isYawAdjustable), Y: \(yaw), CY: \(currentYaw), CACY: \(currentACYaw), ACY: \(adjustedYaw(currentYaw)), IRA: \(isRollAdjustable), R: \(roll), CR: \(self.currentRoll)")
+
             DDLogWarn("Gimbal Controller setAttitude - counter exceeds max count - aborting")
 
             self.delegate?.gimbalControllerAborted("Unable to set gimbal attitude")
