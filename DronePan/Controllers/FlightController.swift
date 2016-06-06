@@ -36,7 +36,7 @@ protocol FlightControllerDelegate {
     func flightControllerDidYaw()
 }
 
-class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate, SystemUtils {
+class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate, SystemUtils, Analytics {
     let fc: DJIFlightController
 
     let yawSpeedThreshold = 0.5
@@ -113,6 +113,15 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
             
             if timer.valid {
                 timer.invalidate()
+
+                var currentHeading : Double?
+                
+                if let compass = self.fc.compass {
+                    currentHeading = self.headingTo360(compass.heading)
+                }
+
+                self.trackEvent(category: "FC", action: "Abort", label: "Yaw Speed: \(self.yawSpeed), Yaw Destination: \(self.yawDestination), Heading: \(currentHeading)")
+                
                 self.delegate?.flightControllerUnableToYaw("Yaw did not complete")
             }
         })
