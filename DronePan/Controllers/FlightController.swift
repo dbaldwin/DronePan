@@ -169,7 +169,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         DDLogDebug("Yawing speed \(self.yawSpeed) target \(self.yawDestination)")
 
         if let _ = self.yawDestination {
-            if (self.yawSpeed < yawSpeedThreshold) {
+            if (fabs(self.yawSpeed) < yawSpeedThreshold) {
                 self.delegate?.flightControllerDidYaw()
                 self.yawSpeed = 0
                 self.yawDestination = nil
