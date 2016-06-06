@@ -74,6 +74,21 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         }
     }
     
+    func getSpeed(yawDestination: Double, heading : Double) -> Double {
+        DDLogDebug("Current heading \(heading) target \(yawDestination)")
+        
+        let diff = fabs(yawDestination - (heading % 360.0))
+        
+        let speed = self.yawSpeedForAngle(diff)
+        
+        
+        if (yawDestination > heading) {
+            return speed
+        } else {
+            return speed * -1.0
+        }
+    }
+    
     func setControlModes() {
         self.fc.enableVirtualStickControlModeWithCompletion {
             (error) in
@@ -173,19 +188,9 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
             DDLogDebug("Current heading \(currentHeading)")
 
             if let yawDestination = self.yawDestination {
-                var diff = 0.0
+                self.yawSpeed = self.getSpeed(yawDestination, heading: currentHeading)
 
-                DDLogDebug("Current heading \(currentHeading) target \(yawDestination)")
-                if (yawDestination > currentHeading) {
-                    diff = fabs(yawDestination) - fabs(currentHeading)
-                    self.yawSpeed = self.yawSpeedForAngle(diff)
-                } else {
-                    // This happens when the current heading is 340 and destination is 40, for example
-                    diff = fabs(currentHeading) - fabs(yawDestination)
-                    self.yawSpeed = self.yawSpeedForAngle(fmod(360.0, diff))
-                }
-
-                DDLogDebug("Current heading \(currentHeading) target \(yawDestination) diff \(diff) yawSpeed \(self.yawSpeed)")
+                DDLogDebug("Current heading \(currentHeading) target \(yawDestination) yawSpeed \(self.yawSpeed)")
             }
             
             self.delegate?.flightControllerUpdateHeading(currentHeading)
