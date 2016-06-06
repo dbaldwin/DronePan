@@ -39,7 +39,7 @@ protocol FlightControllerDelegate {
 class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate, SystemUtils, Analytics {
     let fc: DJIFlightController
 
-    let yawSpeedThreshold = 0.5
+    let yawSpeedThreshold = 1.5
 
     var delegate: FlightControllerDelegate?
 
@@ -60,6 +60,20 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         }
     }
 
+    func yawSpeedForAngle(angle: Double) -> Double {
+        if (angle > 10.0) {
+            return 45.0
+        } else if (angle > 5.0) {
+            return 10.0
+        } else if (angle > 2.0) {
+            return 5.0
+        } else if (angle > 1.0){
+            return 2.5
+        } else {
+            return 1.0
+        }
+    }
+    
     func setControlModes() {
         self.fc.enableVirtualStickControlModeWithCompletion {
             (error) in
@@ -97,7 +111,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
     func yawTo(yaw: Double) {
         DDLogDebug("Yaw to \(yaw)")
 
-        self.yawSpeed = 30 // This represents 30m/sec
+        self.yawSpeed = 45 // This represents 30m/sec
         self.yawDestination = yaw
         
         // Calling this on a timer as it improves the accuracy of aircraft yaw
@@ -164,17 +178,13 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
                 DDLogDebug("Current heading \(currentHeading) target \(yawDestination)")
                 if (yawDestination > currentHeading) {
                     diff = fabs(yawDestination) - fabs(currentHeading)
-                    self.yawSpeed = diff * 0.5
+                    self.yawSpeed = self.yawSpeedForAngle(diff)
                 } else {
                     // This happens when the current heading is 340 and destination is 40, for example
                     diff = fabs(currentHeading) - fabs(yawDestination)
-                    self.yawSpeed = fmod(360.0, diff) * 0.5
+                    self.yawSpeed = self.yawSpeedForAngle(fmod(360.0, diff))
                 }
 
-                if self.yawSpeed.isNaN {
-                    self.yawSpeed = 0.00000001
-                }
-                
                 DDLogDebug("Current heading \(currentHeading) target \(yawDestination) diff \(diff) yawSpeed \(self.yawSpeed)")
             }
             

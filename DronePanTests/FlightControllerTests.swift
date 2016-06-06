@@ -576,4 +576,15 @@ class FlightControllerTests: XCTestCase {
             XCTAssertEqual(heading, 12.3, "Incorrect heading \(heading)")
         }
     }
+    
+    func testYawSpeedForAngle() {
+        let fc = FlightController(fc: DJIFlightController())
+        
+        XCTAssertEqual(45.0, fc.yawSpeedForAngle(60), "Incorrect yaw speed for angle")
+        XCTAssertEqual(10.0, fc.yawSpeedForAngle(5.5), "Incorrect yaw speed for angle")
+        XCTAssertEqual(5.0, fc.yawSpeedForAngle(2.5), "Incorrect yaw speed for angle")
+        XCTAssertEqual(2.5, fc.yawSpeedForAngle(1.5), "Incorrect yaw speed for angle")
+        XCTAssertEqual(1.0, fc.yawSpeedForAngle(0.5), "Incorrect yaw speed for angle")
+        
+    }
 }
