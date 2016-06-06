@@ -585,6 +585,27 @@ class FlightControllerTests: XCTestCase {
         XCTAssertEqual(5.0, fc.yawSpeedForAngle(2.5), "Incorrect yaw speed for angle")
         XCTAssertEqual(2.5, fc.yawSpeedForAngle(1.5), "Incorrect yaw speed for angle")
         XCTAssertEqual(1.0, fc.yawSpeedForAngle(0.5), "Incorrect yaw speed for angle")
+    }
+    
+    func testSpeedForAngleAndHeading() {
+        let fc = FlightController(fc: DJIFlightController())
+        
+        XCTAssertEqual(45.0, fc.getSpeed(60.0, heading: 0.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(120.0, heading: 60.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(180.0, heading: 120.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(240.0, heading: 180.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(300.0, heading: 240.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(360.0, heading: 300.0), "Incorrect speed for angle and heading")
+        
+        XCTAssertEqual(5.0, fc.getSpeed(60.0, heading: 57.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(-5.0, fc.getSpeed(60.0, heading: 63.0), "Incorrect speed for angle and heading")
+        
+        XCTAssertEqual(5.0, fc.getSpeed(360.0, heading: 357.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(-5.0, fc.getSpeed(360.0, heading: 3.0), "Incorrect speed for angle and heading")
+        
+        XCTAssertEqual(-45.0, fc.getSpeed(271.0, heading: 89.0), "Incorrect speed for angle and heading")
+        XCTAssertEqual(45.0, fc.getSpeed(269.0, heading: 91.0), "Incorrect speed for angle and heading")
         
     }
+
 }
