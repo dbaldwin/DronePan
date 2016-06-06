@@ -77,15 +77,24 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
     func getSpeed(yawDestination: Double, heading : Double) -> Double {
         DDLogDebug("Current heading \(heading) target \(yawDestination)")
         
-        let diff = fabs(yawDestination - (heading % 360.0))
+        let dest = yawDestination % 360.0
+        let head = heading % 360.0
+        
+        var diff = fabs(dest - head)
+        
+        var mult = 1.0
+        
+        if (diff > 180.0) {
+            diff = 360.0 - diff
+            mult = -1.0
+        }
         
         let speed = self.yawSpeedForAngle(diff)
         
-        
-        if (yawDestination > heading) {
-            return speed
+        if (dest > head) {
+            return speed * mult
         } else {
-            return speed * -1.0
+            return speed * mult * -1.0
         }
     }
     
