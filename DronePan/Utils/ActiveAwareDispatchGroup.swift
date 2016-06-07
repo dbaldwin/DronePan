@@ -1,7 +1,7 @@
 import Foundation
 import CocoaLumberjackSwift
 
-class ActiveAwareDispatchGroup {
+class ActiveAwareDispatchGroup : Analytics {
     let group = dispatch_group_create()
 
     let name: String
@@ -21,18 +21,19 @@ class ActiveAwareDispatchGroup {
     func leave() -> Bool {
         DDLogDebug("Leaving dispatch group \(name)")
 
-        var result = true
-
         if !active {
             DDLogError("Warning - leaving dispatch group \(name) while not active")
 
-            result = false
+            trackEvent(category: "System", action: "Dispatch - leave when not active", label: name)
+            
+            return false
         }
 
         active = false
+        
         dispatch_group_leave(group)
 
-        return result
+        return true
     }
 
     func leaveIfActive() -> Bool {
