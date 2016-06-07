@@ -329,7 +329,7 @@ extension PanoramaController {
             self.totalCount = numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
 
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                 self.setupForLoop()
 
                 // Loop through the yaws
@@ -344,7 +344,12 @@ extension PanoramaController {
                 self.informUserEndOfLoop()
 
                 self.resetAfterLoop()
-            })
+            })*/
+            
+            // Trying custom mission code
+            if let c = self.flightController {
+                c.tryCustomMission()
+            }
         }
     }
     
