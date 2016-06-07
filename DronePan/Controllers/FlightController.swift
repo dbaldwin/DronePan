@@ -61,6 +61,9 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
     }
 
     func yawSpeedForAngle(angle: Double) -> Double {
+        /*
+         
+        Can't seem to get this to settle in time
         if (angle > 10.0) {
             return 45.0
         } else if (angle > 5.0) {
@@ -72,6 +75,9 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         } else {
             return 1.0
         }
+         */
+        
+        return angle * 0.5
     }
     
     func getSpeed(yawDestination: Double, heading : Double) -> Double {
@@ -135,7 +141,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
     func yawTo(yaw: Double) {
         DDLogDebug("Yaw to \(yaw)")
 
-        self.yawSpeed = 45 // This represents 30m/sec
+        self.yawSpeed = 30 // This represents 30m/sec
         self.yawDestination = yaw
         
         // Calling this on a timer as it improves the accuracy of aircraft yaw
@@ -147,7 +153,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
                 repeats: true)
             
             NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
-            NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 5))
+            NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 15))
             
             if timer.valid {
                 timer.invalidate()

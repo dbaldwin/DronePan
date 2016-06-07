@@ -577,6 +577,8 @@ class FlightControllerTests: XCTestCase {
         }
     }
     
+    /*
+     Not currently in use
     func testYawSpeedForAngle() {
         let fc = FlightController(fc: DJIFlightController())
         
@@ -607,5 +609,6 @@ class FlightControllerTests: XCTestCase {
         XCTAssertEqual(45.0, fc.getSpeed(269.0, heading: 91.0), "Incorrect speed for angle and heading")
         
     }
+ */
 
 }
