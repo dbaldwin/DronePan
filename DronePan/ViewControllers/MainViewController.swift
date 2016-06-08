@@ -204,8 +204,10 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
         if let current = current, count = count {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
+            self.currentProgress = Float(current) / Float(count)
         } else {
             self.sequenceLabel.text = "Photo: -/-"
+            self.currentProgress = 0.0
         }
     }
 
@@ -500,11 +502,6 @@ extension MainViewController: PanoramaControllerDelegate {
             self.startButton.enabled = available
         }
     }
-    
-    func panoProgress(progress: Float) {
-        self.currentProgress = progress
-    }
-    
 }
 
 extension MainViewController : UIAdaptivePresentationControllerDelegate {

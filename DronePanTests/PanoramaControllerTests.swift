@@ -53,9 +53,6 @@ class PanoramaControllerDelegateAdapter : PanoramaControllerDelegate {
     
     func aircraftAltitudeChanged(altitude: Float) {
     }
-    
-    func panoProgress(progress: Float) {
-    }
 }
 
 class PanoramaControllerDelegateTest : PanoramaControllerDelegateAdapter {

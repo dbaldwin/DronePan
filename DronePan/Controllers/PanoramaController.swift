@@ -40,8 +40,6 @@ protocol PanoramaControllerDelegate {
     func panoCountChanged(count: Int, total: Int)
 
     func panoAvailable(available: Bool)
-    
-    func panoProgress(progress: Float)
 }
 
 class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSettings {
@@ -457,7 +455,7 @@ extension PanoramaController {
             }
             
             missionManager.prepareMission(mission, withProgress: { (progress) in
-                self.delegate?.panoProgress(progress)
+                // This is progress of the prepare
             }, withCompletion: { (error) in
                 if let error = error {
                     DDLogDebug("Error preparing mission: \(error)")
