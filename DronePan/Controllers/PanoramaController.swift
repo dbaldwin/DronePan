@@ -466,17 +466,18 @@ extension PanoramaController {
                     
                     return
                 }
+
+                missionManager.startMissionExecutionWithCompletion({ (error) in
+                    if let error = error {
+                        DDLogDebug("Error starting mission: \(error)")
+                        
+                        self.delegate?.postUserWarning("Could not start mission: \(error)")
+                        
+                        return
+                    }
+                })
             })
 
-            missionManager.startMissionExecutionWithCompletion({ (error) in
-                if let error = error {
-                    DDLogDebug("Error starting mission: \(error)")
-                    
-                    self.delegate?.postUserWarning("Could not start mission: \(error)")
-                    
-                    return
-                }
-            })
         }
     }
 }
