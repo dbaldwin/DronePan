@@ -441,7 +441,7 @@ extension PanoramaController {
             self.currentCount = 0
 
             guard let missionManager = DJIMissionManager.sharedInstance() else {
-                self.delegate?.postUserWarning("Unable to get mission manager")
+                self.delegate?.postUserMessage("Unable to get mission manager")
                 
                 return
             }
@@ -449,7 +449,7 @@ extension PanoramaController {
             missionManager.delegate = self
             
             guard let mission = buildMission(gimbalYaw) else {
-                self.delegate?.postUserWarning("Unable to build mission")
+                self.delegate?.postUserMessage("Unable to build mission")
                 
                 return
             }
@@ -460,7 +460,7 @@ extension PanoramaController {
                 if let error = error {
                     DDLogDebug("Error preparing mission: \(error)")
                     
-                    self.delegate?.postUserWarning("Could not prepare mission: \(error)")
+                    self.delegate?.postUserMessage("Could not prepare mission: \(error)")
                     
                     return
                 }
@@ -469,7 +469,7 @@ extension PanoramaController {
                     if let error = error {
                         DDLogDebug("Error starting mission: \(error)")
                         
-                        self.delegate?.postUserWarning("Could not start mission: \(error)")
+                        self.delegate?.postUserMessage("Could not start mission: \(error)")
                         
                         return
                     }
