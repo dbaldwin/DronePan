@@ -44,7 +44,7 @@ protocol PanoramaControllerDelegate {
     func panoProgress(progress: Float)
 }
 
-class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
+class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSettings {
     var delegate: PanoramaControllerDelegate?
 
     var cameraController: CameraController?
@@ -59,13 +59,19 @@ class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
     var lastGimbalRoll: Float = 0.0
     var lastACYaw: Float = 0.0
 
-    var mission : DJIMission?
-    
     var panoRunning: (state:Bool, ok:Bool) = (state: false, ok: true) {
         didSet {
             if panoRunning.state {
                 self.delegate?.panoStarting()
             } else {
+                // TODO - check if mission is actually running?
+                if let missionManager = DJIMissionManager.sharedInstance() {
+                    missionManager.stopMissionExecutionWithCompletion({ (error) in
+                        if let error = error {
+                            self.delegate?.postUserMessage("Unable to stop mission \(error)")
+                        }
+                    })
+                }
                 self.cameraController?.status = .Stopping
 
                 self.delegate?.panoStopping()
@@ -310,6 +316,8 @@ extension PanoramaController {
         attitude.pitch = Float(pitch)
         attitude.roll = 0
         attitude.yaw = Float(yaw)
+        
+        // TODO - if this fails to create (returns optional nil) then the ! will cause an app crash - needs handling
         return DJIGimbalAttitudeStep(attitude: attitude)!
     }
     
@@ -430,6 +438,8 @@ extension PanoramaController {
                 return
             }
             
+            missionManager.delegate = self
+            
             guard let mission = buildMission(gimbalYaw) else {
                 self.delegate?.postUserWarning("Unable to build mission")
                 
@@ -437,7 +447,7 @@ extension PanoramaController {
             }
             
             missionManager.prepareMission(mission, withProgress: { (progress) in
-                // TODO - post progress to main view for progress bar
+                self.delegate?.panoProgress(progress)
             }, withCompletion: { (error) in
                 if let error = error {
                     DDLogDebug("Error preparing mission: \(error)")
@@ -583,5 +593,27 @@ extension PanoramaController: GimbalControllerDelegate {
         lastGimbalRoll = roll
 
         self.delegate?.gimbalAttitudeChanged(pitch: pitch, yaw: yaw, roll: roll)
+    }
+}
+
+// MARK: - DJI Mission Delegate
+
+extension PanoramaController : DJIMissionManagerDelegate {
+    func missionManager(manager: DJIMissionManager, didFinishMissionExecution error: NSError?) {
+        if let error = error {
+            self.panoRunning = (state: false, ok: false)
+            
+            DDLogError("Panorama mission aborted \(error)")
+            
+            self.delegate?.postUserMessage("Panorama mission aborted")
+        } else {
+            self.panoRunning = (state: false, ok: true)
+            
+            self.delegate?.postUserMessage("Panorama mission completed")
+        }
+    }
+    
+    func missionManager(manager: DJIMissionManager, missionProgressStatus missionProgress: DJIMissionProgressStatus) {
+        // TODO
     }
 }
