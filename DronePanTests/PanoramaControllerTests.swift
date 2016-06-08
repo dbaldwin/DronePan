@@ -648,4 +648,68 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         }
     }
 
+    func isAircraftYawStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIAircraftYawStep else {
+            XCTFail("Incorrect step")
+            
+            return
+        }
+    }
+    
+    func isGimbalAttitudeStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIGimbalAttitudeStep else {
+            XCTFail("Incorrect step")
+            
+            return
+        }
+    }
+
+    func isShootPhotoStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIShootPhotoStep else {
+            XCTFail("Incorrect step")
+            
+            return
+        }
+    }
+    
+    func testAircraftYawMission() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+
+        let controller = PanoramaController()
+        
+        controller.product = DJIAircraft()
+        controller.model = DJIAircraftModelNameInspire1
+        
+        if let steps = controller.buildMissionSteps(false) {
+            XCTAssertEqual(steps.count, 47, "Incorrect number of mission steps")
+
+            isAircraftYawStep(steps[8])
+            isGimbalAttitudeStep(steps[13])
+            isShootPhotoStep(steps[42])
+        } else {
+            XCTFail("Failed to build mission")
+        }
+    }
+    
+    func testAircraftGimbalYawMission() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        let controller = PanoramaController()
+        
+        controller.product = DJIAircraft()
+        controller.model = DJIAircraftModelNameInspire1
+        
+        if let steps = controller.buildMissionSteps(true) {
+            XCTAssertEqual(steps.count, 40, "Incorrect number of mission steps")
+            
+            isGimbalAttitudeStep(steps[13])
+            isShootPhotoStep(steps[36])
+        } else {
+            XCTFail("Failed to build mission")
+        }
+    }
 }

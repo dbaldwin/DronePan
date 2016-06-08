@@ -332,17 +332,17 @@ extension PanoramaController {
         }.flatMap{$0}
     }
     
-    func buildMission(gimbalYaw: Bool) -> DJIMission? {
+    func buildMissionSteps(gimbalYaw: Bool) -> [DJIMissionStep]? {
         if let model = self.model, type = self.type {
-            let rows = photosPerRow(model)
+            let cols = photosPerRow(model)
             let nadirs = nadirCount(model)
             
-            let yaw_angle = 360.0 / Double(rows)
-            let yaw_angles = yawAngles(count: rows, heading: 0.0)
+            let yaw_angle = 360.0 / Double(cols)
+            let yaw_angles = yawAngles(count: cols, heading: 0.0)
             
             let nadir_yaw_angle = 360.0 / Double(nadirs)
             let nadir_yaw_angles = yawAngles(count: nadirs, heading: 0.0)
-        
+            
             guard let shoot = DJIShootPhotoStep(singleShootPhoto:()) else {
                 self.delegate?.postUserMessage("Couldn't create shoot photo mission step")
                 
@@ -350,28 +350,28 @@ extension PanoramaController {
             }
             
             let pitches : [Double] = self.pitchesForLoop(maxPitch: Double(maxPitch(model)),
-                                              maxPitchEnabled: maxPitchEnabled(model),
-                                              type: type, rowCount: numberOfRows(model))
+                                                         maxPitchEnabled: maxPitchEnabled(model),
+                                                         type: type, rowCount: numberOfRows(model))
             
             if (gimbalYaw) {
                 let mainMissionSteps = yaw_angles.map {
                     (yaw) in
-                    
                     buildColumn(shoot, pitches: pitches, yaw: yaw)
                 }.flatMap{$0}
                 
                 let nadirMissionSteps = nadir_yaw_angles.map {
                     (yaw) in
-
                     buildColumn(shoot, pitches: [-90.0], yaw: yaw)
                 }.flatMap{$0}
-
+                
                 let missionSteps = [
+                    [buildAttitudeStep(0)], // Reset gimbal
                     mainMissionSteps,
-                    nadirMissionSteps
+                    nadirMissionSteps,
+                    [buildAttitudeStep(0)] // Reset gimbal
                 ].flatMap{$0}
                 
-                return DJICustomMission(steps: missionSteps)
+                return missionSteps
             } else {
                 guard let yaw = DJIAircraftYawStep(relativeAngle: yaw_angle, andAngularVelocity: 50) else {
                     self.delegate?.postUserMessage("Couldn't create aircraft yaw mission step")
@@ -384,13 +384,13 @@ extension PanoramaController {
                     
                     return nil
                 }
-            
+                
                 let mainMissionSteps = yaw_angles.map {
                     (_) in
                     
                     [
-                        buildColumn(shoot, pitches: pitches),
-                        [yaw]
+                        [yaw],
+                        buildColumn(shoot, pitches: pitches)
                     ].flatMap{$0}
                 }.flatMap{$0}
                 
@@ -398,18 +398,28 @@ extension PanoramaController {
                     (_) in
                     
                     [
-                        buildColumn(shoot, pitches: [-90.0]),
-                        [nadirYaw]
+                        [nadirYaw],
+                        buildColumn(shoot, pitches: [-90.0])
                     ].flatMap{$0}
                 }.flatMap{$0}
                 
                 let missionSteps = [
+                    [buildAttitudeStep(0)], // Reset gimbal
                     mainMissionSteps,
-                    nadirMissionSteps
+                    nadirMissionSteps,
+                    [buildAttitudeStep(0)] // Reset gimbal
                 ].flatMap{ $0 }
-            
-                return DJICustomMission(steps: missionSteps)
+                
+                return missionSteps
             }
+        }
+        
+        return nil
+    }
+    
+    func buildMission(gimbalYaw: Bool) -> DJIMission? {
+        if let steps = buildMissionSteps(gimbalYaw) {
+            return DJICustomMission(steps: steps)
         }
         
         return nil
