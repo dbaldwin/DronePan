@@ -624,6 +624,8 @@ extension PanoramaController : DJIMissionManagerDelegate {
     }
     
     func missionManager(manager: DJIMissionManager, missionProgressStatus missionProgress: DJIMissionProgressStatus) {
-        // TODO
+        if let progress = missionProgress as? DJICustomMissionStatus {
+            DDLogDebug("Currently on \(progress.currentExecutingStep)")
+        }
     }
 }
