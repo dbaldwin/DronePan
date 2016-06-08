@@ -61,9 +61,6 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         if let simulator = fc.simulator {
             simulator.delegate = self
         }
-        
-        self.missionManager = DJIMissionManager.sharedInstance()
-        self.missionManager!.delegate = self
     }
 
     func yawSpeedForAngle(angle: Double) -> Double {
@@ -79,47 +76,6 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
             return 1.0
         }
     }
-    
-    func tryCustomMission () {
-        
-        let shoot: DJIMissionStep = DJIShootPhotoStep(singleShootPhoto:())!
-        let yaw: DJIMissionStep = DJIAircraftYawStep(relativeAngle: 60, andAngularVelocity: 50)!
-        
-        var pitch: DJIGimbalAttitude = DJIGimbalAttitude()
-        pitch.pitch = -30
-        pitch.roll = 0
-        pitch.yaw = 0
-        let pitch30: DJIMissionStep = DJIGimbalAttitudeStep(attitude: pitch)!
-        
-        self.customMission = DJICustomMission(steps: [
-            shoot, yaw, // 0
-            shoot, yaw, // 60
-            shoot, yaw, // 120
-            shoot, yaw, // 180
-            shoot, yaw, // 240
-            shoot, yaw, // 300
-            pitch30,
-            shoot, yaw, // 0
-            shoot, yaw, // 60
-            shoot, yaw, // 120
-            shoot, yaw, // 180
-            shoot, yaw, // 240
-            shoot, yaw, // 300
-            ])
-        
-        self.missionManager!.prepareMission(customMission!, withProgress: nil, withCompletion: {[weak self] (error: NSError?) -> Void in
-            if error == nil {
-                self?.missionManager!.startMissionExecutionWithCompletion({ [weak self] (error: NSError?) -> Void in
-                    if error != nil {
-                        DDLogDebug("Error starting custom mission: \(error!.localizedDescription)")
-                    }
-                })
-            } else {
-                DDLogDebug("Error with custom mission: \(error!.localizedDescription)")
-            }
-        })
-    }
-    
     
     func getSpeed(yawDestination: Double, heading : Double) -> Double {
         DDLogDebug("Current heading \(heading) target \(yawDestination)")

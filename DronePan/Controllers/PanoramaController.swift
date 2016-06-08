@@ -50,6 +50,8 @@ class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
     var gimbalController: GimbalController?
     var flightController: FlightController?
 
+    var missionManager : DJIMissionManager? = nil
+
     var lastGimbalPitch: Float = 0.0
     var lastGimbalYaw: Float = 0.0
     var lastGimbalRoll: Float = 0.0
@@ -305,6 +307,62 @@ extension PanoramaController {
         self.panoRunning = (state: false, ok: true)
     }
 
+    func buildPitchStep(pitch: Double) -> DJIMissionStep? {
+        var attitude = DJIGimbalAttitude()
+        attitude.pitch = -30
+        attitude.roll = 0
+        attitude.yaw = 0
+        return DJIGimbalAttitudeStep(attitude: attitude)
+    }
+    
+    func buildAircraftYawMission() -> DJIMission? {
+        if let model = self.model, type = self.type {
+            let rows = photosPerRow(model)
+            let nadirs = nadirCount(model)
+            
+            let yaw_angle = 360.0 / Double(rows)
+            let nadir_yaw_angle = 360.0 / Double(nadirs)
+        
+            let shoot = DJIShootPhotoStep(singleShootPhoto:())!
+            let yaw = DJIAircraftYawStep(relativeAngle: yaw_angle, andAngularVelocity: 50)!
+            let nadirYaw = DJIAircraftYawStep(relativeAngle: nadir_yaw_angle, andAngularVelocity: 50)!
+            
+            let row = (0..<rows).map {_ in
+                [
+                    shoot,
+                    yaw
+                ]
+            }.flatMap{ $0 }
+            
+            let pitches = self.pitchesForLoop(maxPitch: Double(maxPitch(model)),
+                                              maxPitchEnabled: maxPitchEnabled(model),
+                                              type: type, rowCount: numberOfRows(model))
+            
+
+            let mainMissionSteps = pitches.map { pitch in
+                [
+                    [buildPitchStep(pitch)!],
+                    row
+                ].flatMap{ $0 }
+            }.flatMap{ $0 }
+            
+            let nadirMissionSteps = (0..<nadirs).map {_ in
+                nadirYaw
+            }
+            
+            let missionSteps = [
+                mainMissionSteps,
+                [buildPitchStep(-90)!],
+                nadirMissionSteps
+            ].flatMap{ $0 }
+            
+            return DJICustomMission(steps: missionSteps)
+        }
+        
+        return nil
+    }
+    
+    
     // Marked objc to allow override from test - can only override methods that are in extensions when they are marked objc in swift for now
     @objc func doPanoLoop(gimbalYaw: Bool) {
         if let model = self.model, type = self.type {
@@ -314,42 +372,47 @@ extension PanoramaController {
                 return
             }
 
-            let pitches = self.pitchesForLoop(maxPitch: Double(maxPitch(model)),
-                                              maxPitchEnabled: maxPitchEnabled(model),
-                                              type: type, rowCount: numberOfRows(model))
-
             if type == .Handheld {
                 // TODO: should also be done for gimbal yaw of AC when that is in place
                 self.currentHeading = 0
             }
 
-            let yaws = self.yawAngles(count: photosPerRow(model), heading: headingTo360(self.currentHeading))
-            let nadirYaws = self.yawAngles(count: nadirCount(model), heading:  headingTo360(self.currentHeading))
-
             self.totalCount = numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
 
-            /*dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                self.setupForLoop()
-
-                // Loop through the yaws
-                DDLogDebug("PanoLoop: YawLoop - main")
-                self.runYawLoop(yaws, pitches: pitches, gimbalYaw: gimbalYaw)
-
-                // Loop through the zenith/nadir yaws
-                DDLogDebug("PanoLoop: YawLoop - nadir")
-                self.runYawLoop(nadirYaws, pitches: [-90.0], gimbalYaw: gimbalYaw)
-
-                // Check state and inform user
-                self.informUserEndOfLoop()
-
-                self.resetAfterLoop()
-            })*/
-            
-            // Trying custom mission code
-            if let c = self.flightController {
-                c.tryCustomMission()
+            guard let missionManager = DJIMissionManager.sharedInstance() else {
+                self.delegate?.postUserWarning("Unable to get mission manager")
+                
+                return
             }
+            
+            guard let mission = buildAircraftYawMission() else {
+                self.delegate?.postUserWarning("Unable to build mission")
+                
+                return
+            }
+            
+            missionManager.prepareMission(mission, withProgress: { (progress) in
+                // TODO - post progress to main view for progress bar
+            }, withCompletion: { (error) in
+                if let error = error {
+                    DDLogDebug("Error preparing mission: \(error)")
+                    
+                    self.delegate?.postUserWarning("Could not prepare mission: \(error)")
+                    
+                    return
+                }
+            })
+
+            missionManager.startMissionExecutionWithCompletion({ (error) in
+                if let error = error {
+                    DDLogDebug("Error starting mission: \(error)")
+                    
+                    self.delegate?.postUserWarning("Could not start mission: \(error)")
+                    
+                    return
+                }
+            })
         }
     }
     
