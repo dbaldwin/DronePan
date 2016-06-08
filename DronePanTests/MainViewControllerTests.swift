@@ -130,7 +130,6 @@ class MainViewControllerTests: XCTestCase, SystemUtils {
 
         XCTAssertFalse(viewController.sequenceLabel.hidden, "Sequence label was hidden after setting")
         XCTAssertEqual(viewController.sequenceLabel.text, "Photo: 10/20", "Incorrect sequence label seen \(viewController.sequenceLabel.text)")
-        XCTAssertEqual(viewController.currentProgress, 0.5, "Incorrect progress \(viewController.currentProgress)")
     }
     
     func testResetSequence() {
@@ -140,9 +139,16 @@ class MainViewControllerTests: XCTestCase, SystemUtils {
         viewController.setSequence()
         
         XCTAssertEqual(viewController.sequenceLabel.text, "Photo: -/-", "Incorrect sequence label seen \(viewController.sequenceLabel.text)")
-        XCTAssertEqual(viewController.currentProgress, 0.0, "Incorrect progress \(viewController.currentProgress)")
     }
 
+    func testProgress() {
+        buildView()
+        
+        viewController.panoProgress(0.7)
+        
+        XCTAssertEqual(viewController.currentProgress, 0.7, "Incorrect progress \(viewController.currentProgress)")
+    }
+    
     func testSetSatellites() {
         buildView()
         

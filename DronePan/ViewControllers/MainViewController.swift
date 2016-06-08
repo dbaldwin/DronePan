@@ -59,7 +59,11 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
     var animationDuration = 1.0
     
     var currentWarning = ""
-    var currentProgress = 0.0
+    var currentProgress : Float = 0.0 {
+        didSet {
+            self.panoProgressBar.setProgress(currentProgress, animated: true)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -197,19 +201,12 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
     }
 
     func setSequence(current: Int? = nil, count: Int? = nil) {
-        // TODO - move setting of progress bar to progress panorama controller delegate method
         if let current = current, count = count {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
-
-            self.currentProgress = Double(current) / Double(count)
         } else {
             self.sequenceLabel.text = "Photo: -/-"
-
-            self.currentProgress = 0.0
         }
-
-        self.panoProgressBar.setProgress(Float(currentProgress), animated: true)
     }
 
     func setAltitude(altitude: Int? = nil) {
@@ -433,7 +430,8 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoStarting() {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Stop"), forState: .Normal)
-            self.panoProgressBar.setProgress(0, animated: false)
+
+            self.currentProgress = 0.0
 
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
@@ -448,7 +446,8 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoStopping() {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Start"), forState: .Normal)
-            self.panoProgressBar.setProgress(0, animated: false)
+            
+            self.currentProgress = 0.0
 
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
@@ -503,7 +502,7 @@ extension MainViewController: PanoramaControllerDelegate {
     }
     
     func panoProgress(progress: Float) {
-        // TODO - set progress bar
+        self.currentProgress = progress
     }
     
 }
