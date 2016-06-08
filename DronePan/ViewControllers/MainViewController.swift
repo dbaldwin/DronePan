@@ -197,6 +197,7 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
     }
 
     func setSequence(current: Int? = nil, count: Int? = nil) {
+        // TODO - move setting of progress bar to progress panorama controller delegate method
         if let current = current, count = count {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
@@ -500,6 +501,11 @@ extension MainViewController: PanoramaControllerDelegate {
             self.startButton.enabled = available
         }
     }
+    
+    func panoProgress(progress: Float) {
+        // TODO - set progress bar
+    }
+    
 }
 
 extension MainViewController : UIAdaptivePresentationControllerDelegate {

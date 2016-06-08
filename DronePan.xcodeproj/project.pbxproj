@@ -44,7 +44,6 @@
 		1583BF571CC26F6E00C00C0D /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* AppUtils.swift */; };
 		158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158606451CDB26F500C5DF95 /* MainViewController.swift */; };
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
-		15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */; };
 		15CCA5091CE25FEF003C9B38 /* FlightControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */; };
 		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
 		15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F509FE1CC290F80097EB09 /* SettingsViewController.swift */; };
@@ -60,7 +59,6 @@
 		232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */; };
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
-		83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */; };
 		83195C101CE32BF2008A9755 /* PreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */; };
 		83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */; };
 		833AB2641CEC931E0044A783 /* SettingsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833AB2631CEC931E0044A783 /* SettingsViewControllerTests.swift */; };
@@ -238,7 +236,6 @@
 		158606451CDB26F500C5DF95 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
-		15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroupTests.swift; sourceTree = "<group>"; };
 		15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightControllerTests.swift; sourceTree = "<group>"; };
 		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		15F509FE1CC290F80097EB09 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -256,7 +253,6 @@
 		232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
-		83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroup.swift; sourceTree = "<group>"; };
 		83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewControllerTests.swift; sourceTree = "<group>"; };
 		83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalControllerTests.swift; sourceTree = "<group>"; };
 		833AB2631CEC931E0044A783 /* SettingsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewControllerTests.swift; sourceTree = "<group>"; };
@@ -584,7 +580,6 @@
 		15CCA5071CE2447A003C9B38 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */,
 				15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */,
 				1583BF561CC26F6E00C00C0D /* AppUtils.swift */,
 				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
@@ -635,7 +630,6 @@
 			isa = PBXGroup;
 			children = (
 				8362BB211CC64C8D0071D0BA /* Info.plist */,
-				15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */,
 				156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */,
 				156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */,
 				1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */,
@@ -840,7 +834,6 @@
 				15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */,
 				83A7132B1CF83034005194BA /* ButtonViewCell.swift in Sources */,
 				15839FBD1CCEA224008B7E97 /* VideoFrameExtractor.m in Sources */,
-				83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */,
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
 				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,
@@ -870,7 +863,6 @@
 				1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
-				15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */,
 				156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
 				83B5A1C41CEC4A180080A4B3 /* MainViewControllerTests.swift in Sources */,

@@ -19,17 +19,9 @@ import DJISDK
 import CocoaLumberjackSwift
 
 protocol CameraControllerDelegate {
-    func cameraControllerCompleted(shotTaken: Bool)
-
-    func cameraControllerAborted(reason: String)
-
-    func cameraControllerStopped()
-
     func cameraControllerInError(reason: String)
 
     func cameraControllerOK(fromError: Bool)
-
-    func cameraControllerReset()
 
     func cameraControllerNewMedia(filename: String)
 }
@@ -46,15 +38,6 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
 
     var status: ControllerStatus = .Normal
 
-    let maxCount = 5
-
-    let cameraWorkQueue = dispatch_queue_create("com.dronepan.queue.camera", DISPATCH_QUEUE_CONCURRENT)
-
-    var tookShot: Bool = false
-    var isShooting: Bool = false
-    var isStoring: Bool = false
-
-    var mode: DJICameraMode = .Unknown
     var availableCaptureCount: Int = 0
 
     init(camera: DJICamera) {
@@ -67,6 +50,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
         camera.delegate = self
     }
 
+    /*
     func setPhotoMode() {
         DDLogInfo("Camera Controller setPhotoMode")
 
@@ -76,17 +60,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
             self.setPhotoMode(0)
         }
     }
-
-    func takeASnap() {
-        DDLogInfo("Camera Controller takeASnap")
-
-        self.status = .Normal
-
-        self.tookShot = false
-        dispatch_async(self.cameraWorkQueue) {
-            self.takeASnap(0)
-        }
-    }
+ */
 
     func hasSpaceForPano(shotCount: Int) -> Bool {
         DDLogDebug("Camera Controller comparing shotCount: \(shotCount) with availableCaptureCount \(availableCaptureCount)")
@@ -94,6 +68,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
         return availableCaptureCount == 0 || shotCount <= availableCaptureCount
     }
 
+/*
     private func setPhotoMode(counter: Int) {
         if (status != .Normal) {
             DDLogDebug("Camera Controller setPhotoMode - status was \(status) - returning")
@@ -152,100 +127,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
             }
         }
     }
-
-    private func takeASnap(counter: Int) {
-        if (status != .Normal) {
-            DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
-
-            if (status == .Stopping) {
-                self.delegate?.cameraControllerStopped()
-            }
-
-            return
-        }
-
-        if (counter > maxCount) {
-            DDLogWarn("Camera Controller takeASnap - counter exceeds max count - aborting")
-
-            self.delegate?.cameraControllerAborted("Failed to take a photo")
-            return
-        }
-
-        let nextCount = counter + 1
-
-        var errorSeen = false
-
-        self.camera.startShootPhoto(.Single) {
-            (error) in
-            if let e = error {
-                DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
-
-                errorSeen = true
-
-                self.takeASnap(nextCount)
-            }
-        }
-
-        if errorSeen {
-            return
-        }
-
-        self.checkTakeASnap(0, counter: counter)
-    }
-
-    private func checkTakeASnap(checkCounter: Int, counter: Int) {
-        if (status != .Normal) {
-            DDLogDebug("Camera Controller checkTakeASnap - status was \(status) - returning")
-
-            if (status == .Stopping) {
-                self.delegate?.cameraControllerStopped()
-            }
-
-            return
-        }
-
-        if (checkCounter > maxCount) {
-            DDLogWarn("Camera Controller checkTakeASnap - counter exceeds max count - aborting")
-
-            self.delegate?.cameraControllerAborted("Failed to check photo")
-            return
-        }
-
-        delayIfNormal(2) {
-            if (self.status == .Normal) {
-                if (self.tookShot) {
-                    DDLogDebug("Camera Controller checkTakeASnap - OK")
-
-                    self.delegate?.cameraControllerCompleted(true)
-                } else if (self.isShooting || self.isStoring) {
-                    DDLogDebug("Camera Controller checkTakeASnap - busy - retry")
-
-                    self.checkTakeASnap(checkCounter + 1, counter: counter)
-                } else {
-                    DDLogWarn("Camera Controller checkTakeASnap hasn't completed yet count: \(counter)")
-
-                    self.takeASnap(counter + 1)
-                }
-            } else {
-                DDLogDebug("Status changed to \(self.status) while waiting for photo")
-
-                if (self.status == .Stopping) {
-                    self.delegate?.cameraControllerStopped()
-                }
-
-            }
-        }
-    }
-
-    private func delayIfNormal(delaySeconds: Double, closure: () -> ()) {
-        if (status != .Normal) {
-            DDLogDebug("Camera Controller delay - status was \(status) - returning")
-
-            return
-        }
-
-        delay(delaySeconds, queue: self.cameraWorkQueue, closure: closure)
-    }
+*/
 
     @objc func camera(camera: DJICamera, didReceiveVideoData videoBuffer: UnsafeMutablePointer<UInt8>, length size: Int) {
         DDLogVerbose("Camera Controller didReceiveVideoData")
@@ -259,30 +141,19 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
         if (systemState.isCameraOverHeated) {
             DDLogWarn("Camera overheated")
             self.status = .Error
-            self.delegate?.cameraControllerAborted("Camera overheated")
+            self.delegate?.cameraControllerInError("Camera overheated")
         }
         if (systemState.isCameraError) {
             DDLogWarn("Camera in error state")
             self.status = .Error
-            self.delegate?.cameraControllerAborted("Camera in error state")
+            self.delegate?.cameraControllerInError("Camera in error state")
         }
-
-        self.mode = systemState.mode
-
-        self.isShooting = systemState.isShootingSinglePhoto ||
-                systemState.isShootingSinglePhotoInRAWFormat ||
-                systemState.isShootingBurstPhoto ||
-                systemState.isShootingIntervalPhoto
-
-        self.isStoring = systemState.isStoringPhoto
     }
 
     func camera(camera: DJICamera, didGenerateNewMediaFile newMedia: DJIMedia) {
         DDLogDebug("Camera Controller didGenerateNewMediaFile")
 
         self.delegate?.cameraControllerNewMedia(newMedia.fileName)
-
-        self.tookShot = true
     }
 
     func camera(camera: DJICamera, didUpdateSDCardState sdCardState: DJICameraSDCardState) {

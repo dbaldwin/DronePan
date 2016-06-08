@@ -40,6 +40,8 @@ protocol PanoramaControllerDelegate {
     func panoCountChanged(count: Int, total: Int)
 
     func panoAvailable(available: Bool)
+    
+    func panoProgress(progress: Float)
 }
 
 class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
@@ -57,13 +59,13 @@ class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
     var lastGimbalRoll: Float = 0.0
     var lastACYaw: Float = 0.0
 
+    var mission : DJIMission?
+    
     var panoRunning: (state:Bool, ok:Bool) = (state: false, ok: true) {
         didSet {
             if panoRunning.state {
                 self.delegate?.panoStarting()
             } else {
-                self.gimbalController?.status = .Stopping
-
                 self.cameraController?.status = .Stopping
 
                 self.delegate?.panoStopping()
@@ -87,11 +89,7 @@ class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
             }
         }
     }
-
-    let gimbalDispatchGroup = ActiveAwareDispatchGroup(name: "gimbal")
-    let cameraDispatchGroup = ActiveAwareDispatchGroup(name: "camera")
-    let aircraftDispatchGroup = ActiveAwareDispatchGroup(name: "aircraft")
-
+    
     var totalCount = 0
 
     var currentCount = 0 {
@@ -291,8 +289,8 @@ extension PanoramaController {
         if let type = self.type, model = self.model {
             let gimbalYaw = gimbalYawSelected(model, type: type)
             
-            if (!gimbalYaw) {
-                self.flightController?.setControlModes()
+            if (type == .Aircraft) {
+                self.doPanoLoop(gimbalYaw)
             } else {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(UInt64(startDelay(self.model!)) * NSEC_PER_SEC)), dispatch_get_main_queue()) {
                     self.doPanoLoop(gimbalYaw)
@@ -307,61 +305,107 @@ extension PanoramaController {
         self.panoRunning = (state: false, ok: true)
     }
 
-    func buildPitchStep(pitch: Double) -> DJIMissionStep? {
+    func buildAttitudeStep(pitch: Double, yaw: Double = 0.0) -> DJIMissionStep {
         var attitude = DJIGimbalAttitude()
-        attitude.pitch = -30
+        attitude.pitch = Float(pitch)
         attitude.roll = 0
-        attitude.yaw = 0
-        return DJIGimbalAttitudeStep(attitude: attitude)
+        attitude.yaw = Float(yaw)
+        return DJIGimbalAttitudeStep(attitude: attitude)!
     }
     
-    func buildAircraftYawMission() -> DJIMission? {
+    func buildColumn(shoot: DJIMissionStep, pitches: [Double], yaw: Double = 0.0) -> [DJIMissionStep] {
+        return pitches.map {
+            (pitch) in
+            
+            [
+                buildAttitudeStep(pitch, yaw: yaw),
+                shoot
+            ]
+        }.flatMap{$0}
+    }
+    
+    func buildMission(gimbalYaw: Bool) -> DJIMission? {
         if let model = self.model, type = self.type {
             let rows = photosPerRow(model)
             let nadirs = nadirCount(model)
             
             let yaw_angle = 360.0 / Double(rows)
+            let yaw_angles = yawAngles(count: rows, heading: 0.0)
+            
             let nadir_yaw_angle = 360.0 / Double(nadirs)
+            let nadir_yaw_angles = yawAngles(count: nadirs, heading: 0.0)
         
-            let shoot = DJIShootPhotoStep(singleShootPhoto:())!
-            let yaw = DJIAircraftYawStep(relativeAngle: yaw_angle, andAngularVelocity: 50)!
-            let nadirYaw = DJIAircraftYawStep(relativeAngle: nadir_yaw_angle, andAngularVelocity: 50)!
+            guard let shoot = DJIShootPhotoStep(singleShootPhoto:()) else {
+                self.delegate?.postUserMessage("Couldn't create shoot photo mission step")
+                
+                return nil
+            }
             
-            let row = (0..<rows).map {_ in
-                [
-                    shoot,
-                    yaw
-                ]
-            }.flatMap{ $0 }
-            
-            let pitches = self.pitchesForLoop(maxPitch: Double(maxPitch(model)),
+            let pitches : [Double] = self.pitchesForLoop(maxPitch: Double(maxPitch(model)),
                                               maxPitchEnabled: maxPitchEnabled(model),
                                               type: type, rowCount: numberOfRows(model))
             
+            if (gimbalYaw) {
+                let mainMissionSteps = yaw_angles.map {
+                    (yaw) in
+                    
+                    buildColumn(shoot, pitches: pitches, yaw: yaw)
+                }.flatMap{$0}
+                
+                let nadirMissionSteps = nadir_yaw_angles.map {
+                    (yaw) in
 
-            let mainMissionSteps = pitches.map { pitch in
-                [
-                    [buildPitchStep(pitch)!],
-                    row
+                    buildColumn(shoot, pitches: [-90.0], yaw: yaw)
+                }.flatMap{$0}
+
+                let missionSteps = [
+                    mainMissionSteps,
+                    nadirMissionSteps
+                ].flatMap{$0}
+                
+                return DJICustomMission(steps: missionSteps)
+            } else {
+                guard let yaw = DJIAircraftYawStep(relativeAngle: yaw_angle, andAngularVelocity: 50) else {
+                    self.delegate?.postUserMessage("Couldn't create aircraft yaw mission step")
+                    
+                    return nil
+                }
+                
+                guard let nadirYaw = DJIAircraftYawStep(relativeAngle: nadir_yaw_angle, andAngularVelocity: 50) else {
+                    self.delegate?.postUserMessage("Couldn't create aircraft yaw mission step for nadir")
+                    
+                    return nil
+                }
+            
+                let mainMissionSteps = yaw_angles.map {
+                    (_) in
+                    
+                    [
+                        buildColumn(shoot, pitches: pitches),
+                        [yaw]
+                    ].flatMap{$0}
+                }.flatMap{$0}
+                
+                let nadirMissionSteps = nadir_yaw_angles.map {
+                    (_) in
+                    
+                    [
+                        buildColumn(shoot, pitches: [-90.0]),
+                        [nadirYaw]
+                    ].flatMap{$0}
+                }.flatMap{$0}
+                
+                let missionSteps = [
+                    mainMissionSteps,
+                    nadirMissionSteps
                 ].flatMap{ $0 }
-            }.flatMap{ $0 }
             
-            let nadirMissionSteps = (0..<nadirs).map {_ in
-                nadirYaw
+                return DJICustomMission(steps: missionSteps)
             }
-            
-            let missionSteps = [
-                mainMissionSteps,
-                [buildPitchStep(-90)!],
-                nadirMissionSteps
-            ].flatMap{ $0 }
-            
-            return DJICustomMission(steps: missionSteps)
         }
         
         return nil
     }
-    
     
     // Marked objc to allow override from test - can only override methods that are in extensions when they are marked objc in swift for now
     @objc func doPanoLoop(gimbalYaw: Bool) {
@@ -386,7 +430,7 @@ extension PanoramaController {
                 return
             }
             
-            guard let mission = buildAircraftYawMission() else {
+            guard let mission = buildMission(gimbalYaw) else {
                 self.delegate?.postUserWarning("Unable to build mission")
                 
                 return
@@ -415,164 +459,6 @@ extension PanoramaController {
             })
         }
     }
-    
-    func setupForLoop() {
-        DDLogDebug("PanoLoop: starting")
-
-        // Set camera mode
-        DDLogDebug("PanoLoop: setPhotoMode")
-        self.setPhotoMode()
-        
-        // Reset gimbal - this will reset the gimbal yaw in case the user has changed it outside of DronePan
-        DDLogDebug("PanoLoop: resetGimbal")
-        self.resetGimbal()
-    }
-    
-    func resetAfterLoop() {
-        DDLogDebug("PanoLoop: reset gimbal")
-        self.resetGimbal()
-        
-        DDLogDebug("PanoLoop: END")
-    }
-
-    func informUserEndOfLoop() {
-        if (self.panoRunning.state) {
-            self.delegate?.postUserMessage("Completed pano")
-            
-            self.panoRunning = (state: false, ok: true)
-        } else {
-            // The panorama has been aborted
-            DDLogDebug("PanoLoop: was stopped OK");
-            
-            if (self.panoRunning.ok) {
-                self.delegate?.postUserMessage("Pano stopped successfully")
-            } else {
-                self.trackEvent(category: "Panorama", action: "Running", label: "Stopped by system")
-                
-                self.delegate?.postUserMessage("Pano stopped")
-            }
-        }
-    }
-    
-    func runPitchForYaw(yaw: Double, pitch: Double) {
-        if !self.panoRunning.state {
-            return
-        }
-        
-        DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- set pitch")
-        self.setPitch(pitch)
-        
-        if !self.panoRunning.state {
-            return
-        }
-        
-        DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
-        self.takeASnap()
-    }
-    
-    func runPitchesForYaw(yaw: Double, pitches: [Double]) {
-        if !self.panoRunning.state {
-            return
-        }
-
-        for pitch in pitches {
-            DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)")
-            
-            self.runPitchForYaw(yaw, pitch: pitch)
-        }
-    }
-    
-    func runYawLoop(yaws: [Double], pitches: [Double], gimbalYaw: Bool) {
-        if !self.panoRunning.state {
-            return
-        }
-
-        for yaw in yaws {
-            DDLogDebug("PanoLoop: YawLoop: \(yaw)")
-    
-            self.runPitchesForYaw(yaw, pitches: pitches)
-
-            if (!gimbalYaw) {
-                DDLogDebug("PanoLoop: YawLoop: \(yaw) - AC yaw")
-                self.setAcYaw(yaw)
-            } else {
-                DDLogDebug("PanoLoop: YawLoop: \(yaw) - gimbal yaw")
-                self.setYaw(yaw)
-            }
-        } // End yaw loop
-    }
-
-    func setPhotoMode() {
-        DDLogDebug("Set photo mode")
-
-        if let c = self.cameraController {
-            self.cameraDispatchGroup.enter()
-            DDLogDebug("Set photo mode - send")
-            c.setPhotoMode()
-            self.cameraDispatchGroup.wait()
-            DDLogDebug("Set photo mode - done")
-        }
-    }
-
-    func resetGimbal() {
-        DDLogDebug("Reset gimbal")
-
-        if let c = self.gimbalController {
-            self.gimbalDispatchGroup.enter()
-            DDLogDebug("Reset gimbal - send")
-            c.reset()
-            self.gimbalDispatchGroup.wait()
-            DDLogDebug("Reset gimbal - done")
-        }
-    }
-
-    func setPitch(pitch: Double) {
-        DDLogDebug("Set pitch \(pitch)")
-
-        if let c = self.gimbalController {
-            self.gimbalDispatchGroup.enter()
-            DDLogDebug("Set pitch \(pitch) - send")
-            c.setPitch(Float(pitch))
-            self.gimbalDispatchGroup.wait()
-            DDLogDebug("Set pitch \(pitch) - done")
-        }
-    }
-
-    func setAcYaw(yaw: Double) {
-        DDLogDebug("Set AC yaw \(yaw)")
-        
-        if let c = self.flightController {
-            self.aircraftDispatchGroup.enter()
-            DDLogDebug("Set AC yaw \(yaw) - send")
-            c.yawTo(yaw)
-            self.aircraftDispatchGroup.wait()
-            DDLogDebug("Set AC yaw \(yaw) - done")
-        }
-    }
-
-    func setYaw(yaw: Double) {
-        DDLogDebug("Set yaw \(yaw)")
-
-        if let c = self.gimbalController {
-            self.gimbalDispatchGroup.enter()
-            DDLogDebug("Set yaw \(yaw) - send")
-            c.setYaw(Float(yaw))
-            self.gimbalDispatchGroup.wait()
-            DDLogDebug("Set yaw \(yaw) - done")
-        }
-    }
-
-    func takeASnap() {
-        DDLogDebug("Take a snap");
-
-        if let c = self.cameraController {
-            self.cameraDispatchGroup.enter()
-            DDLogDebug("Take a snap - send")
-            c.takeASnap()
-            self.cameraDispatchGroup.wait()
-            DDLogDebug("Take a snap - done")
-        }
-    }
 }
 
 // MARK: - Camera Controller Delegate
@@ -591,38 +477,6 @@ extension PanoramaController: CameraControllerDelegate {
         }
     }
 
-    func cameraControllerCompleted(shotTaken: Bool) {
-        DDLogDebug("Camera signalled complete with shot taken \(shotTaken)")
-
-        if (shotTaken) {
-            self.currentCount += 1
-        }
-
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leave()
-        }
-    }
-
-    func cameraControllerAborted(reason: String) {
-        DDLogWarn("Camera signalled abort \(reason)")
-
-        self.delegate?.postUserMessage(reason)
-
-        dispatch_async(droneCommandsQueue()) {
-            self.trackEvent(category: "Panorama", action: "Camera", label: "Aborted \(reason)")
-
-            self.panoRunning = (state: false, ok: false)
-
-            self.cameraDispatchGroup.leave()
-        }
-    }
-
-    func cameraControllerStopped() {
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leaveIfActive()
-        }
-    }
-
     func cameraControllerInError(reason: String) {
         DDLogWarn("Camera signalled error \(reason)")
 
@@ -631,9 +485,7 @@ extension PanoramaController: CameraControllerDelegate {
         self.delegate?.postUserMessage(reason)
 
         if panoRunning.state {
-            dispatch_async(droneCommandsQueue(), {
-                self.panoRunning = (state: false, ok: false)
-            })
+            self.panoRunning = (state: false, ok: false)
         }
 
         self.delegate?.panoAvailable(false)
@@ -649,16 +501,10 @@ extension PanoramaController: CameraControllerDelegate {
         self.delegate?.panoAvailable(true)
     }
 
-    func cameraControllerReset() {
-        DDLogDebug("Camera signalled reset")
-
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leave()
-        }
-    }
-
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
+        
+        self.currentCount += 1
     }
 }
 
@@ -713,35 +559,6 @@ extension PanoramaController: FlightControllerDelegate {
     func flightControllerUpdateDistance(distance: CLLocationDistance) {
         self.delegate?.aircraftDistanceChanged(distance)
     }
-
-    func flightControllerUnableToSetControlMode() {
-        self.delegate?.postUserMessage("Unable to set virtual stick control mode")
-
-        self.panoRunning = (state: false, ok: false)
-    }
-
-    func flightControllerSetControlMode() {
-        self.doPanoLoop(false)
-    }
-
-    func flightControllerUnableToYaw(reason: String) {
-        self.delegate?.postUserMessage(reason)
-
-        self.trackEvent(category: "Panorama", action: "Aircraft", label: "Aborted \(reason)")
-
-        dispatch_async(droneCommandsQueue()) {
-            self.panoRunning = (state: false, ok: false)
-
-            self.aircraftDispatchGroup.leave()
-        }
-    }
-    
-    func flightControllerDidYaw() {
-        dispatch_async(droneCommandsQueue()) {
-            self.aircraftDispatchGroup.leave()
-        }
-
-    }
 }
 
 // MARK: - Gimbal Controller Delegate
@@ -760,51 +577,11 @@ extension PanoramaController: GimbalControllerDelegate {
         }
     }
 
-    func gimbalControllerCompleted() {
-        DDLogDebug("Gimbal signalled complete")
-
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leave()
-        }
-    }
-
-    func gimbalControllerAborted(reason: String) {
-        DDLogWarn("Gimbal signalled abort \(reason)")
-
-        self.trackEvent(category: "Panorama", action: "Gimbal", label: "Aborted \(reason)")
-
-        self.delegate?.postUserMessage(reason)
-
-        dispatch_async(droneCommandsQueue()) {
-            self.panoRunning = (state: false, ok: false)
-
-            self.gimbalDispatchGroup.leave()
-        }
-    }
-
-    func gimbalMoveOutOfRange(reason: String) {
-        DDLogDebug("Gimbal signalled out of range \(reason)")
-
-        self.trackEvent(category: "Panorama", action: "Gimbal", label: "Out of range \(reason)")
-
-        self.delegate?.postUserMessage(reason)
-
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leave()
-        }
-    }
-
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
         lastGimbalPitch = pitch
         lastGimbalYaw = yaw
         lastGimbalRoll = roll
 
         self.delegate?.gimbalAttitudeChanged(pitch: pitch, yaw: yaw, roll: roll)
-    }
-
-    func gimbalControllerStopped() {
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leaveIfActive()
-        }
     }
 }
