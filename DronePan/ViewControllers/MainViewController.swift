@@ -55,11 +55,16 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
 
     var batteryController: BatteryController?
     var panoramaController: PanoramaController?
-    
+
     var animationDuration = 1.0
-    
+
     var currentWarning = ""
-    var currentProgress = 0.0
+
+    var currentProgress: Float = 0.0 {
+        didSet {
+            self.panoProgressBar.setProgress(currentProgress, animated: true)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,13 +81,6 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
                 selector: #selector(MainViewController.initializeInfo),
         name: UIApplicationWillEnterForegroundNotification,
         object: nil)
-
-        /*
-        // TODO: this should be tested
-        #ifndef DEBUG
-        [self.startButton setEnabled:NO];
-    #endif
- */
 
         self.rcInFMode = false
 
@@ -132,9 +130,9 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
         }
     }
 
-    func showWarning(warning : String) {
+    func showWarning(warning: String) {
         currentWarning = warning
-        
+
         // TODO: this view should be a custom class that has a set of messages that rotate
         if (self.warningOffset.constant == 0) {
             self.warningView.alpha = 1
@@ -148,7 +146,7 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
 
     func hideWarning() {
         currentWarning = ""
-        
+
         if (self.warningOffset.constant != 0) {
             dispatch_async(dispatch_get_main_queue()) {
                 self.scrollView(self.cameraView, toOffset: 0, usingConstraint: self.warningOffset) {
@@ -201,7 +199,7 @@ class MainViewController: UIViewController, Analytics, SystemUtils {
             self.sequenceLabel.hidden = false
             self.sequenceLabel.text = "Photo: \(current)/\(count)"
 
-            self.currentProgress = Double(current) / Double(count)
+            self.currentProgress = Float(current) / Float(count)
         } else {
             self.sequenceLabel.text = "Photo: -/-"
 
@@ -432,7 +430,7 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoStarting() {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Stop"), forState: .Normal)
-            self.panoProgressBar.setProgress(0, animated: false)
+            self.currentProgress = 0.0
 
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
@@ -447,7 +445,7 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoStopping() {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.setBackgroundImage(UIImage(named: "Start"), forState: .Normal)
-            self.panoProgressBar.setProgress(0, animated: false)
+            self.currentProgress = 0.0
 
             if (!self.infoOverride()) {
                 self.resetInfoLabels()
@@ -502,7 +500,7 @@ extension MainViewController: PanoramaControllerDelegate {
     }
 }
 
-extension MainViewController : UIAdaptivePresentationControllerDelegate {
+extension MainViewController: UIAdaptivePresentationControllerDelegate {
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         if (traitCollection.horizontalSizeClass == .Regular && traitCollection.verticalSizeClass == .Regular) {
             // Large enough - don't adapt
