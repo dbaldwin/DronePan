@@ -54,6 +54,71 @@ class PanoramaControllerDelegateAdapter : PanoramaControllerDelegate {
     func aircraftAltitudeChanged(altitude: Float) {
     }
 }
+class PanoramaControllerDelegateTest : PanoramaControllerDelegate {
+    var message : String = ""
+    var callCount : Int = 0
+    
+    var panoStarted : Bool = false
+    
+    func postUserMessage(message: String) {
+        callCount += 1
+        self.message = message
+    }
+    
+    func postUserWarning(warning: String) {
+    }
+    
+    func panoStarting() {
+        panoStarted = true
+    }
+    
+    func panoStopping() {
+        panoStarted = false
+    }
+    
+    func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
+    }
+    
+    func aircraftYawChanged(yaw: Float) {
+    }
+    
+    func aircraftSatellitesChanged(count: Int) {
+    }
+    
+    func aircraftDistanceChanged(distance: CLLocationDistance) {
+    }
+    
+    func aircraftAltitudeChanged(altitude: Float) {
+    }
+    
+    func panoCountChanged(count: Int, total: Int) {
+    }
+    
+    func panoAvailable(available: Bool) {
+    }
+}
+
+class CameraControllerTest : CameraController {
+    var callCount : Int = 0
+    var shotCount : Int = 0
+    
+    var hasSpace : Bool = true
+    
+    
+    override func hasSpaceForPano(shotCount: Int) -> Bool {
+        callCount += 1
+        self.shotCount = shotCount
+        return hasSpace
+    }
+}
+
+class PanoramaControllerTest : PanoramaController {
+    override func doPanoLoop() {
+    }
+    
+    override func doPanoMission(gimbalYaw: Bool) {
+    }
+}
 
 class PanoramaControllerTests: XCTestCase, ModelSettings {
     let panoramaController = PanoramaController()
@@ -318,98 +383,6 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         XCTAssertFalse(panoramaController.gimbalDispatchGroup.active, "Gimbal group was still active after completion")
     }
 
-    func testSetAcYaw() {
-        class FlightControllerTest : FlightController {
-            var done = false
-            
-            override func yawTo(yaw: Double) {
-                done = true
-                self.delegate?.flightControllerDidYaw()
-            }
-        }
-        
-        let controller = FlightControllerTest(fc: DJIFlightController())
-        controller.delegate = panoramaController
-        
-        panoramaController.flightController = controller
-        
-        panoramaController.setAcYaw(3)
-        
-        XCTAssertTrue(controller.done, "Action not performed")
-        XCTAssertFalse(panoramaController.aircraftDispatchGroup.active, "Aircraft group was still active after completion")
-    }
-
-    class PanoramaControllerDelegateTest : PanoramaControllerDelegate {
-        var message : String = ""
-        var callCount : Int = 0
-        
-        var panoStarted : Bool = false
-        
-        func postUserMessage(message: String) {
-            callCount += 1
-            self.message = message
-        }
-        
-        func postUserWarning(warning: String) {
-        }
-        
-        func panoStarting() {
-            panoStarted = true
-        }
-        
-        func panoStopping() {
-            panoStarted = false
-        }
-        
-        func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float) {
-        }
-        
-        func aircraftYawChanged(yaw: Float) {
-        }
-        
-        func aircraftSatellitesChanged(count: Int) {
-        }
-        
-        func aircraftDistanceChanged(distance: CLLocationDistance) {
-        }
-        
-        func aircraftAltitudeChanged(altitude: Float) {
-        }
-        
-        func panoCountChanged(count: Int, total: Int) {
-        }
-        
-        func panoAvailable(available: Bool) {
-        }
-    }
-    
-    class CameraControllerTest : CameraController {
-        var callCount : Int = 0
-        var shotCount : Int = 0
-        
-        var hasSpace : Bool = true
-        
-        
-        override func hasSpaceForPano(shotCount: Int) -> Bool {
-            callCount += 1
-            self.shotCount = shotCount
-            return hasSpace
-        }
-    }
-    
-    class FlightControllerTest : FlightController {
-        var callCount : Int = 0
-        
-        override func setControlModes() {
-            callCount += 1
-        }
-    }
-    
-    class PanoramaControllerTest : PanoramaController {
-        override func doPanoLoop(gimbalYaw: Bool) {
-        }
-    }
-    
     func testProductRequiredForStart() {
         let delegate = PanoramaControllerDelegateTest()
         
@@ -598,7 +571,7 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         remoteController.mode = .Attitude
         controller.remoteController = remoteController
         
-        let flightController = FlightControllerTest(fc: DJIFlightController())
+        let flightController = FlightController(fc: DJIFlightController())
         controller.flightController = flightController
         
         controller.model = DJIAircraftModelNameInspire1
@@ -609,83 +582,6 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         
         XCTAssertEqual(delegate.callCount, 1, "Too many calls to delegate")
         XCTAssertEqual(delegate.message, "Panorama starting", "User not told pano starting")
-        
-        XCTAssertEqual(flightController.callCount, 0, "Gimbal yaw should not use the flight controller")
-        
-        XCTAssertTrue(controller.panoRunning.state, "Panorama didn't start")
-        XCTAssertTrue(controller.panoRunning.ok, "Panorama didn't start ok")
-        XCTAssertTrue(delegate.panoStarted, "Panorama didn't inform start")
-    }
-    
-    func testStartAircraftNotGimbalYaw() {
-        let controller = PanoramaControllerTest()
-        
-        let delegate = PanoramaControllerDelegateTest()
-        
-        controller.delegate = delegate
-        
-        let cameraController = CameraControllerTest(camera: DJICamera())
-        controller.cameraController = cameraController
-        
-        controller.gimbalController = GimbalController(gimbal: DJIGimbal())
-        
-        controller.product = DJIAircraft()
-        
-        let remoteController = RemoteController(remote: DJIRemoteController())
-        remoteController.mode = .Function
-        controller.remoteController = remoteController
-        
-        let flightController = FlightControllerTest(fc: DJIFlightController())
-        controller.flightController = flightController
-        
-        controller.model = DJIAircraftModelNameInspire1
-        
-        updateSettings(DJIAircraftModelNameInspire1, settings: [.ACGimbalYaw: false])
-        
-        controller.start()
-        
-        XCTAssertEqual(delegate.callCount, 1, "Too many calls to delegate")
-        XCTAssertEqual(delegate.message, "Panorama starting", "User not told pano starting")
-        
-        XCTAssertEqual(flightController.callCount, 1, "Aircraft yaw should use the flight controller")
-
-        XCTAssertTrue(controller.panoRunning.state, "Panorama didn't start")
-        XCTAssertTrue(controller.panoRunning.ok, "Panorama didn't start ok")
-        XCTAssertTrue(delegate.panoStarted, "Panorama didn't inform start")
-    }
-    
-    func testStartAircraftNotGimbalYawP4() {
-        let controller = PanoramaControllerTest()
-        
-        let delegate = PanoramaControllerDelegateTest()
-        
-        controller.delegate = delegate
-        
-        let cameraController = CameraControllerTest(camera: DJICamera())
-        controller.cameraController = cameraController
-        
-        controller.gimbalController = GimbalController(gimbal: DJIGimbal())
-        
-        controller.product = DJIAircraft()
-        
-        // P4 should ignore the mode - so set attitude for test
-        let remoteController = RemoteController(remote: DJIRemoteController())
-        remoteController.mode = .Attitude
-        controller.remoteController = remoteController
-        
-        let flightController = FlightControllerTest(fc: DJIFlightController())
-        controller.flightController = flightController
-        
-        controller.model = DJIAircraftModelNamePhantom4
-        
-        updateSettings(DJIAircraftModelNamePhantom4, settings: [.ACGimbalYaw: false])
-        
-        controller.start()
-        
-        XCTAssertEqual(delegate.callCount, 1, "Too many calls to delegate")
-        XCTAssertEqual(delegate.message, "Panorama starting", "User not told pano starting")
-        
-        XCTAssertEqual(flightController.callCount, 1, "Aircraft yaw should use the flight controller")
         
         XCTAssertTrue(controller.panoRunning.state, "Panorama didn't start")
         XCTAssertTrue(controller.panoRunning.ok, "Panorama didn't start ok")
@@ -710,7 +606,7 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
         remoteController.mode = .Function
         controller.remoteController = remoteController
         
-        let flightController = FlightControllerTest(fc: DJIFlightController())
+        let flightController = FlightController(fc: DJIFlightController())
         controller.flightController = flightController
         
         controller.model = DJIAircraftModelNameInspire1
@@ -845,218 +741,68 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
             XCTAssertEqual(reason, "Remote Controller Battery Low: 9%", "No warning on low battery")
         }
     }
-    
-    /* The following tests run fine in XCode but crash the simulator in xcodebuild - something to do with GCD
-    
-    func testCameraAbort() {
-        let controller = PanoramaController()
-
-        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
-            var reason: String? = .None
+    func isAircraftYawStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIAircraftYawStep else {
+            XCTFail("Incorrect step")
             
-            override func postUserMessage(message: String) {
-                guard let expectation = asyncExpectation else {
-                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
-                    return
-                }
-                
-                self.reason = message
-                
-                expectation.fulfill()
-            }
-        }
-        
-        let spyDelegate = PanoramaDelegateMock()
-        
-        let expectation = expectationWithDescription("Camera abort should pass on reason")
-        spyDelegate.asyncExpectation = expectation
-        
-        controller.delegate = spyDelegate
-        
-        // controller.cameraDispatchGroup.enter()
-        
-        controller.panoRunning = (state: true, ok: true)
-        
-        controller.cameraControllerAborted("Test")
-        
-        waitForExpectationsWithTimeout(5) {
-            error in
-            if let error = error {
-                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
-            }
-            
-            guard let reason = spyDelegate.reason else {
-                XCTFail("Expected delegate to be called")
-                return
-            }
-            
-            XCTAssertEqual(reason, "Test", "Message not passed on")
-            
-            // XCTAssertFalse(controller.cameraDispatchGroup.active, "Camera dispatch group still active")
-            // XCTAssertFalse(controller.panoRunning.state, "Pano still running")
-            // XCTAssertFalse(controller.panoRunning.ok, "Pano still marked as OK")
-        }
-    }
-
-    /*
- 
-    func testCameraStopped() {
-        let controller = PanoramaController()
-        
-        controller.cameraDispatchGroup.enter()
-        
-        controller.cameraControllerStopped()
-
-        // This should give just enough time for the dispatch_async in the code to call
-        let expectation = expectationWithDescription("Stopping camera should ensure that we don't have a hanging dispatch group")
-        
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(5) {
-            error in
-
-            XCTAssertFalse(controller.cameraDispatchGroup.active, "Camera dispatch group still active")
-        }
-    }
-
-    func testCameraReset() {
-        let controller = PanoramaController()
-        
-        controller.cameraDispatchGroup.enter()
-        
-        controller.cameraControllerReset()
-        
-        // This should give just enough time for the dispatch_async in the code to call
-        let expectation = expectationWithDescription("Completing a reset on the camera should ensure that we don't have a hanging dispatch group")
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            expectation.fulfill()
-        }
-        
-        waitForExpectationsWithTimeout(5) {
-            error in
-            
-            XCTAssertFalse(controller.cameraDispatchGroup.active, "Camera dispatch group still active")
-        }
-    }
- */
-
-    func testCameraError() {
-        let controller = PanoramaController()
-        
-        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
-            var reason: String? = .None
-            var available: Bool? = .None
-            
-            override func postUserMessage(message: String) {
-                guard let expectation = asyncExpectation else {
-                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
-                    return
-                }
-                
-                self.reason = message
-                
-                expectation.fulfill()
-            }
-            
-            override func panoAvailable(available: Bool) {
-                self.available = available
-            }
-        }
-        
-        let spyDelegate = PanoramaDelegateMock()
-        
-        let expectation = expectationWithDescription("Camera error should pass on reason")
-        spyDelegate.asyncExpectation = expectation
-        
-        controller.delegate = spyDelegate
-        
-        // controller.cameraDispatchGroup.enter()
-        
-        controller.panoRunning = (state: true, ok: true)
-
-        controller.cameraControllerInError("Test")
-        
-        waitForExpectationsWithTimeout(5) {
-            error in
-            if let error = error {
-                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
-            }
-            
-            guard let reason = spyDelegate.reason else {
-                XCTFail("Expected delegate to be called")
-                return
-            }
-
-            guard let available = spyDelegate.available else {
-                XCTFail("Expected delegate to be called")
-                return
-            }
-            
-            XCTAssertEqual(reason, "Test", "Message not passed on")
-            XCTAssertFalse(available, "Still available")
-            // XCTAssertFalse(controller.panoRunning.state, "Pano still running")
-            // XCTAssertFalse(controller.panoRunning.ok, "Pano still marked as OK")
+            return
         }
     }
     
-    func testCameraOK() {
-        let controller = PanoramaController()
-        
-        class PanoramaDelegateMock : PanoramaControllerDelegateAdapter {
-            var reason: String? = .None
-            var available: Bool? = .None
+    func isGimbalAttitudeStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIGimbalAttitudeStep else {
+            XCTFail("Incorrect step")
             
-            override func postUserMessage(message: String) {
-                guard let expectation = asyncExpectation else {
-                    XCTFail("PanoramaControllerDelegateAdapter was not setup correctly. Missing XCTExpectation reference")
-                    return
-                }
-                
-                self.reason = message
-                
-                expectation.fulfill()
-            }
-            
-            override func panoAvailable(available: Bool) {
-                self.available = available
-            }
-        }
-        
-        let spyDelegate = PanoramaDelegateMock()
-        
-        let expectation = expectationWithDescription("Camera ok should inform if coming back from error")
-        spyDelegate.asyncExpectation = expectation
-        
-        controller.delegate = spyDelegate
-        
-        //controller.cameraDispatchGroup.enter()
-        
-        controller.cameraControllerOK(true)
-        
-        waitForExpectationsWithTimeout(5) {
-            error in
-            if let error = error {
-                XCTFail("waitForExpectationsWithTimeout errored: \(error)")
-            }
-            
-            guard let reason = spyDelegate.reason else {
-                XCTFail("Expected delegate to be called")
-                return
-            }
-            
-            guard let available = spyDelegate.available else {
-                XCTFail("Expected delegate to be called")
-                return
-            }
-            
-            XCTAssertEqual(reason, "Camera is ready", "Message not passed on")
-            XCTAssertTrue(available, "Not available")
+            return
         }
     }
- */
     
+    func isShootPhotoStep(step: DJIMissionStep?) {
+        guard let _ = step as? DJIShootPhotoStep else {
+            XCTFail("Incorrect step")
+            
+            return
+        }
+    }
+    
+    func testAircraftYawMission() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        let controller = PanoramaController()
+        
+        controller.product = DJIAircraft()
+        controller.model = DJIAircraftModelNameInspire1
+        
+        if let steps = controller.buildMissionSteps(false) {
+            XCTAssertEqual(steps.count, 47, "Incorrect number of mission steps")
+            
+            isAircraftYawStep(steps[8])
+            isGimbalAttitudeStep(steps[13])
+            isShootPhotoStep(steps[42])
+        } else {
+            XCTFail("Failed to build mission")
+        }
+    }
+    
+    func testAircraftGimbalYawMission() {
+        let appDomain = NSBundle.mainBundle().bundleIdentifier!
+        
+        NSUserDefaults.standardUserDefaults().removePersistentDomainForName(appDomain)
+        
+        let controller = PanoramaController()
+        
+        controller.product = DJIAircraft()
+        controller.model = DJIAircraftModelNameInspire1
+        
+        if let steps = controller.buildMissionSteps(true) {
+            XCTAssertEqual(steps.count, 40, "Incorrect number of mission steps")
+            
+            isGimbalAttitudeStep(steps[13])
+            isShootPhotoStep(steps[36])
+        } else {
+            XCTFail("Failed to build mission")
+        }
+    }
 }

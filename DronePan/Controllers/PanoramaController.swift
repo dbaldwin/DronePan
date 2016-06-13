@@ -42,7 +42,7 @@ protocol PanoramaControllerDelegate {
     func panoAvailable(available: Bool)
 }
 
-class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
+class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSettings {
     var delegate: PanoramaControllerDelegate?
 
     var cameraController: CameraController?
@@ -69,7 +69,7 @@ class PanoramaController: Analytics, SystemUtils, ModelUtils, ModelSettings {
                             self.delegate?.postUserMessage("Unable to stop mission \(error)")
                         }
 
-                        missionManager = nil
+                        self.missionManager = nil
                     })
                 }
 
@@ -300,13 +300,13 @@ extension PanoramaController {
         self.delegate?.postUserMessage("Panorama starting")
 
         if let type = self.type, model = self.model {
-            let gimbalYaw = gimbalYawSelected(model, type: type)
-
             if (type == .Aircraft) {
+                let gimbalYaw = gimbalYawSelected(model, type: type)
+
                 self.doPanoMission(gimbalYaw)
             } else {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(UInt64(startDelay(self.model!)) * NSEC_PER_SEC)), dispatch_get_main_queue()) {
-                    self.doPanoLoop(gimbalYaw)
+                    self.doPanoLoop()
                 }
             }
         }
@@ -319,10 +319,10 @@ extension PanoramaController {
     }
 
     // Marked objc to allow override from test - can only override methods that are in extensions when they are marked objc in swift for now
-    @objc func doPanoLoop(gimbalYaw: Bool) {
+    @objc func doPanoLoop() {
         if let model = self.model, type = self.type {
-            if type == .Unknown {
-                DDLogError("Panorama started with unknown type")
+            if type != .Handheld {
+                DDLogError("Panorama loop started with invalid type \(type)")
 
                 return
             }
@@ -331,13 +331,10 @@ extension PanoramaController {
                     maxPitchEnabled: maxPitchEnabled(model),
                     type: type, rowCount: numberOfRows(model))
 
-            if type == .Handheld {
-                // TODO: should also be done for gimbal yaw of AC when that is in place
-                self.currentHeading = 0
-            }
+            self.currentHeading = 0.0
 
-            let yaws = self.yawAngles(count: photosPerRow(model), heading: headingTo360(self.currentHeading))
-            let nadirYaws = self.yawAngles(count: nadirCount(model), heading: headingTo360(self.currentHeading))
+            let yaws = self.yawAngles(count: photosPerRow(model), heading: 0.0)
+            let nadirYaws = self.yawAngles(count: nadirCount(model), heading: 0.0)
 
             self.totalCount = numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
@@ -347,11 +344,11 @@ extension PanoramaController {
 
                 // Loop through the yaws
                 DDLogDebug("PanoLoop: YawLoop - main")
-                self.runYawLoop(yaws, pitches: pitches, gimbalYaw: gimbalYaw)
+                self.runYawLoop(yaws, pitches: pitches)
 
                 // Loop through the zenith/nadir yaws
                 DDLogDebug("PanoLoop: YawLoop - nadir")
-                self.runYawLoop(nadirYaws, pitches: [-90.0], gimbalYaw: gimbalYaw)
+                self.runYawLoop(nadirYaws, pitches: [-90.0])
 
                 // Check state and inform user
                 self.informUserEndOfLoop()
@@ -482,7 +479,7 @@ extension PanoramaController {
         }
     }
 
-    func runYawLoop(yaws: [Double], pitches: [Double], gimbalYaw: Bool) {
+    func runYawLoop(yaws: [Double], pitches: [Double]) {
         if !self.panoRunning.state {
             return
         }
@@ -492,13 +489,8 @@ extension PanoramaController {
 
             self.runPitchesForYaw(yaw, pitches: pitches)
 
-            if (!gimbalYaw) {
-                DDLogDebug("PanoLoop: YawLoop: \(yaw) - AC yaw")
-                self.setAcYaw(yaw)
-            } else {
-                DDLogDebug("PanoLoop: YawLoop: \(yaw) - gimbal yaw")
-                self.setYaw(yaw)
-            }
+            DDLogDebug("PanoLoop: YawLoop: \(yaw) - gimbal yaw")
+            self.setYaw(yaw)
         } // End yaw loop
     }
 
@@ -535,18 +527,6 @@ extension PanoramaController {
             c.setPitch(Float(pitch))
             self.gimbalDispatchGroup.wait()
             DDLogDebug("Set pitch \(pitch) - done")
-        }
-    }
-
-    func setAcYaw(yaw: Double) {
-        DDLogDebug("Set AC yaw \(yaw)")
-
-        if let c = self.flightController {
-            self.aircraftDispatchGroup.enter()
-            DDLogDebug("Set AC yaw \(yaw) - send")
-            c.yawTo(yaw)
-            self.aircraftDispatchGroup.wait()
-            DDLogDebug("Set AC yaw \(yaw) - done")
         }
     }
 
@@ -662,9 +642,7 @@ extension PanoramaController {
                     [
                             [nadirYaw],
                             buildColumn(shoot, pitches: [-90.0])
-                    ].flatMap {
-                        $0
-                    })
+                    ].flatMap({ $0 })
                 }.flatMap({ $0 })
 
                 let missionSteps = [
@@ -775,6 +753,8 @@ extension PanoramaController: CameraControllerDelegate {
 
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
+        
+        // TODO - if in mission send panoCountChanged
     }
 }
 
@@ -828,35 +808,6 @@ extension PanoramaController: FlightControllerDelegate {
 
     func flightControllerUpdateDistance(distance: CLLocationDistance) {
         self.delegate?.aircraftDistanceChanged(distance)
-    }
-
-    func flightControllerUnableToSetControlMode() {
-        self.delegate?.postUserMessage("Unable to set virtual stick control mode")
-
-        self.panoRunning = (state: false, ok: false)
-    }
-
-    func flightControllerSetControlMode() {
-        self.doPanoLoop(false)
-    }
-
-    func flightControllerUnableToYaw(reason: String) {
-        self.delegate?.postUserMessage(reason)
-
-        self.trackEvent(category: "Panorama", action: "Aircraft", label: "Aborted \(reason)")
-
-        dispatch_async(droneCommandsQueue()) {
-            self.panoRunning = (state: false, ok: false)
-
-            self.aircraftDispatchGroup.leave()
-        }
-    }
-
-    func flightControllerDidYaw() {
-        dispatch_async(droneCommandsQueue()) {
-            self.aircraftDispatchGroup.leave()
-        }
-
     }
 }
 

@@ -26,25 +26,12 @@ protocol FlightControllerDelegate {
     func flightControllerUpdateSatelliteCount(satelliteCount: Int)
 
     func flightControllerUpdateDistance(distance: CLLocationDistance)
-
-    func flightControllerUnableToSetControlMode()
-
-    func flightControllerSetControlMode()
-
-    func flightControllerUnableToYaw(reason: String)
-    
-    func flightControllerDidYaw()
 }
 
 class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDelegate, SystemUtils, Analytics {
     let fc: DJIFlightController
 
-    let yawSpeedThreshold = 1.5
-
     var delegate: FlightControllerDelegate?
-
-    var yawDestination : Double?
-    var yawSpeed = 0.0
 
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
@@ -60,133 +47,6 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         }
     }
 
-    func yawSpeedForAngle(angle: Double) -> Double {
-        /*
-         
-        Can't seem to get this to settle in time
-        if (angle > 10.0) {
-            return 45.0
-        } else if (angle > 5.0) {
-            return 10.0
-        } else if (angle > 2.0) {
-            return 5.0
-        } else if (angle > 1.0){
-            return 2.5
-        } else {
-            return 1.0
-        }
-         */
-        
-        return angle * 0.5
-    }
-    
-    func getSpeed(yawDestination: Double, heading : Double) -> Double {
-        DDLogDebug("Current heading \(heading) target \(yawDestination)")
-        
-        let dest = yawDestination % 360.0
-        let head = heading % 360.0
-        
-        var diff = fabs(dest - head)
-        
-        var mult = 1.0
-        
-        if (diff > 180.0) {
-            diff = 360.0 - diff
-            mult = -1.0
-        }
-        
-        let speed = self.yawSpeedForAngle(diff)
-        
-        if (dest > head) {
-            return speed * mult
-        } else {
-            return speed * mult * -1.0
-        }
-    }
-    
-    func setControlModes() {
-        self.fc.enableVirtualStickControlModeWithCompletion {
-            (error) in
-            if let error = error {
-                DDLogWarn("Unable to set virtual stick mode \(error)")
-                self.delegate?.flightControllerUnableToSetControlMode()
-            } else {
-                self.fc.yawControlMode = .AngularVelocity
-                self.fc.rollPitchControlMode = .Velocity
-                self.fc.verticalControlMode = .Velocity
-                self.delegate?.flightControllerSetControlMode()
-            }
-        }
-    }
-
-    func yaw(speed: Double) {
-        if (self.fc.isVirtualStickControlModeAvailable()) {
-            var ctrlData = DJIVirtualStickFlightControlData()
-            ctrlData.pitch = 0
-            ctrlData.roll = 0
-            ctrlData.verticalThrottle = 0
-            ctrlData.yaw = Float(speed)
-
-            self.fc.sendVirtualStickFlightControlData(ctrlData, withCompletion: {
-                (error) in
-                if let error = error {
-                    DDLogWarn("Unable to yaw aircraft \(error)")
-
-                    self.delegate?.flightControllerUnableToYaw("Unable to yaw: \(error)")
-                }
-            })
-        }
-    }
-
-    func yawTo(yaw: Double) {
-        DDLogDebug("Yaw to \(yaw)")
-
-        self.yawSpeed = 30 // This represents 30m/sec
-        self.yawDestination = yaw
-        
-        // Calling this on a timer as it improves the accuracy of aircraft yaw
-        dispatch_sync(droneCommandsQueue(), {
-            let timer = NSTimer.scheduledTimerWithTimeInterval(0.1,
-                target: self,
-                selector: #selector(FlightController.yawAircraftUsingVelocity(_:)),
-                userInfo: nil,
-                repeats: true)
-            
-            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
-            NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 15))
-            
-            if timer.valid {
-                timer.invalidate()
-
-                var currentHeading : Double?
-                
-                if let compass = self.fc.compass {
-                    currentHeading = self.headingTo360(compass.heading)
-                }
-
-                self.trackEvent(category: "FC", action: "Abort", label: "Yaw Speed: \(self.yawSpeed), Yaw Destination: \(self.yawDestination), Heading: \(currentHeading)")
-                
-                self.delegate?.flightControllerUnableToYaw("Yaw did not complete")
-            }
-        })
-    }
-
-    @objc func yawAircraftUsingVelocity(timer: NSTimer) {
-        DDLogDebug("Yawing speed \(self.yawSpeed) target \(self.yawDestination)")
-
-        if let _ = self.yawDestination {
-            if (fabs(self.yawSpeed) < yawSpeedThreshold) {
-                self.delegate?.flightControllerDidYaw()
-                self.yawSpeed = 0
-                self.yawDestination = nil
-                
-                timer.invalidate()
-            } else {
-                self.yaw(self.yawSpeed)
-            }
-        }
-    }
-    
     @objc func flightController(fc: DJIFlightController, didUpdateSystemState state: DJIFlightControllerCurrentState) {
         DDLogVerbose("FC didUpdateSystemState")
 
@@ -202,12 +62,6 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
             
             DDLogDebug("Current heading \(currentHeading)")
 
-            if let yawDestination = self.yawDestination {
-                self.yawSpeed = self.getSpeed(yawDestination, heading: currentHeading)
-
-                DDLogDebug("Current heading \(currentHeading) target \(yawDestination) yawSpeed \(self.yawSpeed)")
-            }
-            
             self.delegate?.flightControllerUpdateHeading(currentHeading)
         }
 
