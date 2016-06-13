@@ -500,6 +500,26 @@ extension MainViewController: PanoramaControllerDelegate {
             self.startButton.enabled = available
         }
     }
+    
+    func cameraISOUpdated(value: UInt) {
+        // TODO: this func should be updated
+        DDLogInfo("New ISO: \(value)")
+    }
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture) {
+        // TODO: this func should be updated
+        DDLogInfo("Enum Raw Value: \(aperture.rawValue)")
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        // TODO: this func should be updated
+        DDLogInfo("Enum Raw Value: \(mode.rawValue)")
+    }
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed) {
+        // TODO: this func should be updated
+        DDLogInfo("Enum Raw Value: \(shutterSpeed.rawValue)")
+    }
 }
 
 extension MainViewController : UIAdaptivePresentationControllerDelegate {
