@@ -347,8 +347,8 @@ class CameraController: NSObject, DJICameraDelegate {
         
         camera.getExposureModeWithCompletion(){
             (mode, error) in
-            if error != nil {
-                DDLogWarn("ERROR: getExposureModeWithCompletion:. \(error!.description)")
+            if let error = error {
+                DDLogError(". \(error.description)")
             } else {
                 self.delegate?.cameraExposureModeUpdated(mode)
             }
