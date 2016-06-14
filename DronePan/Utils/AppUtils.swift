@@ -80,6 +80,8 @@ protocol SystemUtils {
     func displayDistance(distance: Int) -> String
     
     func headingTo360(heading: Double) -> Double
+    
+    func angleForHeading(heading: Double) -> Double
 }
 
 extension SystemUtils {
@@ -124,4 +126,23 @@ extension SystemUtils {
     func headingTo360(heading: Double) -> Double {
         return heading >= 0 ? heading : heading + 360.0
     }
+    
+    func angleForHeading(angle: Double) -> Double {
+        let sign = (angle == 0) ? 1 : angle / fabs(angle)
+        
+        var angleInRange = angle * sign
+        
+        while angleInRange > 360 {
+            angleInRange -= 360
+        }
+        
+        if (angleInRange > 180) {
+            angleInRange = (360 - angleInRange) * -1.0
+        }
+        
+        let newAngle = angleInRange * sign
+        
+        return newAngle
+    }
+
 }

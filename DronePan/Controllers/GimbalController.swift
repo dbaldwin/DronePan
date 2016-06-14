@@ -181,7 +181,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     func setPitch(pitch: Float) {
         DDLogInfo("Gimbal Controller set pitch to \(pitch)")
 
-        let pitchInRange = self.gimbalAngleForHeading(pitch)
+        let pitchInRange = Float(angleForHeading(Double(pitch)))
 
         if (!inRange(pitchInRange, range: pitchRange, available: isPitchAdjustable)) {
             DDLogWarn("Gimbal Controller set pitch to \(pitchInRange) out of range")
@@ -202,7 +202,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     func setYaw(yaw: Float) {
         DDLogInfo("Gimbal Controller set yaw to \(yaw)")
 
-        let yawInRange = self.gimbalAngleForHeading(yaw)
+        let yawInRange = Float(angleForHeading(Double(yaw)))
 
         if (!inRange(yawInRange, range: yawRange, available: isYawAdjustable)) {
             DDLogWarn("Gimbal Controller set yaw to \(yawInRange) out of range")
@@ -223,7 +223,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     func setRoll(roll: Float) {
         DDLogInfo("Gimbal Controller set roll to \(roll)")
 
-        let rollInRange = self.gimbalAngleForHeading(roll)
+        let rollInRange = Float(angleForHeading(Double(roll)))
 
         if (!inRange(rollInRange, range: rollRange, available: isRollAdjustable)) {
             DDLogWarn("Gimbal Controller set roll to \(rollInRange) out of range")
@@ -239,26 +239,6 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
         dispatch_async(self.gimbalWorkQueue) {
             self.setAttitude(0, pitch: self.lastSetPitch, yaw: self.lastSetYaw, roll: rollInRange)
         }
-    }
-
-    func gimbalAngleForHeading(angle: Float) -> Float {
-        let sign = (angle == 0) ? 1 : angle / fabs(angle)
-
-        var angleInRange = angle * sign
-
-        while angleInRange > 360 {
-            angleInRange -= 360
-        }
-
-        if (angleInRange > 180) {
-            angleInRange = (360 - angleInRange) * -1.0
-        }
-
-        let newAngle = angleInRange * sign
-
-        DDLogVerbose("Gimbal Controller angle \(angle) adjusted to \(newAngle)")
-
-        return newAngle
     }
 
     private func delayIfNormal(delaySeconds: Double, closure: () -> ()) {
@@ -279,7 +259,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
         if (!relativeGimbalYaw) {
             return yaw
         } else {
-            return gimbalAngleForHeading(self.currentACYaw) - yaw
+            return Float(angleForHeading(Double(self.currentACYaw))) - yaw
         }
     }
 

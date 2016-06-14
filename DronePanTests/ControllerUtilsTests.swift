@@ -117,4 +117,31 @@ class ControllerUtilsTests: XCTestCase, ModelUtils, SystemUtils {
 
         XCTAssertEqual(value, "33'", "Incorrect display \(value)")
     }
+    
+    func compare(angle: Double, heading: Double) {
+        let value = angleForHeading(heading)
+        
+        XCTAssertEqual(angle, value, "Incorrect angle \(value) for heading \(heading)")
+    }
+    
+    func testGimbalAngleForHeading() {
+        compare(0, heading: 0)
+        compare(90, heading: 90)
+        compare(180, heading: 180)
+        compare(-179, heading: 181)
+        compare(-90, heading: 270)
+        compare(-1, heading: 359)
+        compare(0, heading: 360)
+        compare(-90, heading: -90)
+        compare(-180, heading: -180)
+        compare(179, heading: -181)
+        compare(90, heading: -270)
+        compare(1, heading: -359)
+        compare(0, heading: 720)
+        compare(0, heading: -720)
+        compare(1, heading: 721)
+        compare(-1, heading: -721)
+        compare(-144, heading: 216)
+    }
+
 }
