@@ -66,6 +66,8 @@ class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSet
                     missionManager.stopMissionExecutionWithCompletion({
                         (error) in
                         if let error = error {
+                            DDLogError("Mission Manager - stopMissionExecution - error: \(error)")
+                            
                             self.delegate?.postUserMessage("Unable to stop mission \(error)")
                         }
 
