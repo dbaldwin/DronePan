@@ -75,7 +75,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
 
     @objc func sdkManagerDidRegisterAppWithError(error: NSError?) {
         if let error = error {
-            DDLogWarn("Registration failed with \(error)")
+            DDLogError("Registration failed with \(error)")
 
             self.delegate?.failedToRegister("Unable to register application - make sure you run at least once with internet access")
         } else {

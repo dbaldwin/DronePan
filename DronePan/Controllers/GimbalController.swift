@@ -405,7 +405,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
             (error) in
 
             if let e = error {
-                DDLogWarn("Gimbal Controller setAttitude - error seen - \(e)")
+                DDLogError("Gimbal Controller setAttitude - error seen - \(e)")
 
                 self.setAttitude(nextCount, pitch: pitch, yaw: yaw, roll: roll)
 

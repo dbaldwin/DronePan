@@ -120,7 +120,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
             (error) in
 
             if let e = error {
-                DDLogWarn("Camera Controller setPhotoMode - error seen - \(e)")
+                DDLogError("Camera Controller setPhotoMode - error seen - \(e)")
 
                 errorSeen = true
 
@@ -178,7 +178,7 @@ class CameraController: NSObject, DJICameraDelegate, SystemUtils {
         self.camera.startShootPhoto(.Single) {
             (error) in
             if let e = error {
-                DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
+                DDLogError("Camera Controller takeASnap - error seen - \(e)")
 
                 errorSeen = true
 
