@@ -573,8 +573,8 @@ extension PanoramaController {
     func buildColumn(shoot: DJIMissionStep, pitches: [Double], yaw: Double = 0.0) -> [DJIMissionStep] {
         return pitches.map {
             (pitch) in
-            [
-                    buildAttitudeStep(pitch, yaw: yaw),
+            return [
+                    buildAttitudeStep(pitch, yaw: angleForHeading(yaw)),
                     shoot
             ]
         }.flatMap({ $0 })
