@@ -393,6 +393,10 @@ extension PanoramaController {
             }, withCompletion: {
                 (error) in
                 if let error = error {
+                    self.missionManager = nil
+                    
+                    self.panoRunning = (state: false, ok: false)
+                    
                     DDLogDebug("Error preparing mission: \(error)")
 
                     self.delegate?.postUserMessage("Could not prepare mission: \(error)")
@@ -909,6 +913,8 @@ extension PanoramaController: GimbalControllerDelegate {
 extension PanoramaController : DJIMissionManagerDelegate {
     func missionManager(manager: DJIMissionManager, didFinishMissionExecution error: NSError?) {
         if let error = error {
+            self.missionManager = nil
+            
             self.panoRunning = (state: false, ok: false)
 
             DDLogError("Panorama mission aborted \(error)")
