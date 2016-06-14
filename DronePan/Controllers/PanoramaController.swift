@@ -688,12 +688,14 @@ extension PanoramaController: CameraControllerDelegate {
     func cameraControllerCompleted(shotTaken: Bool) {
         DDLogDebug("Camera signalled complete with shot taken \(shotTaken)")
 
-        if (shotTaken) {
-            self.currentCount += 1
-        }
+        if (self.missionManager == nil) {
+            if (shotTaken) {
+                self.currentCount += 1
+            }
 
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leave()
+            dispatch_async(droneCommandsQueue()) {
+                self.cameraDispatchGroup.leave()
+            }
         }
     }
 
@@ -702,18 +704,24 @@ extension PanoramaController: CameraControllerDelegate {
 
         self.delegate?.postUserMessage(reason)
 
-        dispatch_async(droneCommandsQueue()) {
-            self.trackEvent(category: "Panorama", action: "Camera", label: "Aborted \(reason)")
+        self.trackEvent(category: "Panorama", action: "Camera", label: "Aborted \(reason)")
 
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.panoRunning = (state: false, ok: false)
+
+                self.cameraDispatchGroup.leave()
+            }
+        } else {
             self.panoRunning = (state: false, ok: false)
-
-            self.cameraDispatchGroup.leave()
         }
     }
 
     func cameraControllerStopped() {
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leaveIfActive()
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.cameraDispatchGroup.leaveIfActive()
+            }
         }
     }
 
@@ -725,9 +733,13 @@ extension PanoramaController: CameraControllerDelegate {
         self.delegate?.postUserMessage(reason)
 
         if panoRunning.state {
-            dispatch_async(droneCommandsQueue(), {
+            if (self.missionManager == nil) {
+                dispatch_async(droneCommandsQueue(), {
+                    self.panoRunning = (state: false, ok: false)
+                })
+            } else {
                 self.panoRunning = (state: false, ok: false)
-            })
+            }
         }
 
         self.delegate?.panoAvailable(false)
@@ -746,15 +758,19 @@ extension PanoramaController: CameraControllerDelegate {
     func cameraControllerReset() {
         DDLogDebug("Camera signalled reset")
 
-        dispatch_async(droneCommandsQueue()) {
-            self.cameraDispatchGroup.leave()
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.cameraDispatchGroup.leave()
+            }
         }
     }
 
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
         
-        // TODO - if in mission send panoCountChanged
+        if (self.missionManager != nil) {
+            self.currentCount += 1
+        }
     }
 }
 
@@ -830,8 +846,10 @@ extension PanoramaController: GimbalControllerDelegate {
     func gimbalControllerCompleted() {
         DDLogDebug("Gimbal signalled complete")
 
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leave()
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.gimbalDispatchGroup.leave()
+            }
         }
     }
 
@@ -842,10 +860,14 @@ extension PanoramaController: GimbalControllerDelegate {
 
         self.delegate?.postUserMessage(reason)
 
-        dispatch_async(droneCommandsQueue()) {
-            self.panoRunning = (state: false, ok: false)
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.panoRunning = (state: false, ok: false)
 
-            self.gimbalDispatchGroup.leave()
+                self.gimbalDispatchGroup.leave()
+            }
+        } else {
+            self.panoRunning = (state: false, ok: false)
         }
     }
 
@@ -856,8 +878,10 @@ extension PanoramaController: GimbalControllerDelegate {
 
         self.delegate?.postUserMessage(reason)
 
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leave()
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.gimbalDispatchGroup.leave()
+            }
         }
     }
 
@@ -870,8 +894,10 @@ extension PanoramaController: GimbalControllerDelegate {
     }
 
     func gimbalControllerStopped() {
-        dispatch_async(droneCommandsQueue()) {
-            self.gimbalDispatchGroup.leaveIfActive()
+        if (self.missionManager == nil) {
+            dispatch_async(droneCommandsQueue()) {
+                self.gimbalDispatchGroup.leaveIfActive()
+            }
         }
     }
 }

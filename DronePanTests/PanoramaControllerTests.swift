@@ -120,6 +120,14 @@ class PanoramaControllerTest : PanoramaController {
     }
 }
 
+class MissionManagerMock : DJIMissionManager {
+    override func stopMissionExecutionWithCompletion(completion: DJICompletionBlock?) {
+        if let completion = completion {
+            completion(nil)
+        }
+    }
+}
+
 class PanoramaControllerTests: XCTestCase, ModelSettings {
     let panoramaController = PanoramaController()
 
@@ -805,4 +813,70 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
             XCTFail("Failed to build mission")
         }
     }
+    
+    func testCameraControllerCompletedWithMissionManager() {
+        let controller = PanoramaController()
+        
+        controller.missionManager = MissionManagerMock()
+        controller.missionManager?.delegate = controller
+        
+        controller.currentCount = 0
+        
+        controller.cameraControllerCompleted(true)
+        
+        XCTAssertEqual(0, controller.currentCount, "Camera completed incremented shot count when using mission")
+    }
+
+    func testCameraControllerAbortedWithMissionManager() {
+        let controller = PanoramaController()
+        
+        controller.missionManager = MissionManagerMock()
+        controller.missionManager?.delegate = controller
+        
+        controller.cameraControllerAborted("Test")
+        
+        XCTAssertFalse(controller.panoRunning.ok, "OK true after camera abort")
+        XCTAssertFalse(controller.panoRunning.state, "State true after camera abort")
+    }
+
+    func testCameraControllerInErrorWithMissionManager() {
+        let controller = PanoramaController()
+        
+        controller.missionManager = MissionManagerMock()
+        controller.missionManager?.delegate = controller
+        
+        controller.panoRunning.state = true
+        
+        controller.cameraControllerInError("Test")
+        
+        XCTAssertFalse(controller.panoRunning.ok, "OK true after camera error")
+        XCTAssertFalse(controller.panoRunning.state, "State true after camera error")
+    }
+
+    func testCameraControllerNewMediaWithMissionManager() {
+        let controller = PanoramaController()
+        
+        controller.missionManager = MissionManagerMock()
+        controller.missionManager?.delegate = controller
+        
+        controller.currentCount = 0
+        
+        controller.cameraControllerNewMedia("Test.png")
+        
+        XCTAssertEqual(1, controller.currentCount, "Camera new media failed to increment shot count when using mission")
+    }
+    
+    func testGimbalControllerAbortedWithMissionManager() {
+        let controller = PanoramaController()
+        
+        controller.missionManager = MissionManagerMock()
+        controller.missionManager?.delegate = controller
+        
+        controller.gimbalControllerAborted("Test")
+        
+        XCTAssertFalse(controller.panoRunning.ok, "OK true after gimbal abort")
+        XCTAssertFalse(controller.panoRunning.state, "State true after gimbal abort")
+    }
+    
+
 }
