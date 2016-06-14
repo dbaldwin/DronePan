@@ -60,7 +60,7 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         if let compass = fc.compass {
             let currentHeading = headingTo360(compass.heading)
             
-            DDLogDebug("Current heading \(currentHeading)")
+            DDLogVerbose("Current heading \(currentHeading)")
 
             self.delegate?.flightControllerUpdateHeading(currentHeading)
         }
