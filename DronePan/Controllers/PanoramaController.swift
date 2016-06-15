@@ -67,7 +67,7 @@ class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSet
                         (error) in
                         if let error = error {
                             DDLogError("Mission Manager - stopMissionExecution - error: \(error)")
-                            
+
                             self.delegate?.postUserMessage("Unable to stop mission \(error)")
                         }
 
@@ -133,8 +133,7 @@ class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSet
         let yaw_angle = 360.0 / Double(count)
 
         return (0 ..< count).map({
-            // Subtract the yaw angle from heading so the first photo sequence can be at 0, the heading of the aircraft when the pano starts
-            (heading - yaw_angle) + (yaw_angle * Double($0 + 1))
+            heading + (yaw_angle * Double($0))
         }).map({
             (angle: Double) -> Double in
             angle > 360 ? angle - 360.0 : angle
@@ -395,9 +394,9 @@ extension PanoramaController {
                 (error) in
                 if let error = error {
                     self.missionManager = nil
-                    
+
                     self.panoRunning = (state: false, ok: false)
-                    
+
                     DDLogDebug("Error preparing mission: \(error)")
 
                     self.delegate?.postUserMessage("Could not prepare mission: \(error)")
@@ -638,8 +637,8 @@ extension PanoramaController {
                     (_) in
 
                     [
-                            [yaw],
-                            buildColumn(shoot, pitches: pitches)
+                            buildColumn(shoot, pitches: pitches),
+                            [yaw]
                     ].flatMap({ $0 })
                 }.flatMap({ $0 })
 
@@ -647,8 +646,8 @@ extension PanoramaController {
                     (_) in
 
                     [
-                            [nadirYaw],
-                            buildColumn(shoot, pitches: [-90.0])
+                            buildColumn(shoot, pitches: [-90.0]),
+                            [nadirYaw]
                     ].flatMap({ $0 })
                 }.flatMap({ $0 })
 
@@ -774,7 +773,7 @@ extension PanoramaController: CameraControllerDelegate {
 
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
-        
+
         if (self.missionManager != nil) {
             self.currentCount += 1
         }
@@ -911,11 +910,11 @@ extension PanoramaController: GimbalControllerDelegate {
 
 // MARK: - DJI Mission Delegate
 
-extension PanoramaController : DJIMissionManagerDelegate {
+extension PanoramaController: DJIMissionManagerDelegate {
     func missionManager(manager: DJIMissionManager, didFinishMissionExecution error: NSError?) {
         if let error = error {
             self.missionManager = nil
-            
+
             self.panoRunning = (state: false, ok: false)
 
             DDLogError("Panorama mission aborted \(error)")
