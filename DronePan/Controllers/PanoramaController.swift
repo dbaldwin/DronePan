@@ -29,7 +29,7 @@ protocol PanoramaControllerDelegate {
 
     func cameraExposureModeUpdated(mode: DJICameraExposureMode)
     
-    func cameraISOUpdated(value: UInt)
+    func cameraISOUpdated(ISO: UInt)
     
     func cameraApertureUpdated(aperture: DJICameraAperture)
     
