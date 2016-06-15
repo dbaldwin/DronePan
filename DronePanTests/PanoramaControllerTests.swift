@@ -169,26 +169,26 @@ class PanoramaControllerTests: XCTestCase, ModelSettings {
 
     func testYawAnglesForCount10WithHeading0() {
         let value = panoramaController.yawAngles(count: 10, heading: 0)
-
-        XCTAssertEqual([36, 72, 108, 144, 180, 216, 252, 288, 324, 360], value, "Incorrect angles for count 10 heading 0 \(value)")
+        
+        XCTAssertEqual([0, 36, 72, 108, 144, 180, 216, 252, 288, 324], value, "Incorrect angles for count 10 heading 0 \(value)")
     }
 
     func testYawAnglesForCount6WithHeading0() {
         let value = panoramaController.yawAngles(count: 6, heading: 0)
 
-        XCTAssertEqual([60, 120, 180, 240, 300, 360], value, "Incorrect angles for count 6 heading 0 \(value)")
+        XCTAssertEqual([0, 60, 120, 180, 240, 300], value, "Incorrect angles for count 6 heading 0 \(value)")
     }
 
     func testYawAnglesForCount10WithHeading84() {
         let value = panoramaController.yawAngles(count: 10, heading: 84)
-
-        XCTAssertEqual([120, 156, 192, 228, 264, 300, 336, 12, 48, 84], value, "Incorrect angles for count 10 heading 84 \(value)")
+        
+        XCTAssertEqual([84, 120, 156, 192, 228, 264, 300, 336, 12, 48], value, "Incorrect angles for count 10 heading 84 \(value)")
     }
 
     func testYawAnglesForCount6WithHeadingNeg84() {
         let value = panoramaController.yawAngles(count: 6, heading: -84)
-
-        XCTAssertEqual([-24, 36, 96, 156, 216, 276], value, "Incorrect angles for count 6 heading -84 \(value)")
+        
+        XCTAssertEqual([-84.0, -24.0, 36.0, 96.0, 156.0, 216.0], value, "Incorrect angles for count 6 heading -84 \(value)")
     }
 
     func testHeadingTo360() {

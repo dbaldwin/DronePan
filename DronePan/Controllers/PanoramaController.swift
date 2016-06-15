@@ -133,7 +133,8 @@ class PanoramaController: NSObject, Analytics, SystemUtils, ModelUtils, ModelSet
         let yaw_angle = 360.0 / Double(count)
 
         return (0 ..< count).map({
-            heading + (yaw_angle * Double($0 + 1))
+            // Subtract the yaw angle from heading so the first photo sequence can be at 0, the heading of the aircraft when the pano starts
+            (heading - yaw_angle) + (yaw_angle * Double($0 + 1))
         }).map({
             (angle: Double) -> Double in
             angle > 360 ? angle - 360.0 : angle
