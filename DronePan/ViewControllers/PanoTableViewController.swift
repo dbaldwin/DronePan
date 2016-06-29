@@ -26,17 +26,6 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
     var panos = [NSManagedObject]()
     
     weak var delegate: PanoSelectionDelegate?
-    
-    /*required init(coder aDecoder: NSCoder) {
-        
-        super.init(coder: aDecoder)!
-        
-        self.panos.append(Pano(name: "This is a really long pano name", datetime: NSDate(), location: CLLocationCoordinate2DMake(30, -96.0)))
-        self.panos.append(Pano(name: "Pano 2", datetime: NSDate(), location: CLLocationCoordinate2DMake(34, -96.0)))
-        self.panos.append(Pano(name: "Pano 3", datetime: NSDate(), location: CLLocationCoordinate2DMake(32, -98.0)))
-        
-        
-    }*/
 
     override func viewDidLoad() {
         
@@ -48,17 +37,7 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         
         super.viewWillAppear(animated)
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        let fetchRequest = NSFetchRequest(entityName: "Pano")
-        
-        do {
-            let results =
-                try managedContext.executeFetchRequest(fetchRequest)
-            panos = results as! [NSManagedObject]
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
+        getPanos()
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,10 +71,7 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         let formatter = NSDateFormatter()
         formatter.dateStyle = NSDateFormatterStyle.LongStyle
         formatter.timeStyle = .MediumStyle
-        
-        //cell.dateTime.text = formatter.stringFromDate(pano.datetime)
-        
-        cell.dateTime.text = "Needs to be filled in"
+        cell.dateTime.text = formatter.stringFromDate((pano.valueForKey("datetime") as? NSDate)!)
 
         return cell
     }
@@ -105,6 +81,23 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         let selectedPano = self.panos[indexPath.row]
         self.delegate?.panoSelected(selectedPano)
         
+    }
+    
+    func getPanos() {
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        let sort = NSSortDescriptor(key: "datetime", ascending: false)
+        let fetchRequest = NSFetchRequest(entityName: "Pano")
+        fetchRequest.sortDescriptors = [sort]
+        
+        do {
+            let results =
+                try managedContext.executeFetchRequest(fetchRequest)
+            panos = results as! [NSManagedObject]
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
     }
     
 
@@ -158,7 +151,7 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
     // MARK: PanoSavedDelegate from AddPanoViewController
     // Let's refresh the table
     func panoSaved() {
-        
+        getPanos()
         self.tableView.reloadData()
         
     }
