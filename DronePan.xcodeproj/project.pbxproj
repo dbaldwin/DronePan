@@ -59,6 +59,27 @@
 		232F6FD71C5449A40013CCD9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD61C5449A40013CCD9 /* libz.tbd */; };
 		232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */; };
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
+		234404761D216BDD009FCBDC /* PanoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234404751D216BDD009FCBDC /* PanoTableViewController.swift */; };
+		234404781D216BF5009FCBDC /* PanoMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234404771D216BF5009FCBDC /* PanoMapViewController.swift */; };
+		2344047D1D2173CB009FCBDC /* PanoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2344047C1D2173CB009FCBDC /* PanoTableViewCell.swift */; };
+		2344047F1D2182D8009FCBDC /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2344047E1D2182D8009FCBDC /* GoogleMaps.framework */; };
+		234404811D21839A009FCBDC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404801D21839A009FCBDC /* AVFoundation.framework */; };
+		234404831D2183A8009FCBDC /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404821D2183A8009FCBDC /* CoreData.framework */; };
+		234404851D2183B0009FCBDC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404841D2183B0009FCBDC /* CoreLocation.framework */; };
+		234404871D2183B8009FCBDC /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404861D2183B8009FCBDC /* CoreText.framework */; };
+		234404891D2183C2009FCBDC /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404881D2183C2009FCBDC /* GLKit.framework */; };
+		2344048B1D2183C9009FCBDC /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2344048A1D2183C9009FCBDC /* ImageIO.framework */; };
+		234404911D218413009FCBDC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404901D218413009FCBDC /* OpenGLES.framework */; };
+		234404931D218423009FCBDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404921D218423009FCBDC /* QuartzCore.framework */; };
+		234404951D218450009FCBDC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404941D218450009FCBDC /* Security.framework */; };
+		234404971D21845A009FCBDC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404961D21845A009FCBDC /* SystemConfiguration.framework */; };
+		234404991D21845E009FCBDC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 234404981D21845E009FCBDC /* CoreGraphics.framework */; };
+		2344049B1D218497009FCBDC /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2344049A1D218497009FCBDC /* libicucore.tbd */; };
+		2344049D1D2184A8009FCBDC /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2344049C1D2184A8009FCBDC /* libc++.tbd */; };
+		2344049E1D2184D4009FCBDC /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2344048C1D2183EA009FCBDC /* Accelerate.framework */; };
+		234404A01D2189D4009FCBDC /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2344049F1D2189D4009FCBDC /* GoogleMaps.bundle */; };
+		234404A21D21D290009FCBDC /* AddPanoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234404A11D21D290009FCBDC /* AddPanoViewController.swift */; };
+		234404A51D2312AB009FCBDC /* DronePan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 234404A31D2312AB009FCBDC /* DronePan.xcdatamodeld */; };
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
 		83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */; };
 		83195C101CE32BF2008A9755 /* PreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */; };
@@ -255,6 +276,28 @@
 		232F6FD61C5449A40013CCD9 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		234404751D216BDD009FCBDC /* PanoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoTableViewController.swift; sourceTree = "<group>"; };
+		234404771D216BF5009FCBDC /* PanoMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoMapViewController.swift; sourceTree = "<group>"; };
+		2344047C1D2173CB009FCBDC /* PanoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoTableViewCell.swift; sourceTree = "<group>"; };
+		2344047E1D2182D8009FCBDC /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		234404801D21839A009FCBDC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		234404821D2183A8009FCBDC /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		234404841D2183B0009FCBDC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		234404861D2183B8009FCBDC /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		234404881D2183C2009FCBDC /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		2344048A1D2183C9009FCBDC /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		2344048C1D2183EA009FCBDC /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		2344048E1D2183F6009FCBDC /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		234404901D218413009FCBDC /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		234404921D218423009FCBDC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		234404941D218450009FCBDC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		234404961D21845A009FCBDC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		234404981D21845E009FCBDC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2344049A1D218497009FCBDC /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		2344049C1D2184A8009FCBDC /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		2344049F1D2189D4009FCBDC /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
+		234404A11D21D290009FCBDC /* AddPanoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPanoViewController.swift; sourceTree = "<group>"; };
+		234404A41D2312AB009FCBDC /* DronePan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DronePan.xcdatamodel; sourceTree = "<group>"; };
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
 		83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroup.swift; sourceTree = "<group>"; };
 		83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewControllerTests.swift; sourceTree = "<group>"; };
@@ -277,6 +320,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2344049E1D2184D4009FCBDC /* Accelerate.framework in Frameworks */,
+				2344049D1D2184A8009FCBDC /* libc++.tbd in Frameworks */,
+				2344049B1D218497009FCBDC /* libicucore.tbd in Frameworks */,
+				234404991D21845E009FCBDC /* CoreGraphics.framework in Frameworks */,
+				234404971D21845A009FCBDC /* SystemConfiguration.framework in Frameworks */,
+				234404951D218450009FCBDC /* Security.framework in Frameworks */,
+				234404931D218423009FCBDC /* QuartzCore.framework in Frameworks */,
+				234404911D218413009FCBDC /* OpenGLES.framework in Frameworks */,
+				2344048B1D2183C9009FCBDC /* ImageIO.framework in Frameworks */,
+				234404891D2183C2009FCBDC /* GLKit.framework in Frameworks */,
+				234404871D2183B8009FCBDC /* CoreText.framework in Frameworks */,
+				234404851D2183B0009FCBDC /* CoreLocation.framework in Frameworks */,
+				234404831D2183A8009FCBDC /* CoreData.framework in Frameworks */,
+				234404811D21839A009FCBDC /* AVFoundation.framework in Frameworks */,
 				15839FB61CCEA224008B7E97 /* libavutil.a in Frameworks */,
 				15839FB31CCEA224008B7E97 /* libavfilter.a in Frameworks */,
 				836F73391CCF513700233FF3 /* MBProgressHUD.framework in Frameworks */,
@@ -292,6 +349,7 @@
 				15839FB41CCEA224008B7E97 /* libavformat.a in Frameworks */,
 				232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */,
 				15839FB51CCEA224008B7E97 /* libavresample.a in Frameworks */,
+				2344047F1D2182D8009FCBDC /* GoogleMaps.framework in Frameworks */,
 				15839FB81CCEA224008B7E97 /* libswscale.a in Frameworks */,
 				15839FB11CCEA224008B7E97 /* libavcodec.a in Frameworks */,
 				15839FB21CCEA224008B7E97 /* libavdevice.a in Frameworks */,
@@ -315,6 +373,23 @@
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2344049F1D2189D4009FCBDC /* GoogleMaps.bundle */,
+				2344049C1D2184A8009FCBDC /* libc++.tbd */,
+				2344049A1D218497009FCBDC /* libicucore.tbd */,
+				234404981D21845E009FCBDC /* CoreGraphics.framework */,
+				234404961D21845A009FCBDC /* SystemConfiguration.framework */,
+				234404941D218450009FCBDC /* Security.framework */,
+				234404921D218423009FCBDC /* QuartzCore.framework */,
+				234404901D218413009FCBDC /* OpenGLES.framework */,
+				2344048E1D2183F6009FCBDC /* CoreBluetooth.framework */,
+				2344048C1D2183EA009FCBDC /* Accelerate.framework */,
+				2344048A1D2183C9009FCBDC /* ImageIO.framework */,
+				234404881D2183C2009FCBDC /* GLKit.framework */,
+				234404861D2183B8009FCBDC /* CoreText.framework */,
+				234404841D2183B0009FCBDC /* CoreLocation.framework */,
+				234404821D2183A8009FCBDC /* CoreData.framework */,
+				234404801D21839A009FCBDC /* AVFoundation.framework */,
+				2344047E1D2182D8009FCBDC /* GoogleMaps.framework */,
 				15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */,
 				15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */,
 				83A558591CD08FE7000BB6C6 /* DJISDK.framework */,
@@ -576,6 +651,10 @@
 				83A713261CF82571005194BA /* SliderTableViewCell.swift */,
 				83A713281CF8258B005194BA /* SegmentTableViewCell.swift */,
 				83A7132A1CF83034005194BA /* ButtonViewCell.swift */,
+				234404751D216BDD009FCBDC /* PanoTableViewController.swift */,
+				234404771D216BF5009FCBDC /* PanoMapViewController.swift */,
+				2344047C1D2173CB009FCBDC /* PanoTableViewCell.swift */,
+				234404A11D21D290009FCBDC /* AddPanoViewController.swift */,
 			);
 			name = "View Controllers";
 			path = ViewControllers;
@@ -620,6 +699,7 @@
 		232F6F0F1C5448320013CCD9 /* DronePan */ = {
 			isa = PBXGroup;
 			children = (
+				234404791D216D44009FCBDC /* Models */,
 				154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */,
 				83EBB1651CD0DA6C00F381A8 /* Controllers */,
 				15CCA5061CE24434003C9B38 /* View Controllers */,
@@ -629,6 +709,14 @@
 				15839F2E1CCEA224008B7E97 /* VideoPreviewer */,
 			);
 			path = DronePan;
+			sourceTree = "<group>";
+		};
+		234404791D216D44009FCBDC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				234404A31D2312AB009FCBDC /* DronePan.xcdatamodeld */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		8362BB1E1CC64C8D0071D0BA /* DronePanTests */ = {
@@ -774,6 +862,7 @@
 				15839FB91CCEA224008B7E97 /* Info.plist in Resources */,
 				232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */,
 				15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */,
+				234404A01D2189D4009FCBDC /* GoogleMaps.bundle in Resources */,
 				232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */,
 				232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */,
 			);
@@ -828,14 +917,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				15FD80DB1CDE92610073B1DA /* AnalyticsUtils.swift in Sources */,
+				2344047D1D2173CB009FCBDC /* PanoTableViewCell.swift in Sources */,
 				158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */,
 				839A7A991CC4B47A003BCAA7 /* ModelSettings.swift in Sources */,
 				15839FC71CD487BB008B7E97 /* ConnectionController.swift in Sources */,
 				83A713271CF82571005194BA /* SliderTableViewCell.swift in Sources */,
+				234404781D216BF5009FCBDC /* PanoMapViewController.swift in Sources */,
 				1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */,
 				15839FBE1CCEA224008B7E97 /* VideoPreviewer.m in Sources */,
 				15839FC41CD3EC56008B7E97 /* PreviewController.swift in Sources */,
 				15839FBA1CCEA224008B7E97 /* LB2AUDHackParser.m in Sources */,
+				234404761D216BDD009FCBDC /* PanoTableViewController.swift in Sources */,
+				234404A21D21D290009FCBDC /* AddPanoViewController.swift in Sources */,
 				154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */,
 				15839FBF1CCEA224008B7E97 /* VideoPreviewerQueue.m in Sources */,
 				83A7132B1CF83034005194BA /* ButtonViewCell.swift in Sources */,
@@ -844,6 +937,7 @@
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
 				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,
+				234404A51D2312AB009FCBDC /* DronePan.xcdatamodeld in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
 				15839FBC1CCEA224008B7E97 /* SoftwareDecodeProcessor.m in Sources */,
 				15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */,
@@ -1000,6 +1094,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DronePan/VideoPreviewer/ffmpeg/include";
 				INFOPLIST_FILE = DronePan/Info.plist;
@@ -1029,6 +1124,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DronePan",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/DronePan/VideoPreviewer/ffmpeg/include";
 				INFOPLIST_FILE = DronePan/Info.plist;
@@ -1119,6 +1215,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		234404A31D2312AB009FCBDC /* DronePan.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				234404A41D2312AB009FCBDC /* DronePan.xcdatamodel */,
+			);
+			currentVersion = 234404A41D2312AB009FCBDC /* DronePan.xcdatamodel */;
+			name = DronePan.xcdatamodeld;
+			path = ../DronePan.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 232F6F051C5448320013CCD9 /* Project object */;
 }

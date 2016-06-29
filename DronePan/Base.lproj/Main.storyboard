@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="CZg-Qn-OKS">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -100,7 +100,7 @@
                                                     <constraint firstAttribute="height" constant="10" id="m4d-ki-EWR"/>
                                                 </constraints>
                                             </view>
-                                            <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sRG-rz-hge" userLabel="Spacer 2">
+                                            <view alpha="0.0" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sRG-rz-hge" userLabel="Spacer 2">
                                                 <rect key="frame" x="420" y="7" width="183" height="10"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
@@ -322,6 +322,192 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="257" y="276"/>
+        </scene>
+        <!--Add Pano View Controller-->
+        <scene sceneID="1Jz-nm-v9Z">
+            <objects>
+                <viewController id="TNN-fF-FyN" customClass="AddPanoViewController" customModule="DronePan" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8Yj-wM-07m"/>
+                        <viewControllerLayoutGuide type="bottom" id="gf4-4J-L3q"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4Aq-cH-a1K">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Enter a panorama name and click on the map below:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7KG-jm-zDO">
+                                <rect key="frame" x="15" y="20" width="399" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tKU-lR-20p">
+                                <rect key="frame" x="15" y="49" width="399" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                            </textField>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GcD-Z5-JmB" customClass="GMSMapView">
+                                <rect key="frame" x="15" y="87" width="989" height="598"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF6-YS-7Yo">
+                                <rect key="frame" x="974" y="28" width="30" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <state key="normal" title="X"/>
+                                <connections>
+                                    <action selector="dismissVC:" destination="TNN-fF-FyN" eventType="touchUpInside" id="ai1-vw-VyV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bLg-YD-Xl5">
+                                <rect key="frame" x="495" y="712" width="34" height="30"/>
+                                <state key="normal" title="Save"/>
+                                <connections>
+                                    <action selector="savePano" destination="TNN-fF-FyN" eventType="touchUpInside" id="bap-EN-nvm"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Altitude:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXc-Hg-jX9">
+                                <rect key="frame" x="486" y="53" width="77" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ttD-uV-h1M">
+                                <rect key="frame" x="571" y="49" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="done"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                    <connections>
+                        <outlet property="map" destination="GcD-Z5-JmB" id="mHY-bR-Rqy"/>
+                        <outlet property="panoAltitude" destination="ttD-uV-h1M" id="QIH-9e-zeG"/>
+                        <outlet property="panoName" destination="tKU-lR-20p" id="gFv-sO-SDU"/>
+                        <outlet property="saveButton" destination="bLg-YD-Xl5" id="xdW-KC-VoR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AD3-E4-qMZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2730" y="2095"/>
+        </scene>
+        <!--Pano Map View Controller-->
+        <scene sceneID="KAi-UL-2Se">
+            <objects>
+                <viewController id="p4V-nz-xaX" customClass="PanoMapViewController" customModule="DronePan" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ahP-IP-PxY"/>
+                        <viewControllerLayoutGuide type="bottom" id="AoO-lZ-7Ji"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="M29-Fm-ORR" customClass="GMSMapView">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                    <connections>
+                        <outlet property="map" destination="M29-Fm-ORR" id="36k-Zg-Uks"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6HS-J8-mtO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1522" y="2079"/>
+        </scene>
+        <!--Pano History-->
+        <scene sceneID="4Tg-9Z-jm0">
+            <objects>
+                <tableViewController clearsSelectionOnViewWillAppear="NO" id="Ws8-pT-E6a" customClass="PanoTableViewController" customModule="DronePan" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" id="Gep-TP-it7">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="75" id="CYc-ua-Hqo" customClass="PanoTableViewCell" customModule="DronePan" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="1024" height="75"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CYc-ua-Hqo" id="Y0D-FN-Fxd">
+                                    <rect key="frame" x="0.0" y="0.0" width="1024" height="74.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="afG-vZ-6pG">
+                                            <rect key="frame" x="13" y="8" width="49" height="24"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date/Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4I-HR-8CO">
+                                            <rect key="frame" x="13" y="32" width="67.5" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="afG-vZ-6pG" firstAttribute="leading" secondItem="Y0D-FN-Fxd" secondAttribute="leadingMargin" constant="5" id="1cz-nG-2OL"/>
+                                        <constraint firstItem="c4I-HR-8CO" firstAttribute="leading" secondItem="Y0D-FN-Fxd" secondAttribute="leadingMargin" constant="5" id="Pm2-CQ-9tT"/>
+                                        <constraint firstItem="afG-vZ-6pG" firstAttribute="top" secondItem="Y0D-FN-Fxd" secondAttribute="topMargin" id="RGS-eR-ivK"/>
+                                        <constraint firstItem="c4I-HR-8CO" firstAttribute="top" secondItem="afG-vZ-6pG" secondAttribute="bottom" id="zey-tb-VAK"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dateTime" destination="c4I-HR-8CO" id="9Af-j1-4cF"/>
+                                    <outlet property="nameLabel" destination="afG-vZ-6pG" id="H49-y9-Ios"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Ws8-pT-E6a" id="9Lk-Hz-wKc"/>
+                            <outlet property="delegate" destination="Ws8-pT-E6a" id="Pgh-7g-RM0"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Pano History" id="yk2-5n-ROM">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ngB-t6-PyQ">
+                            <connections>
+                                <segue destination="TNN-fF-FyN" kind="presentation" id="SbS-zX-phI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wdC-U2-XZ1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2730" y="1151"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="oAh-1m-8kP">
+            <objects>
+                <navigationController id="3eV-0A-gJx" sceneMemberID="viewController">
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="SpO-hC-Xuc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Ws8-pT-E6a" kind="relationship" relationship="rootViewController" id="uoJ-Yu-EAY"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mSl-uo-8g5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1514" y="1151"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="m1v-ZI-6qF">
+            <objects>
+                <splitViewController id="CZg-Qn-OKS" sceneMemberID="viewController">
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
+                    <connections>
+                        <segue destination="3eV-0A-gJx" kind="relationship" relationship="masterViewController" id="8eI-0d-9g6"/>
+                        <segue destination="p4V-nz-xaX" kind="relationship" relationship="detailViewController" id="1dR-30-3LH"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N2K-Jc-2Qg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="362" y="1543"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="EzA-xT-5NI">
