@@ -400,15 +400,36 @@
                         <viewControllerLayoutGuide type="top" id="ahP-IP-PxY"/>
                         <viewControllerLayoutGuide type="bottom" id="AoO-lZ-7Ji"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="M29-Fm-ORR" customClass="GMSMapView">
+                    <view key="view" contentMode="scaleToFill" id="M29-Fm-ORR">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RHw-1y-YIz">
+                                <rect key="frame" x="476" y="728" width="72" height="30"/>
+                                <state key="normal" title="Start Pano"/>
+                                <connections>
+                                    <action selector="startPano:" destination="p4V-nz-xaX" eventType="touchUpInside" id="AMb-dY-f1U"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nn6-Cg-9IU" userLabel="Map" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="306"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="AoO-lZ-7Ji" firstAttribute="top" secondItem="Nn6-Cg-9IU" secondAttribute="bottom" constant="50" id="HcX-q0-gaH"/>
+                            <constraint firstAttribute="trailing" secondItem="Nn6-Cg-9IU" secondAttribute="trailing" id="MCN-9B-8Z8"/>
+                            <constraint firstItem="AoO-lZ-7Ji" firstAttribute="top" secondItem="RHw-1y-YIz" secondAttribute="bottom" constant="10" id="OHt-Ct-xav"/>
+                            <constraint firstItem="Nn6-Cg-9IU" firstAttribute="leading" secondItem="M29-Fm-ORR" secondAttribute="leading" id="izl-Cj-v6k"/>
+                            <constraint firstItem="RHw-1y-YIz" firstAttribute="centerX" secondItem="M29-Fm-ORR" secondAttribute="centerX" id="lPZ-Qz-5zD"/>
+                            <constraint firstItem="Nn6-Cg-9IU" firstAttribute="top" secondItem="M29-Fm-ORR" secondAttribute="top" id="zAh-WZ-y7v"/>
+                        </constraints>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
-                        <outlet property="map" destination="M29-Fm-ORR" id="36k-Zg-Uks"/>
+                        <outlet property="map" destination="Nn6-Cg-9IU" id="dFP-kc-Cp3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6HS-J8-mtO" userLabel="First Responder" sceneMemberID="firstResponder"/>

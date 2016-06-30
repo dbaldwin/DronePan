@@ -16,10 +16,14 @@
 import UIKit
 import GoogleMaps
 import CoreData
+import DJISDK
 
-class PanoMapViewController: UIViewController, GMSMapViewDelegate {
+class PanoMapViewController: UIViewController, GMSMapViewDelegate, DJIMissionManagerDelegate {
     
     @IBOutlet weak var map: GMSMapView!
+    
+    var panoLocation: CLLocationCoordinate2D? = nil
+    var missionManager: DJIMissionManager? = nil
     
     var pano: NSManagedObject! {
         didSet (newPano) {
@@ -38,6 +42,10 @@ class PanoMapViewController: UIViewController, GMSMapViewDelegate {
         map.mapType = kGMSTypeHybrid
         map.settings.myLocationButton = true
         
+        // Setup the mission manager
+        self.missionManager = DJIMissionManager.sharedInstance()
+        self.missionManager!.delegate = self
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,6 +61,8 @@ class PanoMapViewController: UIViewController, GMSMapViewDelegate {
         let latitude = pano.valueForKey("latitude") as! Double
         let longitude = pano.valueForKey("longitude") as! Double
         let location = CLLocationCoordinate2DMake(latitude, longitude)
+        panoLocation = location
+        
         map.animateToLocation(location)
         
         
@@ -67,6 +77,46 @@ class PanoMapViewController: UIViewController, GMSMapViewDelegate {
     }
     
 
+    // This will trigger the aircraft to fly towards the pano location and begin the sequence
+    @IBAction func startPano(sender: AnyObject) {
+        
+        let wp: DJIWaypoint = DJIWaypoint(coordinate: panoLocation!)
+        wp.altitude = 20 // 10 meters
+        
+        // Setup some mission parameters
+        let mission: DJIWaypointMission = DJIWaypointMission()
+        mission.autoFlightSpeed = 10 // 10 m/s or 22 mph
+        mission.finishedAction = DJIWaypointMissionFinishedAction.NoAction
+        mission.headingMode = DJIWaypointMissionHeadingMode.Auto
+        mission.flightPathMode = DJIWaypointMissionFlightPathMode.Normal
+        
+        // Add waypoint to mission
+        mission.addWaypoint(wp)
+        
+        // Upload the waypoint and start the mission
+        self.missionManager!.prepareMission(mission, withProgress: nil, withCompletion: {[weak self] (error: NSError?) -> Void in
+            if error == nil {
+                
+                self?.missionManager!.startMissionExecutionWithCompletion({[weak self] (error: NSError?) -> Void in
+                    
+                    if error != nil {
+                        
+                        print("Error starting mission: \(error!.localizedDescription)")
+                        
+                    }
+                })
+                
+            } else {
+                
+                print("Custom mission failed: \(error!.localizedDescription)")
+                
+            }
+            
+        })
+        
+        
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -38,6 +38,7 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         super.viewWillAppear(animated)
         
         getPanos()
+        
     }
 
     override func didReceiveMemoryWarning() {
