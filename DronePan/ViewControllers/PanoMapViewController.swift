@@ -60,16 +60,16 @@ class PanoMapViewController: UIViewController, GMSMapViewDelegate, DJIMissionMan
         let name = pano.valueForKey("name") as! String
         let latitude = pano.valueForKey("latitude") as! Double
         let longitude = pano.valueForKey("longitude") as! Double
+        let altitude = pano.valueForKey("altitude") as! Float
         let location = CLLocationCoordinate2DMake(latitude, longitude)
         panoLocation = location
         
         map.animateToLocation(location)
         
-        
         let marker = GMSMarker(position: location)
         marker.icon = UIImage(named: "marker")
         marker.title = name
-        marker.snippet = "Altitude: 100m"
+        marker.snippet = "Altitude: " + String(altitude) + " m"
         marker.map = map
         
         map.selectedMarker = marker
@@ -133,4 +133,30 @@ extension PanoMapViewController: PanoSelectionDelegate {
     func panoSelected(newPano: NSManagedObject) {
         pano = newPano
     }
+}
+
+extension PanoMapViewController: FlightControllerDelegate {
+    
+    func flightControllerUpdateHeading(compassHeading: Double) {}
+    
+    func flightControllerUpdateAltitude(altitude: Float) {}
+    
+    func flightControllerUpdateSatelliteCount(satelliteCount: Int) {}
+    
+    func flightControllerUpdateDistance(distance: CLLocationDistance) {}
+    
+    func flightControllerUnableToSetControlMode() {}
+    
+    func flightControllerSetControlMode() {}
+    
+    func flightControllerUnableToYaw(reason: String) {}
+    
+    func flightControllerUpdateHomeLocation(location: CLLocationCoordinate2D) {
+        
+    }
+    
+    func flightControllerUpdateAircraftLocation(location: CLLocationCoordinate2D) {
+        
+    }
+    
 }

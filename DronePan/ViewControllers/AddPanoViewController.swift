@@ -78,6 +78,7 @@ class AddPanoViewController: UIViewController, GMSMapViewDelegate, UITextFieldDe
         pano.setValue(panoName.text, forKey: "name")
         pano.setValue(panoLocation.latitude, forKey: "latitude")
         pano.setValue(panoLocation.longitude, forKey: "longitude")
+        pano.setValue(Float(panoAltitude.text!), forKey: "altitude")
         pano.setValue(NSDate(), forKey: "datetime")
         
         // Save the pano
