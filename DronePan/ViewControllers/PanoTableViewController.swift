@@ -33,12 +33,6 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         
         getPanos()
         
-        // Select the first pano on initial load
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        let selectedPano = self.panos[indexPath.row]
-        self.delegate?.panoSelected(selectedPano)
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -102,6 +96,18 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
             let results =
                 try managedContext.executeFetchRequest(fetchRequest)
             panos = results as! [NSManagedObject]
+            
+            // Select first pano in the list
+            if (panos.count > 0) {
+               
+                // Select the first pano on initial load
+                let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+                let selectedPano = self.panos[indexPath.row]
+                self.delegate?.panoSelected(selectedPano)
+                
+            }
+            
+            
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
