@@ -31,13 +31,19 @@ class PanoTableViewController: UITableViewController, PanoSavedDelegate {
         
         super.viewDidLoad()
         
+        getPanos()
+        
+        // Select the first pano on initial load
+        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
+        let selectedPano = self.panos[indexPath.row]
+        self.delegate?.panoSelected(selectedPano)
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
-        
-        getPanos()
         
     }
 
