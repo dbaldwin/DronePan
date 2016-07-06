@@ -48,6 +48,8 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     var lastSetPitch: Float = 0
     var lastSetYaw: Float = 0
     var lastSetRoll: Float = 0
+    
+    var yawAtStop = false
 
     let isPitchAdjustable: Bool
     let isYawAdjustable: Bool
@@ -132,13 +134,13 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
 
         for (key, val) in gimbal.gimbalCapability {
             if let range = val as? DJIParamCapabilityMinMax {
-                DDLogDebug("Logging \(key) as range")
+                DDLogVerbose("Logging \(key) as range")
                 trackEvent(category: "Gimbal Capability", action: key as! String, label: "\(range.isSupported) \(range.min) - \(range.max)")
             } else if let capability = val as? DJIParamCapability {
-                DDLogDebug("Logging \(key) as cap")
+                DDLogVerbose("Logging \(key) as cap")
                 trackEvent(category: "Gimbal Capability", action: key as! String, label: "\(capability.isSupported)")
             } else {
-                DDLogDebug("Not logging \(key)")
+                DDLogVerbose("Not logging \(key)")
             }
         }
     }
@@ -179,9 +181,9 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     }
 
     func setPitch(pitch: Float) {
-        DDLogInfo("Gimbal Controller set pitch to \(pitch)")
-
         let pitchInRange = self.gimbalAngleForHeading(pitch)
+
+        DDLogInfo("Gimbal Controller set pitch to \(pitch) -> \(pitchInRange)")
 
         if (!inRange(pitchInRange, range: pitchRange, available: isPitchAdjustable)) {
             DDLogWarn("Gimbal Controller set pitch to \(pitchInRange) out of range")
@@ -200,9 +202,9 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     }
 
     func setYaw(yaw: Float) {
-        DDLogInfo("Gimbal Controller set yaw to \(yaw)")
-
         let yawInRange = self.gimbalAngleForHeading(yaw)
+
+        DDLogInfo("Gimbal Controller set yaw to \(yaw) -> \(yawInRange)")
 
         if (!inRange(yawInRange, range: yawRange, available: isYawAdjustable)) {
             DDLogWarn("Gimbal Controller set yaw to \(yawInRange) out of range")
@@ -221,10 +223,10 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     }
 
     func setRoll(roll: Float) {
-        DDLogInfo("Gimbal Controller set roll to \(roll)")
-
         let rollInRange = self.gimbalAngleForHeading(roll)
 
+        DDLogInfo("Gimbal Controller set roll to \(roll) -> \(rollInRange)")
+        
         if (!inRange(rollInRange, range: rollRange, available: isRollAdjustable)) {
             DDLogWarn("Gimbal Controller set roll to \(rollInRange) out of range")
 
@@ -272,6 +274,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
     }
 
     func valueInRange(adjustable: Bool, value: Float, currentValue: Float) -> Bool {
+        DDLogDebug("Checking in range \(adjustable) with value \(value) and currentValue \(currentValue)")
         return !adjustable || ((value - allowedOffset) ... (value + allowedOffset) ~= currentValue)
     }
 
@@ -279,7 +282,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
         if (!relativeGimbalYaw) {
             return yaw
         } else {
-            return gimbalAngleForHeading(self.currentACYaw) - yaw
+            return (gimbalAngleForHeading(self.currentACYaw) - yaw) * -1
         }
     }
 
@@ -393,6 +396,13 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
 
         if (isYawAdjustable) {
             yawRotation.angle = yaw
+            
+            if (self.yawAtStop) {
+                DDLogDebug("Yawing CC")
+                yawRotation.direction = .CounterClockwise
+            } else {
+                DDLogDebug("Yawing C")
+            }
         }
 
         if (isRollAdjustable) {
@@ -438,6 +448,8 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics, SystemUtils {
         self.currentPitch = atti.pitch
         self.currentYaw = atti.yaw
         self.currentRoll = atti.roll
+        
+        self.yawAtStop = gimbalState.isYawAtStop
 
         self.delegate?.gimbalAttitudeChanged(pitch: atti.pitch, yaw: adjustedYaw(atti.yaw), roll: atti.roll)
     }

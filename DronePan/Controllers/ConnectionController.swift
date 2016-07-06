@@ -59,8 +59,8 @@ protocol ConnectionControllerDiagnosticsDelegate {
 }
 
 @objc class ConnectionController: NSObject, DJISDKManagerDelegate, DJIBaseProductDelegate, Analytics {
-    var runInBridgeMode = false
-    let bridgeAddress = "10.0.1.18"
+    var runInBridgeMode = true
+    let bridgeAddress = "192.168.1.147"
 
     let appKey = "d6b78c9337f72fadd85d88e2"
 

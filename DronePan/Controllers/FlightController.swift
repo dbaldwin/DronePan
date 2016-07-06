@@ -45,6 +45,8 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
 
     var yawDestination : Double?
     var yawSpeed = 0.0
+    
+    var lastHeading = 0.0
 
     init(fc: DJIFlightController) {
         DDLogInfo("Flight Controller init")
@@ -200,13 +202,18 @@ class FlightController: NSObject, DJIFlightControllerDelegate, DJISimulatorDeleg
         if let compass = fc.compass {
             let currentHeading = headingTo360(compass.heading)
             
-            DDLogDebug("Current heading \(currentHeading)")
+            if fabs(fabs(currentHeading) - fabs(lastHeading)) > 0.2 {
+                DDLogDebug("Current heading \(currentHeading)")
+            }
+
+            lastHeading = currentHeading
 
             if let yawDestination = self.yawDestination {
                 self.yawSpeed = self.getSpeed(yawDestination, heading: currentHeading)
 
                 DDLogDebug("Current heading \(currentHeading) target \(yawDestination) yawSpeed \(self.yawSpeed)")
             }
+            
             
             self.delegate?.flightControllerUpdateHeading(currentHeading)
         }

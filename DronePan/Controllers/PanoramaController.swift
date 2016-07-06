@@ -331,8 +331,12 @@ extension PanoramaController {
                 self.currentHeading = 0
             }
 
-            let yaws = self.yawAngles(count: photosPerRow(model), heading: headingTo360(self.currentHeading))
-            let nadirYaws = self.yawAngles(count: nadirCount(model), heading:  headingTo360(self.currentHeading))
+            let headingForYaws = gimbalYaw ? 0 : headingTo360(self.currentHeading)
+            
+            let yaws = self.yawAngles(count: photosPerRow(model), heading: headingForYaws)
+            let nadirYaws = self.yawAngles(count: nadirCount(model), heading: headingForYaws)
+
+            DDLogInfo("Starting with yaws: \(yaws)")
 
             self.totalCount = numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
