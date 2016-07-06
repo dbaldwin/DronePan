@@ -170,6 +170,14 @@ extension PanoramaController {
 
                         return false
                     }
+                } else {
+                    if (!(remoteController.mode == .Positioning)) {
+                        DDLogDebug("Not in P mode")
+                        
+                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
+                        
+                        return false
+                    }
                 }
             }
         }
