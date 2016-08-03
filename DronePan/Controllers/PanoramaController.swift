@@ -27,6 +27,14 @@ protocol PanoramaControllerDelegate {
 
     func panoStopping()
 
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode)
+    
+    func cameraISOUpdated(ISO: UInt)
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture)
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed)
+    
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 
     func aircraftYawChanged(yaw: Float)
@@ -512,6 +520,16 @@ extension PanoramaController: CameraControllerDelegate {
             self.cameraController = nil
         }
     }
+    
+    func cameraExposureValuesUpdated(values: DJICameraExposureParameters) {
+        self.delegate?.cameraISOUpdated(values.iso)
+        self.delegate?.cameraApertureUpdated(values.aperture)
+        self.delegate?.cameraShutterSpeedUpdated(values.shutterSpeed)
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        self.delegate?.cameraExposureModeUpdated(mode)
+    }
 
     func cameraControllerCompleted(shotTaken: Bool) {
         DDLogDebug("Camera signalled complete with shot taken \(shotTaken)")
@@ -640,7 +658,6 @@ extension PanoramaController: FlightControllerDelegate {
 
     func flightControllerUpdateSatelliteCount(satelliteCount: Int) {
         self.delegate?.aircraftSatellitesChanged(satelliteCount)
-
     }
 
     func flightControllerUpdateDistance(distance: CLLocationDistance) {

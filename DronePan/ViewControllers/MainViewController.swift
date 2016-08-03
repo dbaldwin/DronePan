@@ -34,6 +34,11 @@ class MainViewController: UIViewController, Analytics {
     @IBOutlet weak var altitudeLabel: UILabel!
     @IBOutlet weak var satelliteLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
+    
+    @IBOutlet weak var exposureModeLabel: UILabel!
+    @IBOutlet weak var apertureLabel: UILabel!
+    @IBOutlet weak var shutterSpeedLabel: UILabel!
+    @IBOutlet weak var ISOLabel: UILabel!
 
     @IBOutlet weak var acYawLabel: UILabel!
     @IBOutlet weak var gimbalYawLabel: UILabel!
@@ -63,7 +68,7 @@ class MainViewController: UIViewController, Analytics {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.previewController = PreviewController(previewer: VideoPreviewerInstance())
         self.panoramaController = PanoramaController()
         self.panoramaController!.delegate = self
@@ -76,7 +81,7 @@ class MainViewController: UIViewController, Analytics {
                 selector: #selector(MainViewController.initializeInfo),
         name: UIApplicationWillEnterForegroundNotification,
         object: nil)
-
+        
         /*
         // TODO: this should be tested
         #ifndef DEBUG
@@ -246,9 +251,45 @@ class MainViewController: UIViewController, Analytics {
             self.batteryLabel.text = "Batt: -"
         }
     }
+    
+    func setExposureMode(mode: DJICameraExposureMode? = nil) {
+        if let mode = mode {
+            self.exposureModeLabel.hidden = false
+            self.exposureModeLabel.text = "Mode: \(mode.description[mode.description.startIndex])"
+        } else {
+            self.exposureModeLabel.text = "Mode: -"
+        }
+    }
+    
+    func setAperture(aperture: DJICameraAperture? = nil) {
+        if let aperture = aperture {
+            self.apertureLabel.hidden = false
+            self.apertureLabel.text = "A: \(aperture.description)"
+        } else {
+            self.apertureLabel.text = "A: -"
+        }
+    }
+    
+    func setShutterSpeed(shutterSpeed: DJICameraShutterSpeed? = nil) {
+        if let shutterSpeed = shutterSpeed {
+            self.shutterSpeedLabel.hidden = false
+            self.shutterSpeedLabel.text = "S: \(shutterSpeed.description)"
+        } else {
+            self.shutterSpeedLabel.text = "S: -"
+        }
+    }
+    
+    func setISO(ISO: UInt = 0) {
+        if ISO != 0 {
+            self.ISOLabel.hidden = false
+            self.ISOLabel.text = "ISO: \(ISO)"
+        } else {
+            self.ISOLabel.text = "ISO: -"
+        }
+    }
 
     func resetLabels() {
-        [self.sequenceLabel, self.batteryLabel, self.altitudeLabel, self.satelliteLabel, self.distanceLabel].forEach {
+        [self.sequenceLabel, self.batteryLabel, self.altitudeLabel, self.satelliteLabel, self.distanceLabel, self.exposureModeLabel, self.apertureLabel, self.shutterSpeedLabel, self.ISOLabel].forEach {
             (label) in
             label.hidden = true
         }
@@ -258,6 +299,11 @@ class MainViewController: UIViewController, Analytics {
         setSatellites()
         setDistance()
         setBattery()
+        
+        setExposureMode()
+        setAperture()
+        setShutterSpeed()
+        setISO()
     }
 
     func resetInfoLabels() {
@@ -498,6 +544,30 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoAvailable(available: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.enabled = available
+        }
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setExposureMode(mode)
+        }
+    }
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setAperture(aperture)
+        }
+    }
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setShutterSpeed(shutterSpeed)
+        }
+    }
+    
+    func cameraISOUpdated(ISO: UInt) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setISO(ISO)
         }
     }
 }
