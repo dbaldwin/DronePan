@@ -29,10 +29,14 @@ enum SettingsViewKey {
 class SettingsViewController: UIViewController, Analytics {
 
     var model: String = ""
+    var sdkVersion: String = ""
+    var firmwareVersion: String = ""
     var type: ProductType = .Aircraft
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var firmwareVersionLabel: UILabel!
+    @IBOutlet weak var sdkVersionLabel: UILabel!
     @IBOutlet weak var yawAngleLabel: UILabel!
     @IBOutlet weak var pitchAngleLabel: UILabel!
     @IBOutlet weak var countLabel: UILabel!
@@ -56,7 +60,7 @@ class SettingsViewController: UIViewController, Analytics {
         
         if let version = ControllerUtils.buildVersion() {
             self.versionLabel.hidden = false
-            self.versionLabel.text = "Version \(version)"
+            self.versionLabel.text = "DronePan: \(version)"
 
             DDLogDebug("Settings VC showing version \(version)")
         } else {
@@ -64,6 +68,11 @@ class SettingsViewController: UIViewController, Analytics {
 
             DDLogWarn("Settings VC unknown version")
         }
+        
+        // Display the SDK and product firmware versions for easy debug purposes
+        self.sdkVersionLabel.text = "SDK: " + sdkVersion
+        self.firmwareVersionLabel.text = "Firmware: " + firmwareVersion
+        
     }
 
     override func viewWillAppear(animated: Bool) {

@@ -52,6 +52,8 @@ protocol ConnectionControllerDelegate {
     func disconnectedFromRemote()
 
     func disconnectedFromFlightController()
+    
+    func firmwareVersion(version: String)
 }
 
 protocol ConnectionControllerDiagnosticsDelegate {
@@ -68,6 +70,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
     var diagnosticsDelegate: ConnectionControllerDiagnosticsDelegate?
 
     var model: String?
+    var firmwareVersion: String?
 
     func start() {
         DJISDKManager.registerApp(appKey, withDelegate: self)
@@ -113,6 +116,14 @@ protocol ConnectionControllerDiagnosticsDelegate {
                     }
                 }
             }
+            
+            // Grab the product firmware version to display in settings
+            product.getFirmwarePackageVersionWithCompletion{ (version:String?, error:NSError?) -> Void in
+                
+                self.delegate?.firmwareVersion(version ?? "Unknown")
+                
+            }
+            
         } else {
             DDLogInfo("Disconnected")
             self.delegate?.disconnected()

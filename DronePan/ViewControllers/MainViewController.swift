@@ -49,6 +49,7 @@ class MainViewController: UIViewController, Analytics {
     var rcInFMode = false
 
     var product: DJIBaseProduct?
+    var firmwareVersion: String = ""
 
     var connectionController: ConnectionController?
     var previewController: PreviewController?
@@ -302,6 +303,13 @@ class MainViewController: UIViewController, Analytics {
                 settings.type = type
             }
 #endif
+            
+            // Set the DJI SDK version
+            settings.sdkVersion = DJISDKManager.getSDKVersion()
+            
+            // Set the product firmware version
+            settings.firmwareVersion = self.firmwareVersion
+            
         }
     }
 }
@@ -398,6 +406,10 @@ extension MainViewController: ConnectionControllerDelegate {
 
     func disconnectedFromFlightController() {
         self.panoramaController?.setFC(nil)
+    }
+    
+    func firmwareVersion(version: String) {
+        self.firmwareVersion = version
     }
 }
 
