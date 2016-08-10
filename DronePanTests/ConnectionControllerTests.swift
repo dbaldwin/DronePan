@@ -152,13 +152,7 @@ class ConnectionControllerSpyDelegate: ConnectionControllerDelegate {
     }
     
     func firmwareVersion(version: String) {
-        guard let expectation = asyncExpectation else {
-            XCTFail("ConnectionControllerSpyDelegate was not setup correctly. Missing XCTExpectation reference")
-            return
-        }
         
-        componentRemoved = true
-        expectation.fulfill()
     }
     
 
