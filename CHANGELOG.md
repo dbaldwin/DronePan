@@ -15,9 +15,13 @@ have taken at least one photo or video before running DronePan.
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 
+### [1.4.3b12](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b12)
+
+Added sdk version and firmware version to settings screen for debug purposes.
+
 ### [1.4.3b11](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b11)
 
-...
+An incremental build to extend the TestFlight beta.
 
 ### [1.4.3b10](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b10)
 
