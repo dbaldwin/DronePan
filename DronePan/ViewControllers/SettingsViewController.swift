@@ -24,6 +24,7 @@ enum SettingsViewKey {
     case NadirCount
     case MaxPitchEnabled
     case MetricSelected
+    case PhotoMode
 }
 
 class SettingsViewController: UIViewController, Analytics {
@@ -52,6 +53,7 @@ class SettingsViewController: UIViewController, Analytics {
     var maxPitchEnabled = true
     var maxPitch = 0
     var metricSelected = true
+    var photoMode = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -155,6 +157,7 @@ class SettingsViewController: UIViewController, Analytics {
         self.maxPitchEnabled = ModelSettings.maxPitchEnabled(model)
         self.maxPitch = ModelSettings.maxPitch(model)
         self.metricSelected = ControllerUtils.metricUnits()
+        self.photoMode = ModelSettings.photoMode(model)
 
         updateCounts()
     }
@@ -203,16 +206,42 @@ extension SettingsViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (self.type) {
         case .Handheld:
-            return 6
+            return 7
         case .Aircraft:
             if maxPitch > 0 {
-                return 6
+                return 7
             } else {
-                return 5
+                return 6
             }
         default:
             return 0
         }
+    }
+    
+    func photoModeCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SegmentViewCell", forIndexPath: indexPath) as! SegmentTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Photo Mode:"
+        cell.values = ["Single", "AEB"]
+        cell.helpText = "Single mode takes one photo per shot. AEB mode takes three photos per shot at different exposures and is not supported by the XT camera."
+        // During testing HDR did not work so I'm saving this help text for future reference
+        // HDR mode automatically blends three exposures into a single image and is not supported by the X5, X5R, and XT cameras
+        cell.key = .PhotoMode
+        
+        var mode = "Single"
+        
+        if (self.photoMode == 1) {
+            mode = "AEB"
+        /*} else if (self.photoMode == 2) {
+            mode = "HDR"*/
+        }
+        
+        cell.prepareForDisplay(mode)
+        
+        return cell
+        
     }
     
     func unitsCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
@@ -346,6 +375,8 @@ extension SettingsViewController : UITableViewDataSource {
                 cell = nadirCountCell(tableView, indexPath: indexPath, nadir: false)
             case 4:
                 cell = unitsCell(tableView, indexPath: indexPath)
+            case 5:
+                cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
             }
@@ -370,6 +401,8 @@ extension SettingsViewController : UITableViewDataSource {
                 cell = pitchMaxCell(tableView, indexPath: indexPath)
             case 4:
                 cell = unitsCell(tableView, indexPath: indexPath)
+            case 5:
+                cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
             }
@@ -391,6 +424,14 @@ extension SettingsViewController : SegmentTableViewCellDelegate {
             self.maxPitchEnabled = value != "Horizon"
         case .MetricSelected:
             self.metricSelected = value == "Metric"
+        case .PhotoMode:
+            if value == "Single" {
+                self.photoMode = 0
+            } else if value == "AEB" {
+                self.photoMode = 1
+            } else if value == "HDR" {
+                self.photoMode = 2
+            }
         default:
             DDLogWarn("Segment control tríed to update a non-segment setting \(key)")
         }
@@ -428,7 +469,8 @@ extension SettingsViewController : ButtonViewCellDelegate {
                 .PhotosPerRow: self.perRow,
                 .NumberOfRows: self.rowCount,
                 .NadirCount: self.nadirCount,
-                .MaxPitchEnabled: self.maxPitchEnabled
+                .MaxPitchEnabled: self.maxPitchEnabled,
+                .PhotoMode: self.photoMode
             ]
 
             ModelSettings.updateSettings(model, settings: settings)

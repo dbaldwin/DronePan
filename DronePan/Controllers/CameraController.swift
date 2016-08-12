@@ -40,6 +40,7 @@ protocol VideoControllerDelegate {
 
 class CameraController: NSObject, DJICameraDelegate {
     let camera: DJICamera
+    let model: String = "Simulator"
 
     var delegate: CameraControllerDelegate?
     var videoDelegate: VideoControllerDelegate?
@@ -175,7 +176,22 @@ class CameraController: NSObject, DJICameraDelegate {
 
         var errorSeen = false
 
-        self.camera.startShootPhoto(.Single) {
+        // Get the photo mode stored in settings
+        let photoMode = ModelSettings.photoMode(self.model)
+        
+        // Set the photo mode from the DJI enum
+        var djiPhotoMode: DJICameraShootPhotoMode = .Single
+        
+        if (photoMode == 1) {
+            djiPhotoMode = .AEB
+        /*
+        // This code is not used. Unfortunately HDR takes so long to process an image that it times out.
+        } else if (photoMode == 2) {
+            djiPhotoMode = .HDR
+        */
+        }
+        
+        self.camera.startShootPhoto(djiPhotoMode) {
             (error) in
             if let e = error {
                 DDLogWarn("Camera Controller takeASnap - error seen - \(e)")

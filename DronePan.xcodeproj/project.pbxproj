@@ -59,7 +59,6 @@
 		232F6FD71C5449A40013CCD9 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD61C5449A40013CCD9 /* libz.tbd */; };
 		232F6FD91C5449AD0013CCD9 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */; };
 		232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */; };
-		23B775B81D5A504C00689507 /* CameraSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B775B71D5A504C00689507 /* CameraSettingsViewController.swift */; };
 		4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1ADC2CAEC27E8366417603 /* GimbalController.swift */; };
 		83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */; };
 		83195C101CE32BF2008A9755 /* PreviewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */; };
@@ -256,7 +255,6 @@
 		232F6FD61C5449A40013CCD9 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		232F6FD81C5449AD0013CCD9 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		232F6FDA1C5449C20013CCD9 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		23B775B71D5A504C00689507 /* CameraSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSettingsViewController.swift; sourceTree = "<group>"; };
 		4E1ADC2CAEC27E8366417603 /* GimbalController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GimbalController.swift; sourceTree = "<group>"; };
 		83195C0D1CE20269008A9755 /* ActiveAwareDispatchGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroup.swift; sourceTree = "<group>"; };
 		83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewControllerTests.swift; sourceTree = "<group>"; };
@@ -578,7 +576,6 @@
 				83A713261CF82571005194BA /* SliderTableViewCell.swift */,
 				83A713281CF8258B005194BA /* SegmentTableViewCell.swift */,
 				83A7132A1CF83034005194BA /* ButtonViewCell.swift */,
-				23B775B71D5A504C00689507 /* CameraSettingsViewController.swift */,
 			);
 			name = "View Controllers";
 			path = ViewControllers;
@@ -856,7 +853,6 @@
 				15839FBB1CCEA224008B7E97 /* MovieGLView.m in Sources */,
 				4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */,
 				1521D6931CD4CF29007458D7 /* FlightController.swift in Sources */,
-				23B775B81D5A504C00689507 /* CameraSettingsViewController.swift in Sources */,
 				1574A1C21CEAF058008CFEE7 /* VideoPreviewerWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

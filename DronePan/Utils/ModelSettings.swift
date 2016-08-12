@@ -22,6 +22,7 @@ enum SettingsKeys: String {
     case NadirCount = "nadir_count"
     case MaxPitch = "max_pitch"
     case MaxPitchEnabled = "max_pitch_enabled"
+    case PhotoMode = "photo_mode"
 }
 
 class ModelSettings {
@@ -59,6 +60,10 @@ class ModelSettings {
 
     class func maxPitchEnabled(model: String) -> Bool {
         return ModelSettings.boolSettingForKey(model, key: .MaxPitchEnabled, defaultValue: true)
+    }
+    
+    class func photoMode(model: String) -> Int {
+        return ModelSettings.intSettingForKey(model, key: .PhotoMode, defaultValue: 0)
     }
     
     class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
