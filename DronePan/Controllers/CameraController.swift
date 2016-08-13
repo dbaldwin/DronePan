@@ -40,7 +40,7 @@ protocol VideoControllerDelegate {
 
 class CameraController: NSObject, DJICameraDelegate {
     let camera: DJICamera
-    let model: String = "Simulator"
+    var model: String = "Simulator"
 
     var delegate: CameraControllerDelegate?
     var videoDelegate: VideoControllerDelegate?

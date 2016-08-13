@@ -503,6 +503,7 @@ extension PanoramaController: CameraControllerDelegate {
     func setCamera(camera: DJICamera?, preview: VideoControllerDelegate? = nil) {
         if let camera = camera {
             self.cameraController = CameraController(camera: camera)
+            self.cameraController!.model = self.model!
             self.cameraController!.delegate = self
 
             if let preview = preview {
