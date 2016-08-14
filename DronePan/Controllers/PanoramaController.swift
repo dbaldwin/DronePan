@@ -40,6 +40,15 @@ protocol PanoramaControllerDelegate {
     func panoCountChanged(count: Int, total: Int)
 
     func panoAvailable(available: Bool)
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode)
+    
+    func cameraISOUpdated(ISO: UInt)
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture)
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed)
+    
 }
 
 class PanoramaController: Analytics {
@@ -512,6 +521,16 @@ extension PanoramaController: CameraControllerDelegate {
         } else {
             self.cameraController = nil
         }
+    }
+    
+    func cameraExposureValuesUpdated(values: DJICameraExposureParameters) {
+        self.delegate?.cameraISOUpdated(values.iso)
+        self.delegate?.cameraApertureUpdated(values.aperture)
+        self.delegate?.cameraShutterSpeedUpdated(values.shutterSpeed)
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        self.delegate?.cameraExposureModeUpdated(mode)
     }
 
     func cameraControllerCompleted(shotTaken: Bool) {

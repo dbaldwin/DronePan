@@ -247,6 +247,42 @@ class MainViewController: UIViewController, Analytics {
             self.batteryLabel.text = "Batt: -"
         }
     }
+    
+    func setExposureMode(mode: DJICameraExposureMode? = nil) {
+        /*if let mode = mode {
+            self.exposureModeLabel.hidden = false
+            self.exposureModeLabel.text = "Mode: \(mode.description[mode.description.startIndex])"
+        } else {
+            self.exposureModeLabel.text = "Mode: -"
+        }*/
+    }
+    
+    func setAperture(aperture: DJICameraAperture? = nil) {
+        /*if let aperture = aperture {
+            self.apertureLabel.hidden = false
+            self.apertureLabel.text = "A: \(aperture.description)"
+        } else {
+            self.apertureLabel.text = "A: -"
+        }*/
+    }
+    
+    func setShutterSpeed(shutterSpeed: DJICameraShutterSpeed? = nil) {
+        /*if let shutterSpeed = shutterSpeed {
+            self.shutterSpeedLabel.hidden = false
+            self.shutterSpeedLabel.text = "S: \(shutterSpeed.description)"
+        } else {
+            self.shutterSpeedLabel.text = "S: -"
+        }*/
+    }
+    
+    func setISO(ISO: UInt = 0) {
+        /*if ISO != 0 {
+            self.ISOLabel.hidden = false
+            self.ISOLabel.text = "ISO: \(ISO)"
+        } else {
+            self.ISOLabel.text = "ISO: -"
+        }*/
+    }
 
     func resetLabels() {
         [self.sequenceLabel, self.batteryLabel, self.altitudeLabel, self.satelliteLabel, self.distanceLabel].forEach {
@@ -259,6 +295,10 @@ class MainViewController: UIViewController, Analytics {
         setSatellites()
         setDistance()
         setBattery()
+        setExposureMode()
+        setAperture()
+        setShutterSpeed()
+        setISO()
     }
 
     func resetInfoLabels() {
@@ -510,6 +550,30 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoAvailable(available: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.enabled = available
+        }
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setExposureMode(mode)
+        }
+    }
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setAperture(aperture)
+        }
+    }
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setShutterSpeed(shutterSpeed)
+        }
+    }
+    
+    func cameraISOUpdated(ISO: UInt) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setISO(ISO)
         }
     }
 }
