@@ -40,7 +40,7 @@ protocol VideoControllerDelegate {
 
 class CameraController: NSObject, DJICameraDelegate {
     let camera: DJICamera
-    var model: String = "Simulator"
+    var model: String?
 
     var delegate: CameraControllerDelegate?
     var videoDelegate: VideoControllerDelegate?
@@ -177,7 +177,7 @@ class CameraController: NSObject, DJICameraDelegate {
         var errorSeen = false
 
         // Get the photo mode stored in settings
-        let photoMode = ModelSettings.photoMode(self.model)
+        let photoMode = ModelSettings.photoMode(self.model!)
         
         // Set the photo mode from the DJI enum
         var djiPhotoMode: DJICameraShootPhotoMode = .Single
