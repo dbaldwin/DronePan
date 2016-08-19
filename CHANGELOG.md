@@ -15,7 +15,7 @@ have taken at least one photo or video before running DronePan.
 * Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
 * Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 
-### [1.4.3b13](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b12)
+### [1.4.3b13](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b13)
 
 * Added sdk version and firmware version to settings screen for debug purposes.
 * Notify P4 users if they try to shoot a pano when not in P mode
