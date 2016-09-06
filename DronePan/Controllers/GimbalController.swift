@@ -70,7 +70,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
 
         self.relativeGimbalYaw = gimbalYawIsRelativeToAircraft
 
-        if let pitchInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustPitch] as? DJIParamCapabilityMinMax {
+        if let pitchInfo = gimbal.gimbalCapability[DJIGimbalParamAdjustPitch] as? DJIParamCapabilityMinMax {
             isPitchAdjustable = pitchInfo.isSupported
 
             if (isPitchAdjustable) {
@@ -83,7 +83,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             pitchRange = nil
         }
 
-        if let yawInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustYaw] as? DJIParamCapabilityMinMax {
+        if let yawInfo = gimbal.gimbalCapability[DJIGimbalParamAdjustYaw] as? DJIParamCapabilityMinMax {
             isYawAdjustable = yawInfo.isSupported
 
             if (isYawAdjustable) {
@@ -96,7 +96,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             yawRange = nil
         }
 
-        if let rollInfo = gimbal.gimbalCapability[DJIGimbalKeyAdjustRoll] as? DJIParamCapabilityMinMax {
+        if let rollInfo = gimbal.gimbalCapability[DJIGimbalParamAdjustRoll] as? DJIParamCapabilityMinMax {
             isRollAdjustable = rollInfo.isSupported
 
             if (isRollAdjustable) {
@@ -109,7 +109,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             rollRange = nil
         }
 
-        if let rangeExtension = gimbal.gimbalCapability[DJIGimbalKeyPitchRangeExtension] as? DJIParamCapability {
+        if let rangeExtension = gimbal.gimbalCapability[DJIGimbalParamPitchRangeExtensionEnabled] as? DJIParamCapability {
             DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
 
             self.supportsRangeExtension = rangeExtension.isSupported

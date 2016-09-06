@@ -142,7 +142,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
 
     func componentWithKey(key: String, changedFrom oldComponent: DJIBaseComponent?, to newComponent: DJIBaseComponent?) {
         switch key {
-        case DJIBatteryComponentKey:
+        case DJIBatteryComponent:
             if let battery = newComponent as? DJIBattery {
                 DDLogDebug("New battery")
                 self.delegate?.connectedToBattery(battery)
@@ -150,7 +150,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
                 DDLogDebug("No battery")
                 self.delegate?.disconnectedFromBattery()
             }
-        case DJICameraComponentKey:
+        case DJICameraComponent:
             if let camera = newComponent as? DJICamera {
                 DDLogDebug("New camera")
 
@@ -174,7 +174,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
                 DDLogDebug("No camera")
                 self.delegate?.disconnectedFromCamera()
             }
-        case DJIGimbalComponentKey:
+        case DJIGimbalComponent:
             if let gimbal = newComponent as? DJIGimbal {
                 DDLogDebug("New gimbal")
                 self.delegate?.connectedToGimbal(gimbal)
@@ -182,7 +182,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
                 DDLogDebug("No gimbal")
                 self.delegate?.disconnectedFromGimbal()
             }
-        case DJIRemoteControllerComponentKey:
+        case DJIRemoteControllerComponent:
             if let remote = newComponent as? DJIRemoteController {
                 DDLogDebug("New remote")
                 self.delegate?.connectedToRemote(remote)
@@ -190,7 +190,7 @@ protocol ConnectionControllerDiagnosticsDelegate {
                 DDLogDebug("No remote")
                 self.delegate?.disconnectedFromRemote()
             }
-        case DJIFlightControllerComponentKey:
+        case DJIFlightControllerComponent:
             if let fc = newComponent as? DJIFlightController {
                 DDLogDebug("New flight controller")
                 self.delegate?.connectedToFlightController(fc)
