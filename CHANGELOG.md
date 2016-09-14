@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.5
+
+#### App Issues
+
+* Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
+* Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
+
+### [1.5b14](https://github.com/dbaldwin/DronePan/releases/tag/1.5b14)
+
+* Added DJI SDK 3.3 which comes with support for Osmo Mobile
+* Enabled pitch range extension for Phantom users. This should force the +30 sky row if it's selected in DronePan (it is by default) and not enabled in GO.
+
 ## 1.4.3
 
 ### Known issues
@@ -9,11 +21,6 @@
 SDK 3.2 does not tell us when a photo or video is taken the first time after the SD card is formatted. DJI
 have said that this will be fixed in a later version of the SDK. Please make sure that after formatting you
 have taken at least one photo or video before running DronePan.
-
-#### App Issues
-
-* Video feed doesn't fill the view in all cases [Issue 33](https://github.com/dbaldwin/DronePan/issues/33)
-* Gimbal yaw for I1 coming soon [Issue 24](https://github.com/dbaldwin/DronePan/issues/24)
 
 ### [1.4.3b13](https://github.com/dbaldwin/DronePan/releases/tag/1.4.3b13)
 
