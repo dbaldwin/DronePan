@@ -343,9 +343,9 @@ class GimbalControllerTests: XCTestCase {
         override var gimbalCapability: [NSObject:AnyObject] {
             get {
                 return [
-                        DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                        DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                        DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
+                        DJIGimbalParamAdjustYaw: RangeParamMock(supported: true),
+                        DJIGimbalParamAdjustRoll: RangeParamMock(supported: true),
+                        DJIGimbalParamAdjustPitch: RangeParamMock(supported: true)
                 ]
             }
         }
@@ -367,9 +367,9 @@ class GimbalControllerTests: XCTestCase {
         override var gimbalCapability: [NSObject:AnyObject] {
             get {
                 return [
-                        DJIGimbalKeyAdjustYaw: RangeParamMock(supported: true),
-                        DJIGimbalKeyAdjustRoll: RangeParamMock(supported: true),
-                        DJIGimbalKeyAdjustPitch: RangeParamMock(supported: true)
+                        DJIGimbalParamAdjustYaw: RangeParamMock(supported: true),
+                        DJIGimbalParamAdjustRoll: RangeParamMock(supported: true),
+                        DJIGimbalParamAdjustPitch: RangeParamMock(supported: true)
                 ]
             }
         }
@@ -381,7 +381,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testPitchCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustPitch, supported: true)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustPitch, supported: true)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -390,7 +390,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testNoPitchCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustPitch, supported: false)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustPitch, supported: false)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -399,7 +399,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testYawCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustYaw, supported: true)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustYaw, supported: true)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -408,7 +408,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testYawCapabilitiesRelative() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustYaw, supported: true)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustYaw, supported: true)
 
         let controller = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: true)
 
@@ -417,7 +417,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testNoYawCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustYaw, supported: false)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustYaw, supported: false)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -426,7 +426,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testRollCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustRoll, supported: true)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustRoll, supported: true)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -435,7 +435,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testNoRollCapabilities() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyAdjustRoll, supported: false)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamAdjustRoll, supported: false)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -444,7 +444,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testPitchExtension() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyPitchRangeExtension, supported: true, range: false)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamPitchRangeExtensionEnabled, supported: true, range: false)
 
         let controller = GimbalController(gimbal: gimbal)
 
@@ -452,7 +452,7 @@ class GimbalControllerTests: XCTestCase {
     }
 
     func testNoPitchExtension() {
-        let gimbal = GimbalMock(testKey: DJIGimbalKeyPitchRangeExtension, supported: false, range: false)
+        let gimbal = GimbalMock(testKey: DJIGimbalParamPitchRangeExtensionEnabled, supported: false, range: false)
 
         let controller = GimbalController(gimbal: gimbal)
 

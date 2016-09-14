@@ -301,23 +301,23 @@ class ConnectionControllerTests: XCTestCase {
     }
 
     func testBatterySeen() {
-        newComponent(DJIBatteryComponentKey, component: DJIBattery())
+        newComponent(DJIBatteryComponent, component: DJIBattery())
     }
 
     func testCameraSeen() {
-        newComponent(DJICameraComponentKey, component: DJICamera())
+        newComponent(DJICameraComponent, component: DJICamera())
     }
 
     func testGimbalSeen() {
-        newComponent(DJIGimbalComponentKey, component: DJIGimbal())
+        newComponent(DJIGimbalComponent, component: DJIGimbal())
     }
 
     func testRemoteSeen() {
-        newComponent(DJIRemoteControllerComponentKey, component: DJIRemoteController())
+        newComponent(DJIRemoteControllerComponent, component: DJIRemoteController())
     }
 
     func testFlightControllerSeen() {
-        newComponent(DJIFlightControllerComponentKey, component: DJIFlightController())
+        newComponent(DJIFlightControllerComponent, component: DJIFlightController())
     }
 
     func loseComponent(key: String) {
@@ -341,23 +341,23 @@ class ConnectionControllerTests: XCTestCase {
     }
 
     func testBatteryLost() {
-        loseComponent(DJIBatteryComponentKey)
+        loseComponent(DJIBatteryComponent)
     }
 
     func testCameraLost() {
-        loseComponent(DJICameraComponentKey)
+        loseComponent(DJICameraComponent)
     }
 
     func testGimbalLost() {
-        loseComponent(DJIGimbalComponentKey)
+        loseComponent(DJIGimbalComponent)
     }
 
     func testRemoteLost() {
-        loseComponent(DJIRemoteControllerComponentKey)
+        loseComponent(DJIRemoteControllerComponent)
     }
 
     func testFlightControllerLost() {
-        loseComponent(DJIFlightControllerComponentKey)
+        loseComponent(DJIFlightControllerComponent)
     }
 
     func testConnected() {
