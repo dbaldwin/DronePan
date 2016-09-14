@@ -113,12 +113,18 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
 
             self.supportsRangeExtension = rangeExtension.isSupported
-            // TOOD - we should now be able to check and set sky row. Testing on all devices needed.
-            /*
-            if rangeExtension.isSupported {
-                gimbal!.setPitchRangeExtensionEnabled(true, withCompletion: nil)
+            
+            if self.supportsRangeExtension {
+                gimbal.setPitchRangeExtensionEnabled(true, withCompletion: {
+                    (error) in
+                    if let error = error {
+                        
+                        DDLogWarn("Error setting pitch range extension \(error)")
+                        
+                    }
+                })
             }
-            */
+        
         }
 
         super.init()
