@@ -367,7 +367,7 @@ class SettingsViewControllerTests: XCTestCase {
 
         let versionString = vc.versionLabel.text
 
-        XCTAssertTrue(versionString?.rangeOfString("\\d\\d?.\\d\\d?.\\d\\d?\\(\\d\\d?\\d?\\)", options: .RegularExpressionSearch) != nil, "Version string didn't match format \(versionString)")
+        XCTAssertTrue(versionString?.rangeOfString("\\d\\d?\\.\\d\\d?(\\.\\d\\d?)?\\(\\d\\d?\\)", options: .RegularExpressionSearch) != nil, "Version string didn't match format \(versionString)")
     }
 
     func testCopyLog() {
