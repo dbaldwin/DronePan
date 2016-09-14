@@ -176,19 +176,18 @@ class CameraController: NSObject, DJICameraDelegate {
 
         var errorSeen = false
 
-        // Get the photo mode stored in settings
-        let photoMode = ModelSettings.photoMode(self.model!)
-        
         // Set the photo mode from the DJI enum
         var djiPhotoMode: DJICameraShootPhotoMode = .Single
+
+        if let model = self.model {
+            // Get the photo mode stored in settings
+            let photoMode = ModelSettings.photoMode(model)
         
-        if (photoMode == 1) {
-            djiPhotoMode = .AEB
-        /*
-        // This code is not used. Unfortunately HDR takes so long to process an image that it times out.
-        } else if (photoMode == 2) {
-            djiPhotoMode = .HDR
-        */
+            if (photoMode == 1) {
+                djiPhotoMode = .AEB
+            }
+            
+            // photoMode == 2 -> djiPhotoMode = .HDR but this takes too long to process and we timeout
         }
         
         self.camera.startShootPhoto(djiPhotoMode) {
