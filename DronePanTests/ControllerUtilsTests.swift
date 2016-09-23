@@ -28,72 +28,124 @@ class ControllerUtilsTests: XCTestCase {
     }
 
     func testIsInspire() {
-        XCTAssertTrue(ControllerUtils.isInspire(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was not inspire")
-        XCTAssertTrue(ControllerUtils.isInspire(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was not inspire")
-        XCTAssertTrue(ControllerUtils.isInspire(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was not inspire")
-
-        XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was inspire")
-        XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was inspire")
-        XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was inspire")
-        XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was inspire")
-        XCTAssertFalse(ControllerUtils.isInspire(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was inspire")
+        let results = [
+            DJIAircraftModelNameInspire1: true,
+            DJIAircraftModelNameInspire1Pro: true,
+            DJIAircraftModelNameInspire1RAW: true,
+            DJIAircraftModelNamePhantom3Professional: false,
+            DJIAircraftModelNamePhantom3Advanced: false,
+            DJIAircraftModelNamePhantom3Standard: false,
+            DJIAircraftModelNamePhantom34K: false,
+            DJIAircraftModelNameMatrice100: false,
+            DJIAircraftModelNamePhantom4: false,
+            DJIAircraftModelNameMatrice600: false,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.isInspire(aircraft) == result, "\(aircraft) incorrect result for inspire")
+        }
     }
 
     func testIsPhantom3() {
-        XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom 3")
-        XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom 3")
-        XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom 3")
-
-        XCTAssertFalse(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was phantom 3")
-
-        XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was not phantom 3")
-        XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was not phantom 3")
-        XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was not phantom 3")
-        XCTAssertTrue(ControllerUtils.isPhantom3(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was not phantom 3")
+        let results = [
+            DJIAircraftModelNameInspire1: false,
+            DJIAircraftModelNameInspire1Pro: false,
+            DJIAircraftModelNameInspire1RAW: false,
+            DJIAircraftModelNamePhantom3Professional: true,
+            DJIAircraftModelNamePhantom3Advanced: true,
+            DJIAircraftModelNamePhantom3Standard: true,
+            DJIAircraftModelNamePhantom34K: true,
+            DJIAircraftModelNameMatrice100: false,
+            DJIAircraftModelNamePhantom4: false,
+            DJIAircraftModelNameMatrice600: false,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.isPhantom3(aircraft) == result, "\(aircraft) incorrect result for phantom 3")
+        }
     }
 
     func testIsPhantom4() {
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom 4")
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom 4")
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom 4")
-
-        XCTAssertTrue(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was not phantom 4")
-
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was phantom 4")
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was phantom 4")
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was phantom 4")
-        XCTAssertFalse(ControllerUtils.isPhantom4(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was phantom 4")
+        let results = [
+            DJIAircraftModelNameInspire1: false,
+            DJIAircraftModelNameInspire1Pro: false,
+            DJIAircraftModelNameInspire1RAW: false,
+            DJIAircraftModelNamePhantom3Professional: false,
+            DJIAircraftModelNamePhantom3Advanced: false,
+            DJIAircraftModelNamePhantom3Standard: false,
+            DJIAircraftModelNamePhantom34K: false,
+            DJIAircraftModelNameMatrice100: false,
+            DJIAircraftModelNamePhantom4: true,
+            DJIAircraftModelNameMatrice600: false,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.isPhantom4(aircraft) == result, "\(aircraft) incorrect result for phantom 4")
+        }
     }
 
     func testIsPhantom() {
-        XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) was phantom")
-        XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) was phantom")
-        XCTAssertFalse(ControllerUtils.isPhantom(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) was phantom")
-
-        XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) was not phantom")
-
-        XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) was not phantom")
-        XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) was not phantom")
-        XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) was not phantom")
-        XCTAssertTrue(ControllerUtils.isPhantom(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) was not phantom")
+        let results = [
+            DJIAircraftModelNameInspire1: false,
+            DJIAircraftModelNameInspire1Pro: false,
+            DJIAircraftModelNameInspire1RAW: false,
+            DJIAircraftModelNamePhantom3Professional: true,
+            DJIAircraftModelNamePhantom3Advanced: true,
+            DJIAircraftModelNamePhantom3Standard: true,
+            DJIAircraftModelNamePhantom34K: true,
+            DJIAircraftModelNameMatrice100: false,
+            DJIAircraftModelNamePhantom4: true,
+            DJIAircraftModelNameMatrice600: false,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.isPhantom(aircraft) == result, "\(aircraft) incorrect result for phantom")
+        }
+    }
+    
+    func testIsMatrice() {
+        let results = [
+            DJIAircraftModelNameInspire1: false,
+            DJIAircraftModelNameInspire1Pro: false,
+            DJIAircraftModelNameInspire1RAW: false,
+            DJIAircraftModelNamePhantom3Professional: false,
+            DJIAircraftModelNamePhantom3Advanced: false,
+            DJIAircraftModelNamePhantom3Standard: false,
+            DJIAircraftModelNamePhantom34K: false,
+            DJIAircraftModelNameMatrice100: true,
+            DJIAircraftModelNamePhantom4: false,
+            DJIAircraftModelNameMatrice600: true,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.isMatrice(aircraft) == result, "\(aircraft) incorrect result for matrice")
+        }
     }
 
+    
     func testGimbalYawIsRelativeToAircraft() {
-        XCTAssertTrue(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNameInspire1), "\(DJIAircraftModelNameInspire1) gimbal yaw was not relative")
-        XCTAssertTrue(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNameInspire1RAW), "\(DJIAircraftModelNameInspire1RAW) gimbal yaw was not relative")
-        XCTAssertTrue(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNameInspire1Pro), "\(DJIAircraftModelNameInspire1Pro) gimbal yaw was not relative")
-
-        XCTAssertTrue(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNamePhantom4), "\(DJIAircraftModelNamePhantom4) gimbal yaw was not relative")
-
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNamePhantom3Professional), "\(DJIAircraftModelNamePhantom3Professional) gimbal yaw was relative")
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNamePhantom3Standard), "\(DJIAircraftModelNamePhantom3Standard) gimbal yaw was relative")
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNamePhantom3Advanced), "\(DJIAircraftModelNamePhantom3Advanced) gimbal yaw was relative")
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIAircraftModelNamePhantom34K), "\(DJIAircraftModelNamePhantom34K) gimbal yaw was relative")
-
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIHandheldModelNameOsmo), "\(DJIHandheldModelNameOsmo) gimbal yaw was relative")
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(DJIHandheldModelNameOsmoPro), "\(DJIHandheldModelNameOsmoPro) gimbal yaw was relative")
-
-        XCTAssertFalse(ControllerUtils.gimbalYawIsRelativeToAircraft(nil), "Missing model gimbal yaw was relative")
+        let results = [
+            DJIAircraftModelNameInspire1: true,
+            DJIAircraftModelNameInspire1Pro: true,
+            DJIAircraftModelNameInspire1RAW: true,
+            DJIAircraftModelNamePhantom3Professional: false,
+            DJIAircraftModelNamePhantom3Advanced: false,
+            DJIAircraftModelNamePhantom3Standard: false,
+            DJIAircraftModelNamePhantom34K: false,
+            DJIAircraftModelNameMatrice100: true,
+            DJIAircraftModelNamePhantom4: true,
+            DJIAircraftModelNameMatrice600: true,
+            DJIAircraftModelNameA3: false
+        ]
+        
+        for (aircraft, result) in results {
+            XCTAssertTrue(ControllerUtils.gimbalYawIsRelativeToAircraft(aircraft) == result, "\(aircraft) incorrect result for gimbal yaw")
+        }
     }
 
     func testDefaultDisplayIsInMeters() {

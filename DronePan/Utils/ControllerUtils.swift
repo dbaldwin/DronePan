@@ -62,9 +62,21 @@ class ControllerUtils {
         return ControllerUtils.isPhantom3(model) || ControllerUtils.isPhantom4(model)
     }
 
+    class func isMatrice100(model: String) -> Bool {
+        return model == DJIAircraftModelNameMatrice100
+    }
+
+    class func isMatrice600(model: String) -> Bool {
+        return model == DJIAircraftModelNameMatrice600
+    }
+    
+    class func isMatrice(model: String) -> Bool {
+        return ControllerUtils.isMatrice100(model) || ControllerUtils.isMatrice600(model)
+    }
+    
     class func gimbalYawIsRelativeToAircraft(model: String?) -> Bool {
         if let model = model {
-            return ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model)
+            return ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model) || ControllerUtils.isMatrice(model)
         } else {
             return false
         }
