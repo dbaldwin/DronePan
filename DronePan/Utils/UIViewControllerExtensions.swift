@@ -21,12 +21,12 @@ extension UIViewController {
         dispatch_async(dispatch_get_main_queue()) {
             if let view = view {
                 let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                hud.color = UIColor(colorLiteralRed: 0, green: 122.0 / 255.0, blue: 1, alpha: 1)
+                hud.bezelView.color = UIColor(colorLiteralRed: 0, green: 122.0 / 255.0, blue: 1, alpha: 1)
                 hud.mode = .Text
-                hud.labelText = message
+                hud.label.text = message
                 hud.margin = 10.0
                 hud.removeFromSuperViewOnHide = true
-                hud.hide(true, afterDelay: 5)
+                hud.hideAnimated(true, afterDelay: 5)
             }
         }
     }
