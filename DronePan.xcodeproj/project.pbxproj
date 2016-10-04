@@ -44,6 +44,8 @@
 		1583BF571CC26F6E00C00C0D /* ControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */; };
 		158606461CDB26F500C5DF95 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 158606451CDB26F500C5DF95 /* MainViewController.swift */; };
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
+		15B5003F1DA37108005DFB0D /* Panorama.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B5003E1DA37108005DFB0D /* Panorama.swift */; };
+		15B500411DA3719F005DFB0D /* PanoramaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B500401DA3719F005DFB0D /* PanoramaViewController.swift */; };
 		15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */; };
 		15CCA5091CE25FEF003C9B38 /* FlightControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */; };
 		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
@@ -238,6 +240,8 @@
 		158606451CDB26F500C5DF95 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DronePan-Bridging-Header.h"; sourceTree = "<group>"; };
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
+		15B5003E1DA37108005DFB0D /* Panorama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Panorama.swift; sourceTree = "<group>"; };
+		15B500401DA3719F005DFB0D /* PanoramaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaViewController.swift; sourceTree = "<group>"; };
 		15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroupTests.swift; sourceTree = "<group>"; };
 		15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightControllerTests.swift; sourceTree = "<group>"; };
 		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -572,6 +576,7 @@
 			isa = PBXGroup;
 			children = (
 				158606451CDB26F500C5DF95 /* MainViewController.swift */,
+				15B500401DA3719F005DFB0D /* PanoramaViewController.swift */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
 				83A713261CF82571005194BA /* SliderTableViewCell.swift */,
 				83A713281CF8258B005194BA /* SegmentTableViewCell.swift */,
@@ -621,6 +626,7 @@
 			isa = PBXGroup;
 			children = (
 				154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */,
+				15B5003E1DA37108005DFB0D /* Panorama.swift */,
 				83EBB1651CD0DA6C00F381A8 /* Controllers */,
 				15CCA5061CE24434003C9B38 /* View Controllers */,
 				15CCA5071CE2447A003C9B38 /* Utils */,
@@ -844,9 +850,11 @@
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
 				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,
+				15B500411DA3719F005DFB0D /* PanoramaViewController.swift in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
 				15839FBC1CCEA224008B7E97 /* SoftwareDecodeProcessor.m in Sources */,
 				15839FC91CD4BC40008B7E97 /* PanoramaController.swift in Sources */,
+				15B5003F1DA37108005DFB0D /* Panorama.swift in Sources */,
 				15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */,
 				15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */,
 				15839FC21CCEAB3E008B7E97 /* RemoteController.swift in Sources */,
