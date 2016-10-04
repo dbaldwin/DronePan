@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -787,6 +786,9 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="414" y="24" width="194" height="24"/>
+                                </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SkC-vk-3b4">
                                 <rect key="frame" x="16" y="72" width="41" height="20"/>
@@ -852,17 +854,17 @@
                                 <rect key="frame" x="16" y="202" width="992" height="550"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Uz9-q0-0OC">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="200" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="z8B-aH-3Pw">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ThumbnailImagecell" id="z8B-aH-3Pw">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="200" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -903,6 +905,9 @@
                                         <integer key="value" value="8"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="519" y="136" width="488" height="50"/>
+                                </variation>
                                 <connections>
                                     <action selector="fetchAll:" destination="mbT-Is-rm1" eventType="touchUpInside" id="Yhe-R2-5QJ"/>
                                 </connections>
@@ -934,7 +939,9 @@
                             <constraint firstItem="p54-2S-MEa" firstAttribute="leading" secondItem="URi-de-pIH" secondAttribute="leading" id="76l-sm-YWa"/>
                             <constraint firstItem="SkC-vk-3b4" firstAttribute="top" secondItem="EG5-zd-KxS" secondAttribute="bottom" constant="24" id="9M9-Ah-5hC"/>
                             <constraint firstAttribute="trailing" secondItem="LHY-HW-Bt5" secondAttribute="trailing" constant="16" id="B2d-V4-19Q"/>
-                            <constraint firstItem="oNF-2k-YdZ" firstAttribute="top" secondItem="IzB-Ns-moL" secondAttribute="bottom" id="CeW-tT-Bfc"/>
+                            <constraint firstItem="oNF-2k-YdZ" firstAttribute="top" secondItem="IzB-Ns-moL" secondAttribute="bottom" id="CeW-tT-Bfc">
+                                <variation key="heightClass=compact" constant="16"/>
+                            </constraint>
                             <constraint firstItem="p54-2S-MEa" firstAttribute="centerY" secondItem="EzJ-my-mTs" secondAttribute="centerY" id="Fyu-nh-128"/>
                             <constraint firstItem="vCo-Xv-eAF" firstAttribute="top" secondItem="LHY-HW-Bt5" secondAttribute="bottom" constant="16" id="GLI-mg-UX7"/>
                             <constraint firstItem="VRW-DP-ZWT" firstAttribute="centerY" secondItem="SkC-vk-3b4" secondAttribute="centerY" id="HyB-WX-eZc"/>
@@ -972,7 +979,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="byu-oz-P9B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1457" y="949"/>
+            <point key="canvasLocation" x="1457" y="1398"/>
         </scene>
     </scenes>
     <resources>
