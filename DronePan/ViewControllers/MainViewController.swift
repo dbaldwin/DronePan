@@ -61,6 +61,8 @@ class MainViewController: UIViewController, Analytics {
     
     var currentWarning = ""
     var currentProgress = 0.0
+    
+    var currentPanorama : Panorama?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -287,30 +289,57 @@ class MainViewController: UIViewController, Analytics {
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let settings = segue.destinationViewController as? SettingsViewController {
-            settings.presentationController!.delegate = self
-#if DEBUG
-            if let model = self.panoramaController?.model, type = self.panoramaController?.type {
-                settings.model = model
-                settings.type = type
-            } else {
-                settings.model = "Simulator"
-                settings.type = .Aircraft
-            }
-#else
-            if let model = self.panoramaController?.model, type = self.panoramaController?.type {
-                settings.model = model
-                settings.type = type
-            }
-#endif
-            
-            // Set the DJI SDK version
-            settings.sdkVersion = DJISDKManager.getSDKVersion()
-            
-            // Set the product firmware version
-            settings.firmwareVersion = self.firmwareVersion
-            
+        guard let identifier = segue.identifier else {
+            DDLogDebug("Segue without identifier seen - ignoring")
+            return
         }
+        
+        switch identifier {
+            
+        case "settingsSegue":
+            
+            if let settings = segue.destinationViewController as? SettingsViewController {
+                settings.presentationController!.delegate = self
+                #if DEBUG
+                    if let model = self.panoramaController?.model, type = self.panoramaController?.type {
+                        settings.model = model
+                        settings.type = type
+                    } else {
+                        settings.model = "Simulator"
+                        settings.type = .Aircraft
+                    }
+                #else
+                    if let model = self.panoramaController?.model, type = self.panoramaController?.type {
+                        settings.model = model
+                        settings.type = type
+                    }
+                #endif
+                
+                // Set the DJI SDK version
+                settings.sdkVersion = DJISDKManager.getSDKVersion()
+                
+                // Set the product firmware version
+                settings.firmwareVersion = self.firmwareVersion
+                
+            }
+            
+        case "overviewSegue":
+            
+            if let overview = segue.destinationViewController as? PanoramaViewController {
+                overview.panorama = self.currentPanorama
+            }
+            
+        default:
+            break;
+        }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == "overviewSegue" {
+            return self.currentPanorama != nil
+        }
+        
+        return true
     }
 }
 
@@ -443,6 +472,7 @@ extension MainViewController: PanoramaControllerDelegate {
 
     func panoStarting() {
         dispatch_async(dispatch_get_main_queue()) {
+            self.currentPanorama = nil
             self.startButton.setBackgroundImage(UIImage(named: "Stop"), forState: .Normal)
             self.panoProgressBar.setProgress(0, animated: false)
 
@@ -510,6 +540,14 @@ extension MainViewController: PanoramaControllerDelegate {
     func panoAvailable(available: Bool) {
         dispatch_async(dispatch_get_main_queue()) {
             self.startButton.enabled = available
+        }
+    }
+    
+    func panoCompleted(panorama: Panorama) {
+        dispatch_async(dispatch_get_main_queue()) {
+            self.currentPanorama = panorama
+            
+            self.performSegueWithIdentifier("overviewSegue", sender: self)
         }
     }
 }

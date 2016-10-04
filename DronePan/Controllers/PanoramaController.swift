@@ -27,6 +27,8 @@ protocol PanoramaControllerDelegate {
 
     func panoStopping()
 
+    func panoCompleted(panorama: Panorama)
+    
     func gimbalAttitudeChanged(pitch pitch: Float, yaw: Float, roll: Float)
 
     func aircraftYawChanged(yaw: Float)
@@ -54,6 +56,8 @@ class PanoramaController: Analytics {
     var lastGimbalYaw: Float = 0.0
     var lastGimbalRoll: Float = 0.0
     var lastACYaw: Float = 0.0
+    
+    var currentPanorama : Panorama?
 
     var panoRunning: (state:Bool, ok:Bool) = (state: false, ok: true) {
         didSet {
@@ -268,6 +272,9 @@ extension PanoramaController {
         self.panoRunning = (state: true, ok: true)
 
         self.delegate?.postUserMessage("Panorama starting")
+        
+        self.currentPanorama = Panorama()
+        self.currentPanorama!.startTime = NSDate()
 
         if (self.type! == .Aircraft) {
             self.flightController?.setControlModes()
@@ -280,7 +287,7 @@ extension PanoramaController {
 
     func stop() {
         self.delegate?.postUserMessage("Panorama stopping. Please wait ...")
-
+        
         self.panoRunning = (state: false, ok: true)
     }
 
@@ -413,7 +420,13 @@ extension PanoramaController {
                         self.takeASnap()
                     }
 
-                    self.delegate?.postUserMessage("Completed pano")
+                    self.currentPanorama?.endTime = NSDate()
+                    
+                    if let panorama = self.currentPanorama {
+                        self.delegate?.panoCompleted(panorama)
+                    } else {
+                        self.delegate?.postUserMessage("Completed pano")
+                    }
 
                     self.panoRunning = (state: false, ok: true)
                 } else {
@@ -433,6 +446,8 @@ extension PanoramaController {
                 self.resetGimbal()
 
                 DDLogDebug("PanoLoop: END")
+                
+                self.currentPanorama = nil
             })
         }
     }
@@ -590,6 +605,8 @@ extension PanoramaController: CameraControllerDelegate {
 
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
+        
+        self.currentPanorama?.imageList.append(filename)
     }
 }
 
