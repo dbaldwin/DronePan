@@ -19,5 +19,5 @@ class Panorama {
     var startTime : NSDate?
     var endTime : NSDate?
     
-    var imageList : [String]
+    var imageList : [String] = []
 }

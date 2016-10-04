@@ -29,11 +29,18 @@ class PanoramaViewController: UIViewController, Analytics {
     static let dateFormatter = NSDateFormatter()
     
     override func viewDidLoad() {
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        super.viewDidLoad()
+        
+        PanoramaViewController.dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         
         if let panorama = panorama {
-            startLabel.text = dateFormatter.format(panorama.startTime)
-            endLabel.text = dateFormatter.format(panorama.endTime)
+            if let startTime = panorama.startTime {
+                startLabel.text = PanoramaViewController.dateFormatter.stringFromDate(startTime)
+            }
+            
+            if let endTime = panorama.endTime {
+                endLabel.text = PanoramaViewController.dateFormatter.stringFromDate(endTime)
+            }
             
             if panorama.imageList.count > 0 {
                 startFile.text = panorama.imageList.first
