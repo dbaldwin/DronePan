@@ -29,7 +29,7 @@ class Panorama {
     init() {
         logger = PanoramaLogger(panorama: self)
         
-        DDLog.addLogger(logger!)
+        DDLog.addLogger(logger!, withLevel: .Debug)
     }
     
     deinit {
@@ -47,7 +47,11 @@ class PanoramaLogger : DDAbstractLogger {
     var owningPanorama : Panorama!
     
     init(panorama: Panorama) {
+        super.init()
+        
         owningPanorama = panorama
+        
+        self.logFormatter = LogFormatter()
     }
     
     override func logMessage(logMessage: DDLogMessage!) {
