@@ -14,10 +14,44 @@
  */
 
 import Foundation
+import CocoaLumberjackSwift
 
 class Panorama {
     var startTime : NSDate?
     var endTime : NSDate?
     
     var imageList : [String] = []
+    
+    var logger : PanoramaLogger?
+    
+    var logs = ""
+    
+    init() {
+        logger = PanoramaLogger(panorama: self)
+        
+        DDLog.addLogger(logger!)
+    }
+    
+    deinit {
+        if let logger = self.logger {
+            DDLog.removeLogger(logger)
+        }
+    }
+    
+    func log(log: String) {
+        logs = logs + log
+    }
 }
+
+class PanoramaLogger : DDAbstractLogger {
+    var owningPanorama : Panorama!
+    
+    init(panorama: Panorama) {
+        owningPanorama = panorama
+    }
+    
+    override func logMessage(logMessage: DDLogMessage!) {
+        owningPanorama.log(logFormatter.formatLogMessage(logMessage))
+    }
+}
+
