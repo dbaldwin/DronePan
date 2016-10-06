@@ -552,6 +552,30 @@ extension MainViewController: PanoramaControllerDelegate {
     }
 }
 
+// MARK: - Panorama Controller Delegate
+
+extension MainViewController: PanoramaCameraControlsDelegate {
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        DDLogInfo("Camera Exposure Mode update: \(mode)")
+    }
+    
+    func cameraISOUpdated(ISO: UInt) {
+        DDLogInfo("Camera ISO update: \(ISO)")
+    }
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture) {
+        DDLogInfo("Camera Aperture update: \(aperture)")
+    }
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed) {
+        DDLogInfo("Camera Shutter Speed update: \(shutterSpeed)")
+    }
+    
+    func cameraExposureCompensationUpdated(comp: DJICameraExposureCompensation) {
+        DDLogInfo("Camera Exposure Compensation update: \(comp)")
+    }
+}
+
 extension MainViewController : UIAdaptivePresentationControllerDelegate {
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         if (traitCollection.horizontalSizeClass == .Regular && traitCollection.verticalSizeClass == .Regular) {

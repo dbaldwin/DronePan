@@ -32,6 +32,10 @@ protocol CameraControllerDelegate {
     func cameraControllerReset()
 
     func cameraControllerNewMedia(filename: String)
+    
+    func cameraExposureValuesUpdated(iso iso: UInt, aperture: DJICameraAperture, shutter: DJICameraShutterSpeed, compensation: DJICameraExposureCompensation)
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode)
 }
 
 protocol VideoControllerDelegate {
@@ -351,5 +355,20 @@ class CameraController: NSObject, DJICameraDelegate {
 
             self.status = newState
         }
+    }
+    
+    func camera(camera: DJICamera, didUpdateCurrentExposureValues values: DJICameraExposureParameters) {
+        DDLogVerbose("Camera Controller didUpdateCurrentExposureValues")
+        
+        camera.getExposureModeWithCompletion(){
+            (mode, error) in
+            if let error = error {
+                DDLogWarn("Camera Controller couldn't get exposure mode: \(error)")
+            } else {
+                self.delegate?.cameraExposureModeUpdated(mode)
+            }
+        }
+        
+        self.delegate?.cameraExposureValuesUpdated(iso: values.iso, aperture: values.aperture, shutter: values.shutterSpeed, compensation: values.exposureCompensation)
     }
 }

@@ -116,6 +116,14 @@ class CameraControllerSpyDelegate: CameraControllerDelegate {
     func cameraControllerNewMedia(filename: String) {
         // NOP
     }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        // NOP
+    }
+    
+    func cameraExposureValuesUpdated(iso iso: UInt, aperture: DJICameraAperture, shutter: DJICameraShutterSpeed, compensation: DJICameraExposureCompensation) {
+        // NOP
+    }
 }
 
 class ModeStateMock: DJICameraSystemState {

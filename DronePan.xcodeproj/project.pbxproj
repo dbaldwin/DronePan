@@ -46,6 +46,7 @@
 		1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */; };
 		15B5003F1DA37108005DFB0D /* Panorama.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B5003E1DA37108005DFB0D /* Panorama.swift */; };
 		15B500411DA3719F005DFB0D /* PanoramaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B500401DA3719F005DFB0D /* PanoramaViewController.swift */; };
+		15B500431DA61970005DFB0D /* DJICameraExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B500421DA61970005DFB0D /* DJICameraExtensions.swift */; };
 		15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */; };
 		15CCA5091CE25FEF003C9B38 /* FlightControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */; };
 		15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 15D284E11CDA4A0B00FD3F52 /* Settings.bundle */; };
@@ -242,6 +243,7 @@
 		1591D1FD1CD868DE006A13E2 /* CameraControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControllerTests.swift; sourceTree = "<group>"; };
 		15B5003E1DA37108005DFB0D /* Panorama.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Panorama.swift; sourceTree = "<group>"; };
 		15B500401DA3719F005DFB0D /* PanoramaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaViewController.swift; sourceTree = "<group>"; };
+		15B500421DA61970005DFB0D /* DJICameraExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DJICameraExtensions.swift; sourceTree = "<group>"; };
 		15CCA5041CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveAwareDispatchGroupTests.swift; sourceTree = "<group>"; };
 		15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightControllerTests.swift; sourceTree = "<group>"; };
 		15D284E11CDA4A0B00FD3F52 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
 				1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */,
 				1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */,
+				15B500421DA61970005DFB0D /* DJICameraExtensions.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -857,6 +860,7 @@
 				15B5003F1DA37108005DFB0D /* Panorama.swift in Sources */,
 				15F509FF1CC290F80097EB09 /* SettingsViewController.swift in Sources */,
 				15839E941CCE9A40008B7E97 /* BatteryController.swift in Sources */,
+				15B500431DA61970005DFB0D /* DJICameraExtensions.swift in Sources */,
 				15839FC21CCEAB3E008B7E97 /* RemoteController.swift in Sources */,
 				15839FBB1CCEA224008B7E97 /* MovieGLView.m in Sources */,
 				4E1AD2718F84A81080EE0481 /* GimbalController.swift in Sources */,

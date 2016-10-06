@@ -44,8 +44,21 @@ protocol PanoramaControllerDelegate {
     func panoAvailable(available: Bool)
 }
 
+protocol PanoramaCameraControlsDelegate {
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode)
+    
+    func cameraISOUpdated(ISO: UInt)
+    
+    func cameraApertureUpdated(aperture: DJICameraAperture)
+    
+    func cameraShutterSpeedUpdated(shutterSpeed: DJICameraShutterSpeed)
+    
+    func cameraExposureCompensationUpdated(comp: DJICameraExposureCompensation)
+}
+
 class PanoramaController: Analytics {
     var delegate: PanoramaControllerDelegate?
+    var cameraControlsDelegate: PanoramaCameraControlsDelegate?
 
     var cameraController: CameraController?
     var remoteController: RemoteController?
@@ -607,6 +620,17 @@ extension PanoramaController: CameraControllerDelegate {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
         
         self.currentPanorama?.imageList.append(filename)
+    }
+    
+    func cameraExposureModeUpdated(mode: DJICameraExposureMode) {
+        self.cameraControlsDelegate?.cameraExposureModeUpdated(mode)
+    }
+    
+    func cameraExposureValuesUpdated(iso iso: UInt, aperture: DJICameraAperture, shutter: DJICameraShutterSpeed, compensation: DJICameraExposureCompensation) {
+        self.cameraControlsDelegate?.cameraISOUpdated(iso)
+        self.cameraControlsDelegate?.cameraApertureUpdated(aperture)
+        self.cameraControlsDelegate?.cameraShutterSpeedUpdated(shutter)
+        self.cameraControlsDelegate?.cameraExposureCompensationUpdated(compensation)
     }
 }
 
