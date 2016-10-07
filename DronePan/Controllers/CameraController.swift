@@ -357,7 +357,7 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
     
-    func camera(camera: DJICamera, didUpdateCurrentExposureValues values: DJICameraExposureParameters) {
+    func camera(camera: DJICamera, didUpdateCurrentExposureParameters params: DJICameraExposureParameters) {
         DDLogVerbose("Camera Controller didUpdateCurrentExposureValues")
         
         camera.getExposureModeWithCompletion(){
@@ -369,6 +369,6 @@ class CameraController: NSObject, DJICameraDelegate {
             }
         }
         
-        self.delegate?.cameraExposureValuesUpdated(iso: values.iso, aperture: values.aperture, shutter: values.shutterSpeed, compensation: values.exposureCompensation)
+        self.delegate?.cameraExposureValuesUpdated(iso: params.iso, aperture: params.aperture, shutter: params.shutterSpeed, compensation: params.exposureCompensation)
     }
 }
