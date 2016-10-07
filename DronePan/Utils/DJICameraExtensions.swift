@@ -17,7 +17,7 @@ import Foundation
 import DJISDK
 import CocoaLumberjackSwift
 
-public extension DJICameraExposureMode {
+extension DJICameraExposureMode {
     var description: String {
         get {
             switch self {
