@@ -72,6 +72,7 @@ class MainViewController: UIViewController, Analytics {
         self.previewController = PreviewController(previewer: VideoPreviewerInstance())
         self.panoramaController = PanoramaController()
         self.panoramaController!.delegate = self
+        self.panoramaController!.cameraControlsDelegate = self
 
         hideWarning()
 
