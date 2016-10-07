@@ -39,24 +39,7 @@ class MainViewControllerTests: XCTestCase {
 
         XCTAssertFalse(viewController.rcInFMode, "RC was in F mode at startup")
 
-        [viewController.sequenceLabel, viewController.batteryLabel, viewController.altitudeLabel, viewController.satelliteLabel, viewController.distanceLabel].forEach {
-            (label) in
-            XCTAssertTrue(label.hidden, "Label \(label.text) was visible at startup")
-        }
-
         XCTAssertEqual(viewController.warningView.alpha, 0, "Warning view was visible at start")
-
-        XCTAssertEqual(viewController.infoView.alpha, 0, "Info view was visible at start")
-    }
-
-    func testInfoInit() {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "infoOverride")
-
-        buildView()
-
-        viewController.animationDuration = 0.0
-
-        XCTAssertEqual(viewController.infoView.alpha, 1, "Info view was not visible at start")
     }
 
     func testShowWarning() {
@@ -78,49 +61,6 @@ class MainViewControllerTests: XCTestCase {
         XCTAssertEqual(viewController.currentWarning, "", "Warning view had incorrect text after hide \(viewController.currentWarning)")
         // TODO - haven't figured out how to wait for animations in unit tests yet
         // XCTAssertEqual(viewController.warningView.alpha, 0, "Warning view was visible after hide")
-    }
-
-    func testShowInfo() {
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "infoOverride")
-
-        buildView()
-
-        viewController.showInfo()
-
-        XCTAssertEqual(viewController.infoView.alpha, 1, "Info view was not visible after show")
-    }
-
-    func testHideInfo() {
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "infoOverride")
-
-        buildView()
-
-        viewController.showInfo()
-
-        viewController.hideInfo()
-
-        // TODO - haven't figured out how to wait for animations in unit tests yet
-        // XCTAssertEqual(viewController.infoView.alpha, 0, "Info view was visible after hide")
-    }
-
-    func testShowInfoOverride() {
-        buildView()
-
-        viewController.showInfo()
-
-        XCTAssertEqual(viewController.infoView.alpha, 1, "Info view was not visible after show with override")
-    }
-
-    func testHideInfoOverride() {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "infoOverride")
-
-        buildView()
-
-        viewController.showInfo()
-
-        viewController.hideInfo()
-
-        XCTAssertEqual(viewController.infoView.alpha, 1, "Info view was not visible after hide with override")
     }
 
     func testSetSequence() {

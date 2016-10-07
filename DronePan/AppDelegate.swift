@@ -55,7 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
 
         let defaults = NSUserDefaults.standardUserDefaults()
         let appDefaults = [
-                "infoOverride": false,
                 "analyticsOK": false
         ]
         defaults.registerDefaults(appDefaults)
