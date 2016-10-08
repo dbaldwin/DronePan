@@ -14,6 +14,7 @@
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
 		1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */; };
+		156BCBB91DA8EECF008A5601 /* CameraSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156BCBB81DA8EECF008A5601 /* CameraSettingsViewController.swift */; };
 		156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */; };
 		156F5FE01CDE510B00BAE596 /* BatteryControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */; };
 		1574A1C21CEAF058008CFEE7 /* VideoPreviewerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */; };
@@ -112,6 +113,7 @@
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
 		1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		156BCBB81DA8EECF008A5601 /* CameraSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSettingsViewController.swift; sourceTree = "<group>"; };
 		156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControllerTests.swift; sourceTree = "<group>"; };
 		156F5FDF1CDE510B00BAE596 /* BatteryControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryControllerTests.swift; sourceTree = "<group>"; };
 		1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPreviewerWrapper.swift; sourceTree = "<group>"; };
@@ -577,6 +579,7 @@
 		15CCA5061CE24434003C9B38 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				156BCBB81DA8EECF008A5601 /* CameraSettingsViewController.swift */,
 				158606451CDB26F500C5DF95 /* MainViewController.swift */,
 				15B500401DA3719F005DFB0D /* PanoramaViewController.swift */,
 				15F509FE1CC290F80097EB09 /* SettingsViewController.swift */,
@@ -853,6 +856,7 @@
 				83A7132B1CF83034005194BA /* ButtonViewCell.swift in Sources */,
 				15839FBD1CCEA224008B7E97 /* VideoFrameExtractor.m in Sources */,
 				83195C0E1CE20269008A9755 /* ActiveAwareDispatchGroup.swift in Sources */,
+				156BCBB91DA8EECF008A5601 /* CameraSettingsViewController.swift in Sources */,
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
 				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,

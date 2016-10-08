@@ -328,11 +328,19 @@ class MainViewController: UIViewController, Analytics {
     }
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if identifier == "overviewSegue" {
+        switch identifier {
+        case "overviewSegue":
             return self.currentPanorama != nil
+        case "cameraSettingsSegue":
+            #if DEBUG
+                return true
+            #else
+                return false
+                // TODO - when ready: return self.panoramaController?.cameraController != nil
+            #endif
+        default:
+            return true
         }
-        
-        return true
     }
 }
 
