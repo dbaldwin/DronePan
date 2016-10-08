@@ -904,102 +904,33 @@
                                             <action selector="done:" destination="HfR-bO-ie8" eventType="touchUpInside" id="NFl-jj-aPP"/>
                                         </connections>
                                     </button>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="R0R-46-S03">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="350" id="hKq-oD-EBd"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="Program"/>
+                                            <segment title="Aperture"/>
+                                            <segment title="Shutter"/>
+                                            <segment title="Manual"/>
+                                        </segments>
+                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="J23-y6-OwO" secondAttribute="trailing" constant="4" id="49N-4B-TwB"/>
+                                    <constraint firstAttribute="bottom" secondItem="R0R-46-S03" secondAttribute="bottom" constant="8" id="Ckx-wV-fWh"/>
+                                    <constraint firstItem="R0R-46-S03" firstAttribute="top" secondItem="TpL-Fr-0Zk" secondAttribute="top" constant="50" id="cuo-Y1-e2V"/>
                                     <constraint firstItem="J23-y6-OwO" firstAttribute="top" secondItem="TpL-Fr-0Zk" secondAttribute="top" constant="4" id="pNF-UW-BM4"/>
+                                    <constraint firstItem="R0R-46-S03" firstAttribute="centerX" secondItem="TpL-Fr-0Zk" secondAttribute="centerX" id="ub9-5t-MNW"/>
                                 </constraints>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="zZN-uR-WCG" userLabel="Mode Stack View">
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NhY-OF-MuU">
-                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="As6-22-GAL"/>
-                                            <constraint firstAttribute="height" constant="25" id="esD-qW-9G4"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Program">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <state key="selected">
-                                            <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vvh-Hf-J0c">
-                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="2iL-P3-LGE"/>
-                                            <constraint firstAttribute="height" constant="25" id="swA-3x-IrY"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Aperture">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <state key="selected">
-                                            <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kns-qF-5x2">
-                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="25" id="2HO-sh-h8o"/>
-                                            <constraint firstAttribute="width" constant="80" id="qdU-Df-sXa"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Shutter">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <state key="selected">
-                                            <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e2S-Fh-zcC">
-                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="gal-6t-w1c"/>
-                                            <constraint firstAttribute="height" constant="25" id="nOP-Pp-NNv"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Manual">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                        <state key="selected">
-                                            <color key="titleColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                </subviews>
-                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="TpL-Fr-0Zk" firstAttribute="leading" secondItem="3ld-uO-Jf6" secondAttribute="leading" id="BXo-E5-nkr"/>
-                            <constraint firstItem="yz5-NK-5Cy" firstAttribute="top" secondItem="zZN-uR-WCG" secondAttribute="bottom" constant="8" id="Mze-oi-i85"/>
                             <constraint firstAttribute="bottom" secondItem="TpL-Fr-0Zk" secondAttribute="bottom" id="VVQ-R7-tPF"/>
-                            <constraint firstItem="TpL-Fr-0Zk" firstAttribute="top" secondItem="zZN-uR-WCG" secondAttribute="top" constant="-50" id="iCj-ly-vHR"/>
                             <constraint firstAttribute="trailing" secondItem="TpL-Fr-0Zk" secondAttribute="trailing" id="jjB-Li-JET"/>
-                            <constraint firstItem="zZN-uR-WCG" firstAttribute="centerX" secondItem="3ld-uO-Jf6" secondAttribute="centerX" id="wDK-Lv-Jcw"/>
                         </constraints>
                     </view>
                 </viewController>
