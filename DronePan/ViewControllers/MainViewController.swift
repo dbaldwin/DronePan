@@ -201,6 +201,7 @@ class MainViewController: UIViewController, Analytics {
             self.batteryIcon.image = ControllerUtils.batteryImageForLevel(batteryPercent)
         } else {
             self.batteryLabel.text = "-"
+            self.batteryIcon.image = ControllerUtils.batteryImageForLevel()
         }
     }
 

@@ -23,6 +23,15 @@ enum ControllerStatus {
     case Stopping
 }
 
+enum BatteryIcon : String {
+    case Unknown = "BatteryIcon - ??"
+    case Empty = "BatteryIcon - 00"
+    case Low = "BatteryIcon - 25"
+    case Half = "BatteryIcon - 50"
+    case High = "BatteryIcon - 75"
+    case Full = "BatteryIcon - 100"
+}
+
 class ControllerUtils {
     class func delay(delay: Double, queue: dispatch_queue_t, closure: () -> ()) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),
@@ -98,24 +107,26 @@ class ControllerUtils {
         }
     }
 
-    class func batteryImageForLevel(level : Int) -> UIImage? {
-        var filename = "BatteryIcon - ??"
+    class func batteryImageForLevel(level : Int? = nil) -> UIImage? {
+        var icon : BatteryIcon = .Unknown
         
-        switch(level) {
-        case (90...100):
-            filename = "BatteryIcon - 100"
-        case (70..<90):
-            filename = "BatteryIcon - 75"
-        case (45..<70):
-            filename = "BatteryIcon - 50"
-        case (20..<45):
-            filename = "BatteryIcon - 25"
-        case (0..<20):
-            filename = "BatteryIcon - 00"
-        default:
-            filename = "BatteryIcon - ??"
+        if let level = level {
+            switch(level) {
+            case (90...100):
+                icon = .Full
+            case (70..<90):
+                icon = .High
+            case (45..<70):
+                icon = .Half
+            case (20..<45):
+                icon = .Low
+            case (0..<20):
+                icon = .Empty
+            default:
+                icon = .Unknown
+            }
         }
         
-        return UIImage(named: filename)
+        return UIImage(named: icon.rawValue)
     }
 }
