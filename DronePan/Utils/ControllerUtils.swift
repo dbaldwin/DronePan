@@ -98,4 +98,24 @@ class ControllerUtils {
         }
     }
 
+    class func batteryImageForLevel(level : Int) -> UIImage? {
+        var filename = "BatteryIcon - ??"
+        
+        switch(level) {
+        case (90...100):
+            filename = "BatteryIcon - 100"
+        case (70..<90):
+            filename = "BatteryIcon - 75"
+        case (45..<70):
+            filename = "BatteryIcon - 50"
+        case (20..<45):
+            filename = "BatteryIcon - 25"
+        case (0..<20):
+            filename = "BatteryIcon - 00"
+        default:
+            filename = "BatteryIcon - ??"
+        }
+        
+        return UIImage(named: filename)
+    }
 }

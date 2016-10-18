@@ -20,6 +20,7 @@ import CocoaLumberjackSwift
 
 class MainViewController: UIViewController, Analytics {
     @IBOutlet weak var batteryLabel: UILabel!
+    @IBOutlet weak var batteryIcon: UIImageView!
 
     @IBOutlet weak var cameraView: UIView!
 
@@ -158,11 +159,11 @@ class MainViewController: UIViewController, Analytics {
 
     func setSequence(current: Int? = nil, count: Int? = nil) {
         if let current = current, count = count {
-            self.sequenceLabel.text = "Photo: \(current)/\(count)"
+            self.sequenceLabel.text = "\(current)/\(count)"
 
             self.currentProgress = Double(current) / Double(count)
         } else {
-            self.sequenceLabel.text = "Photo: -/-"
+            self.sequenceLabel.text = "-/-"
 
             self.currentProgress = 0.0
         }
@@ -172,33 +173,34 @@ class MainViewController: UIViewController, Analytics {
 
     func setAltitude(altitude: Int? = nil) {
         if let altitude = altitude {
-            self.altitudeLabel.text = "Alt: \(ControllerUtils.displayDistance(altitude))"
+            self.altitudeLabel.text = (ControllerUtils.displayDistance(altitude))
         } else {
-            self.altitudeLabel.text = "Alt: -"
+            self.altitudeLabel.text = "-"
         }
     }
 
     func setSatellites(satellites: Int? = nil) {
         if let satellites = satellites {
-            self.satelliteLabel.text = "Sats: \(satellites)"
+            self.satelliteLabel.text = "\(satellites)"
         } else {
-            self.satelliteLabel.text = "Sats: -"
+            self.satelliteLabel.text = "-"
         }
     }
 
     func setDistance(distance: Int? = nil) {
         if let distance = distance {
-            self.distanceLabel.text = "Dist: \(ControllerUtils.displayDistance(distance))"
+            self.distanceLabel.text = (ControllerUtils.displayDistance(distance))
         } else {
-            self.distanceLabel.text = "Dist: -"
+            self.distanceLabel.text = "-"
         }
     }
 
     func setBattery(batteryPercent: Int? = nil) {
         if let batteryPercent = batteryPercent {
-            self.batteryLabel.text = "Batt: \(batteryPercent)%"
+            self.batteryLabel.text = "\(batteryPercent)%"
+            self.batteryIcon.image = ControllerUtils.batteryImageForLevel(batteryPercent)
         } else {
-            self.batteryLabel.text = "Batt: -"
+            self.batteryLabel.text = "-"
         }
     }
 
