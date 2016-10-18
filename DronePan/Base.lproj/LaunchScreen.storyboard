@@ -14,20 +14,20 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Start" translatesAutoresizingMaskIntoConstraints="NO" id="vg0-tu-9eT">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" id="7F8-cm-8cW"/>
-                                    <constraint firstAttribute="width" constant="128" id="Fb5-I4-Y1Z"/>
+                                    <constraint firstAttribute="height" constant="100" id="7F8-cm-8cW"/>
+                                    <constraint firstAttribute="width" constant="100" id="Fb5-I4-Y1Z"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="vg0-tu-9eT" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="f2b-xG-f6b"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="vg0-tu-9eT" secondAttribute="bottom" constant="47" id="v1c-8s-oPW"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="vg0-tu-9eT" secondAttribute="bottom" constant="50" id="v1c-8s-oPW"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -37,6 +37,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Start" width="128" height="128"/>
+        <image name="Start" width="100" height="100"/>
     </resources>
 </document>
