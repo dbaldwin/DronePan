@@ -36,6 +36,15 @@ enum BatteryIcon : String {
     }
 }
 
+enum ConnectionStatusIcon : String {
+    case Disconnected = "Disconnected"
+    case Connected = "Connected"
+    
+    func image() -> UIImage? {
+        return UIImage(named: self.rawValue)
+    }
+}
+
 class ControllerUtils {
     class func delay(delay: Double, queue: dispatch_queue_t, closure: () -> ()) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))),

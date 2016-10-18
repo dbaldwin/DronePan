@@ -44,7 +44,7 @@ class MainViewController: UIViewController, Analytics {
     @IBOutlet weak var cameraISOLabel: UILabel!
     @IBOutlet weak var cameraExposureCompensationLabel: UILabel!
 
-    @IBOutlet weak var connectionStatusIndicator: UIView!
+    @IBOutlet weak var connectionStatusIndicator: UIImageView!
 
     @IBOutlet weak var startButton: UIButton!
 
@@ -374,7 +374,7 @@ extension MainViewController: ConnectionControllerDelegate {
 
         self.resetLabels()
 
-        self.connectionStatusIndicator.backgroundColor = UIColor.greenColor()
+        self.connectionStatusIndicator.image = ConnectionStatusIcon.Connected.image()
 
         self.startButton.enabled = true
 
@@ -386,8 +386,8 @@ extension MainViewController: ConnectionControllerDelegate {
 
         self.resetLabels()
 
-        self.connectionStatusIndicator.backgroundColor = UIColor.redColor()
-
+        self.connectionStatusIndicator.image = ConnectionStatusIcon.Disconnected.image()
+        
         self.startButton.enabled = false
 
         self.rcInFMode = false
