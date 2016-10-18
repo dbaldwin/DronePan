@@ -234,25 +234,25 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Aperture: Unknown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lzA-k7-sZV">
-                                                        <frame key="frameInset" minX="101" width="101" height="26"/>
+                                                        <frame key="frameInset" minX="92" width="101" height="26"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Speed: Unknown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7d-Be-Qn8">
-                                                        <frame key="frameInset" minX="220" width="87" height="26"/>
+                                                        <frame key="frameInset" minX="202" width="87" height="26"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="ISO: Unknown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yf1-7Z-OD0">
-                                                        <frame key="frameInset" minX="325" width="73" height="26"/>
+                                                        <frame key="frameInset" minX="298" width="73" height="26"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="EC: Unknown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D1m-fn-bVT">
-                                                        <frame key="frameInset" minX="416" width="68" height="26"/>
+                                                        <frame key="frameInset" minX="380" width="68" height="26"/>
                                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -264,7 +264,7 @@
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstItem="Zch-Ce-GJ0" firstAttribute="top" secondItem="giV-wh-HKG" secondAttribute="top" constant="2" id="084-d1-iBl"/>
-                                            <constraint firstAttribute="width" constant="500" id="0l3-6N-SkG"/>
+                                            <constraint firstAttribute="width" constant="464" id="0l3-6N-SkG"/>
                                             <constraint firstItem="Zch-Ce-GJ0" firstAttribute="leading" secondItem="giV-wh-HKG" secondAttribute="leading" constant="8" id="Dgs-j5-4JO"/>
                                             <constraint firstAttribute="trailing" secondItem="Zch-Ce-GJ0" secondAttribute="trailing" constant="8" id="Yre-4B-LX2"/>
                                             <constraint firstAttribute="height" constant="30" id="hqo-ks-MxM"/>
@@ -338,7 +338,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="209" y="540"/>
+            <point key="canvasLocation" x="208.75" y="540"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="EzA-xT-5NI">
