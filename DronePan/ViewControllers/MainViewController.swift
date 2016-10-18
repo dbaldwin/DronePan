@@ -164,7 +164,7 @@ class MainViewController: UIViewController, Analytics {
 
             self.currentProgress = Double(current) / Double(count)
         } else {
-            self.sequenceLabel.text = "-/-"
+            self.sequenceLabel.text = ""
 
             self.currentProgress = 0.0
         }
@@ -176,7 +176,7 @@ class MainViewController: UIViewController, Analytics {
         if let altitude = altitude {
             self.altitudeLabel.text = (ControllerUtils.displayDistance(altitude))
         } else {
-            self.altitudeLabel.text = "-"
+            self.altitudeLabel.text = ""
         }
     }
 
@@ -184,7 +184,7 @@ class MainViewController: UIViewController, Analytics {
         if let satellites = satellites {
             self.satelliteLabel.text = "\(satellites)"
         } else {
-            self.satelliteLabel.text = "-"
+            self.satelliteLabel.text = ""
         }
     }
 
@@ -192,7 +192,7 @@ class MainViewController: UIViewController, Analytics {
         if let distance = distance {
             self.distanceLabel.text = (ControllerUtils.displayDistance(distance))
         } else {
-            self.distanceLabel.text = "-"
+            self.distanceLabel.text = ""
         }
     }
 
@@ -201,7 +201,7 @@ class MainViewController: UIViewController, Analytics {
             self.batteryLabel.text = "\(batteryPercent)%"
             self.batteryIcon.image = ControllerUtils.batteryImageForLevel(batteryPercent)
         } else {
-            self.batteryLabel.text = "-"
+            self.batteryLabel.text = ""
             self.batteryIcon.image = ControllerUtils.batteryImageForLevel()
         }
     }
