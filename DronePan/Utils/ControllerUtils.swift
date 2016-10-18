@@ -30,6 +30,10 @@ enum BatteryIcon : String {
     case Half = "BatteryIcon - 50"
     case High = "BatteryIcon - 75"
     case Full = "BatteryIcon - 100"
+    
+    func image() -> UIImage? {
+        return UIImage(named: self.rawValue)
+    }
 }
 
 class ControllerUtils {
@@ -127,6 +131,6 @@ class ControllerUtils {
             }
         }
         
-        return UIImage(named: icon.rawValue)
+        return icon.image()
     }
 }
