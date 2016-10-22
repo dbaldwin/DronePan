@@ -452,7 +452,9 @@ extension MainViewController: ConnectionControllerDelegate {
 extension MainViewController: BatteryControllerDelegate {
 
     func batteryControllerPercentUpdated(batteryPercent: Int) {
-        setBattery(batteryPercent)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.setBattery(batteryPercent)
+        }
 
         if (batteryPercent < 10) {
             showWarning("Battery Low: \(batteryPercent)%")
