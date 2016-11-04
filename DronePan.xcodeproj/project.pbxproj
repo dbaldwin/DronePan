@@ -13,6 +13,8 @@
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
+		155617901DCC86B3005328E6 /* PaperTrailLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1556178F1DCC86B3005328E6 /* PaperTrailLumberjack.framework */; };
+		155617921DCC881C005328E6 /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 155617911DCC881C005328E6 /* CocoaAsyncSocket.framework */; };
 		1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */; };
 		156BCBB91DA8EECF008A5601 /* CameraSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156BCBB81DA8EECF008A5601 /* CameraSettingsViewController.swift */; };
 		156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */; };
@@ -112,6 +114,8 @@
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
+		1556178F1DCC86B3005328E6 /* PaperTrailLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PaperTrailLumberjack.framework; path = Carthage/Build/iOS/PaperTrailLumberjack.framework; sourceTree = "<group>"; };
+		155617911DCC881C005328E6 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		156BCBB81DA8EECF008A5601 /* CameraSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraSettingsViewController.swift; sourceTree = "<group>"; };
 		156F5FDD1CDE4DEF00BAE596 /* RemoteControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteControllerTests.swift; sourceTree = "<group>"; };
@@ -290,9 +294,11 @@
 				836F73391CCF513700233FF3 /* MBProgressHUD.framework in Frameworks */,
 				232F6FDB1C5449C20013CCD9 /* CoreMedia.framework in Frameworks */,
 				154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */,
+				155617901DCC86B3005328E6 /* PaperTrailLumberjack.framework in Frameworks */,
 				15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */,
 				15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */,
 				154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */,
+				155617921DCC881C005328E6 /* CocoaAsyncSocket.framework in Frameworks */,
 				232F6FD31C54498E0013CCD9 /* VideoToolbox.framework in Frameworks */,
 				15FD80E11CDF14EB0073B1DA /* DeviceKit.framework in Frameworks */,
 				83A5585A1CD08FE7000BB6C6 /* DJISDK.framework in Frameworks */,
@@ -323,6 +329,8 @@
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				155617911DCC881C005328E6 /* CocoaAsyncSocket.framework */,
+				1556178F1DCC86B3005328E6 /* PaperTrailLumberjack.framework */,
 				15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */,
 				15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */,
 				83A558591CD08FE7000BB6C6 /* DJISDK.framework */,
@@ -815,6 +823,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/MBProgressHUD.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/GoogleAnalytics.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/DeviceKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PaperTrailLumberjack.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework",
 			);
 			outputPaths = (
 			);

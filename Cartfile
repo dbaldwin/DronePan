@@ -2,3 +2,5 @@ github "CocoaLumberjack/CocoaLumberjack" ~> 2.4.0
 github "jdg/MBProgressHUD" ~> 1.0.0
 github "akashivskyy/GoogleAnalytics-Framework" ~> 3.1.7
 github "dennisweissmann/DeviceKit" ~> 0.3.5
+
+git "https://bitbucket.org/rmonkey/papertraillumberjack.git"

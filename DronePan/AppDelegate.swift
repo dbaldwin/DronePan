@@ -15,6 +15,7 @@
 
 import UIKit
 import CocoaLumberjackSwift
+import PaperTrailLumberjack
 import GoogleAnalytics
 
 let ddloglevel = DDLogLevel.Debug
@@ -29,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject:AnyObject]?) -> Bool {
         UIApplication.sharedApplication().idleTimerDisabled = true
 
+        let version = ControllerUtils.buildVersion() ?? "Unknown version"
+        
         let logFormatter = LogFormatter()
 
         DDTTYLogger.sharedInstance().logFormatter = logFormatter
@@ -45,11 +48,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
 
         DDLog.addLogger(fileLogger!, withLevel: .Debug)
 
+#if DEBUG
+        let paperTrailLogger = RMPaperTrailLogger.sharedInstance() as RMPaperTrailLogger!
+        
+        paperTrailLogger.programName = "DronePan-iOS-\(version)"
+        if let vendorId = UIDevice.currentDevice().identifierForVendor {
+            paperTrailLogger.machineName = "\(vendorId)"
+        }
+    
+        paperTrailLogger.host = "logs4.papertrailapp.com"
+        paperTrailLogger.port = 17031
+        
+        DDLog.addLogger(paperTrailLogger)
+#endif
+    
         DDLogInfo("DronePan launched")
 
-        if let version = ControllerUtils.buildVersion() {
-            DDLogInfo("Running version \(version)")
-        }
+        DDLogInfo("Running version \(version)")
 
         //DDLogDebug("Logging to \(fileLogger.currentLogFileInfo().filePath)  \(fileLogger.currentLogFileInfo().fileName)")
 
