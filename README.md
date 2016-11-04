@@ -9,10 +9,11 @@
 
 DronePan - 360 aerial panoramas with DJI Inspire 1 and Phantom 3 drones.
 
+[![Download on the App Store](https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg)](https://itunes.apple.com/us/app/dronepan/id1026329337?mt=8)
+
 As of 6th March 2016 DronePan is open source.
 
 * For bugs, feature requests etc - please use the project issues page. 
-
 
 ## Want to help out?
 
