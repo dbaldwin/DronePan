@@ -18,6 +18,6 @@
 #ifndef DronePan_Bridging_Header_h
 #define DronePan_Bridging_Header_h
 
-#import "VideoPreviewer.h"
+#import <VideoPreviewer/VideoPreviewer.h>
 
 #endif
