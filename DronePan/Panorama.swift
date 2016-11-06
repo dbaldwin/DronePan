@@ -22,27 +22,32 @@ class Panorama {
     
     var imageList : [String] = []
     
-    var logger : PanoramaLogger?
+    //var logger : PanoramaLogger?
     
     var logs = ""
     
     init() {
+        /*
         logger = PanoramaLogger(panorama: self)
         
         DDLog.addLogger(logger!, withLevel: .Debug)
+        */
     }
     
+    /*
     deinit {
         if let logger = self.logger {
             DDLog.removeLogger(logger)
         }
     }
+    */
     
     func log(log: String) {
         logs = logs + log
     }
 }
 
+/*
 class PanoramaLogger : DDAbstractLogger {
     var owningPanorama : Panorama!
     
@@ -58,4 +63,4 @@ class PanoramaLogger : DDAbstractLogger {
         owningPanorama.log(logFormatter.formatLogMessage(logMessage))
     }
 }
-
+*/
