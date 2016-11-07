@@ -84,8 +84,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
                 paperTrailLogger.machineName = "\(vendorId)"
             }
             
-            paperTrailLogger.host = "logs4.papertrailapp.com"
-            paperTrailLogger.port = 17031
+            paperTrailLogger.host = "logs2.papertrailapp.com"
+            paperTrailLogger.port = 20931
             
             DDLog.addLogger(paperTrailLogger, withLevel: .Debug)
         #endif
