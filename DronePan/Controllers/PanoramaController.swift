@@ -287,7 +287,6 @@ extension PanoramaController {
         self.delegate?.postUserMessage("Panorama starting")
         
         self.currentPanorama = Panorama()
-        self.currentPanorama!.startTime = NSDate()
 
         if (self.type! == .Aircraft) {
             self.flightController?.setControlModes()
@@ -433,7 +432,7 @@ extension PanoramaController {
                         self.takeASnap()
                     }
 
-                    self.currentPanorama?.endTime = NSDate()
+                    self.currentPanorama?.finish()
                     
                     if let panorama = self.currentPanorama {
                         self.delegate?.panoCompleted(panorama)
@@ -619,7 +618,7 @@ extension PanoramaController: CameraControllerDelegate {
     func cameraControllerNewMedia(filename: String) {
         DDLogInfo("Shot taken: \(filename) ACY: \(lastACYaw) GP: \(lastGimbalPitch) GY: \(lastGimbalYaw) GR: \(lastGimbalRoll)")
         
-        self.currentPanorama?.imageList.append(filename)
+        self.currentPanorama?.addFilename(filename)
     }
     
     func cameraExposureModeUpdated(mode: DJICameraExposureMode) {

@@ -22,45 +22,15 @@ class Panorama {
     
     var imageList : [String] = []
     
-    //var logger : PanoramaLogger?
-    
-    var logs = ""
-    
     init() {
-        /*
-        logger = PanoramaLogger(panorama: self)
-        
-        DDLog.addLogger(logger!, withLevel: .Debug)
-        */
+        self.startTime = NSDate()
     }
     
-    /*
-    deinit {
-        if let logger = self.logger {
-            DDLog.removeLogger(logger)
-        }
+    func finish() {
+        self.endTime = NSDate()
     }
-    */
     
-    func log(log: String) {
-        logs = logs + log
+    func addFilename(filename: String) {
+        imageList.append(filename)
     }
 }
-
-/*
-class PanoramaLogger : DDAbstractLogger {
-    var owningPanorama : Panorama!
-    
-    init(panorama: Panorama) {
-        super.init()
-        
-        owningPanorama = panorama
-        
-        self.logFormatter = LogFormatter()
-    }
-    
-    override func logMessage(logMessage: DDLogMessage!) {
-        owningPanorama.log(logFormatter.formatLogMessage(logMessage))
-    }
-}
-*/

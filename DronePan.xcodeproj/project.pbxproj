@@ -10,6 +10,7 @@
 		1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508FEEC1CCD4237000CE953 /* LogFormatter.swift */; };
 		1521D6931CD4CF29007458D7 /* FlightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521D6921CD4CF29007458D7 /* FlightController.swift */; };
 		1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */; };
+		1545C4411DD04CA000BF235D /* PanoramaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1545C4401DD04CA000BF235D /* PanoramaTests.swift */; };
 		154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */; };
 		154669BE1CCCAE3A00B9B6BC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */; };
 		154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */; };
@@ -109,6 +110,7 @@
 		1508FEEC1CCD4237000CE953 /* LogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFormatter.swift; sourceTree = "<group>"; };
 		1521D6921CD4CF29007458D7 /* FlightController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightController.swift; sourceTree = "<group>"; };
 		1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtilsTests.swift; sourceTree = "<group>"; };
+		1545C4401DD04CA000BF235D /* PanoramaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaTests.swift; sourceTree = "<group>"; };
 		154669BA1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjackSwift.framework; path = Carthage/Build/iOS/CocoaLumberjackSwift.framework; sourceTree = "<group>"; };
 		154669BD1CCCAE3A00B9B6BC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		154669BF1CCCB07200B9B6BC /* CocoaLumberjack.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaLumberjack.framework; path = Carthage/Build/iOS/CocoaLumberjack.framework; sourceTree = "<group>"; };
@@ -176,7 +178,6 @@
 				23C04D5F1DADD72B009486A8 /* VideoPreviewer.framework in Frameworks */,
 				154669C01CCCB07200B9B6BC /* CocoaLumberjack.framework in Frameworks */,
 				155617901DCC86B3005328E6 /* PaperTrailLumberjack.framework in Frameworks */,
-				15839FB01CCEA224008B7E97 /* libDJIVTH264Decoder.a in Frameworks */,
 				15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */,
 				154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */,
 				155617921DCC881C005328E6 /* CocoaAsyncSocket.framework in Frameworks */,
@@ -299,6 +300,7 @@
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
 				83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */,
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
+				1545C4401DD04CA000BF235D /* PanoramaTests.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
 				83195C0F1CE32BF2008A9755 /* PreviewControllerTests.swift */,
 				833AB2631CEC931E0044A783 /* SettingsViewControllerTests.swift */,
@@ -540,6 +542,7 @@
 				8362BB281CC64CA60071D0BA /* ModelSettingsTest.swift in Sources */,
 				15CCA5091CE25FEF003C9B38 /* FlightControllerTests.swift in Sources */,
 				83195C101CE32BF2008A9755 /* PreviewControllerTests.swift in Sources */,
+				1545C4411DD04CA000BF235D /* PanoramaTests.swift in Sources */,
 				1591D1FE1CD868DE006A13E2 /* CameraControllerTests.swift in Sources */,
 				1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */,
 				15839FCB1CD4BE29008B7E97 /* PanoramaControllerTests.swift in Sources */,
