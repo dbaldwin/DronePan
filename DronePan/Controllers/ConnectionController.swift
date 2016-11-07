@@ -120,6 +120,11 @@ protocol ConnectionControllerDiagnosticsDelegate {
             // Grab the product firmware version to display in settings
             product.getFirmwarePackageVersionWithCompletion{ (version:String?, error:NSError?) -> Void in
                 
+                if let firmware = version {
+                    DDLogInfo("Firmware \(firmware)")
+                    self.trackEvent(category: "Connection", action: "Firmware Version", label: firmware)
+                }
+                
                 self.delegate?.firmwareVersion(version ?? "Unknown")
                 
             }
