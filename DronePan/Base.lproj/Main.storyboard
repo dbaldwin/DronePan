@@ -988,6 +988,8 @@
                     <connections>
                         <outlet property="endFile" destination="Rou-YA-Cyh" id="kgG-TZ-Dsc"/>
                         <outlet property="endLabel" destination="S4Q-6m-jRQ" id="zvS-nU-Vda"/>
+                        <outlet property="fetchAllButton" destination="xUw-Hc-3FB" id="eog-ds-GBK"/>
+                        <outlet property="fetchFirstLastButton" destination="3EE-23-TLK" id="WZY-dM-NzE"/>
                         <outlet property="startFile" destination="4uO-Ac-aGn" id="hcc-ke-BxF"/>
                         <outlet property="startLabel" destination="VRW-DP-ZWT" id="jMK-hv-YFl"/>
                     </connections>

@@ -26,6 +26,9 @@ class PanoramaViewController: UIViewController, Analytics {
     @IBOutlet weak var startFile : UILabel!
     @IBOutlet weak var endFile : UILabel!
     
+    @IBOutlet weak var fetchFirstLastButton: UIButton!
+    @IBOutlet weak var fetchAllButton: UIButton!
+    
     static let dateFormatter = NSDateFormatter()
     
     override func viewDidLoad() {
@@ -47,6 +50,11 @@ class PanoramaViewController: UIViewController, Analytics {
                 endFile.text = panorama.imageList.last
             }
         }
+        
+        #if !DEBUG
+            fetchFirstLastButton.hidden = true
+            fetchAllButton.hidden = true
+        #endif
     }
 
     @IBAction func fetchStartEnd(sender: UIButton) {
