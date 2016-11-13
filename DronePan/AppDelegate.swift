@@ -15,7 +15,7 @@
 
 import UIKit
 import CocoaLumberjackSwift
-import PaperTrailLumberjack
+//import PaperTrailLumberjack
 import GoogleAnalytics
 
 let ddloglevel = DDLogLevel.Debug
@@ -77,6 +77,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
     
     func addRemoteLogger() {
         #if DEBUG
+/*
+            // Add this to Cartfile then run carthage update --platform ios
+            // git "https://bitbucket.org/rmonkey/papertraillumberjack.git"
+
+            // Drag in PapertrailLumberjack.framework and CocoaAsyncSocket.framework from Carthage/Build/iOS/
+            // to Build Phases > Link Binary with Libraries
+            
+            // In the second Run Script stage add the following
+            // $(SRCROOT)/Carthage/Build/iOS/PaperTrailLumberjack.framework
+            // $(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework
+             
             let paperTrailLogger = RMPaperTrailLogger.sharedInstance() as RMPaperTrailLogger!
             
             paperTrailLogger.programName = "DronePan-iOS-\(version)"
@@ -88,6 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
             paperTrailLogger.port = 20931
             
             DDLog.addLogger(paperTrailLogger, withLevel: .Debug)
+ */
         #endif
     }
 

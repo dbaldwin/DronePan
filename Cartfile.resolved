@@ -1,7 +1,5 @@
-github "robbiehanson/CocoaAsyncSocket" "f34134f7d14125370caf54b45dcb32d77b3ce38c"
 github "CocoaLumberjack/CocoaLumberjack" "2.4.0"
 github "dennisweissmann/DeviceKit" "0.3.5"
 github "jdg/MBProgressHUD" "1.0.0"
 github "jspahrsummers/xcconfigs" "0.10"
 github "akashivskyy/GoogleAnalytics-Framework" "3.17"
-git "https://bitbucket.org/rmonkey/papertraillumberjack.git" "0.1.6"
