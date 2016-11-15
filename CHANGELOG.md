@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.6b16](https://github.com/dbaldwin/DronePan/releases/tag/1.6b16)
+
+* Updated UI with icons and connection status light
+* View camera settings: mode, aperture, shutter, ISO, exposure compensation
+* Better debug logging with papertrail
+* Updated video previewer from SDK 3.3
+* Video preview now full screen
+
 ## 1.5
 
 #### App Issues
