@@ -132,6 +132,16 @@ class CameraController: NSObject, DJICameraDelegate {
                 self.setPhotoMode(nextCount)
             }
         }
+        
+        self.camera.setLensFocusMode(DJICameraLensFocusMode.Auto) {
+            (error) in
+        
+            if let e = error {
+             
+                DDLogWarn("Camera Controller setLensFocusMode - error seen - \(e)")
+            
+            }
+        }
 
         if errorSeen {
             return

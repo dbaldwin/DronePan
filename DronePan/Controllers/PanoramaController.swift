@@ -190,7 +190,7 @@ extension PanoramaController {
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
-                if (!ControllerUtils.isPhantom4(model)) {
+                if (!ControllerUtils.isPhantom4(model) && !ControllerUtils.isMavicPro(model)) {
                     if (!(remoteController.mode == .Function)) {
                         DDLogDebug("Not in F mode")
 
