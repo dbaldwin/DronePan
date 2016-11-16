@@ -75,6 +75,10 @@ class ControllerUtils {
                 model == DJIAircraftModelNamePhantom3Standard ||
                 model == DJIAircraftModelNamePhantom3Professional
     }
+    
+    class func isMavicPro(model: String) -> Bool {
+        return model == DJIAircraftModelNameMavicPro
+    }
 
     class func isPhantom4(model: String) -> Bool {
         return model == DJIAircraftModelNamePhantom4
@@ -98,7 +102,7 @@ class ControllerUtils {
     
     class func gimbalYawIsRelativeToAircraft(model: String?) -> Bool {
         if let model = model {
-            return ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model) || ControllerUtils.isMatrice(model)
+            return ControllerUtils.isMavicPro(model) || ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model) || ControllerUtils.isMatrice(model)
         } else {
             return false
         }
