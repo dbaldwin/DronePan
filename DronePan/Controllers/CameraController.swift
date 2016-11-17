@@ -133,8 +133,8 @@ class CameraController: NSObject, DJICameraDelegate {
             }
         }
         
-        // Let's check if it says focus is adjustable
         
+        // Check if we can set the focus mode for Mavic
         if(self.camera.isAdjustableFocalPointSupported()) {
             
             self.camera.setLensFocusMode(DJICameraLensFocusMode.Auto) {
@@ -149,7 +149,6 @@ class CameraController: NSObject, DJICameraDelegate {
                     DDLogDebug("Camera Controller setLensFocusMode successful")
                     
                     // Since it was successful let's try to set the focus to center
-                    
                     self.camera.setLensFocusTarget(CGPointMake(0.5, 0.5)) {
                         (error) in
                         
