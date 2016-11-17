@@ -130,6 +130,8 @@ typedef NS_ENUM (uint8_t, DJIHotpointMissionExecutionState){
  *  The user can control the aircraft to fly around the hotpoint with a specific
  *  radius and altitude. During execution, the user can also use the physical
  *  remote controller to modify its radius and speed.
+ *
+ *  It is not supported by Mavic Pro when using WiFi connection.
  */
 @interface DJIHotPointMission : DJIMission
 

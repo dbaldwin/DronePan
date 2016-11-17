@@ -11,6 +11,7 @@
 @class DJIWiFiLink;
 @class DJILBAirLink;
 @class DJIAuxLink;
+@class DJIOcuSyncLink;
 
 /**
  *
@@ -34,10 +35,17 @@
 @property (nonatomic, readonly) BOOL isLBAirLinkSupported;
 
 /**
- *  YES if the Auxiliary Control Air Link is supported. The Auxiliary Control link is the wireless link between the remote controller and aircraft on products that have a WiFi Video link. Phantom 3 Standard, and Phantom 3 4K have an auxiliary control link.
- *
+ *  YES if the Auxiliary Control Air Link is supported. The Auxiliary Control
+ *  link is the wireless link between the remote controller and aircraft for the
+ *  Phantom 3 Standard and Phantom 3 4K products.
  */
 @property (nonatomic, readonly) BOOL isAuxLinkSupported;
+
+/**
+ *  YES if the OcuSync Link is supported. 
+ *  OcuSync Link is only supported by Mavic Pro.
+ */
+@property (nonatomic, readonly) BOOL isOcuSyncLinkSupported;
 
 /**
  *  Returns the WiFi Air Link if it is available.
@@ -55,5 +63,10 @@
  *  Returns the Auxiliary Control Air Link if it is available.
  */
 @property (nonatomic, strong) DJIAuxLink *_Nullable auxLink;
+
+/**
+ *  Returns the OcuSync Link if it is available.
+ */
+@property (nonatomic, strong) DJIOcuSyncLink *_Nullable ocuSyncLink;
 
 @end

@@ -159,7 +159,8 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
  *  battery, we reccomend notifying the user.
  *
  *  NOTE: No automatic action will be taken if any of the properties below 
- *  return `YES`, which is why it is imperative the user is notified of the issue.
+ *  return `YES`, which is why it is imperative the user is notified of the
+ *  issue.
  *
  *  These states are not supported by Osmo.
  */

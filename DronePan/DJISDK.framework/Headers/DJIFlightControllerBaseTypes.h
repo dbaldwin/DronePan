@@ -129,7 +129,7 @@ typedef NS_ENUM (NSUInteger, DJIFlightControllerFlightMode){
      */
     DJIFlightControllerFlightModeGPSFollowMe = 25,
     /**
-     *  ActiveTrack mode.
+     *  ActiveTrack mode, corresponds to Trace or Profile active track modes.
      */
     DJIFlightControllerFlightModeActiveTrack = 26,
     /**
@@ -144,6 +144,22 @@ typedef NS_ENUM (NSUInteger, DJIFlightControllerFlightMode){
      *  GPS Novice mode.
      */
     DJIFlightControllerFlightModeGPSNovice = 32,
+    /**
+     *  Confirm landing mode.
+     */
+    DJIFlightControllerFlightModeConfirmLanding = 33,
+    /**
+     *  The aircraft should move following the terrain.
+     */
+    DJIFlightControllerFlightModeTerrainFollow = 35,
+    /**
+     *  Tripod mode.
+     */
+    DJIFlightControllerFlightModeTripod = 38,
+    /**
+     *  Active track mode, corresponds to Spotlight active track mode.
+     */
+    DJIFlightControllerFlightModeActiveTrackSpotlight = 39,
     /**
      *  The main controller flight mode is unknown.
      */

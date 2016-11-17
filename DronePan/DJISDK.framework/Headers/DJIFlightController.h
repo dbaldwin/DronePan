@@ -261,8 +261,7 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
 
 /**
  *  Turns on the aircraft's motors.
- *  Currently, this method will be supported by Matrice 100 with upcoming
- *  firmware version.
+ *  It is supported by flight controller firmware 3.1.0.0 or above.
  */
 - (void)turnOnMotorsWithCompletion:(DJICompletionBlock)completion;
 
@@ -440,6 +439,16 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
 - (void)startIMUCalibrationForID:(NSUInteger)imuID withCompletion:(DJICompletionBlock)completion;
 
 /**
+ *  Confirms to continue the landing action. When the clearance between the
+ *  aircraft and the ground is less than 0.3m, the aircraft will pause landing
+ *  and wait for user's confirmation. Can use `isLandingConfirmationNeeded` in
+ *  `DJIFlightControllerCurrentState` to check if confirmation is needed. 
+ *
+ *  It is supported by flight controller firmware 3.2.0.0 or above.
+ */
+- (void)confirmLandingWithCompletion:(DJICompletionBlock)completion;
+
+/**
  *  Turns on/off the LEDs in the front. The LEDs are used to indicate the status
  *  of the aircraft. By default, it is on.
  *  It is only supported by Phantom 3 series and Phantom 4.
@@ -455,7 +464,7 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
  *
  *  @param completion Completion block that receives the getter execution result.
  */
-- (void)getLEDsEnabled:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
+- (void)getLEDsEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
 
 /**
  *  Sets the control mode of the flight controller. By default the value is 
@@ -475,6 +484,60 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
  *  @param completion Completion block that receives the getter execution result.
  */
 - (void)getControlModeWithCompletion:(void (^_Nonnull)(DJIFlightControllerControlMode mode, NSError *_Nullable error))completion;
+
+/**
+ *  Enable/disable tripod mode. Tripod Mode drops the aircraft’s maximum speed
+ *  to 2.2mph (3.6kph), and significantly reduces the control stick sensitivity
+ *  of the remote controller to give the user the precision needed for accurate
+ *  framing.
+ *  When tripod mode is enabled, missions, terrain follow mode, course lock and
+ *  home lock are not allowed. Tripod mode is not allowed if the aircraft is
+ *  running a mission. If GPS or vision positioning isn't available, tripod mode
+ *  cannot be enabled.
+ *  If the GPS and/or the vision system is providing the flight controller with
+ *  velocity information then the aircraft will be able to automatically
+ *  compensate for wind.
+ *  If however, position information is not available, then manual intervention
+ *  will be required, but the user should beware any manual compensation will be
+ *  limited due to the reduced maximum velocity and sensitivity. If GPS and
+ *  vision position become unavailable during tripod mode, it is recommended to
+ *  alert the user and disable tripod mode.
+ *
+ *  It is only supported by Mavic Pro.
+ *
+ *  @param enabled      YES to enable tripod mode.
+ *  @param completion   Completion block that receives the setter result.
+ */
+- (void)setTripodModeEnabled:(BOOL)enabled
+              withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets if tripod mode is enabled or not. 
+ *  It is only supported by Mavic Pro.
+ *
+ *  @param completion   Completion block that receives the getter result.
+ */
+- (void)getTripodModeEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
+
+/**
+ *  Enable/disable terrain follow mode. The aircraft uses height information
+ *  gathered by the onboard ultrasonic system, and its downward facing cameras
+ *  to keep flying at the same height above the ground. 
+ *  It is only supported by Mavic Pro.
+ *
+ *  @param enabled      `YES` to enable terrain follow mode.
+ *  @param completion   Completion block that receives the setter result.
+ */
+- (void)setTerrainFollowModeEnabled:(BOOL)enabled
+                     withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets if terrain follow mode is enabled or not.
+ *  It is only supported by Mavic Pro.
+ *
+ *  @param completion   Completion block that receives the getter result.
+ */
+- (void)getTerrainFollowModeEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
 
 @end
 
@@ -520,13 +583,17 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
  *  Enables virtual stick control mode. By enabling virtual stick control mode,
  *  the aircraft can be controlled using the
  *  `sendVirtualStickFlightControlData:withCompletion:` method.
+ *  It is not supported by Mavic Pro when using the WiFi connection.
  *
+ *  @param completion   Completion block.
  */
 - (void)enableVirtualStickControlModeWithCompletion:(DJICompletionBlock)completion;
 
 /**
  *  Disables virtual stick control mode.
+ *  It is not supported by Mavic Pro when using the WiFi connection.
  *
+ *  @param completion   Completion block.
  */
 - (void)disableVirtualStickControlModeWithCompletion:(DJICompletionBlock)completion;
 

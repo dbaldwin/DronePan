@@ -34,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)gimbal:(DJIGimbal *_Nonnull)gimbal didUpdateGimbalState:(DJIGimbalState *_Nonnull)gimbalState;
 
 /**
- *  Update the gimbal's user configuration data. This method is only supported for Osmo.
+ *  Update the gimbal's user configuration data. This method is only supported
+ *  by Osmo series.
  */
 - (void)gimbal:(DJIGimbal *_Nonnull)gimbal didUpdateAdvancedSettingsState:(DJIGimbalAdvancedSettingsState *_Nonnull)settingsState;
 

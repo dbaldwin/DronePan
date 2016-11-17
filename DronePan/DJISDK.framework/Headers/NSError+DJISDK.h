@@ -446,6 +446,10 @@ typedef NS_ENUM (NSInteger, DJISDKFlightControllerError) {
      *  Illegal battery.
      */
     DJISDKFlightControllerErrorIllegalBattery = -4027L,
+    /**
+     *  Aircraft is in tripod mode.
+     */
+    DJISDKFlightControllerErrorInTripodMode = -4028L,
 };
 
 /*********************************************************************************/
@@ -692,7 +696,10 @@ typedef NS_ENUM (NSInteger, DJISDKMissionError){
      *  The aircraft reaches the altitude lower bound of the TapFly Mission.
      */
     DJISDKMissionErrorReachAltitudeLowerBound = -5058L,
-
+    /**
+     *  RTK's signal is weak.
+     */
+    DJISDKMissionErrorRTKSignalWeak = -5059L,
 };
 /*********************************************************************************/
 #pragma mark GEO Error

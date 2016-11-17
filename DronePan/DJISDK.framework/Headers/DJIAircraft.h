@@ -14,6 +14,7 @@
 @class DJIRemoteController;
 @class DJICamera;
 @class DJIAirLink;
+@class DJIMobileRemoteController;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,6 +66,10 @@ extern NSString *const DJIAircraftModelNameMatrice600;
  *  The Aircraft's model name is A3.
  */
 extern NSString *const DJIAircraftModelNameA3;
+/**
+ *  The Aircraft's model name is Mavic Pro.
+ */
+extern NSString *const DJIAircraftModelNameMavicPro;
 
 /**
  *  This class contains the components of an aircraft.
@@ -120,6 +125,14 @@ extern NSString *const DJIAircraftModelNameA3;
  *  @see DJIAirLink
  */
 @property(nonatomic, readonly) DJIAirLink *_Nullable airLink;
+
+/**
+ *  A simulated remote controller on the mobile device.
+ *  It is supported only by Mavic Pro using WiFi.
+ *
+ *  @see DJIMobileRemoteController
+ */
+@property(nonatomic, readonly) DJIMobileRemoteController *_Nullable mobileRemoteController;
 
 /**
  *  Sets the aircraft's name. The aircraft's name should be less than 32 characters.

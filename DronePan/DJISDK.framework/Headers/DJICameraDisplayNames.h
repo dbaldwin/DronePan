@@ -63,5 +63,10 @@ extern NSString *const DJICameraDisplayNameXT;
  */
 extern NSString *const DJICameraDisplayNameZ3;
 
+/**
+ *  The display name for Mavic Pro camera.
+ */
+extern NSString *const DJICameraDisplayNameMavicProCamera;
+
 
 #endif /* DJICameraDisplayNames_h */

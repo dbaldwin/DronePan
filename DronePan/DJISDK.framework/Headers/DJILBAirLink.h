@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  only when the connecting product is Lightbridge 2.
  *                     For other products, the value of power is always 0.
  */
-- (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateRemoteControllerSignalInformation:(NSArray *_Nonnull)antennas;
+- (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateRemoteControllerSignalInformation:(NSArray<DJISignalInformation *> *_Nonnull)antennas;
 
 /**
  *  Signal quality and strength information for current downlink channel on each
@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param lbAirLink    DJILBAirLink Instance.
  *  @param antennas     DJISignalInformation object.
  */
-- (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateLBAirLinkModuleSignalInformation:(NSArray *_Nonnull)antennas;
+- (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateLBAirLinkModuleSignalInformation:(NSArray<DJISignalInformation *> *_Nonnull)antennas;
 
 /**
  *  Signal strength for all available downlink channels.

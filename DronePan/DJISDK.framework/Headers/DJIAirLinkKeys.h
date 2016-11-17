@@ -1,16 +1,16 @@
 //
-//  DJIAirLinkParams.h
+//  DJIAirLinkKeys.h
 //  DJISDK
 //
 //  Copyright © 2016, DJI. All rights reserved.
 //
 
-#ifndef DJIAirLinkParams_h
-#define DJIAirLinkParams_h
+#ifndef DJIAirLinkKeys_h
+#define DJIAirLinkKeys_h
 
 /**
  *  DJIAirLink Component Key
  */
 DJI_API_EXTERN NSString *const DJIAirLinkComponent;
 
-#endif /* DJIAirLinkParams_h */
+#endif /* DJIAirLinkKeys_h */
