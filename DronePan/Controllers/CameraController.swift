@@ -133,14 +133,39 @@ class CameraController: NSObject, DJICameraDelegate {
             }
         }
         
-        self.camera.setLensFocusMode(DJICameraLensFocusMode.Auto) {
-            (error) in
+        // Let's check if it says focus is adjustable
         
-            if let e = error {
-             
-                DDLogWarn("Camera Controller setLensFocusMode - error seen - \(e)")
+        if(self.camera.isAdjustableFocalPointSupported()) {
             
+            self.camera.setLensFocusMode(DJICameraLensFocusMode.Auto) {
+                (error) in
+            
+                if let e = error {
+                 
+                    DDLogWarn("Camera Controller setLensFocusMode - error seen - \(e)")
+                
+                } else {
+                    
+                    DDLogDebug("Camera Controller setLensFocusMode successful")
+                    
+                    // Since it was successful let's try to set the focus to center
+                    
+                    self.camera.setLensFocusTarget(CGPointMake(0.5, 0.5)) {
+                        (error) in
+                        
+                        if let e = error {
+                            
+                            DDLogWarn("Camera Controller setLensFocusTarget - error seen - \(e)")
+                            
+                        } else {
+                            
+                            DDLogDebug("Camera Controller setLensFocusTarget successful")
+                            
+                        }
+                    }
+                }
             }
+            
         }
 
         if errorSeen {
