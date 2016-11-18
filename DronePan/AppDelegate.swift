@@ -15,7 +15,7 @@
 
 import UIKit
 import CocoaLumberjackSwift
-//import PaperTrailLumberjack
+import PaperTrailLumberjack
 import GoogleAnalytics
 
 let ddloglevel = DDLogLevel.Debug
@@ -36,7 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
         
         let defaults = NSUserDefaults.standardUserDefaults()
         let appDefaults = [
-            "analyticsOK": false
+            "analyticsOK": false,
+            "remoteLog": false
         ]
         defaults.registerDefaults(appDefaults)
         defaults.synchronize()
@@ -70,37 +71,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate, Analytics {
 
         DDLogInfo("Running version \(version)")
 
-        //DDLogDebug("Logging to \(fileLogger.currentLogFileInfo().filePath)  \(fileLogger.currentLogFileInfo().fileName)")
-
         return true
     }
     
     func addRemoteLogger() {
-        #if DEBUG
-/*
-            // Add this to Cartfile then run carthage update --platform ios
-            // git "https://bitbucket.org/rmonkey/papertraillumberjack.git"
+        var remoteLog = NSUserDefaults.standardUserDefaults().boolForKey("remoteLog")
 
-            // Drag in PapertrailLumberjack.framework and CocoaAsyncSocket.framework from Carthage/Build/iOS/
-            // to Build Phases > Link Binary with Libraries
-            
-            // In the second Run Script stage add the following
-            // $(SRCROOT)/Carthage/Build/iOS/PaperTrailLumberjack.framework
-            // $(SRCROOT)/Carthage/Build/iOS/CocoaAsyncSocket.framework
-             
+        #if DEBUG
+            remoteLog = true
+        #endif
+
+        if remoteLog {
             let paperTrailLogger = RMPaperTrailLogger.sharedInstance() as RMPaperTrailLogger!
             
             paperTrailLogger.programName = "DronePan-iOS-\(version)"
             if let vendorId = UIDevice.currentDevice().identifierForVendor {
-                paperTrailLogger.machineName = "\(vendorId)"
+                paperTrailLogger.machineName = vendorId.UUIDString
             }
             
             paperTrailLogger.host = "logs2.papertrailapp.com"
             paperTrailLogger.port = 20931
             
             DDLog.addLogger(paperTrailLogger, withLevel: .Debug)
- */
-        #endif
+        }
     }
 
     func showAnalyticsOpt() {

@@ -10,9 +10,9 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Always show info</string>
+			<string>Send anonymous analytics</string>
 			<key>Key</key>
-			<string>infoOverride</string>
+			<string>analyticsOK</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
@@ -20,11 +20,19 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Send anonymous analytics</string>
+			<string>Remote debug logging</string>
 			<key>Key</key>
-			<string>analyticsOK</string>
+			<string>remoteLog</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>ID</string>
+			<key>Key</key>
+			<string>remoteLogId</string>
 		</dict>
 	</array>
 </dict>
