@@ -7,7 +7,7 @@
 
 # DronePan
 
-DronePan - 360 aerial panoramas with DJI Inspire 1 and Phantom 3 drones.
+DronePan - 360 aerial panoramas with DJI (Phantom (3 and later), Inspire, Matrice, Mavic, Osmo family)
 
 [![Download on the App Store](https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg)](https://itunes.apple.com/us/app/dronepan/id1026329337?mt=8)
 
