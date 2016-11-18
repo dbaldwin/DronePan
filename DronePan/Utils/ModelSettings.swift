@@ -43,7 +43,11 @@ class ModelSettings {
     }
 
     class func photosPerRow(model: String) -> Int {
-        return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
+        if(ControllerUtils.isMavicPro(model)) {
+            return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 7)
+        } else {
+            return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
+        }
     }
 
     class func numberOfRows(model: String) -> Int {
