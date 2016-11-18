@@ -434,12 +434,14 @@ extension PanoramaController {
 
                     self.currentPanorama?.finish()
                     
-                    if let panorama = self.currentPanorama {
+                    // Add this back in when we have the pano overview ready when pano is completed
+                    /*if let panorama = self.currentPanorama {
                         self.delegate?.panoCompleted(panorama)
                     } else {
                         self.delegate?.postUserMessage("Completed pano")
-                    }
+                    }*/
 
+                    self.delegate?.postUserMessage("Completed pano")
                     self.panoRunning = (state: false, ok: true)
                 } else {
                     // The panorama has been aborted
