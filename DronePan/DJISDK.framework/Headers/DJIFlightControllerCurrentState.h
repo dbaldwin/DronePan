@@ -252,6 +252,16 @@ typedef NS_ENUM (uint8_t, DJIAircraftRemainingBatteryState){
  */
 @property(nonatomic, readonly) NSString *_Nonnull flightModeString;
 
+/**
+ *  `YES` if the clearance between the aircraft and the ground is less than 0.3m
+ *  and confirmation from the user is needed to continue the landing. When the
+ *  confirmation is needed, user can use `confirmLandingWithCompletion` in
+ *  `DJIFlightController` to continue the landing. 
+ *
+ *  It is supported by flight controller firmware 3.2.0.0 or above.
+ */
+@property(nonatomic, readonly) BOOL isLandingConfirmationNeeded;
+
 @end
 
 NS_ASSUME_NONNULL_END

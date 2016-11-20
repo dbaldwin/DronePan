@@ -86,11 +86,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Downloads the current mission configuration data from aircraft. This method
- *  should only be called after a mission has been prepared. Only waypoint
+ *  should only be called after a mission has been started. Only waypoint
  *  missions and hot point missions can be downloaded from the aircraft.
  *
- *  @param downloadProgress Progress handler callback method to monitor download progress.
- *  @param completion Completion block.
+ *  @param downloadProgress Progress handler callback method to monitor download
+ *                          progress.
+ *  @param completion       Completion block.
  */
 - (void)downloadMissionWithProgress:(DJIMissionProgressHandler)downladProgress
                      withCompletion:(DJIMissionDownloadCompletionBlock)completion;

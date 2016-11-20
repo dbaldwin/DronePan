@@ -632,8 +632,8 @@ typedef NS_ENUM (uint8_t, DJIRCHardwareFlightModeSwitchState){
     /**
      *  The Remote Controller's flight mode switch is set to the P (Positioning)
      *  mode. Positioning mode can use both GPS and the vision system (when
-     *  available) to fly and hover. For the Phantom 4, P mode must be used to
-     *  enable Mission Manager functions from the Mobile Device.
+     *  available) to fly and hover. For the Phantom 4 and Mavic Pro, P mode
+     *  must be used to enable Mission Manager functions from the Mobile Device.
      *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
      *  from left to right.
      *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch
@@ -645,7 +645,7 @@ typedef NS_ENUM (uint8_t, DJIRCHardwareFlightModeSwitchState){
     /**
      *  The Remote Controller's flight mode switch is set to the S (Sport) mode.
      *  Sport mode can use both GPS and the vision system (when available) to hover.
-     *  Sport mode is only supported when using the Phantom 4.
+     *  Sport mode is only supported when using the Phantom 4 and Mavic Pro.
      *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
      *  from left to right.
      *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch 
@@ -706,6 +706,53 @@ typedef struct
      */
     int value;
 } DJIRCHardwareJoystick;
+
+/*********************************************************************************/
+#pragma mark DJIRCFiveDButton
+/*********************************************************************************/
+/**
+ *  Movement direction of the remote controller's 5D button.
+ */
+typedef NS_ENUM(NSUInteger, DJIRCFiveDButtonDirection) {
+    /**
+     *  Button has no movement in either the vertical direction or the
+     *  horizontal direction.
+     */
+    DJIRCFiveDButtonDirectionMiddle,
+    /**
+     *  Button is moved in the positive direction.
+     */
+    DJIRCFiveDButtonDirectionPositive,
+    /**
+     *  Button is moved in the negative direction.
+     */
+    DJIRCFiveDButtonDirectionNegative,
+};
+
+/**
+ *  State of the 5D button on the remote controller.
+ *  Vertical movement, horizontal movment and if it is pressed are not exclusive.
+ */
+typedef struct{
+    /**
+     * YES if 5D button is present.
+     */
+    BOOL isPresent;
+    /**
+     *  The movement in the vertical direction of the 5D button.
+     *  Up is the positive direction and down is the negative direction.
+     */
+    DJIRCFiveDButtonDirection verticalMovement;
+    /**
+     *  The movement in the horizontal direction of the 5D button.
+     *  Right is the positive direction and left is the negative direction.
+     */
+    DJIRCFiveDButtonDirection horizontalMovement;
+    /**
+     *  If the 5D button is pressed down.
+     */
+    BOOL buttonPressed;
+}DJIRCFiveDButton;
 
 /*********************************************************************************/
 #pragma mark DJIRCHardwareState
@@ -778,6 +825,12 @@ typedef struct
      *  Current state of custom button 2 (right Back Button).
      */
     DJIRCHardwareButton customButton2;
+    /**
+     *  Current state of the 5D button. The button can be moved up, down, left
+     *  and right and can be pressed. The 5D button is only supported on Mavic
+     *  Pro remote controllers.
+     */
+    DJIRCFiveDButton fiveDButton;
 } DJIRCHardwareState;
 
 /*********************************************************************************/

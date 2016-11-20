@@ -247,8 +247,8 @@ NS_ASSUME_NONNULL_BEGIN
                     withCompletion:(DJICompletionBlock)completion;
 
 /**
- *  Gets the operation to be executed when the cell voltage crosses beneath the Level 1
- *  threshold.
+ *  Gets the operation to be executed when the cell voltage crosses beneath the
+ *  Level 1 threshold.
  *
  *  It is only supported by stand-alone A3.
  *

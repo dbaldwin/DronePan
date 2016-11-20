@@ -70,7 +70,7 @@ typedef NS_ENUM(uint8_t, DJIUserAccountStatus) {
  *  Restricted zones cannot be unlocked using the GEO system.
  *
  *  Use of the geographic information provided DJIFlyZoneManager is restricted.
- *  Refer to the DJI Developer Policy sent when signing up for Mobile SDK v3.3 Beta.
+ *  Refer to the DJI Developer Policy.
  */
 @interface DJIFlyZoneManager : NSObject
 
@@ -89,7 +89,7 @@ typedef NS_ENUM(uint8_t, DJIUserAccountStatus) {
  *  available only when the aircraft location is within 50km of (37.460484, -122.115312).
  *
  *  Use of the geographic information provided by DJIFlyZoneManager is restricted.
- *  Refer to the DJI Developer Policy sent when signing up for Mobile SDK v3.3 Beta.
+ *  Refer to the DJI Developer Policy.
  *
  *  @param block The execution block with the returned execution result.
  */

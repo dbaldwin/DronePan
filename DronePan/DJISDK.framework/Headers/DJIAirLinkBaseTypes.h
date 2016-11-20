@@ -26,13 +26,18 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM (uint8_t, DJIWiFiFrequencyBand){
     /**
-     *  The WiFi Frequency band is 2.4G.
+     *  The WiFi Frequency band is 2.4 GHz.
      */
     DJIWiFiFrequencyBand2Dot4G,
     /**
-     *  The WiFi Frequency band is 5.8G.
+     *  The WiFi Frequency band is 5 GHz.
      */
-    DJIWiFiFrequencyBand5Dot8G,
+    DJIWiFiFrequencyBand5G,
+    /**
+     *  Dual frequency band mode. The WiFi frequency band can be either 2.4 GHz
+     *  or 5 GHz.
+     */
+    DJIWiFiFrequencyBandDual,
     /**
      *  The WiFi Frequency is unknown.
      */
@@ -64,6 +69,52 @@ typedef NS_ENUM (uint8_t, DJIWiFiSignalQuality) {
      */
     DJIWiFiSignalQualityUnknown = 0xFF,
 };
+
+/**
+ *  WiFi data rate. Lower rates are used for longer ranges, but will have lower
+ *  video quality.
+ */
+typedef NS_ENUM (uint8_t, DJIWiFiDataRate) {
+    /**
+     *  1 Mbps.
+     */
+    DJIWiFiDataRate1Mbps,
+    /**
+     *  2 Mbps.
+     */
+    DJIWiFiDataRate2Mbps,
+    /**
+     *  4 Mbps.
+     */
+    DJIWiFiDataRate4Mbps,
+    /**
+     *  Unknown.
+     */
+    DJIWiFiDataRateUnknown = 0xFF,
+};
+
+/**
+ *  The interference power of a WiFi channel.
+ */
+@interface DJIWiFiChannelInterference : NSObject
+
+/**
+ *  The interference power with range from [-60, -100] dBm. A smaller, more
+ *  negative value represents less interference and better communication quality.
+ */
+@property (nonatomic, readonly) NSInteger power;
+
+/**
+ *  The channel index.
+ */
+@property (nonatomic, readonly) NSUInteger channel;
+
+/**
+ *  The frequency band that the channel belongs to.
+ */
+@property (nonatomic, readonly) DJIWiFiFrequencyBand band;
+
+@end
 
 /*********************************************************************************/
 #pragma mark - LBAirLink
@@ -277,7 +328,7 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkDataRate) {
     /**
      *  Unknown
      */
-    DJILBAirLinkDataRateUnknown
+    DJILBAirLinkDataRateUnknown = 0xFF
 };
 
 /**
@@ -360,6 +411,133 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkEncodeMode) {
      */
     DJILBAirLinkEncodeModeUnknown = 0xFF
 };
+
+/*********************************************************************************/
+#pragma mark - OcuSyncLink
+/*********************************************************************************/
+/**
+ *  Downlink channel selection mode (manual or automatic) for the wireless
+ *  OcuSync Link.
+ */
+typedef NS_ENUM (uint8_t, DJIOcuSyncChannelSelectionMode) {
+    /**
+     *  OcuSync will automatically select the best channel number and bandwidth
+     *  adapting to the signal environment.
+     */
+    DJIOcuSyncChannelSelectionModeAuto,
+    /**
+     *  Both channel number and bandwidth can be selected manually.
+     */
+    DJIOcuSyncChannelSelectionModeManual,
+    /**
+     *  Unknown physical channel selection mode.
+     */
+    DJIOcuSyncChannelSelectionModeUnknown = 0xFF
+};
+
+/**
+ *  The channel bandwidth for the OcuSync downlink (from the aircraft to the
+ *  remote controller). Setting a smaller bandwidth will reduce the data rate,
+ *  but make the connection more robust.
+ *  Only supported by Mavic Pro.
+ */
+typedef NS_ENUM (uint8_t, DJIOcuSyncBandwidth) {
+    /**
+     *  The frequency band of the OcuSync link is 20 MHz (up to 46 Mbps).
+     */
+    DJIOcuSyncBandwidth20MHz,
+    /**
+     *  The frequency band of the OcuSync link is 10 MHz (up to 23 Mbps).
+     */
+    DJIOcuSyncBandwidth10MHz,
+    /**
+     *  Unknown frequency band.
+     */
+    DJIOcuSyncBandwidthUnknown = 0xFF
+};
+
+/**
+ *  This class represents the power spectral density of a frequency slice.
+ *  Only supported by Mavic Pro.
+ */
+@interface DJIOcuSyncFrequencyInterference : NSObject
+/**
+ *  The average interference spectral density of the frequency range. The valid
+ *  range is from [-60, -110] dBm/MHz. A smaller (more negative) value
+ *  represents less interference and better communication quality.
+ */
+@property(nonatomic, readonly) NSInteger powerPerMHz;
+/**
+ *  The start point of the frequency range in MHz.
+ */
+@property(nonatomic, readonly) float frequencyStart;
+/**
+ *  The width of the frequency range in MHz.
+ */
+@property(nonatomic, readonly) float frequencyWidth;
+
+@end
+
+/**
+ *  OcuSync link warning messages.
+ *  Only supported by Mavic Pro.
+ */
+typedef NS_ENUM (uint8_t, DJIOcuSyncWarningMessage) {
+    /**
+     *  Warning that interference is high for take-off. When the signal gets
+     *  weaker as separation between remote controller and aircraft get larger,
+     *  there is a change the link will fail. 
+     */
+    DJIOcuSyncWarningMessageStrongTakeoffInterference,
+    /**
+     *  There is strong interference on the downlink signal incident on the
+     *  remote controller. If the channel selection mode 
+     *  `DJIOcuSyncChannelSelectionModeManual` is being used, consider changing
+     *  to `DJIOcuSyncChannelSelectionModeAuto` as the OcuSync link can
+     *  automatically select Channel Numbers and bandwidth to mitigate 
+     *  interference on the fly.
+     */
+    DJIOcuSyncWarningMessageStrongDownlinkInterference,
+    /**
+     *  There is strong interference on the uplink signal incident on the
+     *  aircraft.
+     */
+    DJIOcuSyncWarningMessageStrongUplinkInterference,
+    /**
+     *  Weak OcuSync signal strength. Be aware of anything blocking the signal
+     *  between the remote controller and aircraft, adjust the orientation of
+     *  the antennas on the remote controller, or reduce the distance between
+     *  remote controller and aircraft to increase signal strength.
+     */
+    DJIOcuSyncWarningMessageWeakSignal,
+    /**
+     *  The OcuSync link on the aircraft is rebooting.
+     */
+    DJIOcuSyncWarningMessageAircraftLinkReboot,
+    /**
+     *  The uplink from the remote controller to the aircraft is broken. Usually
+     *  if only the uplink disconnects, it is due to interference on the
+     *  aircraft's OcuSync antennas. Try changing the channel number if the
+     *  interference source cannot be removed.
+     */
+    DJIOcuSyncWarningMessageUplinkBroken,
+    /**
+     *  The downlink from the aircraft to the remote controller is broken.
+     *  Usually if only the downlink disconnects, it is due to interference
+     *  on the remote controller's OcuSync antennas. Try changing channel 
+     *  number, or reducing the bandwidth of the channel to make it more
+     *  robust.
+     */
+    DJIOcuSyncWarningMessageDownlinkBroken,
+    /**
+     *  The link between the remote controller and the aircraft is unusable. It
+     *  is determined to be unusable if signal is too weak. Check to see if the 
+     *  antennas are setup correctly and the path from remote controller to 
+     *  aircraft is unobstructed.
+     */
+    DJIOcuSyncWarningMessageLinkUnusable,
+};
+
 
 NS_ASSUME_NONNULL_END
 

@@ -5,7 +5,7 @@
 //  Copyright © 2015, DJI. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <DJISDK/DJISDKFoundation.h>
 #import <DJISDK/DJIBaseProduct.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -58,8 +58,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)getFirmwareVersionWithCompletion:(void (^)(NSString *_Nullable version, NSError *_Nullable error))block;
 
 /**
- *  Get the serial number of the component. Note that this serial number does not match the serial number found on the physical component.
+ *  Get the serial number of the component. Note that this serial number does
+ *  not match the serial number found on the physical component.
  *
+ *  @param block Completion block that receives the getter result.
+ *  @deprecated Call `getSerialNumberWithCompletion:` instead.
+ */
+- (void)getLegacySerialNumberWithCompletion:(void (^)(NSString *_Nullable serialNumber, NSError *_Nullable error))block
+DJI_API_DEPRECATED("Only for migration purpose. Use getSerialNumberWithCompletion:. ");
+
+/**
+ *  Get the serial number of the component. 
+ *
+ *  @param block Completion block that receives the getter result.
  */
 - (void)getSerialNumberWithCompletion:(void (^)(NSString *_Nullable serialNumber, NSError *_Nullable error))block;
 

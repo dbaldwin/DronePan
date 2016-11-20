@@ -10,24 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /*********************************************************************************/
-#pragma mark DJIHandheldWiFiFrequency Type
+#pragma mark DJIHandheldPowerMode Type
 /*********************************************************************************/
-
-/**
- *  Handheld WiFi Frequency Type.
- */
-typedef NS_ENUM (uint8_t, DJIHandheldWiFiFrequencyType){
-    /**
-     *  The Handheld WiFi frequency is 2.4G
-     */
-    DJIHandheldWiFiFrequency2Dot4G,
-    /**
-     *  The Handheld WiFi frequency is 5.8G
-     */
-    DJIHandheldWiFiFrequency5Dot8G,
-    
-};
-
 /**
  *  Handheld Power Mode
  */

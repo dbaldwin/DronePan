@@ -30,7 +30,17 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param quality WiFi signal quality.
  *
  */
-- (void)wifiLink:(DJIWiFiLink *_Nonnull)link didUpdatesWiFiSignalQuality:(DJIWiFiSignalQuality)quality;
+- (void)wifiLink:(DJIWiFiLink *_Nonnull)link didUpdateWiFiSignalQuality:(DJIWiFiSignalQuality)quality;
+
+/**
+ *  Interference power of the available channels.
+ *  Supported only by Mavic Pro. 
+ *
+ *  @param link             `DJIWiFiLink` object.
+ *  @param interferences    The interference power of available channels.
+ */
+- (void)wifiLink:(DJIWiFiLink *_Nonnull)link didUpdateChannelInterferencePowers:(NSArray<DJIWiFiChannelInterference *> *)interferences;
+
 @end
 
 /*********************************************************************************/
@@ -104,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  YES if the product allows the user to change WiFi frequency bands.
- *  Only Osmo supports this feature.
+ *  Osmo and Mavic Pro with WiFi connection support this feature.
  */
 - (BOOL)isWiFiFrequencyBandEditable;
 
@@ -126,6 +136,62 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)getWiFiFrequencyBandWithCompletion:(void (^_Nonnull)(DJIWiFiFrequencyBand frequencyBand,
                                                              NSError *_Nullable error))block;
+
+/*********************************************************************************/
+#pragma mark Channels
+/*********************************************************************************/
+/**
+ *  Sets the WiFi channel. `getAvailableChannels` must be used to determine
+ *  which channels are possible to set.
+ *  When a new channel is set, the WiFi on the product will reboot.
+ *  The channel can only be changed when the product is not flying.
+ *  Supported only by Mavic Pro.
+ *  
+ *  @param channelIndex Index of the channel to select.
+ *  @param block        The completion block with the returned execution result.
+ */
+-(void)setChannel:(NSUInteger)channelIndex withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Gets the WiFi channel. Channels 1-13 are in the 2.4 GHz band. Other channels
+ *  are in the 5 GHz band.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param block    The completion block with the returned execution result.
+ */
+-(void)getChannelWithCompletion:(void (^)(NSUInteger channelIndex,
+                                          NSError *_Nullable error))block;
+
+/**
+ *  Gets the channels available for the current frequency band. When 
+ *  `DJIWiFiFrequencyBandDual` is selected, channels for both 2.4GHz and 5GHz
+ *  are available.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param block    The completion block with the returned execution result.
+ */
+-(void)getAvailableChannelsWithCompletion:(void (^)(NSArray<NSNumber *> *_Nullable channels,
+                                                    NSError *_Nullable error))block;
+
+/*********************************************************************************/
+#pragma mark Data Rate
+/*********************************************************************************/
+/**
+ *  Sets the WiFi data rate (throughput). Higher data rates increase the quality
+ *  of video transmission, but can only be used at shorter ranges.
+ *
+ *  @param rate     Data rate (throughput).
+ *  @param block    The completion block with the returned execution result.
+ */
+-(void)setDataRate:(DJIWiFiDataRate)rate withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Gets the current data rate (throughput).
+ *
+ *  @param block    The completion block with the returned execution result.
+ */
+-(void)getDataRateWithCompletion:(void (^)(DJIWiFiDataRate rate,
+                                                   NSError *_Nullable error))block;
 
 
 @end

@@ -137,6 +137,7 @@ extern NSString *const DJISupportedCameraApertureRange;
  */
 - (nonnull NSArray<NSNumber *> *)supportedCameraApertureRange;
 
+
 @end
 
 /**

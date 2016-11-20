@@ -7,8 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import "DJIBaseProduct.h"
+#import "DJICameraSettingsDef.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class DJIMedia; 
 
 /*********************************************************************************/
 #pragma mark - DJIMediaType
@@ -54,6 +57,52 @@ typedef NS_ENUM (NSUInteger, DJIMediaType){
 };
 
 /*********************************************************************************/
+#pragma mark - DJIMediaVideoPlaybackStatus
+/*********************************************************************************/
+/**
+ *  The playback status.
+ */
+typedef NS_ENUM(uint8_t, DJIMediaVideoPlaybackStatus) {
+    /**
+     *  The playback is stopped. No media is playing.
+     */
+    DJIMediaVideoPlaybackStatusStopped,
+    /**
+     *  The media manager is playing a video.
+     */
+    DJIMediaVideoPlaybackStatusPlaying,
+    /**
+     *  The playing video is paused.
+     */
+    DJIMediaVideoPlaybackStatusPaused,
+};
+
+/*********************************************************************************/
+#pragma mark - DJIMediaVideoPlaybackState
+/*********************************************************************************/
+/**
+ *  The playback state of the media manager.
+ */
+@interface DJIMediaVideoPlaybackState : NSObject
+/**
+ *  The video media file that is playing.
+ */
+@property(nonatomic, readonly) DJIMedia *playingMedia;
+
+/**
+ *  The status of the playback (e.g. playing or paused).
+ */
+@property(nonatomic, readonly) DJIMediaVideoPlaybackStatus playbackStatus;
+
+/**
+ *  The playing position in seconds.
+ */
+@property(nonatomic, readonly) float playingPosition;
+
+@end
+
+
+/*********************************************************************************/
 #pragma mark - DJIMedia
 /*********************************************************************************/
 
@@ -94,6 +143,16 @@ typedef NS_ENUM (NSUInteger, DJIMediaType){
  *  call `fetchThumbnailWithCompletion`.
  */
 @property(nonatomic, readonly) UIImage *_Nullable thumbnail;
+
+/**
+ *  The orientation of the camera when the video file was first recorded. If the
+ *  camera orientation changes during a video capture, this will report the
+ *  initial orientation.
+ *  Will be `DJICameraOrientationLandscape` if the media file is a photo.
+ *  Only Mavic Pro supports this property. Will be `DJICameraOrientationLandscape` 
+ *  for other products.
+ */
+@property(nonatomic, readonly) DJICameraOrientation videoOrientation;
 
 /**
  *  Fetches this media's thumbnail from the SD card. This method can be used

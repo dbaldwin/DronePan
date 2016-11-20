@@ -51,15 +51,15 @@ typedef NS_ENUM (NSUInteger, DJICameraMode){
     /**
      *  Playback mode. In this mode, the user can preview photos and videos, and
      *  can delete files.
-     *  Not supported by Osmo, Phantom 3 Standard or Phantom 3 4K.
+     *  Not supported by Osmo, Phantom 3 Standard, Phantom 3 4K, Z3 camera or XT
+     *  camera.
      */
     DJICameraModePlayback = 0x02,
     /**
      *  In this mode, the user can download media to the Mobile Device.
      *  Not supported by Inspire 1 Pro (X5 camera) nor Inspire 1 RAW (X5R camera).
      */
-    DJICameraModeMediaDownload = 0x03,
-    
+    DJICameraModeMediaDownload = 0x03,    
     /**
      *  The camera work mode is unknown.
      */
@@ -116,7 +116,7 @@ typedef NS_ENUM (NSUInteger, DJICameraShootPhotoMode){
      *  `camera:didGenerateTimeLapsePreview:`.
      */
     DJICameraShootPhotoModeTimeLapse,
-    
+
     /**
      *  The shoot photo mode is unknown.
      */
@@ -225,6 +225,10 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoResolution){
      */
     DJICameraVideoResolution2704x1520,
     /**
+     *  The camera's video resolution is 2720x1530.
+     */
+    DJICameraVideoResolution2720x1530,
+    /**
      *  The camera's video resolution is 3840x2160.
      */
     DJICameraVideoResolution3840x2160,
@@ -271,11 +275,15 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoFrameRate){
      */
     DJICameraVideoFrameRate60fps,
     /**
+     *  The camera's video frame rate is 96fps (frames per second). This frame
+     *  rate can only be used when `isSlowMotionSupported` returns YES.
+     */
+    DJICameraVideoFrameRate96fps,
+    /**
      *  The camera's video frame rate is 120fps (frames per second). This frame
      *  rate can only be used when `isSlowMotionSupported` returns YES.
      */
     DJICameraVideoFrameRate120fps,
-    
     /**
      *  The camera's video frame rate is unknown.
      */
@@ -1318,6 +1326,8 @@ typedef NS_ENUM (NSUInteger, DJICameraLensFocusMode){
     DJICameraLensFocusModeUnknown = 0xFF
 };
 
+
+
 /*********************************************************************************/
 #pragma mark DJILensType
 /*********************************************************************************/
@@ -2175,11 +2185,11 @@ typedef NS_ENUM (NSUInteger, DJICameraDigitalFilter){
      */
     DJICameraDigitalFilterBright,
     /**
-     *  The digital filter is set to movie, also known as D-Cinelike.
+     *  The digital filter is set to D-Cinelike (called movie before).
      */
-    DJICameraDigitalFilterCinelike,
+    DJICameraDigitalFilterDCinelike,
     /**
-     *  The digital filter is set to portrait. Only supported by OSMO with X3
+     *  The digital filter is set to portrait. Only supported by Osmo with X3
      *  camera.
      */
     DJICameraDigitalFilterPortrait,
@@ -2200,43 +2210,14 @@ typedef NS_ENUM (NSUInteger, DJICameraDigitalFilter){
      */
     DJICameraDigitalFilterJugo,
     /**
-     *  The digital filter is set to neutral, also known as D-Log.
+     *  The digital filter is set to D-Log (called neutral before).
      */
     DJICameraDigitalFilterDLog,
     /**
-     *  The digital filter is set to true color. support since xxx firmware of P4
+     *  The digital filter is set to true color. 
+     *  It is only supported by Phantom 4 with firmware v1.2.503 or above.
      */
     DJICameraDigitalFilterTrueColor,
-    
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterReminiscence,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterInverse,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterSolarize,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterPostrize,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterWhiteboard,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterBlackboard,
-    /**
-     *  reserved
-     */
-    DJICameraDigitalFilterAqua,
-    
     /**
      *  The digital filter is unknown.
      */
@@ -2276,6 +2257,30 @@ typedef NS_ENUM (NSUInteger, DJIDownloadFileType){
      *  The file to be downloaded is unknown.
      */
     DJIDownloadFileTypeUnknown
+};
+
+/*********************************************************************************/
+#pragma mark DJICameraOrientation
+/*********************************************************************************/
+/**
+ *  Physical orientation of the camera.
+ *
+ *  Only supported by Mavic Pro
+ */
+typedef NS_ENUM(NSUInteger, DJICameraOrientation) {
+    /**
+     *  By default, the camera is in landscape orientation.
+     */
+    DJICameraOrientationLandscape,
+    /**
+     *  The camera is in the portrait orientation, which is rotated 90 degrees
+     *  in the clockwise direction from the default landscape orientation.
+     */
+    DJICameraOrientationPortrait,
+    /**
+     *  Unknown. 
+     */
+    DJICameraOrientationUnknown = 0xFF,
 };
 
 NS_ASSUME_NONNULL_END

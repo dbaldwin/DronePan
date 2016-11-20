@@ -183,9 +183,15 @@ typedef NS_ENUM (NSInteger, DJIRTKPositioningSolution){
 @property(nonatomic, readonly) BOOL isConnected;
 
 /**
- *  Enables RTK positioning. Disable RTK when in poor signal environments where incorrect positioning information might might controlling the aircraft difficult.
+ *  Enables RTK positioning. Disable RTK when in poor signal environments where
+ *  incorrect positioning information might might controlling the aircraft
+ *  difficult.
+ *  It can only be set when the motors are off. 
+ *
+ *  @param enabled      YES to enable RTK positioning.
+ *  @param completion   Completion block that receives setter result. 
  */
-- (void)setRTKEnabled:(BOOL)enable withCompletion:(DJICompletionBlock)completion;
+- (void)setRTKEnabled:(BOOL)enabled withCompletion:(DJICompletionBlock)completion;
 
 @end
 

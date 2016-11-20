@@ -71,6 +71,8 @@ FOUNDATION_EXPORT const unsigned char DJISDKVersionString[];
 #import <DJISDK/DJIRemoteControllerBaseTypes.h>
 #import <DJISDK/DJIRemoteController.h>
 #import <DJISDK/DJIRemoteControllerKeys.h>
+#import <DJISDK/DJIMobileRemoteController.h>
+#import <DJISDK/DJIMobileRemoteControllerKeys.h>
 
 //-----------------------------------------------------------------
 #pragma mark Camera
@@ -112,6 +114,7 @@ FOUNDATION_EXPORT const unsigned char DJISDKVersionString[];
 #import <DJISDK/DJILBAirLink.h>
 #import <DJISDK/DJIWiFiLink.h>
 #import <DJISDK/DJIAuxLink.h>
+#import <DJISDK/DJIOcuSyncLink.h>
 #import <DJISDK/DJISignalInformation.h>
 #import <DJISDK/DJIAirLinkBaseTypes.h>
 

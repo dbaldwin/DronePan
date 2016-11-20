@@ -222,6 +222,8 @@ typedef NS_ENUM (NSInteger, DJIWaypointMissionGotoWaypointMode) {
  *  If the aircraft is pulled back along the waypoint mission all the way to the
  *  first waypoint, then it will hover in place until the stick is released
  *  enough for it to again progress through the mission from start to finish.
+ *
+ *  It is not supported by Mavic Pro when using WiFi connection.
  */
 
 @interface DJIWaypointMission : DJIMission

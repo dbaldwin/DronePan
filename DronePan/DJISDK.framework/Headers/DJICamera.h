@@ -71,11 +71,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Tells the delegate that a new media file (photo or video) has been generated.
+ *  It is not supported by Zenmuse XT camera.
  *
  *  @param camera   Camera that generates the new media file.
  *  @param newMedia The new media file.
  *
- *  @warning In this delegate, the `DJIMedia` instance properties `thumbnail` and `durationInSeconds` require special consideration. The `thumbnail` property normally has a pointer to a `UIImage` of the thumbnail, but this is only available when the camera is in `DJICameraModeMediaDownload` work mode. Additionally, for this instance of `DJIMedia`, the `durationInSeconds` property is 0.
+ *  @warning In this delegate, the `DJIMedia` instance properties `thumbnail`,
+ *  `durationInSeconds` and `orientation` require special consideration. The
+ *  `thumbnail` property normally has a pointer to a `UIImage` of the thumbnail,
+ *  but this is only available when the camera is in `DJICameraModeMediaDownload`
+ *  work mode. Additionally, for this instance of `DJIMedia`, the
+ *  `durationInSeconds` property is 0 and the `videoOrientation` property is
+ *  `DJICameraOrientationLandscape`.
  */
 - (void)camera:(DJICamera *_Nonnull)camera didGenerateNewMediaFile:(DJIMedia *_Nonnull)newMedia;
 
@@ -268,24 +275,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  `YES` if current device supports Slow Motion video recording.
- *  Currently Slow Motion is supported only by the Osmo camera and the Phantom 4
- *  camera. There are two ways to enter Slow Motion mode:
+ *  Currently Slow Motion is supported by the Osmo X3/Z3 camera, the Phantom 4
+ *  camera and the Mavic Pro camera.
+ *  There are two ways to enter Slow Motion mode:
  *
  *  1. Call `setVideoSlowMotionEnabled:withCompletion:` with YES.
  *  2. Call `setVideoResolution:andFrameRate:withCompletion:` with
- *     `DJICameraVideoResolution1920x1080` and `DJICameraVideoFrameRate120fps`.
- *
+ *     `DJICameraVideoResolution1920x1080` and `DJICameraVideoFrameRate120fps`
+ *      for the X3 camera or the Phantom 4 camera.
+ *     Call `setVideoResolution:andFrameRate:withCompletion:` with
+ *     `DJICameraVideoResolution1920x1080` and `DJICameraVideoFrameRate96fps` or
+ *     `DJICameraVideoResolution1280x720` and `DJICameraVideoFrameRate120fps`
+ *      for the Mavic Pro camera.
  */
 - (BOOL)isSlowMotionSupported;
 
 /**
  *  Enables/Disables Slow Motion video recording.
- *  When it is enabled, the resolution and frame rate will change to 1920x1080
- *  120fps.
+ *  When it is enabled, the frame rate will change to 120fps.
  *  When it is disabled, the resolution and frame rate will revert to the
- *  previous setting for Osmo, while for the Phantom 4 camera, the resolution
- *  will remain at `DJICameraVideoResolution1920x1080` and the frame rate will
- *  change to `DJICameraVideoFrameRate48fps`.
+ *  previous setting for Osmo, while for the Phantom 4 camera or the Mavic Pro
+ *  camera, the resolution will remain at `DJICameraVideoResolution1920x1080`
+ *  and the frame rate will change to `DJICameraVideoFrameRate48fps`.
  *
  *  @param enabled  Enable or disable Slow Motion video.
  *  @param block    The execution callback with the returned execution result.
@@ -595,12 +606,16 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param block Remote execution result callback block.
  */
-- (void)getExposureModeWithCompletion:(void (^_Nonnull)(DJICameraExposureMode, NSError *_Nullable))block;
+- (void)getExposureModeWithCompletion:(void (^_Nonnull)(DJICameraExposureMode mode, NSError *_Nullable error))block;
 
 /**
- *  Sets the camera's ISO value. See [DJICameraISO](../Enums/DJICameraISO.html) to view all possible ISO settings for the camera.
+ *  Sets the camera's ISO value. See [DJICameraISO](../Enums/DJICameraISO.html)
+ *  to view all possible ISO settings for the camera.
  *
- *  For all cameras except the X5 and X5R, the ISO value can only be set when the camera exposure mode is in Manual mode. For the X5 and X5R, the ISO value can be set for all modes. See the `setExposureMode:withCompletion:` method for how to set exposure mode.
+ *  For all cameras except the X5 and X5R, the ISO value can only be set when
+ *  the camera exposure mode is in Manual mode. For the X5 and X5R, the ISO
+ *  value can be set for all modes. See the `setExposureMode:withCompletion:`
+ *  method for how to set exposure mode.
  *
  *  @param iso ISO value to be set.
  *  @param block   Completion block.
@@ -794,6 +809,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Sets the camera's hue. The default hue value is 0.
+ *  It is not supported by Mavic Pro.
  *
  *  @param hue   Hue value to be set in the range of [-3, 3].
  *  @param block Remote execution result error block.
@@ -849,13 +865,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Check if the current device supports digital zoom scale.
- *  It is only supported by Osmo with X3 camera and Phantom 4 camera.
+ *  It is supported by Osmo with X3 camera, Phantom 4 camera, Z3 camera and
+ *  Mavic Pro camera.
  */
 - (BOOL)isDigitalZoomScaleSupported;
 
 /**
  *  Adjusts the digital zoom.
- *  It is only supported by Osmo.
+ *  It is supported by Osmo with X3 camera, Phantom 4 camera, Z3 camera and
+ *  Mavic Pro camera.
  *
  *  @param scale    The valid range is from 1.0 to 2.0.
  *  @param block    The completion block with the returned execution result.
@@ -863,16 +881,20 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDigitalZoomScale:(float)scale withCompletion:(DJICompletionBlock)block;
 
 /**
- * Gets current digital zoom.
+ *  Gets current digital zoom.
+ *  It is supported by Osmo with X3 camera, Phantom 4 camera, Z3 camera and
+ *  Mavic Pro camera.
  *
- * @param block Completion block that receives the getter result. When an error occurs, the error is returned and the result is undefined.
+ * @param block Completion block that receives the getter result. When an error
+ *              occurs, the error is returned and the result is undefined.
  * @see [- (void)setDigitalZoomScale:(float)scale withCompletion:(DJICompletionBlock)block;].
  */
 - (void)getDigitalZoomScaleWithCompletion:(void (^_Nonnull)(float scale, NSError *_Nullable error))block;
 
 /**
  *  Check if camera supports optical zoom.
- *  It is only supported by X5 and X5R camera with the Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ lens.
+ *  It is only supported by X5 and X5R camera with the Olympus M.Zuiko ED
+ *  14-42mm f/3.5-5.6 EZ lens and Z3 camera.
  *
  *  @return `YES` if camera supports optical zoom.
  */
@@ -880,7 +902,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Gets the specification of the zoom lens.
- *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ.
+ *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED
+ *  14-42mm f/3.5-5.6 EZ and Z3 camera.
  *
  * @param block Completion block that receives the getter result. When an error occurs, the error is returned and the result is undefined.
  */
@@ -888,39 +911,112 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Sets focal length of the zoom lens.
- *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ.
+ *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED
+ *  14-42mm f/3.5-5.6 EZ and Z3 camera.
  *
- *  @param focalLength  Focal length of zoom lens. Valid range is [`DJICameraOpticalZoomspec.minFocalLength`, `DJICameraOpticalZoomspec.maxFocalLength`] and must be a multiple of `DJICameraOpticalZoomspec.focalLengthStep`.
+ *  @param focalLength  Focal length of zoom lens. Valid range is
+ *                      [`DJICameraOpticalZoomspec.minFocalLength`, `DJICameraOpticalZoomspec.maxFocalLength`]
+ *                      and must be a multiple of `DJICameraOpticalZoomspec.focalLengthStep`.
  *  @param block        The completion block with returned execution result.
  */
 -(void)setOpticalZoomFocalLength:(NSUInteger)focalLength withCompletion:(DJICompletionBlock)block;
 
 /**
  *  Gets zoom lens focal length in units of 0.1mm.
- *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ.
+ *  It is only supported by X5 and X5R camera with lens Olympus M.Zuiko ED
+ *  14-42mm f/3.5-5.6 EZ and Z3 camera.
  *
  * @param block Completion block that receives the getter result. When an error occurs, the error is returned and the result is undefined.
  */
 -(void)getOpticalZoomFocalLengthWithCompletion:(void (^_Nonnull)(NSUInteger focalLength, NSError *_Nullable error))block;
 
 /**
- * Start changing the focal length of the lens in specified direction with specified speed. Focal length change (zooming) will halt when maximum or minimum focal lengths are reached, or `stopContinuousOpticalZoomWithCompletion` is called.
- *  It is only supported by X5 and X5R camera on Osmo with lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ.
+ * Start changing the focal length of the lens in specified direction with
+ *  specified speed. Focal length change (zooming) will halt when maximum or
+ *  minimum focal lengths are reached, or `stopContinuousOpticalZoomWithCompletion`
+ *  is called.
+ *  It is only supported by X5 and X5R camera on Osmo with lens Olympus M.Zuiko
+ *  ED 14-42mm f/3.5-5.6 EZ and Z3 camera.
  *
  *  @param direction    Direction to zoom. 
  *  @param speed        Zoom speed.
  *  @param block        The execution callback with the returned execution result.
  */
--(void)startContinuousOpticalZoomInDirection:(DJICameraOpticalZoomDirection)direction withSpeed:(DJICameraOpticalZoomSpeed)speed withCompletion:(DJICompletionBlock)block;
-
+-(void)startContinuousOpticalZoomInDirection:(DJICameraOpticalZoomDirection)direction
+                                   withSpeed:(DJICameraOpticalZoomSpeed)speed
+                              withCompletion:(DJICompletionBlock)block;
 
 /**
  *  Called to stop focal length changing, when it currently is from calling `startContinuousOpticalZoomInDirection:withSpeed:withCompletion`.
- *  It is only supported by X5 and X5R camera on Osmo with lens Olympus M.Zuiko ED 14-42mm f/3.5-5.6 EZ.
+ *  It is only supported by X5 and X5R camera on Osmo with lens Olympus M.Zuiko
+ *  ED 14-42mm f/3.5-5.6 EZ and Z3 camera. 
  *
  *  @param block        The execution callback with the returned execution result.
  */
 -(void)stopContinuousOpticalZoomWithCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Enables HD (high-definition) live view. When it is enabled, the live view
+ *  resolution is 1080p with frame rate 30 fps.
+ *  The settings will only take effect when the camera is in record-video mode
+ *  and the video resolution is either 1080p or 2.7k without slow-motion enabled. 
+ *  If recording video in 4k, then the live stream will be limited to 720p.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param enabled  Enable or disable HD live view. 
+ *  @param block    The execution callback with the returned execution result.
+ */
+-(void)setHighDefinitionLiveViewEnabled:(BOOL)enabled withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  YES if 1080p live view is enabled. This will return the value of the setter,
+ *  and not necessarily the actual live view resolution. For example, if recording in 
+ *  4K and HD live view has previously been set, then this will return YES but the
+ *  actual live view resolution will be 720p.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param block    The execution callback with the returned execution result.
+ */
+-(void)getHighDefinitionLiveViewEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))block;
+
+/**
+ *  Enables the automatic control of the front-arm LEDs. The camera can turn off
+ *  the front-arm LEDs automatically when it shoots photos or records videos.
+ *  The LEDs will be turned on after the shooting or recording is finished.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param enabled  Enable the automatic control of the front-arm LEDs.
+ *  @param block    The execution callback with the returned execution result.
+ */
+-(void)setAutoTurnOffLEDEnabled:(BOOL)enabled withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Determines whether the automatic control of the front-arm LEDs is Enabled.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param block    The execution callback with the returned execution result.
+ */
+-(void)getAutoTurnOffLEDEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))block;
+
+
+/**
+ *  Sets the camera's orientation. The gimbal will rotate the roll axis based on
+ *  the orientation.
+ *  Supported only by Mavic Pro.
+ *
+ *  @param orientation  Camera's orientation. 
+ *  @param block        The execution callback with the returned execution
+ *                      result.
+ */
+-(void)setOrientation:(DJICameraOrientation)orientation withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Gets the camera's orientation. 
+ *  Supported only by Mavic Pro.
+ *
+ *  @param block    The execution callback with the returned execution result.
+ */
+-(void)getOrientationWithCompletion:(void (^_Nonnull)(DJICameraOrientation orientation, NSError *_Nullable error))block;
 
 /*********************************************************************************/
 #pragma mark Audio Settings
@@ -1031,14 +1127,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Determines whether the camera supports an adjustable focal point.
- *  Currently, the adjustable focal point is supported only by the X5 and X5R cameras.
+ *  Currently, the adjustable focal point is supported only by the X5, X5R, Z3
+ *  cameras and the Mavic Pro camera.
  */
 - (BOOL)isAdjustableFocalPointSupported;
 
 /**
  *  Sets the lens focus mode. See [DJICameraLensFocusMode](../Enums/DJICameraLensFocusMode.html).
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R, Z3 cameras (Z3 camera can only support
+ *  `DJICameraLensFocusModeAuto`) and the Mavic Pro camera.
  *
  *  @param focusMode    Focus mode to set. See [DJICameraLensFocusMode](../Enums/DJICameraLensFocusMode.html) for more detail.
  *  @param block        The execution callback with the returned execution result.
@@ -1048,7 +1146,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Gets the lens focus mode. See [DJICameraLensFocusMode](../Enums/DJICameraLensFocusMode.html).
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R, Z3 cameras and the Mavic Pro camera.
  *
  * @param block The execution callback with the returned value(s).
  */
@@ -1060,7 +1158,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  When the focus mode is manual, the target point is the zoom out area if the focus assistant is enabled for
  *  the manual mode.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R, Z3 cameras and the Mavic Pro camera.
  *
  *  @param focusTarget  The focus target to set. The range for x and y is from 0.0 to 1.0. The point [0.0, 0.0]
  *                      represents the top-left angle of the screen.
@@ -1072,7 +1170,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Gets the lens focus target point.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R, Z3 cameras and the Mavic Pro camera.
  *
  *  @param callback The execution callback with the returned value(s).
  */
@@ -1082,7 +1180,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  Sets whether the lens focus assistant is enabled.
  *  If the focus assistant is enabled, a specific area of the screen will zoom out during focusing.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R and Z3 cameras. Because Z3 only supports AF
+ *  mode, `enableMF` will be ignored.
  *
  *  @param enabledMF    Sets whether the lens focus assistant under MF mode is enabled.
  *  @param enabledAF    Sets whether the lens focus assistant under AF mode is enabled.
@@ -1093,7 +1192,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Determines whether the lens focus assistant is enabled.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R and Z3 cameras.
  *
  *  @param block The execution callback with the returned value(s).
  *  The first result stands for MF, the second result stands for AF.
@@ -1103,16 +1202,18 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Gets the lens focusing ring value's max value.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R cameras and the Mavic Pro camera.
  *
  *  @param callback The execution callback with the returned value(s).
  */
 - (void)getLensFocusRingValueUpperBoundWithCompletion:(void (^_Nonnull)(NSUInteger upperBound, NSError *_Nullable error))block;
 
 /**
- *  Set the focal distance by simulating the focus ring adjustment. Value can have a range of [0, `getLensFocusRingValueUpperBoundWithCompletion`], which represents infinity and the closest possible focal distance.
+ *  Set the focal distance by simulating the focus ring adjustment. Value can
+ *  have a range of [0, `getLensFocusRingValueUpperBoundWithCompletion`], which
+ *  represents infinity and the closest possible focal distance.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R cameras and the Mavic Pro camera.
  *
  *  For some lenses, the minimum focus ring value is larger than 0. For example the minimum of DJI MFT 15mm f/1.7 ASPH is 270.
  *  To retrieve the minimum value, perform the following steps:
@@ -1131,7 +1232,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Gets the lens focus ring value.
  *  It is available only when `isAdjustableFocalPointSupported` returns `YES`.
- *  Supported only by the X5 and X5R cameras.
+ *  Supported only by the X5, X5R cameras and the Mavic Pro camera.
  *
  *  @param callback The execution callback with the returned value(s).
  */
@@ -1654,10 +1755,12 @@ DJI_API_DEPRECATED("Use getThermalMeasurementModeWithCompletion:. ");
 - (void)getThermalDigitalZoomScaleWithCompletion:(void (^_Nonnull)(DJICameraThermalDigitalZoomScale scale, NSError *_Nullable error))block;
 
 /**
- *  Gets the thermal imaging camera profile. The profile includes information about resolution, frame rate and focal length.
+ *  Gets the thermal imaging camera profile. The profile includes information
+ *  about resolution, frame rate and focal length.
  *  Supported only by thermal imaging cameras.
  *
- *  @param block Completion block that receives the getter result. When an error occurs, the error is returned and the result is undefined.
+ *  @param block Completion block that receives the getter result. When an error
+ *               occurs, the error is returned and the result is undefined.
  */
 - (void)getThermalProfileWithCompletion:(void (^_Nonnull)(DJICameraThermalProfile profile, NSError *_Nullable error))block;
 

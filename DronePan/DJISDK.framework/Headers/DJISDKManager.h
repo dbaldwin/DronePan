@@ -103,6 +103,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setCompletionBlockQueue:(dispatch_queue_t)completionBlockQueue;
 
 /**
+ *  The Mavic Pro broadcasts wi-fi signal on spectrum that is not permissable in some specific countries. 
+ *  The SDK has an automatic means of checking and disabling this functionality on applicable products. 
+ *  Calling this method with YES will disable the check involving DJI servers behavior, NO will re-enable it. 
+ *  The developer still has the responsibility to adhere to all applicable regulations at all times. 
+ *  The automatic behavior is always on by default.
+ *
+ *  Note: this method must be called before calling +registerApp:withDelegate: in order to take effect.
+ *
+ */
++ (void)setDisableCountryCodeCheck:(BOOL)disableCountryCodeCheck;
+
+/**
  *  Start a connection to the DJI product. Call this method after successful
  *  registration of the app. `sdkManagerProductDidChangeFrom:to:` delegate
  *  method will be called if the connection succeeded.
