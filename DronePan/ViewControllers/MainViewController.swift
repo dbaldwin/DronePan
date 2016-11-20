@@ -543,7 +543,7 @@ extension MainViewController: PanoramaControllerDelegate {
         dispatch_async(dispatch_get_main_queue()) {
             self.currentPanorama = panorama
             
-            //self.performSegueWithIdentifier("overviewSegue", sender: self)
+            self.performSegueWithIdentifier("overviewSegue", sender: self)
         }
     }
 }
