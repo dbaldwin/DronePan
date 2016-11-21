@@ -1,0 +1,8 @@
+DronePan/DJISDK.framework/ filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/DJISDK filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/DJISDKResources.bundle filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/Headers filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/Info.plist filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/Modules filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/rsaCert.der filter=lfs diff=lfs merge=lfs -text
+DronePan/DJISDK.framework/strip-frameworks.sh filter=lfs diff=lfs merge=lfs -text
