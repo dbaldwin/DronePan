@@ -232,7 +232,7 @@ class MainViewController: UIViewController, Analytics {
     
     func setCameraISO(iso: DJICameraISO? = nil) {
         if let iso = iso {
-            self.cameraISOLabel.text = "ISO: \(iso.description)"
+            self.cameraISOLabel.text = "ISO: \(iso.rawValue)"
         } else {
             self.cameraISOLabel.text = "ISO: Unknown"
         }
