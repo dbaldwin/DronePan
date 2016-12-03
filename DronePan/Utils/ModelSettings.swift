@@ -37,17 +37,12 @@ class ModelSettings {
     private class func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
         return ModelSettings.settingForKey(model, key: key) as? Bool ?? defaultValue
     }
-
     class func startDelay(model: String) -> Int {
         return ModelSettings.intSettingForKey(model, key: .StartDelay, defaultValue: 5)
     }
 
     class func photosPerRow(model: String) -> Int {
-        if(ControllerUtils.isMavicPro(model)) {
-            return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 7)
-        } else {
-            return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: 6)
-        }
+        return ModelSettings.intSettingForKey(model, key: .PhotosPerRow, defaultValue: ModelConfig.photosPerRow(model))
     }
 
     class func numberOfRows(model: String) -> Int {

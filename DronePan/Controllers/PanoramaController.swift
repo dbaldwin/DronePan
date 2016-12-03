@@ -191,30 +191,13 @@ extension PanoramaController {
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
-                if (ControllerUtils.isMavicPro(model)) {
-                    if(remoteController.mode != .Attitude) {
-                        
-                        DDLogDebug("Mavic not in P mode")
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
-                        
-                    }
+                let mode = ModelConfig.switchMode(model)
+                if (!(remoteController.mode == mode)) {
+                    DDLogDebug("Not in correct mode - wanted \(mode) - saw \(remoteController.mode)")
                     
-                } else if (!ControllerUtils.isPhantom4(model)) {
-                    if (!(remoteController.mode == .Function)) {
-                        DDLogDebug("Not in F mode")
+                    self.delegate?.postUserMessage("Please set RC Flight Mode to \(mode) first")
 
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to F first")
-
-                        return false
-                    }
-                } else {
-                    if (!(remoteController.mode == .Positioning)) {
-                        DDLogDebug("Not in P mode")
-                        
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
-                        
-                        return false
-                    }
+                    return false
                 }
             }
         }

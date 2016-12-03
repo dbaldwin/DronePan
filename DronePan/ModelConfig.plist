@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>defaults</key>
+	<dict>
+		<key>photosPerRow</key>
+		<integer>6</integer>
+		<key>relativeGimbalYaw</key>
+		<true/>
+		<key>switchMode</key>
+		<string>F</string>
+	</dict>
+	<key>photosPerRow</key>
+	<dict>
+		<key>Mavic Pro</key>
+		<integer>7</integer>
+	</dict>
+	<key>relativeGimbalYaw</key>
+	<dict>
+		<key>Phantom 3 4K</key>
+		<false/>
+		<key>Phantom 3 Advanced</key>
+		<false/>
+		<key>Phantom 3 Standard</key>
+		<false/>
+		<key>Phantom 3 Professional</key>
+		<false/>
+		<key>A3</key>
+		<false/>
+	</dict>
+	<key>switchMode</key>
+	<dict>
+		<key>Mavic Pro</key>
+		<string>P</string>
+		<key>Phantom 4</key>
+		<string>P</string>
+		<key>Phantom 4 Pro</key>
+		<string>P</string>
+	</dict>
+</dict>
+</plist>
