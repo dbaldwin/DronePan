@@ -18,6 +18,16 @@
 	</dict>
 	<key>relativeGimbalYaw</key>
 	<dict>
+        <key>Osmo</key>
+        <false/>
+        <key>Osmo Mobile</key>
+        <false/>
+        <key>Osmo Plus</key>
+        <false/>
+        <key>Osmo Pro</key>
+        <false/>
+        <key>Osmo Raw</key>
+        <false/>
 		<key>Phantom 3 4K</key>
 		<false/>
 		<key>Phantom 3 Advanced</key>
