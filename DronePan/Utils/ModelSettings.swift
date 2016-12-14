@@ -23,6 +23,7 @@ enum SettingsKeys: String {
     case MaxPitch = "max_pitch"
     case MaxPitchEnabled = "max_pitch_enabled"
     case PhotoMode = "photo_mode"
+    case PhotoDelay = "photo_delay"
 }
 
 class ModelSettings {
@@ -36,6 +37,10 @@ class ModelSettings {
 
     private class func boolSettingForKey(model: String, key: SettingsKeys, defaultValue: Bool) -> Bool {
         return ModelSettings.settingForKey(model, key: key) as? Bool ?? defaultValue
+    }
+    
+    private class func doubleForSetting(model: String, key: SettingsKeys, defaultValue: Double) -> Double {
+        return ModelSettings.settingForKey(model, key: key) as? Double ?? defaultValue
     }
 
     class func startDelay(model: String) -> Int {
@@ -68,6 +73,10 @@ class ModelSettings {
     
     class func photoMode(model: String) -> Int {
         return ModelSettings.intSettingForKey(model, key: .PhotoMode, defaultValue: 0)
+    }
+    
+    class func photoDelay(model: String) -> Double {
+        return ModelSettings.doubleSettingForKey(model, key: .PhotoDelay, defaultValue: 0.0)
     }
     
     class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {
