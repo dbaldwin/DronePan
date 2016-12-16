@@ -81,7 +81,7 @@ class ControllerUtils {
     }
 
     class func isPhantom4(model: String) -> Bool {
-        return model == DJIAircraftModelNamePhantom4
+        return model == DJIAircraftModelNamePhantom4 || model == DJIAircraftModelNamePhantom4Pro
     }
 
     class func isPhantom(model: String) -> Bool {
