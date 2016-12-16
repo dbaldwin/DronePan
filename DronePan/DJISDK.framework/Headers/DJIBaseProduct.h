@@ -78,8 +78,8 @@ typedef void (^_Nullable DJICompletionBlock)(NSError *_Nullable error);
 
 /**
  *  Get the product's firmware package version. For Products except Phantom 4,
- *  Internet connection is required and the execution time for this method
- *  highly depends on the Internet status.
+ *  Phantom 4 Pro, Mavic Pro and Inspire 2, Internet connection is required and
+ *  the execution time for this method highly depends on the Internet status.
  *
  *  @param block Completion block to receive the result.
  *

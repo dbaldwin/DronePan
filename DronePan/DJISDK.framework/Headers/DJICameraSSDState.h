@@ -13,7 +13,7 @@
  *  information, including state, whether it is connected, its capacity, video
  *  size and rate, etc.
  *
- *  Supported only by the X5R camera.
+ *  Supported only by the X5R camera an X5S camera. 
  */
 @interface DJICameraSSDState : NSObject
 
@@ -53,5 +53,10 @@
  *  Video framerate to be saved to SSD.
  */
 @property (nonatomic, readonly) DJICameraVideoFrameRate videoFrameRate;
+
+/**
+ *  Number of photos that are shot in RAW burst mode.
+ */
+@property(nonatomic, readonly) NSInteger rawPhotoBurstCount;
 
 @end

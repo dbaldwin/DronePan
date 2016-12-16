@@ -235,6 +235,13 @@ typedef NS_ENUM (NSInteger, DJIDiagnosticsError){
      *  Aircraft is warming up
      */
     DJIDiagnosticsErrorFlightControllerWarmingUp = 8016,
+    
+    /**
+     *  Using the wrong propellers. Inspire 2 has propellers for high altitudes and 
+     *  low altitudes. This error will be present when the wrong propellers are 
+     *  being used at the wrong altitude.
+     */
+    DJIDiagnosticsErrorFlightControllerUsingWrongPropellers = 8017,
     /**
      *  Propeller Guard Mounted
      */

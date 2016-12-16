@@ -128,14 +128,14 @@ typedef NS_ENUM (uint8_t, DJIGimbalWorkMode){
      *  if the aircraft yaw changes, the camera will continue pointing in the same
      *  world direction. This feature is supported by the X3, X5 and X5R camera
      *  gimbals and the Ronin-MX. This mode is only available for the Ronin-MX when
-     *  the M600 landing gear is retracted.
+     *  the M600 or M600 Pro landing gear is retracted.
      */
     DJIGimbalWorkModeFreeMode,
     /**
      *  The gimbal's work mode is FPV mode. In this mode, the gimbal yaw will
      *  follow the aircraft's heading, and the gimbal roll will follow the RC's
      *  roll channel value. The pitch will be available to move. This mode is only
-     *  available for the Ronin-MX when the M600 landing gear is retracted.
+     *  available for the Ronin-MX when the M600 or M600 Pro landing gear is retracted.
      *  Not supported by Osmo.
      */
     DJIGimbalWorkModeFpvMode,
@@ -370,6 +370,7 @@ typedef NS_ENUM (uint8_t, DJIGimbalLoadingBalanceStatus){
  *  A positive value in the valid range represents clockwise rotation.
  */
 extern NSString *const DJIGimbalParamAdjustPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal supports
  *  yaw axis adjustment.
@@ -383,6 +384,7 @@ extern NSString *const DJIGimbalParamAdjustPitch;
  *  of the extended range whether it is enabled or not.
  */
 extern NSString *const DJIGimbalParamAdjustYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal supports
  *  roll axis adjustment. The corresponding value in `gimbalCapability` is an
@@ -392,6 +394,7 @@ extern NSString *const DJIGimbalParamAdjustYaw;
  *  A positive value in the valid range represents clockwise rotation.
  */
 extern NSString *const DJIGimbalParamAdjustRoll;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal supports
  *  Advanced Settings Profiles.
@@ -399,6 +402,7 @@ extern NSString *const DJIGimbalParamAdjustRoll;
  *  `DJIParamCapability`.
  */
 extern NSString *const DJIGimbalParamAdvancedSettingsProfile;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal supports
  *  a range extension in pitch.
@@ -407,6 +411,7 @@ extern NSString *const DJIGimbalParamAdvancedSettingsProfile;
  *  its possible range in degrees is returned.
  */
 extern NSString *const DJIGimbalParamPitchRangeExtensionEnabled;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis response speed to manual control can be adjusted.
@@ -415,6 +420,7 @@ extern NSString *const DJIGimbalParamPitchRangeExtensionEnabled;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerSpeedPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis response speed to manual control can be adjusted.
@@ -423,6 +429,7 @@ extern NSString *const DJIGimbalParamControllerSpeedPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerSpeedYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis smoothing can be adjusted when using manual control.
@@ -431,6 +438,7 @@ extern NSString *const DJIGimbalParamControllerSpeedYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerSmoothingPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis smoothing can be adjusted when using manual control.
@@ -439,6 +447,7 @@ extern NSString *const DJIGimbalParamControllerSmoothingPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerSmoothingYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's manual
  *  control pitch axis deadband can be adjusted.
@@ -447,6 +456,7 @@ extern NSString *const DJIGimbalParamControllerSmoothingYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerDeadbandPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's manual
  *  control yaw axis deadband can be adjusted.
@@ -455,6 +465,7 @@ extern NSString *const DJIGimbalParamControllerDeadbandPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamControllerDeadbandYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis SmoothTrack can be toggled.
@@ -463,6 +474,7 @@ extern NSString *const DJIGimbalParamControllerDeadbandYaw;
  *  Ronin-MX cannot toggle the SmoothTrack functionality and it is always enabled.
  */
 extern NSString *const DJIGimbalParamSmoothTrackEnabledPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis SmoothTrack can be toggled.
@@ -471,6 +483,7 @@ extern NSString *const DJIGimbalParamSmoothTrackEnabledPitch;
  *  Ronin-MX cannot toggle the SmoothTrack functionality and it is always enabled.
  */
 extern NSString *const DJIGimbalParamSmoothTrackEnabledYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis SmoothTrack accelaration can be adjusted.
@@ -479,6 +492,7 @@ extern NSString *const DJIGimbalParamSmoothTrackEnabledYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackAccelerationPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis SmoothTrack accelaration can be adjusted.
@@ -487,6 +501,7 @@ extern NSString *const DJIGimbalParamSmoothTrackAccelerationPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackAccelerationYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis SmoothTrack speed can be adjusted.
@@ -495,6 +510,7 @@ extern NSString *const DJIGimbalParamSmoothTrackAccelerationYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackSpeedPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis SmoothTrack speed can be adjusted.
@@ -503,6 +519,7 @@ extern NSString *const DJIGimbalParamSmoothTrackSpeedPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackSpeedYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis SmoothTrack deadband can be adjusted.
@@ -511,6 +528,7 @@ extern NSString *const DJIGimbalParamSmoothTrackSpeedYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackDeadbandPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis SmoothTrack deadband can be adjusted.
@@ -519,6 +537,7 @@ extern NSString *const DJIGimbalParamSmoothTrackDeadbandPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamSmoothTrackDeadbandYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  up endpoint can be adjusted.
@@ -527,6 +546,7 @@ extern NSString *const DJIGimbalParamSmoothTrackDeadbandYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamEndpointPitchUp;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  down endpoint can be adjusted.
@@ -535,6 +555,7 @@ extern NSString *const DJIGimbalParamEndpointPitchUp;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamEndpointPitchDown;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  left endpoint can be adjusted.
@@ -543,6 +564,7 @@ extern NSString *const DJIGimbalParamEndpointPitchDown;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamEndpointYawLeft;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  right endpoint can be adjusted.
@@ -551,6 +573,7 @@ extern NSString *const DJIGimbalParamEndpointYawLeft;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamEndpointYawRight;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis motor control stiffness can be adjusted.
@@ -559,6 +582,7 @@ extern NSString *const DJIGimbalParamEndpointYawRight;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStiffnessPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis motor control stiffness can be adjusted.
@@ -567,6 +591,7 @@ extern NSString *const DJIGimbalParamMotorControlStiffnessPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStiffnessYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's roll
  *  axis motor control stiffness can be adjusted.
@@ -575,6 +600,7 @@ extern NSString *const DJIGimbalParamMotorControlStiffnessYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStiffnessRoll;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis motor control strength can be adjusted.
@@ -583,6 +609,7 @@ extern NSString *const DJIGimbalParamMotorControlStiffnessRoll;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStrengthPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis motor control strength can be adjusted.
@@ -591,6 +618,7 @@ extern NSString *const DJIGimbalParamMotorControlStrengthPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStrengthYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's roll
  *  axis motor control strength can be adjusted.
@@ -599,6 +627,7 @@ extern NSString *const DJIGimbalParamMotorControlStrengthYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlStrengthRoll;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis motor control gyro filtering can be adjusted.
@@ -607,6 +636,7 @@ extern NSString *const DJIGimbalParamMotorControlStrengthRoll;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlGyroFilteringPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis motor control gyro filtering can be adjusted.
@@ -615,6 +645,7 @@ extern NSString *const DJIGimbalParamMotorControlGyroFilteringPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlGyroFilteringYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's roll
  *  axis motor control gyro filtering can be adjusted.
@@ -623,6 +654,7 @@ extern NSString *const DJIGimbalParamMotorControlGyroFilteringYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlGyroFilteringRoll;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's pitch
  *  axis motor control "precontrol" can be adjusted.
@@ -631,6 +663,7 @@ extern NSString *const DJIGimbalParamMotorControlGyroFilteringRoll;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlPrecontrolPitch;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's yaw
  *  axis motor control "precontrol" can be adjusted.
@@ -639,6 +672,7 @@ extern NSString *const DJIGimbalParamMotorControlPrecontrolPitch;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlPrecontrolYaw;
+
 /**
  *  Key string in `gimbalCapability` associated with whether the gimbal's roll
  *  axis motor control "precontrol" can be adjusted.
@@ -647,3 +681,4 @@ extern NSString *const DJIGimbalParamMotorControlPrecontrolYaw;
  *  its possible range (unitless) is returned.
  */
 extern NSString *const DJIGimbalParamMotorControlPrecontrolRoll;
+

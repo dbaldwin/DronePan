@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Callback function that updates the Remote Controller's current GPS data.
  *
  *  @param rc    Instance of the Remote Controller for which the GPS data will be updated.
- *  @param state Current state of the Remote Controller's GPS data.
+ *  @param gpsData Current state of the Remote Controller's GPS data.
  */
 - (void)remoteController:(DJIRemoteController *_Nonnull)rc didUpdateGpsData:(DJIRCGPSData)gpsData;
 
@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Callback function that updates the Remote Controller's current battery state.
  *
  *  @param rc    Instance of the Remote Controller for which the battery state will be updated.
- *  @param state Current state of the Remote Controller's battery state.
+ *  @param batteryInfo Current state of the Remote Controller's battery state.
  */
 - (void)remoteController:(DJIRemoteController *_Nonnull)rc didUpdateBatteryState:(DJIRCBatteryInfo)batteryInfo;
 
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Remote Controller to control the gimbal using the method requestGimbalControlRightWithCallbackBlock.
  *
  *  @param rc    Instance of the Remote Controller.
- *  @param state Information of the slave making the request to the master Remote Controller.
+ *  @param slave Information of the slave making the request to the master Remote Controller.
  */
 - (void)remoteController:(DJIRemoteController *_Nonnull)rc didReceiveGimbalControlRequestFromSlave:(DJIRCInfo *_Nonnull)slave;
 
@@ -66,9 +66,21 @@ NS_ASSUME_NONNULL_BEGIN
  *  method will be called.
  *
  *  @param rc    Instance of the Remote Controller for which the battery state will be updated.
- *  @param state Current state of the Remote Focus state.
+ *  @param remoteFocusState Current state of the Remote Focus state.
  */
 - (void)remoteController:(DJIRemoteController *_Nonnull)rc didUpdateRemoteFocusState:(DJIRCRemoteFocusState)remoteFocusState;
+
+
+/**
+ *  Callback function that updates the remote controller's state related to the
+ *  master and slave mode.
+ *  Only supported by Inspire 2.
+ *
+ *  @param rc               Instance of the Remote Controller
+ *  @param masterSlaveState The remote controller's state related to the master
+ *                          and slave mode.
+ */
+- (void)remoteController:(DJIRemoteController *_Nonnull)rc didUpdateMasterSlaveState:(DJIRCMasterSlaveState *_Nonnull)masterSlaveState;
 
 @end
 
@@ -79,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class DJIWiFiLink;
 
 /**
-   This class represents the remote controller of the aircraft. It provides
+ This class represents the remote controller of the aircraft. It provides
  *  methods to change the settings of the physical remote controller. For some
  *  products (e.g. Inspire 1 and Matric 100), the class provides methods to
  *  manager the slave/master mode of the remote controllers.
@@ -169,6 +181,31 @@ NS_ASSUME_NONNULL_BEGIN
  *
  */
 - (void)getRCToAircraftPairingStateWithCompletion:(void (^_Nonnull)(DJIRCToAircraftPairingState state, NSError *_Nullable error))completion;
+
+
+/*********************************************************************************/
+#pragma mark RC Charging
+/*********************************************************************************/
+
+/**
+ *  Sets the charge mode of a connected iOS device.
+ *  Note: Android devices are always charging when connected to the remote
+ *  controller.
+ *  It is only supported by Inspire 2.
+ *
+ *  @param chargeMode   Charge Mobile mode.
+ *  @param completion   Completion block that receives the setter result.
+ */
+- (void)setChargeMobileMode:(DJIRemoteControllerChargeMobileMode)chargeMode withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets the mode to charge the connected iOS device. Note that Android devices
+ *  are always charging when connected to the remote controller.
+ *  It is only supported by Inspire 2.
+ *
+ *  @param completion   Completion block that receives the getter result.
+ */
+- (void)getChargeMobileModeWithCompletion:(void (^_Nonnull)(DJIRemoteControllerChargeMobileMode chargeMode, NSError *_Nullable error))completion;
 
 /*********************************************************************************/
 #pragma mark RC gimbal control
@@ -260,25 +297,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Query method to check if the Remote Controller supports master/slave mode.
+ *  Master-slave mode is supported by the Inspire 1, Inspire 1 Pro, Matrice 100,
+ *  Lightbridge 2 (including Matrice 600, Matrice 600 Pro, A3 and N3) and
+ *  Inspire 2.
+ *  Inspire 2 is using a new set of interfaces to control the master and slave
+ *  connection.
+ *  - Similar to other products, Inspire 2 uses set/get `RemoteControllerMode`
+ *    to change the master/slave mode.
+ *  - A slave remote controller can use `getMastersWithCompletion:` and
+ *    `joinMasterWithID:authorizationCode:withCompletion:` to join a master
+ *    remote controller.
+ *  - A master remote controller can use `setMasterAuthorizationCode:withCompletion:`
+ *    to change the authorization code.
  */
 - (BOOL)isMasterSlaveModeSupported;
 
 /**
  *  Sets the Remote Controller's mode. See the `DJIRemoteControllerMode` enum
  *  for all possible Remote Controller modes.
- *  The master and slave modes are only supported for the Inspire 1, Inspire 1
- *  Pro and M100.
+ *  It is supported by the Inspire 1, Inspire 1 Pro, Matrice 100, Lightbridge 2
+ *  (including Matrice 600, Matrice 600 Pro, A3 and N3) and Inspire 2.
  *
- *  @param mode  Mode of type `DJIRemoteControllerMode` to be set for the Remote Controller.
- *  @param completion Completion block.
+ *  @param mode         Mode of type `DJIRemoteControllerMode` to be set for the
+ *                      Remote Controller.
+ *  @param completion   Completion block that receives setter result.
  */
 - (void)setRemoteControllerMode:(DJIRemoteControllerMode)mode withCompletion:(DJICompletionBlock)completion;
 
 /**
  *  Gets the Remote Controller's mode.
+ *  It is supported by the Inspire 1, Inspire 1 Pro, Matrice 100, Lightbridge 2
+ *  (including Matrice 600, Matrice 600 Pro, A3 and N3) and Inspire 2.
  *
+ *  @param completion   Completion block that receives getter result.
  */
-- (void)getRemoteControllerModeWithCompletion:(void (^_Nonnull)(DJIRemoteControllerMode mode, BOOL isConnected, NSError *_Nullable error))completion;
+- (void)getRemoteControllerModeWithCompletion:(void (^_Nonnull)(DJIRemoteControllerMode mode,
+                                                                BOOL isConnected,
+                                                                NSError *_Nullable error))completion;
 
 /*********************************************************************************/
 #pragma mark RC master and slave mode - Slave RC methods
@@ -420,5 +475,50 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)responseRequester:(DJIRCID)requesterId forGimbalControlRight:(BOOL)isAgree;
 
+/*********************************************************************************/
+#pragma mark RC Master and Slave Mode - Inspire 2 Only
+/*********************************************************************************/
+
+/**
+ *  Sets the authorization code of a master remote controller. The slave remote
+ *  controller needs to know the authorization code in order to join the master.
+ *  A valid input is a string with 6 digits. The default value is "888888".
+ *  It can only be called when the remote controller is in master mode.
+ *  It is only supported by Inspire 2.
+ *
+ *  @param authorizationCode   Authorization code to set.
+ *  @param completion           Completion block that receives the setter result.
+ */
+- (void)setMasterAuthorizationCode:(NSString*)authorizationCode
+                    withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets a list of the nearby remote controllers in master mode.
+ *  It can only be called when the remote controller is in slave mode.
+ *  It is only supported by Inspire 2.
+ *
+ *  @param completion Completion block that receives the getter results.
+ */
+- (void)getMastersWithCompletion:(void (^_Nonnull)(NSArray<NSString *> *_Nullable masters,
+                                                   NSError *_Nullable error))completion;
+
+
+/**
+ *  Joins the master remote controller with the specific ID.
+ *  If the remote controller has joined the same master before, the
+ *  authorization code is not required until the master remote controller
+ *  changes its authorization code. In this case, `code` can be `nil`.
+ *  It can only be called when the remote controller is in slave mode.
+ *  It is only supported by Inspire 2.
+ *
+ *  @param masterID Master remote controller with the specific ID to join.
+ *  @param code     Authorization code of the master remote controller.
+ *  @completion     Completion block that receives the execution result.
+ */
+- (void)joinMasterWithID:(NSString *_Nonnull)masterID
+       authorizationCode:(NSString *_Nullable)code
+          withCompletion:(void (^_Nonnull)(DJIRCJoinMasterResult result, NSError *_Nullable error))completion;
+
 @end
+
 NS_ASSUME_NONNULL_END

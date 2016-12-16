@@ -48,6 +48,12 @@
 @property(nonatomic, readonly) BOOL isCalibrating;
 
 /**
+ *  Calibration progress in percent.
+ *  Supported by Phantom 4, Phantom 4 Pro, Inspire 2 and Osmo series.
+ */
+@property(nonatomic, readonly) NSInteger calibrationProgress;
+
+/**
  *  Returns whether the gimbal's pitch value is at its limit.
  */
 @property(nonatomic, readonly) BOOL isPitchAtStop;
@@ -78,7 +84,7 @@
 @property(nonatomic, readonly) DJIGimbalBalanceTestResult rollTestResult;
 
 /**
- *  `YES` if the mobile device is mounted on the gimbal. Only used by Osmo 
+ *  `YES` if the mobile device is mounted on the gimbal. Only used by Osmo
  *  Mobile.
  */
 @property(nonatomic, readonly) BOOL isMobileDeviceMounted;

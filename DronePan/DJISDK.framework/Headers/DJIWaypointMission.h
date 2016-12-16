@@ -267,6 +267,10 @@ typedef NS_ENUM (NSInteger, DJIWaypointMissionGotoWaypointMode) {
  *  If `autoFlightSpeed <0` and the aircraft is at the first waypoint, the
  *  aircraft will hover in place until the speed is made positive by the remote
  *  controller joystick.
+ * 
+ *  In flight controller firmware 3.2.10.0 or above, different speeds between
+ *  individual waypoints can also be set in waypoint objects which will overwrite
+ *  `autoFlightSpeed`.
  */
 @property(nonatomic, assign) float autoFlightSpeed;
 
@@ -330,7 +334,7 @@ typedef NS_ENUM (NSInteger, DJIWaypointMissionGotoWaypointMode) {
 /**
  *  Adds an array of waypoints to the waypoint mission.
  *
- *  @param Array of waypoints to be added to the waypoint mission.
+ *  @param waypoints of waypoints to be added to the waypoint mission.
  */
 - (void)addWaypoints:(NSArray *_Nonnull)waypoints;
 

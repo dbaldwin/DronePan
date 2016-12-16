@@ -414,6 +414,10 @@
 
 "dji_check_fc_aircraft_warming_up_solution"="请等待";
 
+"dji_check_fc_wrong_propeller_reason"="桨叶异常";
+"dji_check_fc_plain_propeller_on_plateau_solution"="高原上请不要使用平原桨。";
+"dji_check_fc_plateau_propeller_on_plain_solution"="平原上请不要使用高原桨。";
+
 "dji_check_vision_propeller_guard_reason"="螺旋桨保护罩已安装";
 
 "dji_check_vision_propeller_guard_solution"="已安装螺旋桨保护罩，前视感知系统将自动关闭";

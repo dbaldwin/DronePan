@@ -154,7 +154,7 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
 
 /**
  *  Landing Gear object. For products with moveable landing gear only.
- *  It is supported by Inspire 1 and Matrice 600.
+ *  It is supported by Inspire 1, Matrice 600, Matrice 600 Pro and Inspire 2.
  */
 @property(nonatomic, readonly) DJILandingGear *_Nullable landingGear;
 
@@ -183,8 +183,10 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
  *  Most products have 1 IMU 
  *
  *  Exceptions:
- *  - Phantom 4 has 2 IMUs
- *  - A3 has 3 IMUs
+ *  - Phantom 4, Phantom 4 Pro, Mavic Pro and Inspire 2 have 2 IMUs
+ *  - A3, Matrice 600 and Matrice 600 Pro have 1 inner IMU and can have at most
+ *    2 external IMUs.
+ *  - N3 has 2 inner IMUs and can have 1 external IMU.
  */
 @property(nonatomic, readonly) NSUInteger numberOfIMUs;
 
@@ -451,7 +453,8 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
 /**
  *  Turns on/off the LEDs in the front. The LEDs are used to indicate the status
  *  of the aircraft. By default, it is on.
- *  It is only supported by Phantom 3 series and Phantom 4.
+ *  It is only supported by Phantom 3 series, Phantom 4, Phantom 4 Pro, Mavic
+ *  Pro and Inspire 2.
  *
  *  @param enabled      `YES` to turn on the front LEDs, `NO` to turn off.
  *  @param completion   Completion block that receives the setter execution result.
@@ -460,7 +463,8 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
 
 /**
  *  Gets if the LEDs in the front is enabled or not.
- *  It is only supported by Phantom 3 series and Phantom 4.
+ *  It is only supported by Phantom 3 series, Phantom 4, Phantom 4 Pro, Mavic
+ *  Pro and Inspire 2.
  *
  *  @param completion Completion block that receives the getter execution result.
  */
@@ -538,6 +542,48 @@ typedef NS_ENUM (uint8_t, DJIFlightFailsafeOperation){
  *  @param completion   Completion block that receives the getter result.
  */
 - (void)getTerrainFollowModeEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
+
+/**
+ *  Enable/disable Auto Quick Spin. When the gimbal reaches a yaw movement 
+ *  limit, the aircraft will automatically rotate the aircraft 360 degrees
+ *  to uniwind the gimbal, allowing it to continue moving in the yaw direction.
+ *  It is only available when the aircraft is flying at least 3m above the
+ *  ground.
+ *  Only supported by Inspire 2.
+ *
+ *  @param enabled      `YES` to enable Auto Quick Spin.
+ *  @parma completion   Completion block that receives the setter result.
+ */
+- (void)setAutoQuickSpinEnabled:(BOOL)enabled withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets if Auto Quick Spin is enabled or not. 
+ *  Only supported by Inspire 2.
+ *
+ *  @parma completion   Completion block that receives the getter result.
+ */
+- (void)getAutoQuickSpinEnabledWithCompletion:(void (^_Nonnull)(BOOL enabled, NSError *_Nullable error))completion;
+
+/**
+ *  Gets the mapping between the flight modes and the flight mode switch
+ *  positions on the remote controller.
+ *  Elements 0, 1 and 2 of `mapping` map to
+ *  `DJIRemoteControllerFlightModeSwitchPositionOne`, 
+ *  `DJIRemoteControllerFlightModeSwitchPositionTwo` and
+ *  `DJIRemoteControllerFlightModeSwitchPositionThree` of the `flightModeSwitch`
+ *  in `DJIRCHardwareState`. Each element is an `NSNumber` instance with a value
+ *  from `DJIFlightControllerRemoteControllerFlightMode` representing the flight
+ *  mode.
+ *  The mapping is fixed for Phantom series, Inspire series, Mavic Pro and 
+ *  the M100. For N3, A3, Matrice 600, and Matrice 600 Pro the mapping is
+ *  firmware dependent. With firmware version 3.2.11.0 or above, the mapping
+ *  can be customized in DJI Assistant 2.
+ *
+ *  @param completion   Completion block that receives the getter result. Each
+ *                      element of `mapping` is an `NSNumber` instance with a
+ *                      value of `DJIFlightControllerRemoteControllerFlightMode`.
+ */
+- (void)getRemoteControllerFlightModeMappingWithCompletion:(void (^_Nonnull)(NSArray<NSNumber *> *_Nullable mapping, NSError *_Nullable error))completion;
 
 @end
 

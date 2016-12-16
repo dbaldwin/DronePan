@@ -37,6 +37,13 @@
 @property(nonatomic, readonly) BOOL isShootingBurstPhoto;
 
 /**
+ *  YES when the camera is performing a RAW burst capture. `YES` after
+ *  `startShootPhoto` is called, and `NO` after the RAW burst is complete.
+ *  The camera is shooting RAW burst photos.
+ */
+@property(nonatomic, readonly) BOOL isShootingRAWBurstPhoto;
+
+/**
  *  YES if the camera is recording video.
  */
 @property(nonatomic, readonly) BOOL isRecording;
