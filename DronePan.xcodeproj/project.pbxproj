@@ -42,7 +42,9 @@
 		15FD80DB1CDE92610073B1DA /* AnalyticsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */; };
 		15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */; };
 		15FD80E11CDF14EB0073B1DA /* DeviceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */; };
-		230F722A1E046EC800FF7162 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230F72291E046EC800FF7162 /* DJISDK.framework */; };
+		230F722C1E04907500FF7162 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230F722B1E04907500FF7162 /* DJISDK.framework */; };
+		230F722D1E0490B800FF7162 /* DJISDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230F722B1E04907500FF7162 /* DJISDK.framework */; };
+		230F722E1E0490B800FF7162 /* DJISDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 230F722B1E04907500FF7162 /* DJISDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F191C5448320013CCD9 /* Main.storyboard */; };
 		232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1C1C5448320013CCD9 /* Assets.xcassets */; };
 		232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 232F6F1E1C5448320013CCD9 /* LaunchScreen.storyboard */; };
@@ -98,6 +100,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				23C04D601DADD72B009486A8 /* VideoPreviewer.framework in Embed Frameworks */,
+				230F722E1E0490B800FF7162 /* DJISDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -141,7 +144,7 @@
 		15FD80DA1CDE92610073B1DA /* AnalyticsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsUtils.swift; sourceTree = "<group>"; };
 		15FD80DC1CDE93FD0073B1DA /* GoogleAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAnalytics.framework; path = Carthage/Build/iOS/GoogleAnalytics.framework; sourceTree = "<group>"; };
 		15FD80E01CDF14EB0073B1DA /* DeviceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DeviceKit.framework; path = Carthage/Build/iOS/DeviceKit.framework; sourceTree = "<group>"; };
-		230F72291E046EC800FF7162 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
+		230F722B1E04907500FF7162 /* DJISDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DJISDK.framework; path = DronePan/DJISDK.framework; sourceTree = "<group>"; };
 		232F6F0D1C5448320013CCD9 /* DronePan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DronePan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		232F6F1A1C5448320013CCD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		232F6F1C1C5448320013CCD9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -178,8 +181,9 @@
 				15FD80DD1CDE93FD0073B1DA /* GoogleAnalytics.framework in Frameworks */,
 				154669BB1CCCAD8800B9B6BC /* CocoaLumberjackSwift.framework in Frameworks */,
 				232F6FD31C54498E0013CCD9 /* VideoToolbox.framework in Frameworks */,
-				230F722A1E046EC800FF7162 /* DJISDK.framework in Frameworks */,
+				230F722C1E04907500FF7162 /* DJISDK.framework in Frameworks */,
 				156712851DDA13ED001737B1 /* CocoaAsyncSocket.framework in Frameworks */,
+				230F722D1E0490B800FF7162 /* DJISDK.framework in Frameworks */,
 				156712861DDA13ED001737B1 /* PaperTrailLumberjack.framework in Frameworks */,
 				15FD80E11CDF14EB0073B1DA /* DeviceKit.framework in Frameworks */,
 			);
@@ -200,7 +204,7 @@
 		154669C11CCCBDB300B9B6BC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				230F72291E046EC800FF7162 /* DJISDK.framework */,
+				230F722B1E04907500FF7162 /* DJISDK.framework */,
 				156712831DDA13ED001737B1 /* CocoaAsyncSocket.framework */,
 				156712841DDA13ED001737B1 /* PaperTrailLumberjack.framework */,
 				23C04D591DADD6EB009486A8 /* VideoPreviewer.xcodeproj */,
