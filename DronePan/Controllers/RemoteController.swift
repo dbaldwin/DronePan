@@ -50,15 +50,14 @@ class RemoteController: NSObject, DJIRemoteControllerDelegate {
     @objc func remoteController(rc: DJIRemoteController, didUpdateHardwareState state: DJIRCHardwareState) {
         DDLogVerbose("Remote didUpdateHardwareState")
 
-        switch (state.flightModeSwitch.mode) {
-        case .F:
+        switch (state.flightModeSwitch) {
+        case .One:
             mode = .Function
-        case .A:
+        case .Two:
             mode = .Attitude
-        case .P:
+        case .Three:
             mode = .Positioning
-        case .S:
-            mode = .Sport
+        
         }
     }
 }
