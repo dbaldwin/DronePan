@@ -45,9 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
+
 /**
  *  Updates the aggregate information of the batteries.
- *  Only supported by M600.
+ *  Only supported by Matrice 600 and Matrice 600 Pro.
  *
  *  @param batteryState The battery's state.
  */
@@ -143,6 +144,49 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param block Remote execution result callback block.
  */
 - (void)getCellVoltagesWithCompletion:(void (^_Nonnull)(NSArray<DJIBatteryCell *> *_Nullable cellArray, NSError *_Nullable error))block;
+ 
+/**
+ *  A battery's full charge capacity reduces a little every time it goes through
+ *  a discharge and recharge cycle. Therefore, older batteries that have gone
+ *  through many cycles will have lower full charge capacity than newer
+ *  batteries. When multiple batteries are used simultaneously in a product, the
+ *  aggregate full charge capacity will be limited by the battery with lowest
+ *  full charge capacity. To optimize the amount of energy delivered by a
+ *  battery over its lifetime to a product, batteries should be matched or
+ *  paired with other batteries of similar full charge capacity. The operational
+ *  challenges of always using paired batteries can be alleviated using the
+ *  battery pairing interfaces.
+ *
+ *  This method will pair two batteries, by recording the aggregate of the
+ *  serial numbers in each of their firmwares. `getBatteryPairStatusWithCompletion`
+ *  can then be used to determine if the installed battery combination is a
+ *  previously assigned pair or not.
+ *  Batteries can be repaired.
+ *  Only supported by Inspire 2.
+ *
+ *  @param completion Completion block that receives the execution result.
+ */
+- (void)pairBatteriesWithCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  A battery's full charge capacity reduces a little every time it goes through
+ *  a discharge and recharge cycle. Therefore, older batteries that have gone
+ *  through many cycles will have lower full charge capacity than newer
+ *  batteries. When multiple batteries are used simultaneously in a product, the
+ *  aggregate full charge capacity will be limited by the battery with lowest
+ *  full charge capacity. To optimize the amount of energy delivered by a
+ *  battery over its lifetime to a product, batteries should be matched or
+ *  paired with other batteries of similar full charge capacity. The operational
+ *  challenges of always using paired batteries can be alleviated using the
+ *  battery pairing interfaces.
+ *
+ *  This method can then be used to determine if the installed battery
+ *  combination is a previously assigned pair or not.
+ *  Only supported by Inspire 2.
+ *
+ *  @param completion Completion block that receives the getter execution result.
+ */
+- (void)getBatteryPairStatusWithCompletion:(void (^_Nonnull)(DJIBatteryPairStatus pairStatus, NSError *_Nullable error))completion;
 
 /*********************************************************************************/
 #pragma mark Battery self discharge
@@ -180,7 +224,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  the cell voltage threshold to determine if the aircraft should go home or
  *  land. The valid range is [3, 12].
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param numberOfCells Number of cells inside the battery.
  *  @param block         Remote execution result error block.
@@ -194,7 +238,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  than the Level 2 cell voltage threshold, the Level 2 threshold will be set
  *  to (new value - 100) mV.
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param voltageInmV  Level 1 cell voltage threshold to set.
  *  @param completion   Completion block that receives the setter execution result.
@@ -205,7 +249,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Gets the Level 1 cell voltage threshold in mV. When the cell voltage of the
  *  battery is lower than the threshold, Level 1 operation will be executed.
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param completion Completion block that receives the getter execution result.
  */
@@ -217,7 +261,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  executed.
  *  The valid range is [3500, 3800] mV and must be at least 100 mV lower than the
  *  Level 1 voltage threshold.
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param voltageInmV  Level 2 cell voltage threshold to set.
  *  @param completion   Completion block that receives the setter execution result.
@@ -228,7 +272,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Gets the Level 2 cell voltage threshold in mV. When the cell voltage of the
  *  battery is lower than the threshold, Level 1 operation will be executed.
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param completion Completion block that receives the getter execution result.
  */
@@ -238,7 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Sets the operation to be executed when the cell voltage crosses beneath the
  *  Level 1 threshold.
  *  It can only be set when the motors are off.
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param operation    Level 1 operation.
  *  @param completion   Completion block that receives the setter execution result.
@@ -250,7 +294,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Gets the operation to be executed when the cell voltage crosses beneath the
  *  Level 1 threshold.
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param completion Completion block that receives the getter execution result.
  */
@@ -260,7 +304,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Sets the operation to be executed when the cell voltage is under Level 2
  *  threshold.
  *  It can only be set when motors are off.
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param operation    Level 2 operation.
  *  @param completion   Completion block that receives the setter execution result.
@@ -271,7 +315,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Gets the operation to be executed when the cell voltage crosses beneath the
  *  Level 2 threshold.
  *
- *  It is only supported by stand-alone A3.
+ *  It is only supported by stand-alone A3 and N3.
  *
  *  @param completion Completion block that receives the getter execution result.
  */

@@ -13,7 +13,7 @@
  *  lens type, focus status, focus mode, focus assistant state, and Auto Focus
  *  (AF) switch state.
  *
- *  Supported only by X5 camera and X5R camera.
+ *  Supported only by X5 camera, X5R camera and X5S camera.
  */
 @interface DJICameraLensState : NSObject
 

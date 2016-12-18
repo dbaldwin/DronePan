@@ -416,6 +416,10 @@
 
 "dji_check_fc_aircraft_warming_up_solution"="Wait before take off";
 
+"dji_check_fc_wrong_propeller_reason"="Propeller Error";
+"dji_check_fc_plain_propeller_on_plateau_solution"="Do not use standard Propellers at high altitudes.";
+"dji_check_fc_plateau_propeller_on_plain_solution"="Do not use Plateau Propellers at low altitudes.";
+
 "dji_check_vision_propeller_guard_reason"="Propeller Guard Mounted";
 
 "dji_check_vision_propeller_guard_solution"="Propeller Guard mounted. Forward Obstacle Sensing will be automatically switched off";

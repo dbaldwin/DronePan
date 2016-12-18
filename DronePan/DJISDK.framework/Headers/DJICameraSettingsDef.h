@@ -44,22 +44,36 @@ typedef NS_ENUM (NSUInteger, DJICameraMode){
      *  Capture mode. In this mode, the user can capture pictures.
      */
     DJICameraModeShootPhoto = 0x00,
+    
     /**
-     *  Record mode. In this mode, the user can record videos.
+     *  Record mode. In this mode, the videos can be recorded.
+     *  For Phantom 4 Pro, X4S and X5 cameras, still photos can also be taken
+     *  in this mode, but only while a video is recording.
      */
     DJICameraModeRecordVideo = 0x01,
+    
     /**
      *  Playback mode. In this mode, the user can preview photos and videos, and
      *  can delete files.
-     *  Not supported by Osmo, Phantom 3 Standard, Phantom 3 4K, Z3 camera or XT
-     *  camera.
+     *  It is supported by Phantom 3 Profressional, Phantom 4, X3, X5 and X5R
+     *  cameras.
      */
     DJICameraModePlayback = 0x02,
     /**
      *  In this mode, the user can download media to the Mobile Device.
-     *  Not supported by Inspire 1 Pro (X5 camera) nor Inspire 1 RAW (X5R camera).
+     *  Not supported by X5 camera nor X5R camera while mounted on aircraft.
      */
-    DJICameraModeMediaDownload = 0x03,    
+    DJICameraModeMediaDownload = 0x03,
+    
+    /**
+     *  In this mode, live stream resolution and frame rate will be
+     *  1080i50 (PAL) or 720p60 (NTSC). In this mode videos can be recorded.
+     *  Still photos can also be taken only when video is recording.
+     *  The only way to exit broadcast mode is to change modes to
+     *  `DJICameraModeRecordVideo`
+     *  Only supported by Inspire 2.
+     */
+    DJICameraModeBroadcast = 0x04,
     /**
      *  The camera work mode is unknown.
      */
@@ -80,7 +94,8 @@ typedef NS_ENUM (NSUInteger, DJICameraShootPhotoMode){
     DJICameraShootPhotoModeSingle,
     /**
      *  Sets the camera to take an HDR photo.
-     *  X5 camera, X5R camera and XT camera do not support HDR mode.
+     *  X5 camera, X5R camera, XT camera, Z30 camera, Phantom 4 Pro camera, X4S
+     *  camera and X5S camera do not support HDR mode.
      */
     DJICameraShootPhotoModeHDR,
     /**
@@ -92,14 +107,17 @@ typedef NS_ENUM (NSUInteger, DJICameraShootPhotoMode){
      *  Automatic Exposure Bracketing (AEB) capture. In this mode you can
      *  quickly take multiple shots (the default is 3) at different exposures
      *  without having to manually change any settings between frames.
-     *  XT camera does not support AEB mode.
+     *  XT camera and Z30 camera does not support AEB mode.
      */
     DJICameraShootPhotoModeAEB,
     /**
      *  Sets the camera to take a picture (or multiple pictures) continuously at
      *  a set time interval.
      *  The minimum interval for JPEG format of any quality is 2s.
-     *  The minimum interval for Raw or Raw+JPEG format is 10s.
+     *  For all cameras except X4S, X5S and Phantom 4 Pro camera: The minimum
+     *  interval for RAW or RAW+JPEG format is 10s.
+     *  For the X4S, X5S and Phantom 4 Pro cameras the minimum interval for RAW
+     *  or RAW+JPEG dformat is 5s.
      */
     DJICameraShootPhotoModeInterval,
     /**
@@ -116,7 +134,16 @@ typedef NS_ENUM (NSUInteger, DJICameraShootPhotoMode){
      *  `camera:didGenerateTimeLapsePreview:`.
      */
     DJICameraShootPhotoModeTimeLapse,
-
+    
+    /**
+     *  Sets the camera to take a burst of RAW photos. Use `rawPhotoBurstCount` 
+     *  in `DJICameraSSDState` to check how many photos have been shot. RAW
+     *  photos can be shot faster with a continuous RAW burst than using 
+     *  `DJICameraShootPhotoModeInterval` as the burst is used in conjunction
+     *  with SSD storage.
+     *  Only supported by X5S when using SSD storage.
+     */
+    DJICameraShootPhotoModeRAWBurst,
     /**
      *  The shoot photo mode is unknown.
      */
@@ -134,7 +161,7 @@ typedef NS_ENUM (NSUInteger, DJICameraShootPhotoMode){
  *  be set automatically or manually. Exposure compensation can be changed in all modes
  *  except Manual mode where it is not settable.
  *
- *  <b>X5 camera and X5R camera:</b><br/>
+ *  <b>X5, X5R, Phantom 4 Pro camera, X4S and X5S:</b><br/>
  *       Program Mode:       Shutter: Auto     Aperture: Auto     ISO: Manual or Auto<br/>
  *       Shutter Priority:   Shutter: Manual   Aperture: Auto     ISO: Manual or Auto<br/>
  *       Aperture Priority:  Shutter: Auto     Aperture: Manual   ISO: Manual or Auto<br/>
@@ -196,6 +223,7 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoFileFormat){
     DJICameraVideoFileFormatUnknown = 0xFF
 };
 
+
 /*********************************************************************************/
 #pragma mark DJICameraVideoResolution
 /*********************************************************************************/
@@ -229,6 +257,10 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoResolution){
      */
     DJICameraVideoResolution2720x1530,
     /**
+     *  The camera's video resolution is 3840x1572.
+     */
+    DJICameraVideoResolution3840x1572,
+    /**
      *  The camera's video resolution is 3840x2160.
      */
     DJICameraVideoResolution3840x2160,
@@ -236,6 +268,24 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoResolution){
      *  The camera's video resolution is 4096x2160.
      */
     DJICameraVideoResolution4096x2160,
+    /**
+     *  The camera's video resolution is 5280x2160.
+     */
+    DJICameraVideoResolution5280x2160,
+    /**
+     *  The camera's video resolution will be maximum resolution supported
+     *  by the camera sensor.
+     *  For X5S and X4S, the maximum resolution is 5280x2972.
+     */
+    DJICameraVideoResolutionMaxResolution,
+    /**
+     *  SSD video is not currently enabled. This is because the selected
+     *  resolution is not the same as available resolutions determined by analog
+     *  video standard, SD video frame rate, and the SSD video license being
+     *  used. This value can also be used in `setSSDVideoResolution` to disable
+     *  SSD video recording.
+     */
+    DJICameraVideoResolutionNoSSDVideo,
     /**
      *  The camera's video resolution is unknown.
      */
@@ -251,39 +301,46 @@ typedef NS_ENUM (NSUInteger, DJICameraVideoResolution){
  */
 typedef NS_ENUM (NSUInteger, DJICameraVideoFrameRate){
     /**
+     *  The camera's video frame rate is 23.976fps (frames per second).
+     */
+    DJICameraVideoFrameRate23dot976FPS,
+    /**
      *  The camera's video frame rate is 24fps (frames per second).
      */
-    DJICameraVideoFrameRate24fps = 0x00,
+    DJICameraVideoFrameRate24FPS,
     /**
      *  The camera's video frame rate is 25fps (frames per second).
      */
-    DJICameraVideoFrameRate25fps,
+    DJICameraVideoFrameRate25FPS,
     /**
-     *  The camera's video frame rate is 30fps (frames per second).
+     *  The camera's video frame rate is 29.970fps (frames per second).
      */
-    DJICameraVideoFrameRate30fps,
+    DJICameraVideoFrameRate29dot970FPS,
     /**
-     *  The camera's video frame rate is 48fps (frames per second).
+     *  The camera's video frame rate is 47.950fps (frames per second).
      */
-    DJICameraVideoFrameRate48fps,
+    DJICameraVideoFrameRate47dot950FPS,
     /**
      *  The camera's video frame rate is 50fps (frames per second).
      */
-    DJICameraVideoFrameRate50fps,
+    DJICameraVideoFrameRate50FPS,
     /**
-     *  The camera's video frame rate is 60fps (frames per second).
+     *  The camera's video frame rate is 59.940fps (frames per second).
      */
-    DJICameraVideoFrameRate60fps,
+    DJICameraVideoFrameRate59dot940FPS,
     /**
      *  The camera's video frame rate is 96fps (frames per second). This frame
      *  rate can only be used when `isSlowMotionSupported` returns YES.
      */
-    DJICameraVideoFrameRate96fps,
+    DJICameraVideoFrameRate96FPS,
+    
     /**
-     *  The camera's video frame rate is 120fps (frames per second). This frame
-     *  rate can only be used when `isSlowMotionSupported` returns YES.
+     *  The camera's video frame rate is 120 FPS (frames per second). For X3,
+     *  Z3, Phantom 4 camera and Mavic Pro camera, when 120 FPS is used, video
+     *  recording will be in slow motion mode. For Phantom 4 Pro camera, X4S and
+     *  X5S, video is recorded without slow motion.
      */
-    DJICameraVideoFrameRate120fps,
+    DJICameraVideoFrameRate120FPS,
     /**
      *  The camera's video frame rate is unknown.
      */
@@ -446,7 +503,8 @@ typedef NS_ENUM (NSUInteger, DJICameraPhotoAspectRatio){
      */
     DJICameraPhotoAspectRatio16_9 = 0x01,
     /**
-     *  the camera's photo ratio is 3:2
+     *  the camera's photo ratio is 3:2. 
+     *  It is only supported by Phantom 4 Pro camera. 
      */
     DJICameraPhotoAspectRatio3_2 = 0x02,
     /**
@@ -468,21 +526,44 @@ typedef NS_ENUM (NSUInteger, DJICameraPhotoBurstCount){
      *  The camera burst shoot count is set to capture 3 pictures at once when
      *  the camera shoots a photo.
      */
-    DJICameraPhotoBurstCount3 = 0x03,
+    DJICameraPhotoBurstCount3,
     /**
      *  The camera burst shoot count is set to capture 5 pictures at once when
      *  the camera takes a photo.
      */
-    DJICameraPhotoBurstCount5 = 0x05,
+    DJICameraPhotoBurstCount5,
     /**
      *  The camera burst shoot count is set to capture 7 pictures at once when
      *  the camera takes a photo.
+     *  It is not supported by Z30 camera. 
      */
-    DJICameraPhotoBurstCount7 = 0x07,
+    DJICameraPhotoBurstCount7,
+    /**
+     *  The camera burst shoot count is set to capture 10 pictures at once when
+     *  the camera takes a photo.
+     *  Only supported by X4S camera, X5S camera and Phantom 4 Pro camera.
+     */
+    DJICameraPhotoBurstCount10,
+    /**
+     *  The camera burst shoot count is set to capture 14 pictures at once when
+     *  the camera takes a photo.
+     *  Only supported by X4S camera, X5S camera and Phantom 4 Pro camera.
+     */
+    DJICameraPhotoBurstCount14,
+    
+    /**
+     *  The camera burst shoot count is set to capture RAW pictures continuously
+     *  until `stopShootPhoto` command is sent. RAW burst photos can be taken
+     *  at a quicker time interval than `DJICameraShootPhotoModeInterval` due
+     *  to being used in conjunction with SSD storage.
+     *  It is only supported by Inspire 2 when the photo shoot mode is RAW burst and 
+     *  SSD storage is used.
+     */
+    DJICameraPhotoBurstCountContinuous,
     /**
      *  The camera burst shoot count value is unknown.
      */
-    DJICameraPhotoBurstCountUnknown = 0xFF
+    DJICameraPhotoBurstCountUnknown = 0xFF,
 };
 
 /*********************************************************************************/
@@ -504,9 +585,14 @@ typedef struct
      */
     uint8_t exposureOffset;
     /**
-     *  The number of pictures to continuously take at one time.
-     *  If the exposureOffest is larger than 5, the captureCount can only be 3.
-     *  Otherwise, the value can only be 3 or 5.
+     *  Auto exposure bracketing (AEB) will take `captureCount` pictures with
+     *  each exposure offset by `exposureOffset` from the previous.
+     *  If `exposureOffest` is larger than 5, `captureCount` can only be 3.
+     *  If `exposureOffset` is less than or equal to 5, then `captureCount` can
+     *  be greater than 3.
+     *  For X4S, X5S and Phantom 4 Pro cameras, valid values of `captureCount`
+     *  are 3, 5 and 7.
+     *  For all other cameras, valid values are 3 and 5.
      *  The default value is 3.
      */
     uint8_t captureCount;
@@ -526,7 +612,7 @@ typedef struct
      *  The number of photos to capture. The value range is [2, 255].
      *  If 255 is selected, then the camera will continue to take pictures until
      *  stopShootPhotoWithCompletion is called.
-     *  For thermal imaging camera, it can only be set to 255.
+     *  For thermal imaging camera and Z30 camera, it can only be set to 255.
      */
     uint8_t captureCount;
     
@@ -556,235 +642,281 @@ typedef NS_ENUM (NSUInteger, DJICameraShutterSpeed) {
     /**
      *  Camera's shutter speed 1/8000 s.
      */
-    DJICameraShutterSpeed1_8000 = 0x00,
+    DJICameraShutterSpeed1_8000,
     /**
      *  Camera's shutter speed 1/6400 s.
      */
-    DJICameraShutterSpeed1_6400 = 0x01,
+    DJICameraShutterSpeed1_6400,
+    /**
+     *  Camera's shutter speed 1/6000 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_6000,
     /**
      *  Camera's shutter speed 1/5000 s.
      */
-    DJICameraShutterSpeed1_5000 = 0x02,
+    DJICameraShutterSpeed1_5000,
     /**
      *  Camera's shutter speed 1/4000 s.
      */
-    DJICameraShutterSpeed1_4000 = 0x03,
+    DJICameraShutterSpeed1_4000,
     /**
      *  Camera's shutter speed 1/3200 s.
      */
-    DJICameraShutterSpeed1_3200 = 0x04,
+    DJICameraShutterSpeed1_3200,
+    /**
+     *  Camera's shutter speed 1/3000 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_3000,
     /**
      *  Camera's shutter speed 1/2500 s.
      */
-    DJICameraShutterSpeed1_2500 = 0x05,
+    DJICameraShutterSpeed1_2500,
     /**
      *  Camera's shutter speed 1/2000 s.
      */
-    DJICameraShutterSpeed1_2000 = 0x06,
+    DJICameraShutterSpeed1_2000,
+    /**
+     *  Camera's shutter speed 1/1500 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_1500,
     /**
      *  Camera's shutter speed 1/1600 s.
      */
-    DJICameraShutterSpeed1_1600 = 0x07,
+    DJICameraShutterSpeed1_1600,
     /**
      *  Camera's shutter speed 1/1250 s.
      */
-    DJICameraShutterSpeed1_1250 = 0x08,
+    DJICameraShutterSpeed1_1250,
     /**
      *  Camera's shutter speed 1/1000 s.
      */
-    DJICameraShutterSpeed1_1000 = 0x09,
+    DJICameraShutterSpeed1_1000,
     /**
      *  Camera's shutter speed 1/800 s.
      */
-    DJICameraShutterSpeed1_800 = 0x0A,
+    DJICameraShutterSpeed1_800,
+    /**
+     *  Camera's shutter speed 1/725 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_725,
     /**
      *  Camera's shutter speed 1/640 s.
      */
-    DJICameraShutterSpeed1_640 = 0x0B,
+    DJICameraShutterSpeed1_640,
     /**
      *  Camera's shutter speed 1/500 s.
      */
-    DJICameraShutterSpeed1_500 = 0x0C,
+    DJICameraShutterSpeed1_500,
     /**
      *  Camera's shutter speed 1/400 s.
      */
-    DJICameraShutterSpeed1_400 = 0x0D,
+    DJICameraShutterSpeed1_400,
+    /**
+     *  Camera's shutter speed 1/350 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_350,
     /**
      *  Camera's shutter speed 1/320 s.
      */
-    DJICameraShutterSpeed1_320 = 0x0E,
+    DJICameraShutterSpeed1_320,
+    /**
+     *  Camera's shutter speed 1/250 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_250,
     /**
      *  Camera's shutter speed 1/240 s.
      */
-    DJICameraShutterSpeed1_240 = 0x0F,
+    DJICameraShutterSpeed1_240,
     /**
      *  Camera's shutter speed 1/200 s.
      */
-    DJICameraShutterSpeed1_200 = 0x10,
+    DJICameraShutterSpeed1_200,
+    /**
+     *  Camera's shutter speed 1/180 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_180,
     /**
      *  Camera's shutter speed 1/160 s.
      */
-    DJICameraShutterSpeed1_160 = 0x11,
+    DJICameraShutterSpeed1_160,
+    /**
+     *  Camera's shutter speed 1/125 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_125,
     /**
      *  Camera's shutter speed 1/120 s.
      */
-    DJICameraShutterSpeed1_120 = 0x12,
+    DJICameraShutterSpeed1_120,
     /**
      *  Camera's shutter speed 1/100 s.
      */
-    DJICameraShutterSpeed1_100 = 0x13,
+    DJICameraShutterSpeed1_100,
+    /**
+     *  Camera's shutter speed 1/90 s.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraShutterSpeed1_90,
     /**
      *  Camera's shutter speed 1/80 s.
      */
-    DJICameraShutterSpeed1_80 = 0x14,
+    DJICameraShutterSpeed1_80,
     /**
      *  Camera's shutter speed 1/60 s.
      */
-    DJICameraShutterSpeed1_60 = 0x15,
+    DJICameraShutterSpeed1_60,
     /**
      *  Camera's shutter speed 1/50 s.
      */
-    DJICameraShutterSpeed1_50 = 0x16,
+    DJICameraShutterSpeed1_50,
     /**
      *  Camera's shutter speed 1/40 s.
      */
-    DJICameraShutterSpeed1_40 = 0x17,
+    DJICameraShutterSpeed1_40,
     /**
      *  Camera's shutter speed 1/30 s.
      */
-    DJICameraShutterSpeed1_30 = 0x18,
+    DJICameraShutterSpeed1_30,
     /**
      *  Camera's shutter speed 1/25 s.
      */
-    DJICameraShutterSpeed1_25 = 0x19,
+    DJICameraShutterSpeed1_25,
     /**
      *  Camera's shutter speed 1/20 s.
      */
-    DJICameraShutterSpeed1_20 = 0x1A,
+    DJICameraShutterSpeed1_20,
     /**
      *  Camera's shutter speed 1/15 s.
      */
-    DJICameraShutterSpeed1_15 = 0x1B,
+    DJICameraShutterSpeed1_15,
     /**
      *  Camera's shutter speed 1/12.5 s.
      */
-    DJICameraShutterSpeed1_12p5 = 0x1C,
+    DJICameraShutterSpeed1_12p5,
     /**
      *  Camera's shutter speed 1/10 s.
      */
-    DJICameraShutterSpeed1_10 = 0x1D,
+    DJICameraShutterSpeed1_10,
     /**
      *  Camera's shutter speed 1/8 s.
      */
-    DJICameraShutterSpeed1_8 = 0x1E,
+    DJICameraShutterSpeed1_8,
     /**
      *  Camera's shutter speed 1/6.25 s.
      */
-    DJICameraShutterSpeed1_6p25 = 0x1F,
+    DJICameraShutterSpeed1_6p25,
     /**
      *  Camera's shutter speed 1/5 s.
      */
-    DJICameraShutterSpeed1_5 = 0x20,
+    DJICameraShutterSpeed1_5,
     /**
      *  Camera's shutter speed 1/4 s.
      */
-    DJICameraShutterSpeed1_4 = 0x21,
+    DJICameraShutterSpeed1_4,
     /**
      *  Camera's shutter speed 1/3 s.
      */
-    DJICameraShutterSpeed1_3 = 0x22,
+    DJICameraShutterSpeed1_3,
     /**
      *  Camera's shutter speed 1/2.5 s.
      */
-    DJICameraShutterSpeed1_2p5 = 0x23,
+    DJICameraShutterSpeed1_2p5,
     /**
      *  Camera's shutter speed 1/2 s.
      */
-    DJICameraShutterSpeed1_2 = 0x24,
+    DJICameraShutterSpeed1_2,
     /**
      *  Camera's shutter speed 1/1.67 s.
      */
-    DJICameraShutterSpeed1_1p67 = 0x25,
+    DJICameraShutterSpeed1_1p67,
     /**
      *  Camera's shutter speed 1/1.25 s.
      */
-    DJICameraShutterSpeed1_1p25 = 0x26,
+    DJICameraShutterSpeed1_1p25,
     /**
      *  Camera's shutter speed 1.0 s.
      */
-    DJICameraShutterSpeed1p0 = 0x27,
+    DJICameraShutterSpeed1p0,
     /**
      *  Camera's shutter speed 1.3 s.
      */
-    DJICameraShutterSpeed1p3 = 0x28,
+    DJICameraShutterSpeed1p3,
     /**
      *  Camera's shutter speed 1.6 s.
      */
-    DJICameraShutterSpeed1p6 = 0x29,
+    DJICameraShutterSpeed1p6,
     /**
      *  Camera's shutter speed 2.0 s.
      */
-    DJICameraShutterSpeed2p0 = 0x2A,
+    DJICameraShutterSpeed2p0,
     /**
      *  Camera's shutter speed 2.5 s.
      */
-    DJICameraShutterSpeed2p5 = 0x2B,
+    DJICameraShutterSpeed2p5,
     /**
      *  Camera's shutter speed 3.0 s.
      */
-    DJICameraShutterSpeed3p0 = 0x2C,
+    DJICameraShutterSpeed3p0,
     /**
      *  Camera's shutter speed 3.2 s.
      */
-    DJICameraShutterSpeed3p2 = 0x2D,
+    DJICameraShutterSpeed3p2,
     /**
      *  Camera's shutter speed 4.0 s.
      */
-    DJICameraShutterSpeed4p0 = 0x2E,
+    DJICameraShutterSpeed4p0,
     /**
      *  Camera's shutter speed 5.0 s.
      */
-    DJICameraShutterSpeed5p0 = 0x2F,
+    DJICameraShutterSpeed5p0,
     /**
      *  Camera's shutter speed 6.0 s.
      */
-    DJICameraShutterSpeed6p0 = 0x30,
+    DJICameraShutterSpeed6p0,
     /**
      *  Camera's shutter speed 7.0 s.
      */
-    DJICameraShutterSpeed7p0 = 0x31,
+    DJICameraShutterSpeed7p0,
     /**
      *  Camera's shutter speed 8.0 s.
      */
-    DJICameraShutterSpeed8p0 = 0x32,
+    DJICameraShutterSpeed8p0,
     /**
      *  Camera's shutter speed 9.0 s.
      */
-    DJICameraShutterSpeed9p0 = 0x33,
+    DJICameraShutterSpeed9p0,
     /**
      *  Camera's shutter speed 10.0 s.
      */
-    DJICameraShutterSpeed10p0 = 0x34,
+    DJICameraShutterSpeed10p0,
     /**
      *  Camera's shutter speed 13.0 s.
      */
-    DJICameraShutterSpeed13p0 = 0x35,
+    DJICameraShutterSpeed13p0,
     /**
      *  Camera's shutter speed 15.0 s.
      */
-    DJICameraShutterSpeed15p0 = 0x36,
+    DJICameraShutterSpeed15p0,
     /**
      *  Camera's shutter speed 20.0 s.
      */
-    DJICameraShutterSpeed20p0 = 0x37,
+    DJICameraShutterSpeed20p0,
     /**
      *  Camera's shutter speed 25.0 s.
      */
-    DJICameraShutterSpeed25p0 = 0x38,
+    DJICameraShutterSpeed25p0,
     /**
      *  Camera's shutter speed 30.0 s.
      */
-    DJICameraShutterSpeed30p0 = 0x39,
+    DJICameraShutterSpeed30p0,
+
     /**
      *  Camera's shutter speed unknown.
      */
@@ -852,10 +984,15 @@ typedef NS_ENUM (NSUInteger, DJICameraISO){
 /*********************************************************************************/
 
 /**
- *  Camera aperture values. Currently only the X5 and X5R cameras support
- *  this setting.
+ *  Camera aperture values. X5, X5R, Z30, Phantom 4 Pro camera, X4S and X5S
+ *  support this setting.
  */
 typedef NS_ENUM (NSUInteger, DJICameraAperture) {
+    /**
+     *  The Aperture value is f/1.6.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF1p6,
     /**
      *  The Aperture value is f/1.7.
      */
@@ -873,6 +1010,11 @@ typedef NS_ENUM (NSUInteger, DJICameraAperture) {
      */
     DJICameraApertureF2p2,
     /**
+     *  The Aperture value is f/2.4.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF2p4,
+    /**
      *  The Aperture value is f/2.5.
      */
     DJICameraApertureF2p5,
@@ -884,6 +1026,11 @@ typedef NS_ENUM (NSUInteger, DJICameraAperture) {
      *  The Aperture value is f/3.2.
      */
     DJICameraApertureF3p2,
+    /**
+     *  The Aperture value is f/3.4.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF3p4,
     /**
      *  The Aperture value is f/3.5.
      */
@@ -897,6 +1044,11 @@ typedef NS_ENUM (NSUInteger, DJICameraAperture) {
      */
     DJICameraApertureF4p5,
     /**
+     *  The Aperture value is f/4.8.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF4p8,
+    /**
      *  The Aperture value is f/5.
      */
     DJICameraApertureF5,
@@ -909,6 +1061,11 @@ typedef NS_ENUM (NSUInteger, DJICameraAperture) {
      */
     DJICameraApertureF6p3,
     /**
+     *  The Aperture value is f/6.8.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF6p8,
+    /**
      *  The Aperture value is f/7.1.
      */
     DJICameraApertureF7p1,
@@ -920,6 +1077,11 @@ typedef NS_ENUM (NSUInteger, DJICameraAperture) {
      *  The Aperture value is f/9.
      */
     DJICameraApertureF9,
+    /**
+     *  The Aperture value is f/9.6.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraApertureF9p6,
     /**
      *  The Aperture value is f/10.
      */
@@ -1176,6 +1338,7 @@ typedef NS_ENUM (NSUInteger, DJICameraExposureCompensation){
 typedef NS_ENUM (NSUInteger, DJICameraAntiFlicker){
     /**
      *  The camera's anti-flicker is automatically set.
+     *  It is not supported by Z30 camera.
      */
     DJICameraAntiFlickerAuto = 0x00,
     /**
@@ -1277,7 +1440,7 @@ typedef struct{
      *  the resulting image.
      */
     NSUInteger iso;
-    
+
     /**
      *  Returns the camera's current exposure compensation. In Program, Aperture
      *  Priority and Shutter Priority modes, the exposure compensation value 
@@ -1292,6 +1455,8 @@ typedef struct{
      *  camera is -2.0 EV to 2.0 EV. In Program, Aperture Priority and Shutter
      *  Priority modes, the range of exposure compensation is -3.0 EV to + 3.0
      *  EV.
+     *  For the Z30 camera in manual mode, exposureCompensation is
+     *  not used and the value is always `DJICameraExposureCompensationN00`.
      */
     DJICameraExposureCompensation exposureCompensation;
 }DJICameraExposureParameters;
@@ -1317,7 +1482,9 @@ typedef NS_ENUM (NSUInteger, DJICameraLensFocusMode){
     DJICameraLensFocusModeManual,
     /**
      *  The camera's focus mode is set to auto.
-     *  In this mode, user sets the lens focus target to adjust the focal point.
+     *  For the Z30 camera, the focus is calculated completely automatically.
+     *  For all other cameras, a focus target can be set by the user, which is
+     *  used to calculate focus automatically.
      */
     DJICameraLensFocusModeAuto,
     /**
@@ -1325,8 +1492,6 @@ typedef NS_ENUM (NSUInteger, DJICameraLensFocusMode){
      */
     DJICameraLensFocusModeUnknown = 0xFF
 };
-
-
 
 /*********************************************************************************/
 #pragma mark DJILensType
@@ -1422,6 +1587,24 @@ typedef NS_ENUM (NSUInteger, DJICameraSSDOperationState) {
      */
     DJICameraSSDOperationStateFull,
     /**
+     *  Communication to SSD is not stable. User can try to reinsert the SSD.
+     *  Only supported by X5S.
+     */
+    DJICameraSSDOperationStatePoorConnection,
+
+    /**
+     *  SSD video license key is switching from one license
+     *  to another.
+     *  Only supported by X5S.
+     */
+    DJICameraSSDOperationStateSwitchingLicense,
+    
+    /**
+     *  Formatting is required. This is typically needed when the SSD is new.
+     *  Only supported by X5S.
+     */
+    DJICameraSSDOperationStateFormattingRequired,
+    /**
      *  SSD state is unknown. This happens in the first 2 seconds after turning
      *  the camera power on as during this time the camera cannot check the
      *  state of the SSD.
@@ -1455,6 +1638,32 @@ typedef NS_ENUM (NSUInteger, DJICameraSSDCapacity) {
     DJICameraSSDCapacityUnknown = 0xFF,
 };
 
+/**
+ *  DJI camera's license keys. An Inspire 2 License Key activates the usage
+ *  permission of CinemaDNG or Apple ProRes inside CineCore 2.0. License keys
+ *  are obtained by by purchase from the DJI store website using the Inspire 2
+ *  serial number. The Inspire 2 is then connected to DJI Assistant 2, and the 
+ *  license keys downloaded to it.
+ *  Only supported by X5S camera.
+ */
+typedef NS_ENUM (NSUInteger, DJICameraSSDVideoLicense) {
+    /**
+     *  CinemaDNG
+     */
+    DJICameraSSDVideoLicenseCinemaDNG,
+    /**
+     *  Apple ProRes 422 HQ
+     */
+    DJICameraSSDVideoLicenseProRes422HQ,
+    /**
+     *  Apple ProRes 4444 XQ(no alpha)
+     */
+    DJICameraSSDVideoLicenseProRes4444XQ,
+    /**
+     *  Unknown.
+     */
+    DJICameraSSDVideoLicenseUnknown = 0xFF,
+};
 
 /*********************************************************************************/
 #pragma mark - Thermal Imaging Camera Related
@@ -2018,9 +2227,10 @@ typedef struct {
 #pragma mark DJICameraOpticalZoomSpec
 /*********************************************************************************/
 
+
 /**
  *  Zoom lens profile. Includes focal length range and minimum focal length step.
- *  Supported only by X5 and X5R camera with zoom lens.
+ *  Supported by X5, X5R and X5S with zoom lens, Z3 camera and Z30 camera.
  */
 typedef struct {
     /**
@@ -2041,9 +2251,10 @@ typedef struct {
 #pragma mark DJICameraOpticalZoomDirection
 /*********************************************************************************/
 
+
 /**
  * The direction to adjust the camera zoom (camera focal length).
- *  Supported only by X5 and X5R camera with zoom lens.
+ *  Supported by X5, X5R and X5S with zoom lens, Z3 camera and Z30 camera.
  */
 typedef NS_ENUM(uint8_t, DJICameraOpticalZoomDirection) {
     /**
@@ -2064,7 +2275,7 @@ typedef NS_ENUM(uint8_t, DJICameraOpticalZoomDirection) {
 
 /**
  *  The speed of lens to zoom.
- *  Supported only by X5 and X5R camera with zoom lens.
+ *  Supported by X5, X5R and X5S with zoom lens, Z3 camera and Z30 camera.
  */
 typedef NS_ENUM(uint8_t, DJICameraOpticalZoomSpeed) {
     /**
@@ -2163,9 +2374,11 @@ typedef NS_ENUM (NSUInteger, DJICameraCustomSettings){
 /*********************************************************************************/
 #pragma mark DJICameraDigitalFilter
 /*********************************************************************************/
-
 /**
  *  Camera digital filters. The default value is `DJICameraDigitalFilterNone`.
+ *
+ *  Z30 camera only supports `DJICameraDigitalFilterNone`, 
+ *  `DJICameraDigitalFilterBlackAndWhite` and `DJICameraDigitalFilterInverse`.
  */
 typedef NS_ENUM (NSUInteger, DJICameraDigitalFilter){
     /**
@@ -2219,18 +2432,61 @@ typedef NS_ENUM (NSUInteger, DJICameraDigitalFilter){
      */
     DJICameraDigitalFilterTrueColor,
     /**
+     *  The digital filter is set to inverse.
+     *  It is only supported by Z30 camera.
+     */
+    DJICameraDigitalFilterInverse,
+    /**
      *  The digital filter is unknown.
      */
     DJICameraDigitalFilterUnknown = 0xFF
 };
 
 /*********************************************************************************/
+#pragma mark DJICameraSSDVideoDigitalFilter
+/*********************************************************************************/
+/**
+ *  Camera digital filters for videos that will be stored in SSD with Apple ProRes
+ *  codecs. The default value is `DJICameraSSDVideoDigitalFilterNone`.
+ *
+ *  Only Supported by X5S.
+ */
+
+typedef NS_ENUM (NSUInteger, DJICameraSSDVideoDigitalFilter){
+    /**
+     *  The digital filter is set to none.
+     */
+    DJICameraSSDVideoDigitalFilterNone,
+    /**
+     *  The digital filter is set to DCinelike.
+     */
+    DJICameraSSDVideoDigitalFilterDCinelike,
+    /**
+     *  The digital filter is set to DLog.
+     */
+    DJICameraSSDVideoDigitalFilterDLog,
+    /**
+     *  The digital filter is set to DColor1.
+     */
+    DJICameraSSDVideoDigitalFilterDColor1,
+    /**
+     *  The digital filter is set to DColor2.
+     */
+    DJICameraSSDVideoDigitalFilterDColor2,
+    /**
+     *  Unknown. 
+     */
+    DJICameraSSDVideoDigitalFilterUnknown = 0xFF
+};
+
+
+/*********************************************************************************/
 #pragma mark DJIDownloadFileType
 /*********************************************************************************/
 
 /**
- *  Download file types. This typedef is only supported by the Phantom 3
- *  Professional and the Inspire 1.
+ *  Download file types. This typedef is supported by Phantom 3 Profressional
+ *  camera, X3, X5 and X5R cameras on aircraft and Phantom 4 camera.
  */
 typedef NS_ENUM (NSUInteger, DJIDownloadFileType){
     /**
@@ -2281,6 +2537,29 @@ typedef NS_ENUM(NSUInteger, DJICameraOrientation) {
      *  Unknown. 
      */
     DJICameraOrientationUnknown = 0xFF,
+};
+
+
+/*********************************************************************************/
+#pragma mark DJIVideoFileCompressionStandard
+/*********************************************************************************/
+/**
+ *  The compression standard used to store the video files.
+ *  Only supported by X4S, X5S and Phantom 4 Pro cameras.
+ */
+typedef NS_ENUM(NSUInteger, DJIVideoFileCompressionStandard){
+    /**
+     *  H.264 compression standard.
+     */
+    DJIVideoFileCompressionStandardH264,
+    /**
+     *  H.265 compression standard.
+     */
+    DJIVideoFileCompressionStandardH265,
+    /**
+     *  Unknown.
+     */
+    DJIVideoFileCompressionStandardUnknown = 0xFF,
 };
 
 NS_ASSUME_NONNULL_END

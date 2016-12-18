@@ -63,13 +63,30 @@ extern NSString *const DJIAircraftModelNamePhantom4;
  */
 extern NSString *const DJIAircraftModelNameMatrice600;
 /**
+ *  The Aircraft's model name is Matrice 600 Pro.
+ */
+extern NSString *const DJIAircraftModelNameMatrice600Pro;
+/**
  *  The Aircraft's model name is A3.
  */
 extern NSString *const DJIAircraftModelNameA3;
 /**
+ *  The Aircraft's model name is N3.
+ */
+extern NSString *const DJIAircraftModelNameN3;
+/**
  *  The Aircraft's model name is Mavic Pro.
  */
 extern NSString *const DJIAircraftModelNameMavicPro;
+/**
+ *  The Aircraft's model name is Phantom 4 Pro.
+ */
+extern NSString *const DJIAircraftModelNamePhantom4Pro;
+/**
+ *  The Aircraft's model name is Inspire 2.
+ */
+extern NSString *const DJIAircraftModelNameInspire2;
+
 
 /**
  *  This class contains the components of an aircraft.

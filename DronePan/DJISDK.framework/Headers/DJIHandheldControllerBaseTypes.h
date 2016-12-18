@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark DJIHandheldPowerMode Type
 /*********************************************************************************/
 /**
- *  Handheld Power Mode
+ *  Handheld Power Mode.
  */
 typedef NS_ENUM (uint8_t, DJIHandheldPowerMode){
     /**
@@ -156,7 +156,13 @@ typedef NS_ENUM (uint8_t, DJIHandheldJoystickHorizontalDirection) {
 @property(nonatomic, readonly) DJIHandheldButtonStatus handheldButtonStatus;
 
 /**
- *  Status of the trigger button.
+ *  `YES` when the trigger is being pressed.
+ *  It is only supported in firmware version 1.2.0.40 or above.
+ */
+@property(nonatomic, readonly) BOOL isTriggerBeingPressed;
+
+/**
+ *  Status of the trigger button. 
  */
 @property(nonatomic, readonly) DJIHandheldTriggerStatus triggerState;
 
@@ -169,6 +175,66 @@ typedef NS_ENUM (uint8_t, DJIHandheldJoystickHorizontalDirection) {
  *  Status of the joystick in horizontal direction.
  */
 @property(nonatomic, readonly) DJIHandheldJoystickHorizontalDirection joystickHorizontalDirection;
+
+/**
+ *  Position of the joystick in the vertical direction. Position values
+ *  can be in range [-660, 660] where positive is up and 0 is center.
+ *  Only supported in firmware version 1.2.0.40 or above.
+ */
+@property(nonatomic, readonly) NSInteger joystickVerticalPosition;
+
+/**
+ *  Position of the joystick in the horizontal direction. Position values
+ *  can be in range [-660, 660] where positive is left and 0 is center.
+ *  Only supported in firmware version 1.2.0.40 or above.
+ */
+@property(nonatomic, readonly) NSInteger joystickHorizontalPosition;
+
+@end
+
+/**
+ *  Pattern used to control a single color (red, green or blue) of the handheld
+ *  controller's LED.
+ */
+@interface DJIHandheldControllerLEDColorPattern : NSObject
+
+/**
+ *  Pattern to control the time varying behaviour of the LED color.
+ *  Each element of `pattern` is a boolean NSNumber representing the LED on/off
+ *  state for 0.125 seconds where `YES` means the LED is on.
+ *  The length of the pattern cannot exceed 32.
+ *  By default, the array is empty, which will turn the LED color off.
+ */
+@property (nonatomic) NSArray<NSNumber *> *pattern;
+
+/**
+ *  The number of times to repeat the sequence with range [1,255].
+ *  A value of 255 will repeat the sequence indefinitely until a new 
+ *  command is sent.
+ *  The default value is 255.
+ */
+@property (nonatomic) uint8_t repeatTimes;
+
+@end
+
+/**
+ *  Command used to control different colors (red, green and blue) of the
+ *  handheld controller's LED.
+ */
+@interface DJIHandheldControllerLEDCommand : NSObject
+
+/**
+ *  Pattern to control the red color.
+ */
+@property(nonatomic) DJIHandheldControllerLEDColorPattern *red;
+/**
+ *  Pattern to control the green color.
+ */
+@property(nonatomic) DJIHandheldControllerLEDColorPattern *green;
+/**
+ *  Pattern to control the blue color.
+ */
+@property(nonatomic) DJIHandheldControllerLEDColorPattern *blue;
 
 @end
 

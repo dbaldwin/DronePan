@@ -141,6 +141,10 @@ typedef NS_OPTIONS (uint8_t, DJIRCControlStyle){
  */
 typedef NS_ENUM (uint8_t, DJIRCControlChannelName){
     /**
+     *  Not mapped.
+     */
+    DJIRCControlChannelNameNone,
+    /**
      *  Throttle control channel.
      */
     DJIRCControlChannelNameThrottle,
@@ -172,6 +176,7 @@ typedef struct
      *  is `DJI_RC_CONTROL_CHANNEL_xxx`. The default is American.
      */
     DJIRCControlChannelName channel;
+    
     /**
      *  The control channel's settings will be reversed.
      *  For example, for the throttle, the joystick is moved up or
@@ -196,6 +201,7 @@ typedef struct
      *  The control style to which the Remote Controller is set.
      */
     DJIRCControlStyle controlStyle;
+    
     /**
      *  Setting controls for each of the channels.
      */
@@ -250,31 +256,37 @@ typedef struct
      *  to control the gimbal yaw.
      */
     bool hasGimbalYawControlPermission;
+    
     /**
      *  TRUE if the Remote Controller has permission
      *  to control the gimbal roll.
      */
     bool hasGimbalRollControlPermission;
+    
     /**
      *  TRUE if the Remote Controller has permission
      *  to control the gimbal pitch.
      */
     bool hasGimbalPitchControlPermission;
+    
     /**
      *  TRUE if the Remote Controller has permission
      *  to control camera playback.
      */
     bool hasPlaybackControlPermission;
+    
     /**
      *  TRUE if the Remote Controller has permission
      *  to record video with the camera.
      */
     bool hasRecordControlPermission;
+    
     /**
      *  TRUE if the Remote Controller has permission
      *  to take pictures with the camera.
      */
     bool hasCaptureControlPermission;
+    
 } DJIRCControlPermission;
 
 /*********************************************************************************/
@@ -290,10 +302,12 @@ typedef struct
      *  Gimbal's pitch speed with range [0,100].
      */
     uint8_t pitchSpeed;
+    
     /**
      *  Gimbal's roll speed with range [0,100].
      */
     uint8_t rollSpeed;
+    
     /**
      *  Gimbal's yaw speed with range [0,100].
      */
@@ -386,6 +400,7 @@ typedef struct
      *  battery in milliamp hours (mAh).
      */
     uint32_t remainingEnergyInMAh;
+    
     /**
      *  The remaining power in the Remote Controller's
      *  battery as a percentage in the range of [0, 100].
@@ -406,22 +421,27 @@ typedef struct
      *  Hour value of Remote Controller's GPS time.
      */
     uint8_t hour;
+    
     /**
      *  Minute value of Remote Controller's GPS time.
      */
     uint8_t minute;
+    
     /**
      *  Second value of Remote Controller's GPS time.
      */
     uint8_t second;
+    
     /**
      *  Year value of Remote Controller's GPS time.
      */
     uint16_t year;
+    
     /**
      *  Month value of Remote Controller's GPS time.
      */
     uint8_t month;
+    
     /**
      *  Day value of Remote Controller's GPS time.
      */
@@ -441,35 +461,42 @@ typedef struct
      *  The Remote Controller's GPS time.
      */
     DJIRCGpsTime time;
+    
     /**
      *  The Remote Controller's GPS latitude
      *  in degrees.
      */
     double latitude;
+    
     /**
      *  The Remote Controller's GPS longitude
      *  in degrees.
      */
     double longitude;
+    
     /**
      *  The Remote Controller's speed in the East direction in meters/second. A
      *  negative speed means the Remote Controller is moving in the West direction.
      */
     float speedEast;
+    
     /**
      *  The Remote Controller's speed in the North direction in meters/second. A
      *  negative speed means the Remote Controller is moving in the South direction.
      */
     float speedNorth;
+    
     /**
      *  The number of GPS sattelites the Remote Controller detects.
      */
     int satelliteCount;
+    
     /**
      *  The the margin of error, in meters, for the
      *  GPS location.
      */
     float accuracy;
+    
     /**
      *  YES if the GPS data is valid. The data is not valid if there are too few
      *  satellites or the signal strength is too low.
@@ -513,18 +540,22 @@ typedef struct
      * YES if right wheel present.
      */
     BOOL isPresent;
+    
     /**
      *  YES if wheel value has changed.
      */
     BOOL wheelChanged;
+    
     /**
      *  YES if wheel is being pressed.
      */
     BOOL wheelButtonDown;
+    
     /**
      *  YES if wheel is being turned in a clockwise direction.
      */
     BOOL wheelDirection;
+    
     /**
      *  Wheel value in the range of [0, 1320]. The value represents the
      *  difference in an operation.
@@ -581,6 +612,7 @@ typedef struct
      *  YES if the Transformation Switch present.
      */
     BOOL isPresent;
+    
     /**
      *  Current transformation switch state.
      */
@@ -589,88 +621,39 @@ typedef struct
 } DJIRCHardwareTransformationSwitch;
 
 /*********************************************************************************/
-#pragma mark DJIRCHardwareFlightModeSwitchState
+#pragma mark DJIRemoteControllerFlightModeSwitchPosition
 /*********************************************************************************/
-
 /**
- *  Remote Controller Flight Mode Switch State
+ *  Remote Controller Flight Mode switch position.
  */
-typedef NS_ENUM (uint8_t, DJIRCHardwareFlightModeSwitchState){
+typedef NS_ENUM (uint8_t, DJIRemoteControllerFlightModeSwitchPosition){
     /**
-     *  The Remote Controller's flight mode switch is set to the F (Function)
-     *  mode. For the Phantom 3, Inspire 1 and M100 the remote controller must
-     *  be in Function mode to enable Mission Manager functions from the Mobile
-     *  Device. It is not supported by Phantom 4 (which must use P mode for the
-     *  Mission Manager functions).
-     *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
-     *  from left to right.
-     *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch
-     *  is labeled F, A, P from left to right.
-     *  Independent of label, any remote controller (P3, P4, Inspire 1, M100)
-     *  used with the Phantom 3, Inspire 1 or M100 will report F mode as
-     *  selected if the switch is set to the left position.
+     *  Position One. For all products except Mavic Pro, this is the left most
+     *  position of the flight mode switch on a remote controller from the
+     *  perspective of the pilot. For example, on a Phantom 4 remote controller,
+     *  Position One is labeled "A".
+     *  For the Mavic Pro, this is the position that is furthest away from the
+     *  pilot and labeled "Sport".
      */
-    DJIRCHardwareFlightModeSwitchStateF,
+    DJIRemoteControllerFlightModeSwitchPositionOne,
     /**
-     *  The Remote Controller's flight mode switch is set to the A (Attitude)
-     *  mode. Attitude mode does not use GPS and the vision system for hovering
-     *  or flying, but uses the barometer to maintain altitude. If the GPS
-     *  signal is strong enough, the aircraft can still return to home in this
-     *  mode.
-     *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
-     *  from left to right.
-     *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch
-     *  is labeled F, A, P from left to right.
-     *  Independent of label, any remote controller (P3, P4, Inspire 1, M100)
-     *  used with the Phantom 4 will report A mode as selected if the switch is
-     *  set to the left position.
-     *  Independent of label, any remote controller (P3, P4, Inspire 1, M100)
-     *  used with the Phantom 3, Inspire 1 or M100 will report A mode as
-     *  selected if the switch is set to the middle position.
+     *  Position Two. For all products except Mavic Pro, this is the middle
+     *  position of the flight mode switch on a remote controller from the
+     *  perspective of the pilot. For example, on a Phantom 4 remote controller,
+     *  Position Two is labeled "S".
+     *  For the Mavic Pro, this is the position that is closest to the pilot
+     *  (the P position).
      */
-    DJIRCHardwareFlightModeSwitchStateA,
+    DJIRemoteControllerFlightModeSwitchPositionTwo,
     /**
-     *  The Remote Controller's flight mode switch is set to the P (Positioning)
-     *  mode. Positioning mode can use both GPS and the vision system (when
-     *  available) to fly and hover. For the Phantom 4 and Mavic Pro, P mode
-     *  must be used to enable Mission Manager functions from the Mobile Device.
-     *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
-     *  from left to right.
-     *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch
-     *  is labeled F, A, P from left to right.
-     *  Any remote controller (P3, P4, Inspire 1, M100) used with any aircraft
-     *  will report P mode as selected if the switch is set to the right position.
+     *  Position Three. For all products except Mavic Pro, this is the right
+     *  most position of the flight mode switch on a remote controller from the
+     *  perspective of the pilot. For example, on a Phantom 4 remote controller,
+     *  Position Two is labeled "P".
+     *  The Mavic Pro does not have a third position for the flight mode switch.
      */
-    DJIRCHardwareFlightModeSwitchStateP,
-    /**
-     *  The Remote Controller's flight mode switch is set to the S (Sport) mode.
-     *  Sport mode can use both GPS and the vision system (when available) to hover.
-     *  Sport mode is only supported when using the Phantom 4 and Mavic Pro.
-     *  The Phantom 4 remote controller flight mode switch is labeled A, S, P
-     *  from left to right.
-     *  The Phantom 3, Inspire 1 and M100 remote controller flight mode switch 
-     *  is labeled F, A, P from left to right.
-     *  Independent of label, any remote controller (P3, P4, Inspire 1, M100)
-     *  used with the Phantom 4 will report S mode as selected if the switch is
-     *  set to the middle position.
-     */
-    DJIRCHardwareFlightModeSwitchStateS
+    DJIRemoteControllerFlightModeSwitchPositionThree,
 };
-
-/*********************************************************************************/
-#pragma mark DJIRCHardwareFlightModeSwitch
-/*********************************************************************************/
-
-/**
- *  The value of the Remote Controller's flight mode switch.
- */
-typedef struct
-{
-    /**
-     *  Value of the Remote Controller's flight mode switch.
-     */
-    DJIRCHardwareFlightModeSwitchState mode;
-} DJIRCHardwareFlightModeSwitch;
 
 /*********************************************************************************/
 #pragma mark DJIRCHardwareButton
@@ -685,6 +668,7 @@ typedef struct
      * YES if Hardware button present.
      */
     BOOL isPresent;
+    
     /**
      *  YES if button is pressed down.
      */
@@ -710,6 +694,7 @@ typedef struct
 /*********************************************************************************/
 #pragma mark DJIRCFiveDButton
 /*********************************************************************************/
+
 /**
  *  Movement direction of the remote controller's 5D button.
  */
@@ -734,20 +719,24 @@ typedef NS_ENUM(NSUInteger, DJIRCFiveDButtonDirection) {
  *  Vertical movement, horizontal movment and if it is pressed are not exclusive.
  */
 typedef struct{
+    
     /**
      * YES if 5D button is present.
      */
     BOOL isPresent;
+    
     /**
      *  The movement in the vertical direction of the 5D button.
      *  Up is the positive direction and down is the negative direction.
      */
     DJIRCFiveDButtonDirection verticalMovement;
+    
     /**
      *  The movement in the horizontal direction of the 5D button.
      *  Right is the positive direction and left is the negative direction.
      */
     DJIRCFiveDButtonDirection horizontalMovement;
+    
     /**
      *  If the 5D button is pressed down.
      */
@@ -767,64 +756,79 @@ typedef struct
      *  Left joystick 's horizontal value.
      */
     DJIRCHardwareJoystick leftHorizontal;
+    
     /**
      *  Left joystick 's vertical value.
      */
     DJIRCHardwareJoystick leftVertical;
+    
     /**
      *  Right joystick 's Vertical value.
      */
     DJIRCHardwareJoystick rightVertical;
+    
     /**
      *  Right joystick 's Horizontal value.
      */
     DJIRCHardwareJoystick rightHorizontal;
+    
     /**
      *  Current state of the upper left wheel on the Remote Controller (Gimbal Dial).
      */
     DJIRCHardwareLeftWheel leftWheel;
+    
     /**
      *  Current state of the upper right wheel on the Remote Controller (Camera Settings Dial).
      */
     DJIRCHardwareRightWheel rightWheel;
+    
     /**
      *  Current state of the Transformation Switch on the Remote Controller.
      */
     DJIRCHardwareTransformationSwitch transformationSwitch;
+    
     /**
-     *  Current state of the Flight Mode Switch on the Remote Controller.
+     *  Current position of the Flight Mode Switch on the Remote Controller.
      */
-    DJIRCHardwareFlightModeSwitch flightModeSwitch;
+    DJIRemoteControllerFlightModeSwitchPosition flightModeSwitch;
+    
     /**
      *  Current state of the Return To Home Button.
      */
     DJIRCHardwareButton goHomeButton;
+    
     /**
      *  Current state of the Video Recording Button.
      */
     DJIRCHardwareButton recordButton;
+    
     /**
      *  Current state of the Shutter Button.
      */
     DJIRCHardwareButton shutterButton;
+    
     /**
      *  Current state of the Playback Button. The Playback Button is not 
      *  supported on Phantom 4 remote controllers.
      */
     DJIRCHardwareButton playbackButton;
+    
     /**
      *  Current state of the Pause Button. The Pause button is only supported on
      *  Phantom 4 remote controllers.
      */
     DJIRCHardwareButton pauseButton;
+    
     /**
      *  Current state of custom button 1 (left Back Button).
      */
     DJIRCHardwareButton customButton1;
+    
     /**
      *  Current state of custom button 2 (right Back Button).
      */
     DJIRCHardwareButton customButton2;
+    
     /**
      *  Current state of the 5D button. The button can be moved up, down, left
      *  and right and can be pressed. The 5D button is only supported on Mavic
@@ -867,6 +871,36 @@ typedef NS_ENUM (uint8_t, DJIRCRemoteFocusControlDirection){
      *  CounterClockwise
      */
     DJIRCRemoteFocusControlDirectionCounterClockwise,
+};
+
+/*********************************************************************************/
+#pragma mark DJIRemoteControllerChargeMobileMode
+/*********************************************************************************/
+/**
+ *  Modes to charge the iOS mobile device. 
+ *  Only supported by Inspire 2.
+ */
+typedef NS_ENUM (uint8_t, DJIRemoteControllerChargeMobileMode){
+    /**
+     *  The remote controller does not charge the mobile device.
+     */
+    DJIRemoteControllerChargeMobileModeNever,
+    /**
+     *  The remote controller charges the mobile device until the the mobile
+     *  device is fully charged.
+     */
+    DJIRemoteControllerChargeMobileModeAlways,
+    /**
+     *  The remote controller charges the mobile device in an intelligent mode: 
+     *  The remote controller starts charging when the mobile device's battery
+     *  is lower then 20% and stops charging when the mobile device's battery
+     *  is above 50%.
+     */
+    DJIRemoteControllerChargeMobileModeIntelligent,
+    /**
+     *  Unknown.
+     */
+    DJIRemoteControllerChargeMobileModeUnknown = 0xFF,
 };
 
 /*********************************************************************************/
@@ -913,11 +947,13 @@ typedef struct
      *  until it turns to YES again.
      */
     BOOL isFocusControlWorks;
+    
     /**
      *
      *  Remote Focus Control Type
      */
     DJIRCRemoteFocusControlType controlType;
+    
     /**
      *
      *  Remote Focus Control Direction. Use this with the `isFocusControlWorks`
@@ -972,4 +1008,39 @@ typedef struct
 - (NSString *_Nullable)RCIdentifier;
 
 @end
+
+/*********************************************************************************/
+#pragma mark - DJIRCMasterSlaveState
+/*********************************************************************************/
+/**
+ *  State of the remote controller related to the master and slave mode.
+ *  Only supported by Inspire 2.
+ */
+@interface DJIRCMasterSlaveState : NSObject
+
+/**
+ *  The master/slave mode of the remote controller.
+ */
+@property(nonatomic, readonly) DJIRemoteControllerMode mode;
+/**
+ *  `YES` if a the remote controller is part of a master/slave pairing.
+ */
+@property(nonatomic, readonly) BOOL isConnected;
+/**
+ *  ID of the master remote controller.
+ */
+@property(nonatomic, readonly) NSString *masterID;
+/**
+ *  ID of the slave remote controller.
+ */
+@property(nonatomic, readonly) NSString *slaveID;
+/**
+ *  Authorization code of the master remote controller that is a 6 element
+ *  string of numbers.
+ */
+@property(nonatomic, readonly) NSString *authorizationCode;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

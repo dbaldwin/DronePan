@@ -8,7 +8,6 @@
 #import "DJISDKFoundation.h"
 #import "DJIMission.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @class DJIMissionManager;
@@ -140,7 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Returns the current executing mission. This method should only be called
  *  after the mission has started execution.
  *
- *  @param Mission object for the current mission.
+ *  @return Mission object for the current mission.
  */
 - (DJIMission *_Nullable)currentExecutingMission;
 
