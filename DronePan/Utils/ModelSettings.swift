@@ -39,7 +39,7 @@ class ModelSettings {
         return ModelSettings.settingForKey(model, key: key) as? Bool ?? defaultValue
     }
     
-    private class func doubleForSetting(model: String, key: SettingsKeys, defaultValue: Double) -> Double {
+    private class func doubleSettingForKey(model: String, key: SettingsKeys, defaultValue: Double) -> Double {
         return ModelSettings.settingForKey(model, key: key) as? Double ?? defaultValue
     }
 

@@ -365,8 +365,12 @@ extension PanoramaController {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- set pitch")
                         self.setPitch(pitch)
 
-                        DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
-                        self.takeASnap()
+                        DDLogDebug("PanoLoop: Delay before taking a snap \(photoDelayTime)")
+                        ControllerUtils.delay(delay:ModelSettings.photoDelay(model: self.model), queue: self.droneCommandsQueue, closure: {
+                            DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
+                            self.takeASnap()
+
+                        })
                     }
                     // End the gimbal pitch loop
 
