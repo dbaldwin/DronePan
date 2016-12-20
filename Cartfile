@@ -3,4 +3,4 @@ github "jdg/MBProgressHUD" ~> 1.0.0
 github "akashivskyy/GoogleAnalytics-Framework" ~> 3.1.7
 github "dennisweissmann/DeviceKit" ~> 0.3.5
 
-git "https://bitbucket.org/rmonkey/papertraillumberjack.git" "2162da6a9331802a8e8ae1a9324962be640fa976"
+git "https://bitbucket.org/rmonkey/papertraillumberjack.git" "0.1.7"
