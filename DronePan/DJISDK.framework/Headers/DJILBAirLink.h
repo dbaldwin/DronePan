@@ -7,6 +7,7 @@
 
 #import <DJISDK/DJIAirLinkBaseTypes.h>
 #import <DJISDK/DJIBaseProduct.h>
+#import <DJISDK/DJISDKFoundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,17 +47,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateLBAirLinkModuleSignalInformation:(NSArray<DJISignalInformation *> *_Nonnull)antennas;
 
 /**
- *  Signal strength for all available downlink channels.
+ *  Signal strength of all signals present on all available downlink channels.
+ *  Signals that are not the communication signal are considered interference.
  *
- *  @param lbAirLink        DJILBAirLink Instance.
- *  @param signalStrength   The strength of the signal.
+ *  @param lbAirLink    DJILBAirLink Instance.
+ *  @param interference The updated interference information. The elements in
+ *                      the array of `DJILBAirLinkChannelInterference` objects
+ *                      each hold the interference signal strength of a channel.
+ *                      Elements are sorted by increasing channel number.
+ *  @see DJILBAirLinkChannelInterference
  */
-- (void)lbAirLink:(DJILBAirLink *_Nonnull)lbAirLink didUpdateAllChannelSignalStrengths:(DJILBAirLinkAllChannelSignalStrengths)signalStrength;
+-(void) lbAirLink:(DJILBAirLink *)lbAirlink didUpdateAllChannelInterference:(NSArray <DJILBAirLinkChannelInterference *> *)interference;
 
 /**
  *  Callback for when the FPV video bandwidth percentage has changed. Each
  *  Remote Controller can create a secondary video from the FPV and HD Gimbal
- *  video downlink information. For the slave Remote Controllers, it is 
+ *  video downlink information. For the slave Remote Controllers, it is
  *  important to know if the percentage bandwidth has changed so the right PIP
  *  display mode (`DJIPIPDisplayMode`) can be selected. For example, if the FPV
  *  video bandwidth goes to 100%, `DJIALPIPModeLB` should be used.
@@ -131,13 +137,21 @@ NS_ASSUME_NONNULL_BEGIN
                                                                 NSError *_Nullable error))completion;
 
 /**
+ *  Gets the channels available for the current frequency band.
+ *
+ *  @param completion Completion block.
+ */
+- (void)getChannelRangeWithCompletion:(void (^_Nonnull)(NSRange channelRange,
+                                                        NSError *_Nullable error))completion;
+
+/**
  *  Sets fixed downlink channel. Channel selection mode should be set to
  *  `DJILBAirLinkChannelSelectionModeManual`.
- *  Channel can be between 1 and `DJILBAirLinkSupportedChannelMax`.
+ *  The valid range of channel can be obtained from `getChannelRangeWithCompletion:`.
  *
  *  @param channel    Specific channel for the air link.
  *  @param completion Completion block.
- 
+
  */
 - (void)setChannel:(int)channel withCompletion:(DJICompletionBlock)completion;
 
@@ -267,7 +281,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  ports) and a camera mounted on the HD Gimbal (through the Gimbal port). The
  *  output video can then be a combination of the two video sources. Either a
  *  single video source can be displayed, or one can be displayed within the
- *  other (as a Picture in Picture, or PIP). If the mode is set incorrectly, 
+ *  other (as a Picture in Picture, or PIP). If the mode is set incorrectly,
  *  then no output video will be displayed. For example, if only a FPV camera is
  *  connected, or the bandwidth for the 'LB' data (FPV) is set to 100 percent,
  *  the only mode that will display data is the `DJILBAirLinkPIPModeLB`.
@@ -477,13 +491,13 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL) isDualEncodeModeSupported;
 
 /**
- *  Sets Lightbridge 2 encode mode. It is only available when 
+ *  Sets Lightbridge 2 encode mode. It is only available when
  *  `isDualEncodeModeSupported` returns `YES`. For Lightbridge 2 modules that
  *  don't support dual encode mode, the encode mode is always single.
  *
  *  @param mode         The encode mode to set.
  *  @param completion   Completion block.
- *  
+ *
  *  @see `DJILBAirLinkEncodeMode`
  */
 - (void)setEncodeMode:(DJILBAirLinkEncodeMode)mode
@@ -523,6 +537,38 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)getDualEncodeModePercentWithCompletion:(void (^_Nonnull)(float percent,
                                                                  NSError *_Nullable error))completion;
+
+/**
+ *  Gets the frequency bands supported by the product in the current area.
+ *  It is only supported by Inspire 2 and Phantom 4 Pro. For the other products
+ *  with LB air link, the frequency band is always 2.4 GHz.
+ *
+ *  @param completion   Completion block that receives the getter result. Each
+ *                      element in `frequencyBands` is a value of `DJILBAirLinkFrequencyBand`. 
+ */
+- (void)getSupportedFrequencyBandWithCompletion:(void (^_Nonnull)(NSArray<NSNumber *> *_Nullable frequencyBands,
+                                                                  NSError *_Nullable error))completion;
+
+/**
+ *  Sets the LB air link frequency band.
+ *  It is only supported by Inspire 2 and Phantom 4 Pro. For the other products
+ *  with LB air link, the frequency band is always 2.4 GHz.
+ *
+ *  @param frequencyBand    LBAirLink frequency band to change to.
+ *  @param completion       Remote execution result error block.
+ */
+- (void)setFrequencyBand:(DJILBAirLinkFrequencyBand)frequencyBand
+          withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Gets the LB air link frequency band.
+ *  It is only supported by Inspire 2 and Phantom 4 Pro. For the other products
+ *  with LB air link, the frequency band is always 2.4 GHz.
+ *
+ *  @param completion Remote execution result error block.
+ */
+- (void)getFrequencyBandWithCompletion:(void (^_Nonnull)(DJILBAirLinkFrequencyBand frequencyBand,
+                                                         NSError *_Nullable error))completion;
 
 @end
 

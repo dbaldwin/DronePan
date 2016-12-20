@@ -44,13 +44,13 @@ typedef NS_ENUM (uint8_t, DJILandingGearStatus){
 typedef NS_ENUM (uint8_t, DJILandingGearMode){
     /**
      *  Landing Gear can be deployed and retracted through function calls.
-     *  It is supported by Inspire 1 and Matrice 600.
+     *  It is supported by Inspire 1, Matrice 600, Matrice 600 Pro and Inspire 2.
      */
     DJILandingGearModeNormal,
     /**
      *  Landing Gear is in transport mode (either it is moving into, moving out
      *  of, or stopped in transport position).
-     *  It is only supported by Inspire 1.
+     *  It is only supported by Inspire 1 and Inspire 2.
      */
     DJILandingGearModeTransport,
     /**
@@ -58,7 +58,7 @@ typedef NS_ENUM (uint8_t, DJILandingGearMode){
      *  depending on altitude. During take-off, the transition point is 1.2m
      *  above ground. After take-off (during flight or when landing), the
      *  transition point is 0.5m above ground.
-     *  It is supported by Inspire 1 and Matrice 600.
+     *  It is supported by Inspire 1, Matrice 600, Matrice 600 Pro and Inspire 2.
      */
     DJILandingGearModeAuto,
     /**

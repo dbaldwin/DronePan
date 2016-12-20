@@ -320,6 +320,19 @@ typedef NS_ENUM (NSInteger, DJISDKCameraError){
      *  There is no downloading files to stop.
      */
     DJISDKCameraErrorPlaybackNoDownloadingFiles = -3016L,
+    /**
+     *  Camera has no SSD.
+     */
+    DJISDKCameraErrorSSDNotInserted = -3017L,
+    /**
+     *  The Camera's SSD is full.
+     */
+    DJISDKCameraErrorSSDFull = -3018L,
+    /**
+     *  Error accessing the SSD.
+     */
+    DJISDKCameraErrorSSDError = -3019L,
+
 };
 
 /*********************************************************************************/
@@ -461,7 +474,12 @@ typedef NS_ENUM (NSInteger, DJISDKFlightControllerError) {
  */
 typedef NS_ENUM (NSInteger, DJISDKMissionError){
     /**
-     *  Mode error. For products except Phantom 4, please make sure the remote controller's mode switch is in 'F' mode. For Phantom 4, please make sure the remote controller's mode switch is in 'P' mode.
+     *  Cannot execute in the current flight mode. For products and firmware versions
+     *  that have an F mode option, F mode must be selected to execute missions. 
+     *  For products and firmware versions that do not have an F mode option, P 
+     *  mode must be selected to execute missions. 
+     *  `getRemoteControllerFlightModeMappingWithCompletion` can be used to 
+     *  determine what flight modes are supported by the current product.
      */
     DJISDKMissionErrorModeError = -5000L,
     /**

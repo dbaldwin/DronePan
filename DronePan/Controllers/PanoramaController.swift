@@ -187,10 +187,19 @@ extension PanoramaController {
         return false
     }
 
+    // TODO: Refactor all of this since SDK 3.5 changes switch modes from F-A-P to 1-2-3
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
-                if (!ControllerUtils.isPhantom4(model) && !ControllerUtils.isMavicPro(model)) {
+                if (ControllerUtils.isMavicPro(model)) {
+                    if(remoteController.mode != .Attitude) {
+                        
+                        DDLogDebug("Mavic not in P mode")
+                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
+                        
+                    }
+                    
+                } else if (!ControllerUtils.isPhantom4(model)) {
                     if (!(remoteController.mode == .Function)) {
                         DDLogDebug("Not in F mode")
 

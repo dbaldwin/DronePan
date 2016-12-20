@@ -48,7 +48,17 @@ Join our Facebook group here: http://www.facebook.com/groups/dronepan
 
 ## Development
 
-Apart from XCode we're using [Carthage](https://github.com/Carthage/Carthage) to handle dependencies.
+Tools in use:
+
+* XCode (surprise)
+* [Carthage](https://github.com/Carthage/Carthage) to handle dependencies
+* git-lfs because the DJI SDK is too large for the repo on github
+
+To clone - make sure you have git-lfs installed _before_ you clone.
+
+This is easiest with homebrew
+
+    brew install git git-lfs
 
 After cloning - you'll need to run
 

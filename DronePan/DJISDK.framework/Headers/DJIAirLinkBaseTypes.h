@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Define the air link maximum supported channel count.
+ *  @deprecated See `DJILBAirLinkChannelInterference`.
  */
 #define DJI_LBAIRLINK_SUPPORTED_CHANNEL_COUNT (8)
 
@@ -78,15 +79,15 @@ typedef NS_ENUM (uint8_t, DJIWiFiDataRate) {
     /**
      *  1 Mbps.
      */
-    DJIWiFiDataRate1Mbps,
+    DJIWiFiDataRate1Mbps = 1,
     /**
      *  2 Mbps.
      */
-    DJIWiFiDataRate2Mbps,
+    DJIWiFiDataRate2Mbps = 2,
     /**
      *  4 Mbps.
      */
-    DJIWiFiDataRate4Mbps,
+    DJIWiFiDataRate4Mbps = 4,
     /**
      *  Unknown.
      */
@@ -119,11 +120,51 @@ typedef NS_ENUM (uint8_t, DJIWiFiDataRate) {
 /*********************************************************************************/
 #pragma mark - LBAirLink
 /*********************************************************************************/
+/**
+ *  The interference power of a LBAirLink channel.
+ */
+@interface DJILBAirLinkChannelInterference : NSObject
 
 /**
- *  Define the air link maximum supported channel count.
+ *  The interference power with range from [-60, -100] dBm. A smaller, more
+ *  negative value represents less interference and better communication quality.
  */
-#define DJI_LBAIRLINK_SUPPORTED_CHANNEL_COUNT (8)
+@property (nonatomic, readonly) NSInteger power;
+
+/**
+ *  The channel number. Different frequency bands have different channel index
+ *  ranges.
+ */
+@property (nonatomic, readonly) NSUInteger channel;
+
+@end
+
+/**
+ *  LBAirLink frequency band.
+ */
+typedef NS_ENUM (uint8_t, DJILBAirLinkFrequencyBand){
+    /**
+     *  The LBAirLink Frequency band is 2.4 GHz.
+     */
+    DJILBAirLinkFrequencyBand2Dot4G,
+    
+    /**
+     *  The LBAirLink Frequency band is 5.7 GHz.
+     */
+    DJILBAirLinkFrequencyBand5Dot7G,
+    
+    /**
+     *  The LBAirLink Frequency band is 5.8 GHz.
+     */
+    DJILBAirLinkFrequencyBand5Dot8G,
+    
+    /**
+     *  The LBAirLink Frequency is unknown.
+     */
+    DJILBAirLinkFrequencyBandUnknown = 0xFF,
+    
+};
+
 
 /*********************************************************************************/
 #pragma mark - Data Struct
@@ -185,7 +226,6 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkSecondaryVideoOutputPort) {
     DJILBAirLinkSecondaryVideoOutputPortUnknown,
 };
 
-
 /**
  *  Defines the combination of video sources to form the secondary output video.
  *  The secondary output can display video streams from one or two input sources. 
@@ -237,21 +277,45 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkSecondaryVideoFormat) {
      *  1080I
      */
     DJILBAirLinkSecondaryVideoFormat1080I60FPS,
+    /**
+     *  1080I
+     */
     DJILBAirLinkSecondaryVideoFormat1080I50FPS,
     /**
      *  1080P
      */
     DJILBAirLinkSecondaryVideoFormat1080P60FPS,
+    /**
+     *  1080P
+     */
     DJILBAirLinkSecondaryVideoFormat1080P50FPS,
+    /**
+     *  1080P
+     */
     DJILBAirLinkSecondaryVideoFormat1080P30FPS,
+    /**
+     *  1080P
+     */
     DJILBAirLinkSecondaryVideoFormat1080P25FPS,
+    /**
+     *  1080P
+     */
     DJILBAirLinkSecondaryVideoFormat1080P24FPS,
     /**
      *  720P
      */
     DJILBAirLinkSecondaryVideoFormat720P60FPS,
+    /**
+     *  720P
+     */
     DJILBAirLinkSecondaryVideoFormat720P50FPS,
+    /**
+     *  720P
+     */
     DJILBAirLinkSecondaryVideoFormat720P30FPS,
+    /**
+     *  720P
+     */
     DJILBAirLinkSecondaryVideoFormat720P25FPS,
     /**
      *  Unknown
@@ -299,7 +363,7 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkFPVVideoQualityLatency) {
      */
     DJILBAirLinkFPVVideoQualityLatencyLowLatency,
     /**
-     *  Unknown transmission mode.
+     *  Unknown.
      */
     DJILBAirLinkFPVVideoQualityLatencyUnknown,
 };
@@ -330,19 +394,6 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkDataRate) {
      */
     DJILBAirLinkDataRateUnknown = 0xFF
 };
-
-/**
- *  RSSI (Received Signal Strength Indicator) in dBm
- *
- */
-typedef struct
-{
-    /**
-     *  RSSI with range [-100, -60] dBm
-     *
-     */
-    int8_t rssi[DJI_LBAIRLINK_SUPPORTED_CHANNEL_COUNT];
-} DJILBAirLinkAllChannelSignalStrengths;
 
 /**
  *  The video source for the delegate method
@@ -407,7 +458,7 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkEncodeMode) {
      */
     DJILBAirLinkEncodeModeDual,
     /**
-     *  Unknown
+     *  Unknown.
      */
     DJILBAirLinkEncodeModeUnknown = 0xFF
 };
@@ -415,6 +466,7 @@ typedef NS_ENUM (uint8_t, DJILBAirLinkEncodeMode) {
 /*********************************************************************************/
 #pragma mark - OcuSyncLink
 /*********************************************************************************/
+
 /**
  *  Downlink channel selection mode (manual or automatic) for the wireless
  *  OcuSync Link.
@@ -429,6 +481,7 @@ typedef NS_ENUM (uint8_t, DJIOcuSyncChannelSelectionMode) {
      *  Both channel number and bandwidth can be selected manually.
      */
     DJIOcuSyncChannelSelectionModeManual,
+    
     /**
      *  Unknown physical channel selection mode.
      */
@@ -461,16 +514,19 @@ typedef NS_ENUM (uint8_t, DJIOcuSyncBandwidth) {
  *  Only supported by Mavic Pro.
  */
 @interface DJIOcuSyncFrequencyInterference : NSObject
+
 /**
  *  The average interference spectral density of the frequency range. The valid
  *  range is from [-60, -110] dBm/MHz. A smaller (more negative) value
  *  represents less interference and better communication quality.
  */
 @property(nonatomic, readonly) NSInteger powerPerMHz;
+
 /**
  *  The start point of the frequency range in MHz.
  */
 @property(nonatomic, readonly) float frequencyStart;
+
 /**
  *  The width of the frequency range in MHz.
  */

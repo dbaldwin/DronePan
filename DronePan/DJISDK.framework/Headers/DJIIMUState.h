@@ -123,7 +123,6 @@ typedef NS_ENUM (uint8_t, DJIIMUCalibrationStatus){
  *  DJI IMU Sensor State
  */
 typedef NS_ENUM (NSUInteger, DJIIMUSensorStatus) {
-
     /**
      *  The IMU Sensor disconnected with the flight controller.
      */

@@ -103,14 +103,15 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setCompletionBlockQueue:(dispatch_queue_t)completionBlockQueue;
 
 /**
- *  The Mavic Pro broadcasts wi-fi signal on spectrum that is not permissable in some specific countries. 
- *  The SDK has an automatic means of checking and disabling this functionality on applicable products. 
- *  Calling this method with YES will disable the check involving DJI servers behavior, NO will re-enable it. 
- *  The developer still has the responsibility to adhere to all applicable regulations at all times. 
- *  The automatic behavior is always on by default.
+ *  Some products (Mavic Pro, Inspire 2, Phantom 4 Pro) can use 5 GHz wireless
+ *  spectrum that is not permissable in some countries. By default, the 5 GHz
+ *  usage is not enabled, but on registration the SDK will do a country code
+ *  check to determine whether 5 GHz can be used. The check can involve sending
+ *  location data to a server. This method can be used to disable this check,
+ *  leaving the default configuration of only using the 2.4 GHz spectrum.
  *
- *  Note: this method must be called before calling +registerApp:withDelegate: in order to take effect.
- *
+ *  Note: this method must be called before calling `+registerApp:withDelegate:`
+ *  in order to take effect.
  */
 + (void)setDisableCountryCodeCheck:(BOOL)disableCountryCodeCheck;
 

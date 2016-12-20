@@ -189,6 +189,83 @@ typedef NS_ENUM (NSUInteger, DJIWaypointActionType){
  */
 @property(nonatomic, assign) float gimbalPitch;
 
+
+
+/**
+ *  The base automatic speed of the aircraft as it moves between this waypoint
+ *  and the next waypoint with range [0, 15] m/s.
+ *  By default, it is 0.0 and the aircraft will fly with `autoFlightSpeed` of
+ *  the waypoint mission. If greater than 0, `speed` will override `autoFlightSpeed`.
+ *  This `speed` can only define movement forward through the waypoint mission
+ *  in comparison to `autoFlightSpeed` which can be both forward and backwards
+ *  through a waypoint mission.
+ *
+ *  Waypoint mission speed priority from highest to lowest is:
+ *  1) manual speed adjustment with remote controller joy sticks
+ *  2) `speed`
+ *  3) `setAutoFlightSpeed`
+ *  4) `autoFlightSpeed`
+ *
+ *  Warning: `speed`, `shootPhotoTimeInterval` and `shootPhotoDistanceInterval`
+ *  relate to behavior between this waypoint and the next waypoint in the
+ *  mission. In comparison, `turnMode`, `altitude` and `heading` relate to
+ *  behavior between the last waypoint and this waypoint in the waypoint mission.
+ *  Only supported by flight controller firmware 3.2.10.0 or above.
+ */
+@property(nonatomic, assign) float speed;
+
+/**
+ *  The time interval in seconds when two photos are taken as the aircraft moves
+ *  between the current waypoint and the next waypoint. The first photo will be
+ *  taken as the aircraft leaves the current waypoint.
+ *
+ *  The maximum value is 6,000.0. The minimum value is above 0.0 and depends on
+ *  the camera type and the camera parameters. When the photo file format is
+ *  JPEG, the recommended minimum value is 2.0. When the photo file format is
+ *  RAW, the time interval between two photos cannot smaller than 10 seconds for
+ *  all cameras except those on the Inspire 2 which can be 5 seconds. If the
+ *  input exceeds the camera's capability, the pictures will be taken at the
+ *  maximum possible speed.
+ *
+ *  The default value is 0.0 and no photo will be taken. For a waypoint, either
+ *  `shootPhotoTimeInterval` or `shootPhotoDistanceInterval` is 0.0.
+ *
+ *  Input with precision of greater than 1 decimal places, will be rounded to 1.
+ *
+ *  Warning: `speed`, `shootPhotoTimeInterval` and `shootPhotoDistanceInterval`
+ *  relate to behavior between this waypoint and the next waypoint in the
+ *  mission. In comparison, `turnMode`, `altitude` and `heading` relate to
+ *  behavior between the last waypoint and this waypoint in the waypoint mission.
+ *  Only supported by flight controller firmware 3.2.10.0 or above.
+ */
+@property(nonatomic, assign) float shootPhotoTimeInterval;
+
+/**
+ *  The distance interval in meters when two photos are taken as the aircraft
+ *  moves between the current waypoint and the next waypoint. The first photo
+ *  is taken at the first waypoint.
+ *
+ *  The maximum value is 6,000.0. The minimum value is above 0.0 and depends on
+ *  the camera type, the camera parameters and the flight speed. When the photo
+ *  file format is JPEG, the time interval between two photos cannot smaller
+ *  than 2 seconds. When the photo file format is RAW, the time interval between
+ *  two photos cannot smaller than 10 seconds for all cameras except those on the 
+ *  Inspire 2 which can be 5 seconds. If the input exceeds the camera's
+ *  capability, the taken photos may be less than expectation.
+ *
+ *  The default value is 0.0 and no photo will be taken. For a waypoint, either
+ *  `shootPhotoTimeInterval` or `shootPhotoDistanceInterval` is 0.0.
+ *
+ *  Input with precision of greater than 1 decimal places, will be rounded to 1.
+ *
+ *  Warning: `speed`, `shootPhotoTimeInterval` and `shootPhotoDistanceInterval`
+ *  relate to behavior between this waypoint and the next waypoint in the
+ *  mission. In comparison, `turnMode`, `altitude` and `heading` relate to
+ *  behavior between the last waypoint and this waypoint in the waypoint mission.
+ *  Only supported by flight controller firmware 3.2.10.0 or above.
+ */
+@property(nonatomic, assign) float shootPhotoDistanceInterval;
+
 /**
  *  Array of all waypoint actions for the respective waypoint. The waypoint
  *  actions will be executed consecutively from the start of the array once the

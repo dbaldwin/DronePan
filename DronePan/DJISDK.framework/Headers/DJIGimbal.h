@@ -140,11 +140,11 @@ NS_ASSUME_NONNULL_BEGIN
                       withCompletion:(DJICompletionBlock)block;
 
 /**
- *  Resets the gimbal. The behaviours are product-dependent.
+ *  Resets the gimbal. The behaviors are product-dependent.
  *  Osmo series (e.g. Osmo, Osmo Pro): 
  *  The gimbal's pitch and yaw will be set to the origin, which is the standard
  *  position for the gimbal.
- *  Phantom series (e.g. Phantom 3 Professional, Phantom 4):
+ *  Phantom series (e.g. Phantom 3 Professional, Phantom 4 series):
  *  The first call sets gimbal to point down vertically to the earth. The second
  *  call sets gimbal to the standard position.
  *  Other products (e.g. Inspire 1): 
@@ -236,8 +236,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Extends the pitch range of gimbal. Currently, it is only supported by
- *  Phantom 3 Series and Phantom 4. If extended, the gimbal's pitch control
- *  range can be [-30, 90], otherwise, it's [0, 90].
+ *  Phantom 3 Series, Phantom 4 and Phantom 4 Pro. If extended, the gimbal's
+ *  pitch control range can be [-30, 90], otherwise, it's [0, 90].
  *  Use `DJIGimbalParamPitchRangeExtension` to check if it is supported by the
  *  gimbal.
  *

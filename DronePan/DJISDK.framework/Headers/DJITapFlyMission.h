@@ -75,12 +75,50 @@ typedef NS_ENUM (NSInteger, DJITapFlyMissionExecutionState){
 };
 
 /**
+ *  Different modes of the TapFly Mission. Defaults to Forward, set to others
+ *  to enable the feature.
+ */
+typedef NS_ENUM (NSInteger, DJITapFlyMode) {
+    /**
+     *  Aircraft will fly towards the target. Forward Obstacle Sensing System
+     *  is active.
+     */
+    DJITapFlyModeForward,
+    /**
+     *  Aircraft will fly in the opposite direction from the target. Backward
+     *  Obstacle Sensing System is active.
+     */
+    DJITapFlyModeBackward,
+    /**
+     *  Aircraft will fly towards the target. User can control the heading by
+     *  remote controller's stick. Obstacle Sensing Systems may fail to work
+     *  when aircraft is flying sideward.
+     */
+    DJITapFlyModeFree,
+    /**
+     *  The TapFly mode is unknown.
+     */
+    DJITapFlyModeUnknown
+};
+
+/**
+ *  Completion block for asynchronous operations. This completion block is used
+ *  for methods that return at an unknown future time.
+ *
+ *  @param tapFlyMode   TapFly mode to return. The value is undefined if `error`
+ *                      is not nil.
+ *  @param error        An error object if an error occured during async
+ *                      operation, or nil if no error occurred.
+ */
+typedef void (^_Nullable DJITapFlyModeCompletionBlock)(DJITapFlyMode tapFlyMode, NSError *_Nullable error);
+
+/**
  *  This class provides the real-time status of an executing TapFly Mission.
  */
 @interface DJITapFlyMissionStatus : DJIMissionProgressStatus
 
 /**
- * Current execution state of TapFly Mission.
+ *  Current execution state of TapFly Mission.
  */
 @property(nonatomic, readonly) DJITapFlyMissionExecutionState executionState;
 
@@ -98,6 +136,11 @@ typedef NS_ENUM (NSInteger, DJITapFlyMissionExecutionState){
  *  The image point from the video feed where the vision system should calculate the flight direction from. The image point is normalized to [0,1] where (0,0) is the top left corner and (1,1) is the bottom right.
  */
 @property(nonatomic, readonly) CGPoint imageLocation;
+
+/**
+ *  Aircraft's heading relative to the flight direction.
+ */
+@property(nonatomic, readonly) float relativeHeading;
 
 @end
 
@@ -123,9 +166,27 @@ typedef NS_ENUM (NSInteger, DJITapFlyMissionExecutionState){
 @property(nonatomic, assign) CGPoint imageLocationToCalculateDirection;
 
 /**
+ *  TapFly Mission mode. Defaults to DJITapFlyModeForward, adjust to a different
+ *  mode before starting mission.
+ *
+ *  Additional modes only supported by the Phantom 4 Pro.
+ */
+@property(nonatomic) DJITapFlyMode tapFlyMode;
+
+/**
  *  Set TapFly Mission's auto flight speed.
+ *
+ *  @param completion   Completion block that receives the execution result.
  */
 + (void)setAutoFlightSpeed:(float)speed withCompletion:(DJICompletionBlock)completion;
+
+/**
+ *  Reset aircraft heading to the flight direction.
+ *  It can only be used when the TapFly mode is `DJITapFlyModeFree`.
+ *
+ *  @param completion   Completion block that receives the execution result.
+ */
++ (void)resetHeadingWithCompletion:(DJICompletionBlock)completion;
 
 @end
 

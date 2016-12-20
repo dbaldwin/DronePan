@@ -11,7 +11,7 @@
  *  Battery cell voltage level threshold. Different thresholds will initiate
  *  different aircraft behaviors or operations.
  *  Level 3 is the lowest level.
- *  It is only supported when the connected product is stand-alone A3.
+ *  It is only supported when the connected product is stand-alone A3 and N3.
  */
 typedef NS_ENUM (uint8_t, DJIBatteryCellVoltageLevel){
     /**
@@ -45,10 +45,9 @@ typedef NS_ENUM (uint8_t, DJIBatteryCellVoltageLevel){
     DJIBatteryCellVoltageLevelUnknown = 0xFF
 };
 
-
 /**
  *  Defines aircraft operation when the cell voltage is low.
- *  It is only supported when the connected product is stand-alone A3.
+ *  It is only supported when the connected product is stand-alone A3 and N3.
  */
 typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
     /**
@@ -69,6 +68,26 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
     DJIBatteryLowCellVoltageOperationUnknown = 0xFF
 };
 
+/**
+ *  Battery pairing state for batteries that can be paired.
+ *  Only supported by Inspire 2.
+ */
+typedef NS_ENUM (uint8_t, DJIBatteryPairStatus){
+    /**
+     *  The batteries are unpaired.
+     */
+    DJIBatteryPairStatusUnpaired,
+    /**
+     *  Batteries are paired.
+     */
+    DJIBatteryPairStatusPaired,
+    /**
+     *  Unknown.
+     */
+    DJIBatteryPairStatusUnknown,
+};
+
+
 /*********************************************************************************/
 #pragma mark - DJIBatteryState
 /*********************************************************************************/
@@ -77,7 +96,7 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
  *  `DJIBatteryState` is used to keep track of the real-time state of the
  *  battery. It is supported by both smart and non-smart batteries. However for
  *  non-smart batteries, only some of the properties are valid:
- *  - When the connected product is A3, only `currentVoltage` and
+ *  - When the connected product is A3 and N3, only `currentVoltage` and
  *    `cellVoltageLevel` are valid.
  *  - When the connected product is A2, only `currentVoltage` is valid.
  */
@@ -98,6 +117,12 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
 @property(nonatomic, readonly) NSInteger currentEnergy;
 
 /**
+ *  Returns the percentage of battery energy left. The range of this value is
+ *  [0 - 100].
+ */
+@property(nonatomic, readonly) NSInteger batteryEnergyRemainingPercent;
+
+/**
  *   Returns the current battery voltage (mV).
  */
 @property(nonatomic, readonly) NSInteger currentVoltage;
@@ -112,14 +137,9 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
 /**
  *  Returns the percentage of remaining lifetime value of the battery. The range
  *  of this value is [0 - 100].
+ *  It is not supported by Inspire 2 and Phantom 4 Pro.
  */
 @property(nonatomic, readonly) NSInteger lifetimeRemainingPercent;
-
-/**
- *  Returns the percentage of battery energy left. The range of this value is
- *  [0 - 100].
- */
-@property(nonatomic, readonly) NSInteger batteryEnergyRemainingPercent;
 
 /**
  *  Returns the temperature of battery in Centigrade, with a range [-128 to 127].
@@ -134,8 +154,8 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
 @property(nonatomic, readonly) NSInteger numberOfDischarge;
 
 /**
- *  Current cell voltage level of the battery. 
- *  It is only supported when the connected product is stand-alone A3.
+ *  Current cell voltage level of the battery.
+ *  It is only supported when the connected product is stand-alone A3 and N3.
  */
 @property(nonatomic, readonly) DJIBatteryCellVoltageLevel cellVoltageLevel; 
 
@@ -144,6 +164,15 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
  *  It is only supported by Osmo Mobile.
  */
 @property(nonatomic, readonly) BOOL isBeingCharged;
+
+/**
+ *  `YES' if only one battery is inserted to slot on the the right or starboard
+ *  side of the aircraft. The aircraft can still take off but the flight time
+ *  will be shorter.
+ *  It is only supported by Inspire 2. Inspire 2 must always have a battery
+ *  in the right or starboard slot.
+ */
+@property(nonatomic, readonly) BOOL isInSingleBatteryMode;
 
 @end
 
@@ -242,10 +271,12 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
  *  For Matrice 600, the number 1 battery compartment relates to index 0.
  */
 @property(nonatomic, readonly) NSUInteger index;
+
 /**
  *  `YES` if the battery is currently connected to the aircraft.
  */
 @property(nonatomic, readonly) BOOL isConnected;
+
 /**
  *  The remaining percentage energy of the battery with range [0,100].
  */
@@ -259,7 +290,7 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
 
 /**
  *  Provides a real time summary of the aggregated battery system.
- *  Only supported by M600.
+ *  Only supported by Matrice 600, Matrice 600 Pro and Inspire 2.
  */
 @interface DJIBatteryAggregationState : NSObject
 
@@ -275,53 +306,64 @@ typedef NS_ENUM (uint8_t, DJIBatteryLowCellVoltageOperation){
  *  For Matrice 600, there are 6 elements in `batteryOverviews`.
  */
 @property(nonatomic, readonly) NSArray<DJIBatteryOverview *> *_Nullable batteryOverviews;
+
 /**
  *  Returns the current voltage (mV) provided by the battery group.
  */
 @property(nonatomic, readonly) NSInteger currentVoltage;
+
 /**
  *  Returns the real time current draw through the batteries. A negative value
  *  means the batteries are being discharged.
  */
 @property(nonatomic, readonly) NSInteger currentCurrent;
+
 /**
  *  Returns the the total amount of energy, in mAh (milliamp hours), stored in
  *  the batteries when the batteries are fully charged.
  */
 @property(nonatomic, readonly) NSInteger fullChargeEnergy;
+
 /**
  *  Returns the remaining energy stored in the batteries in mAh (milliamp hours).
  */
 @property(nonatomic, readonly) NSInteger currentEnergy;
+
 /**
  *  Returns the percentage of energy left in the battery group with range [0 - 100].
  */
 @property(nonatomic, readonly) NSInteger energyRemainingPercent;
+
 /**
- *  Returns the highest temperature (in Centigrade) among the batteries in the
+ *  Returns the highest temperature (in Celsius) among the batteries in the
  *  group, with a range [-128 to 127].
  */
 @property(nonatomic, readonly) NSInteger highestBatteryTemperature;
+
 /**
  *  `YES` if one of the batteries in the group is disconnected. When it is `YES`,
  *  the aircraft is not allowed to take off.
  */
 @property(nonatomic, readonly) BOOL batteryDisconnected;
+
 /**
  *  `YES` if there is significant difference between the voltage (above 1.5V) of
  *  two batteries. When it is `YES`, the aircraft is not allowed to take off.
  */
 @property(nonatomic, readonly) BOOL voltageDifferenceDetected;
+
 /**
  *  `YES` if one of the batteries in the group has cells with low voltage. When
  *  it is `YES`, the aircraft is not allow to take off.
  */
 @property(nonatomic, readonly) BOOL lowCellVoltageDetected;
+
 /**
  *  `YES` if one of the batteries in the group has damaged cells. When it is
  *  `YES`, the aircraft is not allow to take off.
  */
 @property(nonatomic, readonly) BOOL hasDamagedCell;
+
 /**
  *  `YES` if one of the batteries in the group has a firmware version different
  *  from the others. When it is `YES`, the aircraft is not allow to take off.

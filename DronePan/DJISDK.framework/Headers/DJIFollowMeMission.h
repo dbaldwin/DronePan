@@ -18,7 +18,6 @@ typedef NS_ENUM (uint8_t, DJIFollowMeHeading){
      *  Aircraft's heading will be controlled by the remote controller.
      */
     DJIFollowMeHeadingControlledByRemoteController,
-
     /**
      *  Aircraft's heading remains toward the coordinate it is following.
      */

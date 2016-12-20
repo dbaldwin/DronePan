@@ -9,7 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 /**
  *  `DJIMissionProgressStatus` is an abstract class representing the progress of an executing mission.
  */
@@ -38,7 +37,7 @@ typedef void (^_Nullable DJIMissionProgressHandler)(float progress);
 typedef void (^_Nullable DJIMissionDownloadCompletionBlock)(DJIMission *_Nullable newMission, NSError *_Nullable error);
 
 /**
- *  `DJIMission` is an abstract class representing a mission that can be executed by the mission manager.
+ *  This class is an abstract class representing a mission that can be executed by the mission manager.
  */
 @interface DJIMission : NSObject
 

@@ -121,9 +121,9 @@ typedef NS_ENUM (NSUInteger, DJIFlightControllerFlightMode){
      */
     DJIFlightControllerFlightModeAttiLimited = 23,
     /**
-     *  GPS attitude limited mode.
+     *  Draw mode.
      */
-    DJIFlightControllerFlightModeGPSAttiLimited = 24,
+    DJIFlightControllerFlightModeDraw = 24,
     /**
      *  GPS follow me mode.
      */
@@ -160,6 +160,10 @@ typedef NS_ENUM (NSUInteger, DJIFlightControllerFlightMode){
      *  Active track mode, corresponds to Spotlight active track mode.
      */
     DJIFlightControllerFlightModeActiveTrackSpotlight = 39,
+    /**
+     *  The motors are just started.
+     */
+    DJIFlightControllerFlightModeMotorsJustStarted = 41,
     /**
      *  The main controller flight mode is unknown.
      */
@@ -211,7 +215,6 @@ typedef NS_ENUM (NSUInteger, DJIFlightControllerGoHomeExecutionStatus){
      */
     DJIFlightControllerGoHomeExecutionStatusUnknown = 0xFF
 };
-
 
 /*********************************************************************************/
 #pragma mark DJIFlightControllerNoFlyStatus
@@ -321,6 +324,7 @@ typedef struct
      *  See the <i>Flight Controller User Guide</i> for more information.
      */
     float pitch;
+    
     /**
      *  Velocity (m/s) along the x-axis or angle value (in degrees) for roll.
      *  Use `DJIVirtualStickRollPitchControlMode` to set the velocity or angle
@@ -329,11 +333,13 @@ typedef struct
      *  See the <i>Flight Controller User Guide</i> for more information.
      */
     float roll;
+    
     /**
      *  Angular Velocity (degrees/s) or Angle (degrees) value for yaw.
      *  Use DJIVirtualStickYawControlMode to set angular velocity or angle mode.
      */
     float yaw;
+    
     /**
      *  Velocity (m/s) or Alititude (m) value for verticalControl.
      *  Use DJIVirtualStickVerticalControlMode to set velocity or altitude mode.
@@ -361,7 +367,6 @@ typedef NS_ENUM (uint8_t, DJIVirtualStickVerticalControlMode){
      */
     DJIVirtualStickVerticalControlModePosition,
 };
-
 
 /**
  *  Defines how manual roll and pitch values are interpreted by the aircraft.
@@ -464,10 +469,61 @@ typedef NS_ENUM(uint8_t, DJIFlightControllerControlMode) {
 };
 
 /**
+ *  Flight modes that map to the flight mode switch on the remote controller.
+ */
+typedef NS_ENUM(uint8_t, DJIFlightControllerRemoteControllerFlightMode) {
+    /**
+     *  Positioning mode. GNSS and Vision Positioning Systems are used for
+     *  positioning if they are available.
+     *  For products without F mode, intelligent functions such as missions
+     *  and intelligent orientation control can be performed in P-mode.
+     */
+    DJIFlightControllerRemoteControllerFlightModeP,
+    /**
+     *  Attitude mode. The GNSS and Vision Positioning Systems are not used for
+     *  positioning. The aircraft only uses the barometer to maintain altitude.
+     *  If receiving a GNSS signal, the aircraft can automatically
+     *  return home if the Remote Controller signal is lost and if the Home
+     *  Point has been recorded successfully.
+     */
+    DJIFlightControllerRemoteControllerFlightModeA,
+    /**
+     *  Sport mode. The maximum flight speed and responsiveness of the
+     *  aircraft is increased in this mode.
+     */
+    DJIFlightControllerRemoteControllerFlightModeS,
+    /**
+     *  Gentle mode. The sensitivity and speed of aircraft will be substantially
+     *  decreased in gentle mode.
+     */
+    DJIFlightControllerRemoteControllerFlightModeG,
+    /**
+     *  Manual mode. The aircraft will not stabilize its altitude and attitude
+     *  in manual mode. This mode is for advanced pilots only, and should only
+     *  be used when the pilot understands the risk of operating in this mode.
+     *  Any damage to the product when operating in this mode will not be
+     *  covered under warranty.
+     *  It is supported by stand-alone A3 and N3 and can be enabled in
+     *  Assistant 2.
+     */
+    DJIFlightControllerRemoteControllerFlightModeM,
+    /**
+     *  Function mode. Performs the same as Positioning mode with intelligent
+     *  functions such as missions and intelligent orientation control enabled.
+     */
+    DJIFlightControllerRemoteControllerFlightModeF,
+    /**
+     *  Unknown.
+     */
+    DJIFlightControllerRemoteControllerFlightModeUnknown = 0xFF,
+};
+
+/**
  *  The vertical control velocity MIN value is -4 m/s in `VirtualStickControlMode`.
  *  Positive velocity is up.
  */
 DJI_API_EXTERN const float DJIVirtualStickVerticalControlMinVelocity;
+
 /**
  *  The vertical control velocity MAX value is 4 m/s in VirtualStickControlMode.
  *  Positive velocity is up.
@@ -479,48 +535,52 @@ DJI_API_EXTERN const float DJIVirtualStickVerticalControlMaxVelocity;
  *  `VirtualStickVerticalControlModePosition`.
  */
 DJI_API_EXTERN const float DJIVirtualStickVerticalControlMinPosition;
+
 /**
  *  The vertical control position MAX value is 500 m for
  *  `VirtualStickVerticalControlModePosition`.
  */
 DJI_API_EXTERN const float DJIVirtualStickVerticalControlMaxPosition;
 
-
 /**
  *  Roll/Pitch control velocity MAX value is 15m/s.
  */
 DJI_API_EXTERN const float DJIVirtualStickRollPitchControlMaxVelocity;
+
 /**
  *  Roll/Pitch control velocity MIN value is -15m/s.
  */
 DJI_API_EXTERN const float DJIVirtualStickRollPitchControlMinVelocity;
+
 /**
  *  Roll/Pitch control angle MAX value is 30 degrees.
  */
 DJI_API_EXTERN const float DJIVirtualStickRollPitchControlMaxAngle;
+
 /**
  *  Roll/Pitch control angle MIN value is -30 degrees.
  */
 DJI_API_EXTERN const float DJIVirtualStickRollPitchControlMinAngle;
 
-
 /**
  *  Yaw control angle MAX value is 180 degrees.
  */
 DJI_API_EXTERN const float DJIVirtualStickYawControlMaxAngle;
+
 /**
  *  Yaw control angle MIN value is -180 degrees.
  */
 DJI_API_EXTERN const float DJIVirtualStickYawControlMinAngle;
+
 /**
  *  Yaw control angular velocity MAX value is 100 degrees/second.
  */
 DJI_API_EXTERN const float DJIVirtualStickYawControlMaxAngularVelocity;
+
 /**
  *  Yaw control angular velocity MIN value is -100 degrees/second.
  */
 DJI_API_EXTERN const float DJIVirtualStickYawControlMinAngularVelocity;
-
 
 
 #endif /* DJIFlightControllerBaseTypes_h */

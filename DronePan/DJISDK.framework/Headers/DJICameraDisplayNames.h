@@ -54,6 +54,11 @@ extern NSString *const DJICameraDisplayNameX5R;
 extern NSString *const DJICameraDisplayNamePhantom4Camera;
 
 /**
+ *  The display name for Phantom 4 Pro camera.
+ */
+extern NSString *const DJICameraDisplayNamePhantom4ProCamera;
+
+/**
  *  The display name for XT camera
  */
 extern NSString *const DJICameraDisplayNameXT;
@@ -67,6 +72,21 @@ extern NSString *const DJICameraDisplayNameZ3;
  *  The display name for Mavic Pro camera.
  */
 extern NSString *const DJICameraDisplayNameMavicProCamera;
+
+/**
+ *  The display name for Z30 camera.
+ */
+extern NSString *const DJICameraDisplayNameZ30;
+
+/**
+ *  The display name for X4S camera.
+ */
+extern NSString *const DJICameraDisplayNameX4S;
+
+/**
+ *  The display name for X5S camera.
+ */
+extern NSString *const DJICameraDisplayNameX5S;
 
 
 #endif /* DJICameraDisplayNames_h */

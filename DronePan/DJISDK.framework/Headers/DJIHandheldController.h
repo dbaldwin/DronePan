@@ -76,6 +76,36 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setHandheldPowerMode:(DJIHandheldPowerMode)mode withCompletion:(DJICompletionBlock)block;
 
+/**
+ *  Controls the LED of the handheld controller.
+ *
+ *  @param command  The command to control the LED.
+ *  @param block    Remote execution result callback block.
+ */
+- (void)controlLEDWithCommand:(DJIHandheldControllerLEDCommand *)command
+               withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Enables/disables joystick control of the gimbal.
+ *  By default, it is enabled. The handheld will be reset to the default value 
+ *  when it reboots or SDK reinitializes. When gimbal control is disabled, the
+ *  joystick can be used for other purposes in an SDK application by reading its
+ *  position values with `joystickVerticalDirection` and `joystickHorizontalDirection`.
+ *  It is only supported in firmware version 1.2.0.40 or above.
+ *
+ *  @param enabled  `YES` to enable the gimbal control.
+ *  @param block    Remote execution result callback block.
+ */
+- (void)setStickGimbalControlEnabled:(BOOL)enabled withCompletion:(DJICompletionBlock)block;
+
+/**
+ *  Gets if the gimbal control with the joystick is enabled or not.
+ *  It is only supported in firmware version 1.2.0.40 or above.
+ *
+ *  @param block    Remote execution result callback block.
+ */
+- (void)getStickGimbalControlEnabledWithCompletion:(void(^)(BOOL enabled, NSError *_Nullable error))block;
+
 @end
 
 NS_ASSUME_NONNULL_END
