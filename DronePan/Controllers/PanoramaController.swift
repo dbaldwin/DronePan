@@ -207,10 +207,6 @@ extension PanoramaController {
 
                         return false
                     }
-                } else if (ControllerUtils.isMavicPro(model)) {
-                
-                    
-                
                 } else {
                     if (!(remoteController.mode == .Positioning)) {
                         DDLogDebug("Not in P mode")
