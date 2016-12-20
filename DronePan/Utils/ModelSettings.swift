@@ -75,8 +75,8 @@ class ModelSettings {
         return ModelSettings.intSettingForKey(model, key: .PhotoMode, defaultValue: 0)
     }
     
-    class func photoDelay(model: String) -> Double {
-        return ModelSettings.doubleSettingForKey(model, key: .PhotoDelay, defaultValue: 0.0)
+    class func photoDelay(model: String) -> Int {
+        return ModelSettings.intSettingForKey(model, key: .PhotoDelay, defaultValue: 0)
     }
     
     class func updateSettings(model: String, settings newSettings: [SettingsKeys:AnyObject]) {

@@ -55,7 +55,7 @@ class SettingsViewController: UIViewController, Analytics {
     var maxPitch = 0
     var metricSelected = true
     var photoMode = 0
-    var photoDelay = 0.0
+    var photoDelay = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -319,13 +319,13 @@ extension SettingsViewController : UITableViewDataSource {
         cell.delegate = self
         
         cell.title = "Delay before each shot:"
-        cell.min = 0.0
+        cell.min = 0
         cell.max = 3
-        cell.step = 0.5
-        cell.helpText = "How long should device wait after movement is done, before taking a shot. Use this delay to prevent image blurring issues when shooting in dark or using auto-exposure mode"
+        cell.step = 1
+        cell.helpText = "How long should device wait after movement, before taking a shot. Use this delay to prevent image blurring issues when shooting in dark or using auto-exposure mode"
         cell.key = .PhotoDelay
         
-        cell.prepareForDisplay(self.rowCount)
+        cell.prepareForDisplay(self.photoDelay)
         
         return cell
     }
@@ -394,11 +394,11 @@ extension SettingsViewController : UITableViewDataSource {
             case 3:
                 cell = nadirCountCell(tableView, indexPath: indexPath, nadir: false)
             case 4:
-                cell = unitsCell(tableView, indexPath: indexPath)
-            case 5:
-                cell = photoModeCell(tableView, indexPath: indexPath)
-            case 6:
                 cell = photoDelayCell(tableView, indexPath: indexPath)
+            case 5:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            case 6:
+                cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
             }
@@ -422,11 +422,11 @@ extension SettingsViewController : UITableViewDataSource {
             case 3:
                 cell = pitchMaxCell(tableView, indexPath: indexPath)
             case 4:
-                cell = unitsCell(tableView, indexPath: indexPath)
-            case 5:
-                cell = photoModeCell(tableView, indexPath: indexPath)
-            case 6:
                 cell = photoDelayCell(tableView, indexPath: indexPath)
+            case 5:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            case 6:
+                cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
             }
@@ -475,22 +475,12 @@ extension SettingsViewController : SliderTableViewCellDelegate {
             self.rowCount = value
         case .NadirCount:
             self.nadirCount = value
-        default:
-            DDLogWarn("Slider control tríed to update a non-slider setting \(key)")
-        }
-        
-        updateCounts()
-    }
-}
-
-extension SettingsViewController : SliderTableViewCellDelegate {
-    func newValueForKey(key: SettingsViewKey, value: Double) {
-        switch key {
         case .PhotoDelay:
             self.photoDelay = value
         default:
             DDLogWarn("Slider control tríed to update a non-slider setting \(key)")
         }
+        
         updateCounts()
     }
 }
@@ -506,7 +496,8 @@ extension SettingsViewController : ButtonViewCellDelegate {
                 .NumberOfRows: self.rowCount,
                 .NadirCount: self.nadirCount,
                 .MaxPitchEnabled: self.maxPitchEnabled,
-                .PhotoMode: self.photoMode
+                .PhotoMode: self.photoMode,
+                .PhotoDelay: self.photoDelay
             ]
 
             ModelSettings.updateSettings(model, settings: settings)
