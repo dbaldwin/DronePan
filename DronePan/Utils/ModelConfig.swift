@@ -14,6 +14,7 @@
  */
 
 import Foundation
+import DJISDK
 
 class ModelConfig {
     static let sharedInstance = ModelConfig.modelConfig()
@@ -60,8 +61,14 @@ class ModelConfig {
     class func photosPerRow(model: String) -> Int {
         let loadedConfig = ModelConfig.sharedInstance.config
         
-        guard let photosPerRow = loadedConfig["photosPerRow"]?[model] as? Int else {
-            return loadedConfig["defaults"]!["photosPerRow"] as! Int
+        let defaultValue = loadedConfig["defaults"]!["photosPerRow"] as! Int
+        
+        guard let modelName = ModelConstants.valueToName(model) else {
+            return defaultValue
+        }
+        
+        guard let photosPerRow = loadedConfig["photosPerRow"]?[modelName] as? Int else {
+            return defaultValue
         }
 
         return photosPerRow
@@ -70,8 +77,14 @@ class ModelConfig {
     class func relativeGimbalYaw(model: String) -> Bool {
         let loadedConfig = ModelConfig.sharedInstance.config
         
-        guard let relativeGimbalYaw = loadedConfig["relativeGimbalYaw"]?[model] as? Bool else {
-            return loadedConfig["defaults"]!["relativeGimbalYaw"] as! Bool
+        let defaultValue = loadedConfig["defaults"]!["relativeGimbalYaw"] as! Bool
+        
+        guard let modelName = ModelConstants.valueToName(model) else {
+            return defaultValue
+        }
+
+        guard let relativeGimbalYaw = loadedConfig["relativeGimbalYaw"]?[modelName] as? Bool else {
+            return defaultValue
         }
         
         return relativeGimbalYaw
@@ -80,8 +93,14 @@ class ModelConfig {
     class func switchMode(model: String) -> FlightMode {
         let loadedConfig = ModelConfig.sharedInstance.config
         
-        guard let switchMode = loadedConfig["switchMode"]?[model] as? String ?? loadedConfig["defaults"]?["switchMode"] as? String else {
-            return FlightMode.Function
+        let defaultValue = FlightMode.Function
+        
+        guard let modelName = ModelConstants.valueToName(model) else {
+            return defaultValue
+        }
+
+        guard let switchMode = loadedConfig["switchMode"]?[modelName] as? String ?? loadedConfig["defaults"]?["switchMode"] as? String else {
+            return defaultValue
         }
         
         switch (switchMode) {
@@ -95,6 +114,62 @@ class ModelConfig {
             return FlightMode.Sport
         default:
             return FlightMode.Unknown
+        }
+    }
+}
+
+/**
+ * Taken from Aircraft.h and Handheld.h. We want to store constant names in the plist to avoid issues
+ * if DJI change a display string.
+ */
+class ModelConstants {
+    class func valueToName(value: String) -> String? {
+        switch (value) {
+            
+        case DJIAircraftModelNameInspire1:
+            return "DJIAircraftModelNameInspire1"
+        case DJIAircraftModelNameInspire1Pro:
+            return "DJIAircraftModelNameInspire1Pro"
+        case DJIAircraftModelNameInspire1RAW:
+            return "DJIAircraftModelNameInspire1RAW"
+        case DJIAircraftModelNamePhantom3Professional:
+            return "DJIAircraftModelNamePhantom3Professional"
+        case DJIAircraftModelNamePhantom3Advanced:
+            return "DJIAircraftModelNamePhantom3Advanced"
+        case DJIAircraftModelNamePhantom3Standard:
+            return "DJIAircraftModelNamePhantom3Standard"
+        case DJIAircraftModelNamePhantom34K:
+            return "DJIAircraftModelNamePhantom34K"
+        case DJIAircraftModelNameMatrice100:
+            return "DJIAircraftModelNameMatrice100"
+        case DJIAircraftModelNamePhantom4:
+            return "DJIAircraftModelNamePhantom4"
+        case DJIAircraftModelNameMatrice600:
+            return "DJIAircraftModelNameMatrice600"
+        case DJIAircraftModelNameMatrice600Pro:
+            return "DJIAircraftModelNameMatrice600Pro"
+        case DJIAircraftModelNameA3:
+            return "DJIAircraftModelNameA3"
+        case DJIAircraftModelNameN3:
+            return "DJIAircraftModelNameN3"
+        case DJIAircraftModelNameMavicPro:
+            return "DJIAircraftModelNameMavicPro"
+        case DJIAircraftModelNamePhantom4Pro:
+            return "DJIAircraftModelNamePhantom4Pro"
+        case DJIAircraftModelNameInspire2:
+            return "DJIAircraftModelNameInspire2"
+        case DJIHandheldModelNameOsmo:
+            return "DJIHandheldModelNameOsmo"
+        case DJIHandheldModelNameOsmoPro:
+            return "DJIHandheldModelNameOsmoPro"
+        case DJIHandheldModelNameOsmoRAW:
+            return "DJIHandheldModelNameOsmoRAW"
+        case DJIHandheldModelNameOsmoMobile:
+            return "DJIHandheldModelNameOsmoMobile"
+        case DJIHandheldModelNameOsmoPlus:
+            return "DJIHandheldModelNameOsmoPlus"
+        default:
+            return nil
         }
     }
 }

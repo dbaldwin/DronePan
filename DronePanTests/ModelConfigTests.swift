@@ -31,7 +31,9 @@ class ModelConfigTests: XCTestCase {
             DJIAircraftModelNameMatrice100: .Function,
             DJIAircraftModelNamePhantom4: .Positioning,
             DJIAircraftModelNameMatrice600: .Function,
-            DJIAircraftModelNameA3: .Function
+            DJIAircraftModelNameA3: .Function,
+            DJIAircraftModelNameMavicPro: .Positioning,
+            DJIAircraftModelNamePhantom4Pro: .Positioning
         ]
         
         for (aircraft, result) in results {
