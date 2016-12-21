@@ -8,8 +8,13 @@
 		<integer>6</integer>
 		<key>relativeGimbalYaw</key>
 		<true/>
-		<key>switchMode</key>
-		<string>F</string>
+		<key>switchPosition</key>
+		<dict>
+            <key>name</key>
+            <string>F</string>
+			<key>position</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>photosPerRow</key>
 	<dict>
@@ -18,16 +23,16 @@
 	</dict>
 	<key>relativeGimbalYaw</key>
 	<dict>
-        <key>DJIHandheldModelNameOsmo</key>
-        <false/>
-        <key>DJIHandheldModelNameOsmoMobile</key>
-        <false/>
-        <key>DJIHandheldModelNameOsmoPlus</key>
-        <false/>
-        <key>DJIHandheldModelNameOsmoPro</key>
-        <false/>
-        <key>DJIHandheldModelNameOsmoRAW</key>
-        <false/>
+		<key>DJIHandheldModelNameOsmo</key>
+		<false/>
+		<key>DJIHandheldModelNameOsmoMobile</key>
+		<false/>
+		<key>DJIHandheldModelNameOsmoPlus</key>
+		<false/>
+		<key>DJIHandheldModelNameOsmoPro</key>
+		<false/>
+		<key>DJIHandheldModelNameOsmoRAW</key>
+		<false/>
 		<key>DJIAircraftModelNamePhantom34K</key>
 		<false/>
 		<key>DJIAircraftModelNamePhantom3Advanced</key>
@@ -39,14 +44,29 @@
 		<key>DJIAircraftModelNameA3</key>
 		<false/>
 	</dict>
-	<key>switchMode</key>
-	<dict>
-		<key>DJIAircraftModelNameMavicPro</key>
-		<string>P</string>
-		<key>DJIAircraftModelNamePhantom4</key>
-		<string>P</string>
-		<key>DJIAircraftModelNamePhantom4Pro</key>
-		<string>P</string>
-	</dict>
+    <key>switchPosition</key>
+    <dict>
+        <key>DJIAircraftModelNameMavicPro</key>
+        <dict>
+            <key>name</key>
+            <string>P</string>
+            <key>position</key>
+            <integer>2</integer>
+        </dict>
+        <key>DJIAircraftModelNamePhantom4</key>
+        <dict>
+            <key>name</key>
+            <string>P</string>
+            <key>position</key>
+            <integer>3</integer>
+        </dict>
+        <key>DJIAircraftModelNamePhantom4Pro</key>
+        <dict>
+            <key>name</key>
+            <string>P</string>
+            <key>position</key>
+            <integer>3</integer>
+        </dict>
+    </dict>
 </dict>
 </plist>

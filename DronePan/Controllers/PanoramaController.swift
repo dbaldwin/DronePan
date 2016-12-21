@@ -191,11 +191,12 @@ extension PanoramaController {
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
-                let mode = ModelConfig.switchMode(model)
-                if (!(remoteController.mode == mode)) {
-                    DDLogDebug("Not in correct mode - wanted \(mode) - saw \(remoteController.mode)")
+                let (correctMode, userMessage) = ModelConfig.correctMode(model, position: remoteController.mode)
+                
+                if (!correctMode) {
+                    DDLogDebug("Not in correct mode - saw \(remoteController.mode) for model \(model)")
                     
-                    self.delegate?.postUserMessage("Please set RC Flight Mode to \(mode) first")
+                    self.delegate?.postUserMessage(userMessage!)
 
                     return false
                 }

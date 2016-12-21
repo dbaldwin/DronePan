@@ -19,25 +19,54 @@ import DJISDK
 @testable import DronePan
 
 class ModelConfigTests: XCTestCase {
-    func testSwitchPosition() {
-        let results:[String: FlightMode] = [
-            DJIAircraftModelNameInspire1: .Function,
-            DJIAircraftModelNameInspire1Pro: .Function,
-            DJIAircraftModelNameInspire1RAW: .Function,
-            DJIAircraftModelNamePhantom3Professional: .Function,
-            DJIAircraftModelNamePhantom3Advanced: .Function,
-            DJIAircraftModelNamePhantom3Standard: .Function,
-            DJIAircraftModelNamePhantom34K: .Function,
-            DJIAircraftModelNameMatrice100: .Function,
-            DJIAircraftModelNamePhantom4: .Positioning,
-            DJIAircraftModelNameMatrice600: .Function,
-            DJIAircraftModelNameA3: .Function,
-            DJIAircraftModelNameMavicPro: .Positioning,
-            DJIAircraftModelNamePhantom4Pro: .Positioning
+    func testValidSwitchPosition() {
+        let testData:[String: DJIRemoteControllerFlightModeSwitchPosition] = [
+            DJIAircraftModelNameInspire1: .One,
+            DJIAircraftModelNameInspire1Pro: .One,
+            DJIAircraftModelNameInspire1RAW: .One,
+            DJIAircraftModelNamePhantom3Professional: .One,
+            DJIAircraftModelNamePhantom3Advanced: .One,
+            DJIAircraftModelNamePhantom3Standard: .One,
+            DJIAircraftModelNamePhantom34K: .One,
+            DJIAircraftModelNameMatrice100: .One,
+            DJIAircraftModelNamePhantom4: .Three,
+            DJIAircraftModelNameMatrice600: .One,
+            DJIAircraftModelNameA3: .One,
+            DJIAircraftModelNameMavicPro: .Two,
+            DJIAircraftModelNamePhantom4Pro: .Three
         ]
         
-        for (aircraft, result) in results {
-            XCTAssertTrue(ModelConfig.switchMode(aircraft) == result, "\(aircraft) incorrect result for switch mode")
+        for (aircraft, position) in testData {
+            let (valid, warning) = ModelConfig.correctMode(aircraft, position: position)
+            
+            XCTAssertTrue(valid, "\(aircraft) incorrect result for switch mode \(warning)")
+            XCTAssertNil(warning)
+
+        }
+    }
+    
+    func testInvalidSwitchPosition() {
+        let testData:[String: DJIRemoteControllerFlightModeSwitchPosition] = [
+            DJIAircraftModelNameInspire1: .Two,
+            DJIAircraftModelNameInspire1Pro: .Three,
+            DJIAircraftModelNameInspire1RAW: .Two,
+            DJIAircraftModelNamePhantom3Professional: .Three,
+            DJIAircraftModelNamePhantom3Advanced: .Two,
+            DJIAircraftModelNamePhantom3Standard: .Three,
+            DJIAircraftModelNamePhantom34K: .Two,
+            DJIAircraftModelNameMatrice100: .Three,
+            DJIAircraftModelNamePhantom4: .Two,
+            DJIAircraftModelNameMatrice600: .Three,
+            DJIAircraftModelNameA3: .Two,
+            DJIAircraftModelNameMavicPro: .One,
+            DJIAircraftModelNamePhantom4Pro: .One
+        ]
+        
+        for (aircraft, position) in testData {
+            let (valid, warning) = ModelConfig.correctMode(aircraft, position: position)
+            
+            XCTAssertFalse(valid, "\(aircraft) incorrect result for switch mode")
+            XCTAssertNotNil(warning)
         }
     }
 }

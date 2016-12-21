@@ -90,31 +90,46 @@ class ModelConfig {
         return relativeGimbalYaw
     }
     
-    class func switchMode(model: String) -> FlightMode {
+    class func correctMode(model: String, position: DJIRemoteControllerFlightModeSwitchPosition) -> (Bool, String?) {
         let loadedConfig = ModelConfig.sharedInstance.config
-        
-        let defaultValue = FlightMode.Function
+
+        let defaultValue : (Bool, String?) = (true, nil)
         
         guard let modelName = ModelConstants.valueToName(model) else {
             return defaultValue
         }
+        
+        guard let positionData = loadedConfig["switchPosition"]?[modelName] as? [String : AnyObject] ?? loadedConfig["defaults"]?["switchPosition"] as? [String : AnyObject] else {
+            return defaultValue
+        }
 
-        guard let switchMode = loadedConfig["switchMode"]?[modelName] as? String ?? loadedConfig["defaults"]?["switchMode"] as? String else {
+        guard let switchPosition = positionData["position"] as? Int else {
             return defaultValue
         }
         
-        switch (switchMode) {
-        case "F":
-            return FlightMode.Function
-        case "A":
-            return FlightMode.Attitude
-        case "P":
-            return FlightMode.Positioning
-        case "S":
-            return FlightMode.Sport
-        default:
-            return FlightMode.Unknown
+        guard let switchPositionName = positionData["name"] as? String else {
+            return defaultValue
         }
+
+        let invalidValue : (Bool, String?) = (false, "Please set RC flight mode switch to \(switchPositionName)")
+
+        
+        switch(position) {
+        case .One:
+            if switchPosition != 1 {
+                return invalidValue
+            }
+        case .Two:
+            if switchPosition != 2 {
+                return invalidValue
+            }
+        case .Three:
+            if switchPosition != 3 {
+                return invalidValue
+            }
+        }
+        
+        return defaultValue
     }
 }
 
