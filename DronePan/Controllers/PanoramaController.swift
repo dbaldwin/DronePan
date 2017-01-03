@@ -375,12 +375,9 @@ extension PanoramaController {
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- set pitch")
                         self.setPitch(pitch)
 
-                        DDLogDebug("PanoLoop: Delay before taking a snap \(photoDelayTime)")
-                        ControllerUtils.delay(Double(photoDelayTime), queue: self.droneCommandsQueue, closure: {
-                            DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
-                            self.takeASnap()
+                        DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
+                        self.takeASnap(photoDelayTime)
 
-                        })
                     }
                     // End the gimbal pitch loop
 
@@ -443,7 +440,7 @@ extension PanoramaController {
                         }
 
                         DDLogDebug("PanoLoop: NadirYawLoop: \(yaw) - take photo")
-                        self.takeASnap()
+                        self.takeASnap(photoDelayTime)
                     }
 
                     self.currentPanorama?.finish()
@@ -535,13 +532,13 @@ extension PanoramaController {
         }
     }
 
-    func takeASnap() {
+    func takeASnap(photoDelayTime: Int) {
         DDLogDebug("Take a snap");
 
         if let c = self.cameraController {
             self.cameraDispatchGroup.enter()
             DDLogDebug("Take a snap - send")
-            c.takeASnap()
+            c.takeASnap(photoDelayTime)
             self.cameraDispatchGroup.wait()
             DDLogDebug("Take a snap - done")
         }

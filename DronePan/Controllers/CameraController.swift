@@ -82,14 +82,14 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
 
-    func takeASnap() {
+    func takeASnap(photoDelayTime: Int) {
         DDLogInfo("Camera Controller takeASnap")
 
         self.status = .Normal
 
         self.tookShot = false
         dispatch_async(self.cameraWorkQueue) {
-            self.takeASnap(0)
+            self.takeASnap(0, photoDelayTime: photoDelayTime)
         }
     }
 
@@ -192,7 +192,7 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
 
-    private func takeASnap(counter: Int) {
+    private func takeASnap(counter: Int, photoDelayTime: Int) {
         if (status != .Normal) {
             DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
 
@@ -228,16 +228,22 @@ class CameraController: NSObject, DJICameraDelegate {
             // photoMode == 2 -> djiPhotoMode = .HDR but this takes too long to process and we timeout
         }
         
+        if(counter == 0){
+            // Only sleep on first attempt at taking photo
+            DDLogDebug("Sleep for \(photoDelayTime) second(s) before taking photo")
+            NSThread.sleepForTimeInterval(Double(photoDelayTime))
+        }
+        
         self.camera.startShootPhoto(djiPhotoMode) {
             (error) in
-            if let e = error {
+                if let e = error {
                 DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
-
+                
                 errorSeen = true
-
                 self.takeASnap(nextCount)
             }
         }
+        
 
         if errorSeen {
             return
