@@ -711,7 +711,10 @@ extension PanoramaController: FlightControllerDelegate {
 extension PanoramaController: GimbalControllerDelegate {
     func setGimbal(gimbal: DJIGimbal?) {
         if let gimbal = gimbal {
-            self.gimbalController = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: ControllerUtils.gimbalYawIsRelativeToAircraft(self.model))
+            self.gimbalController = GimbalController(gimbal: gimbal,
+                                                     gimbalYawIsRelativeToAircraft: ControllerUtils.gimbalYawIsRelativeToAircraft(self.model),
+                                                     allowsAboveHorizon: ModelConfig.allowsAboveHorizon(self.model ?? ""))
+            
             self.gimbalController!.delegate = self
             
             if let model = self.model, maxPitch = self.gimbalController?.getMaxPitch() {

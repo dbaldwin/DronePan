@@ -73,6 +73,22 @@ class ModelConfig {
 
         return photosPerRow
     }
+    
+    class func allowsAboveHorizon(model: String) -> Bool {
+        let loadedConfig = ModelConfig.sharedInstance.config
+        
+        let defaultValue = loadedConfig["defaults"]!["allowsAboveHorizon"] as! Bool
+        
+        guard let modelName = ModelConstants.valueToName(model) else {
+            return defaultValue
+        }
+        
+        guard let relativeGimbalYaw = loadedConfig["allowsAboveHorizon"]?[modelName] as? Bool else {
+            return defaultValue
+        }
+        
+        return relativeGimbalYaw
+    }
 
     class func relativeGimbalYaw(model: String) -> Bool {
         let loadedConfig = ModelConfig.sharedInstance.config
