@@ -191,30 +191,14 @@ extension PanoramaController {
     private func checkRCMode() -> Bool {
         if let type = self.type, model = self.model, remoteController = self.remoteController {
             if (type == .Aircraft) {
-                if (ControllerUtils.isMavicPro(model)) {
-                    if(remoteController.mode != .Attitude) {
-                        
-                        DDLogDebug("Mavic not in P mode")
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
-                        
-                    }
+                let (correctMode, userMessage) = ModelConfig.correctMode(model, position: remoteController.mode)
+                
+                if (!correctMode) {
+                    DDLogDebug("Not in correct mode - saw \(remoteController.mode) for model \(model)")
                     
-                } else if (!ControllerUtils.isPhantom4(model)) {
-                    if (!(remoteController.mode == .Function)) {
-                        DDLogDebug("Not in F mode")
+                    self.delegate?.postUserMessage(userMessage!)
 
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to F first")
-
-                        return false
-                    }
-                } else {
-                    if (!(remoteController.mode == .Positioning)) {
-                        DDLogDebug("Not in P mode")
-                        
-                        self.delegate?.postUserMessage("Please set RC Flight Mode to P first")
-                        
-                        return false
-                    }
+                    return false
                 }
             }
         }
@@ -727,7 +711,10 @@ extension PanoramaController: FlightControllerDelegate {
 extension PanoramaController: GimbalControllerDelegate {
     func setGimbal(gimbal: DJIGimbal?) {
         if let gimbal = gimbal {
-            self.gimbalController = GimbalController(gimbal: gimbal, gimbalYawIsRelativeToAircraft: ControllerUtils.gimbalYawIsRelativeToAircraft(self.model))
+            self.gimbalController = GimbalController(gimbal: gimbal,
+                                                     gimbalYawIsRelativeToAircraft: ControllerUtils.gimbalYawIsRelativeToAircraft(self.model),
+                                                     allowsAboveHorizon: ModelConfig.allowsAboveHorizon(self.model ?? ""))
+            
             self.gimbalController!.delegate = self
             
             if let model = self.model, maxPitch = self.gimbalController?.getMaxPitch() {

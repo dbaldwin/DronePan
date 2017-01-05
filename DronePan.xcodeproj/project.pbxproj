@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508FEEC1CCD4237000CE953 /* LogFormatter.swift */; };
+		15139CCC1DF2DCF900F6AFD5 /* ModelConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 15139CCB1DF2DCF900F6AFD5 /* ModelConfig.plist */; };
+		15139CCE1DF2DD8D00F6AFD5 /* ModelConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15139CCD1DF2DD8D00F6AFD5 /* ModelConfig.swift */; };
+		15139CD01DF2E8F900F6AFD5 /* ModelConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15139CCF1DF2E8F900F6AFD5 /* ModelConfigTests.swift */; };
 		1521D6931CD4CF29007458D7 /* FlightController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521D6921CD4CF29007458D7 /* FlightController.swift */; };
 		1527B5F31CCE891D00D8AE5D /* ControllerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */; };
 		1545C4411DD04CA000BF235D /* PanoramaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1545C4401DD04CA000BF235D /* PanoramaTests.swift */; };
@@ -109,6 +112,9 @@
 
 /* Begin PBXFileReference section */
 		1508FEEC1CCD4237000CE953 /* LogFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFormatter.swift; sourceTree = "<group>"; };
+		15139CCB1DF2DCF900F6AFD5 /* ModelConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ModelConfig.plist; sourceTree = "<group>"; };
+		15139CCD1DF2DD8D00F6AFD5 /* ModelConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelConfig.swift; sourceTree = "<group>"; };
+		15139CCF1DF2E8F900F6AFD5 /* ModelConfigTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelConfigTests.swift; sourceTree = "<group>"; };
 		1521D6921CD4CF29007458D7 /* FlightController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlightController.swift; sourceTree = "<group>"; };
 		1527B5F21CCE891D00D8AE5D /* ControllerUtilsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControllerUtilsTests.swift; sourceTree = "<group>"; };
 		1545C4401DD04CA000BF235D /* PanoramaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanoramaTests.swift; sourceTree = "<group>"; };
@@ -242,6 +248,7 @@
 				1583BF561CC26F6E00C00C0D /* ControllerUtils.swift */,
 				15B500421DA61970005DFB0D /* DJICameraExtensions.swift */,
 				1508FEEC1CCD4237000CE953 /* LogFormatter.swift */,
+				15139CCD1DF2DD8D00F6AFD5 /* ModelConfig.swift */,
 				839A7A981CC4B47A003BCAA7 /* ModelSettings.swift */,
 				1568E9C21CDDE3F3009929FC /* UIViewControllerExtensions.swift */,
 				1574A1C11CEAF058008CFEE7 /* VideoPreviewerWrapper.swift */,
@@ -303,6 +310,7 @@
 				15CCA5081CE25FEF003C9B38 /* FlightControllerTests.swift */,
 				83251CBC1CC65B41009D4A4B /* GimbalControllerTests.swift */,
 				83B5A1C31CEC4A180080A4B3 /* MainViewControllerTests.swift */,
+				15139CCF1DF2E8F900F6AFD5 /* ModelConfigTests.swift */,
 				8362BB271CC64CA60071D0BA /* ModelSettingsTest.swift */,
 				1545C4401DD04CA000BF235D /* PanoramaTests.swift */,
 				15839FCA1CD4BE29008B7E97 /* PanoramaControllerTests.swift */,
@@ -319,6 +327,7 @@
 				158ECBBF1CC0113400A2765F /* DronePan-Bridging-Header.h */,
 				232F6F211C5448320013CCD9 /* Info.plist */,
 				15D284E11CDA4A0B00FD3F52 /* Settings.bundle */,
+				15139CCB1DF2DCF900F6AFD5 /* ModelConfig.plist */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -453,6 +462,7 @@
 			files = (
 				232F6F201C5448320013CCD9 /* LaunchScreen.storyboard in Resources */,
 				15D284E21CDA4A0B00FD3F52 /* Settings.bundle in Resources */,
+				15139CCC1DF2DCF900F6AFD5 /* ModelConfig.plist in Resources */,
 				232F6F1D1C5448320013CCD9 /* Assets.xcassets in Resources */,
 				232F6F1B1C5448320013CCD9 /* Main.storyboard in Resources */,
 			);
@@ -521,6 +531,7 @@
 				156BCBB91DA8EECF008A5601 /* CameraSettingsViewController.swift in Sources */,
 				1583BF551CC26C2100C00C0D /* CameraController.swift in Sources */,
 				1568E9C31CDDE3F3009929FC /* UIViewControllerExtensions.swift in Sources */,
+				15139CCE1DF2DD8D00F6AFD5 /* ModelConfig.swift in Sources */,
 				83A713291CF8258B005194BA /* SegmentTableViewCell.swift in Sources */,
 				15B500411DA3719F005DFB0D /* PanoramaViewController.swift in Sources */,
 				1508FEED1CCD4237000CE953 /* LogFormatter.swift in Sources */,
@@ -553,6 +564,7 @@
 				15CCA5051CE23A5F003C9B38 /* ActiveAwareDispatchGroupTests.swift in Sources */,
 				156F5FDE1CDE4DEF00BAE596 /* RemoteControllerTests.swift in Sources */,
 				83251CBD1CC65B41009D4A4B /* GimbalControllerTests.swift in Sources */,
+				15139CD01DF2E8F900F6AFD5 /* ModelConfigTests.swift in Sources */,
 				83B5A1C41CEC4A180080A4B3 /* MainViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

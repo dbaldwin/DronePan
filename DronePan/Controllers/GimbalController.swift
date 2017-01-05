@@ -63,7 +63,7 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
 
     let gimbalWorkQueue = dispatch_queue_create("com.dronepan.queue.gimbal", DISPATCH_QUEUE_CONCURRENT)
 
-    init(gimbal: DJIGimbal, gimbalYawIsRelativeToAircraft: Bool = false) {
+    init(gimbal: DJIGimbal, gimbalYawIsRelativeToAircraft: Bool = false, allowsAboveHorizon: Bool = true) {
         DDLogInfo("Gimbal Controller init")
 
         self.gimbal = gimbal
@@ -74,7 +74,11 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             isPitchAdjustable = pitchInfo.isSupported
 
             if (isPitchAdjustable) {
-                pitchRange = pitchInfo.min.integerValue ... pitchInfo.max.integerValue
+                if (allowsAboveHorizon) {
+                    pitchRange = pitchInfo.min.integerValue ... pitchInfo.max.integerValue
+                } else {
+                    pitchRange = pitchInfo.min.integerValue ... 0
+                }
             } else {
                 pitchRange = nil
             }
@@ -109,22 +113,25 @@ class GimbalController: NSObject, DJIGimbalDelegate, Analytics {
             rollRange = nil
         }
 
-        if let rangeExtension = gimbal.gimbalCapability[DJIGimbalParamPitchRangeExtensionEnabled] as? DJIParamCapability {
-            DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
-
-            self.supportsRangeExtension = rangeExtension.isSupported
-            
-            if self.supportsRangeExtension {
-                gimbal.setPitchRangeExtensionEnabled(true, withCompletion: {
-                    (error) in
-                    if let error = error {
-                        
-                        DDLogWarn("Error setting pitch range extension \(error)")
-                        
-                    }
-                })
+        if (allowsAboveHorizon) {
+            if let rangeExtension = gimbal.gimbalCapability[DJIGimbalParamPitchRangeExtensionEnabled] as? DJIParamCapability {
+                DDLogDebug("Range extension supported: \(rangeExtension.isSupported)")
+                
+                self.supportsRangeExtension = rangeExtension.isSupported
+                
+                if self.supportsRangeExtension {
+                    gimbal.setPitchRangeExtensionEnabled(true, withCompletion: {
+                        (error) in
+                        if let error = error {
+                            
+                            DDLogWarn("Error setting pitch range extension \(error)")
+                            
+                        }
+                    })
+                }
             }
-        
+        } else {
+            self.supportsRangeExtension = false
         }
 
         super.init()
