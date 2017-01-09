@@ -334,7 +334,7 @@ extension PanoramaController {
 
             let yaws = self.yawAngles(count: ModelSettings.photosPerRow(model), heading: self.headingTo360(self.currentHeading))
             let nadirYaws = self.yawAngles(count: ModelSettings.nadirCount(model), heading:  self.headingTo360(self.currentHeading))
-            let photoDelayTime = ModelSettings.photoDelay(model)
+            let photoDelayTime: Double = Double(ModelSettings.photoDelay(model)) / 10
             
             self.totalCount = ModelSettings.numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
@@ -532,7 +532,7 @@ extension PanoramaController {
         }
     }
 
-    func takeASnap(photoDelayTime: Int) {
+    func takeASnap(photoDelayTime: Double) {
         DDLogDebug("Take a snap");
 
         if let c = self.cameraController {
