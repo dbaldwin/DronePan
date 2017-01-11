@@ -32,7 +32,7 @@ class SliderTableViewCell: UITableViewCell {
     var min : Int = 0
     var max : Int = 0
     var step : Int = 1
-    var divider: Int = 1
+    var divider: Int = 1 // Used for division of integers in case decimal is needed
     var helpText : String?
     var key : SettingsViewKey?
 

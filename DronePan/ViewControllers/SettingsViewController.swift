@@ -320,7 +320,7 @@ extension SettingsViewController : UITableViewDataSource {
         
         cell.title = "Delay before each shot:"
         cell.min = 0
-        cell.max = 30
+        cell.max = 50
         cell.step = 5
         cell.divider = 10
         cell.helpText = "How long should device wait after movement, before taking a shot. Use this delay to prevent image blurring issues when shooting in dark or using auto-exposure mode"
