@@ -78,32 +78,4 @@ class RemoteControllerTests: XCTestCase {
             XCTAssertEqual(30, percent, "Incorrect battery percent")
         }
     }
-
-    func modeChange(mode: DJIRCHardwareFlightModeSwitchState, result: FlightMode) {
-        var state = DJIRCHardwareState()
-        state.flightModeSwitch.mode = mode
-        remoteController!.remoteController(remote, didUpdateHardwareState: state)
-
-        let value = remoteController!.mode
-
-        XCTAssertEqual(result, value, "\(mode) returned \(value) instead of \(result)")
-    }
-
-    func testModeF() {
-        modeChange(.F, result: .Function)
-    }
-
-    func testModeA() {
-        modeChange(.A, result: .Attitude)
-    }
-
-    func testModeP() {
-        modeChange(.P, result: .Positioning)
-    }
-
-    func testModeS() {
-        modeChange(.S, result: .Sport)
-    }
-
-
 }

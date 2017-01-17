@@ -13,7 +13,7 @@ DronePan - 360 aerial panoramas with DJI (Phantom (3 and later), Inspire, Matric
 
 As of 6th March 2016 DronePan is open source.
 
-* For bugs, feature requests etc - please use the project issues page. 
+* For bugs, feature requests etc - please use the project issues page.
 
 ## Want to help out?
 
@@ -56,11 +56,14 @@ Tools in use:
 
 To clone - make sure you have git-lfs installed _before_ you clone.
 
-This is easiest with homebrew
+This is easiest with homebrew:
 
     brew install git git-lfs
 
-After cloning - you'll need to run
+Your clone command will look like this:
+
+    git lfs clone https://github.com/dbaldwin/DronePan
+
+After cloning - you'll need to run:
 
     carthage bootstrap --platform ios
-

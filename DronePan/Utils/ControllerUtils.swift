@@ -63,46 +63,9 @@ class ControllerUtils {
         return nil
     }
 
-    class func isInspire(model: String) -> Bool {
-        return model == DJIAircraftModelNameInspire1 ||
-                model == DJIAircraftModelNameInspire1Pro ||
-                model == DJIAircraftModelNameInspire1RAW
-    }
-
-    class func isPhantom3(model: String) -> Bool {
-        return model == DJIAircraftModelNamePhantom34K ||
-                model == DJIAircraftModelNamePhantom3Advanced ||
-                model == DJIAircraftModelNamePhantom3Standard ||
-                model == DJIAircraftModelNamePhantom3Professional
-    }
-    
-    class func isMavicPro(model: String) -> Bool {
-        return model == DJIAircraftModelNameMavicPro
-    }
-
-    class func isPhantom4(model: String) -> Bool {
-        return model == DJIAircraftModelNamePhantom4 || model == DJIAircraftModelNamePhantom4Pro
-    }
-
-    class func isPhantom(model: String) -> Bool {
-        return ControllerUtils.isPhantom3(model) || ControllerUtils.isPhantom4(model)
-    }
-
-    class func isMatrice100(model: String) -> Bool {
-        return model == DJIAircraftModelNameMatrice100
-    }
-
-    class func isMatrice600(model: String) -> Bool {
-        return model == DJIAircraftModelNameMatrice600
-    }
-    
-    class func isMatrice(model: String) -> Bool {
-        return ControllerUtils.isMatrice100(model) || ControllerUtils.isMatrice600(model)
-    }
-    
     class func gimbalYawIsRelativeToAircraft(model: String?) -> Bool {
         if let model = model {
-            return ControllerUtils.isMavicPro(model) || ControllerUtils.isPhantom4(model) || ControllerUtils.isInspire(model) || ControllerUtils.isMatrice(model)
+            return ModelConfig.relativeGimbalYaw(model)
         } else {
             return false
         }
