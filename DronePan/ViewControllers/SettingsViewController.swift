@@ -25,6 +25,7 @@ enum SettingsViewKey {
     case MaxPitchEnabled
     case MetricSelected
     case PhotoMode
+    case PhotoDelay
 }
 
 class SettingsViewController: UIViewController, Analytics {
@@ -54,6 +55,7 @@ class SettingsViewController: UIViewController, Analytics {
     var maxPitch = 0
     var metricSelected = true
     var photoMode = 0
+    var photoDelay = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -158,6 +160,7 @@ class SettingsViewController: UIViewController, Analytics {
         self.maxPitch = ModelSettings.maxPitch(model)
         self.metricSelected = ControllerUtils.metricUnits()
         self.photoMode = ModelSettings.photoMode(model)
+        self.photoDelay = ModelSettings.photoDelay(model)
 
         updateCounts()
     }
@@ -206,12 +209,12 @@ extension SettingsViewController : UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (self.type) {
         case .Handheld:
-            return 7
+            return 8
         case .Aircraft:
             if maxPitch > 0 {
-                return 7
+                return 8
             } else {
-                return 6
+                return 7
             }
         default:
             return 0
@@ -310,6 +313,24 @@ extension SettingsViewController : UITableViewDataSource {
         return cell
     }
     
+    func photoDelayCell(tableView: UITableView, indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
+        
+        cell.delegate = self
+        
+        cell.title = "Delay before each shot:"
+        cell.min = 0
+        cell.max = 50
+        cell.step = 5
+        cell.divider = 10
+        cell.helpText = "How long should device wait after movement, before taking a shot. Use this delay to prevent image blurring issues when shooting in dark or using auto-exposure mode"
+        cell.key = .PhotoDelay
+        
+        cell.prepareForDisplay(self.photoDelay)
+        
+        return cell
+    }
+    
     func nadirCountCell(tableView: UITableView, indexPath: NSIndexPath, nadir: Bool = true) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SliderViewCell", forIndexPath: indexPath) as! SliderTableViewCell
 
@@ -374,8 +395,10 @@ extension SettingsViewController : UITableViewDataSource {
             case 3:
                 cell = nadirCountCell(tableView, indexPath: indexPath, nadir: false)
             case 4:
-                cell = unitsCell(tableView, indexPath: indexPath)
+                cell = photoDelayCell(tableView, indexPath: indexPath)
             case 5:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            case 6:
                 cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
@@ -400,8 +423,10 @@ extension SettingsViewController : UITableViewDataSource {
             case 3:
                 cell = pitchMaxCell(tableView, indexPath: indexPath)
             case 4:
-                cell = unitsCell(tableView, indexPath: indexPath)
+                cell = photoDelayCell(tableView, indexPath: indexPath)
             case 5:
+                cell = unitsCell(tableView, indexPath: indexPath)
+            case 6:
                 cell = photoModeCell(tableView, indexPath: indexPath)
             default:
                 cell = buttonCell(tableView, indexPath: indexPath)
@@ -451,6 +476,8 @@ extension SettingsViewController : SliderTableViewCellDelegate {
             self.rowCount = value
         case .NadirCount:
             self.nadirCount = value
+        case .PhotoDelay:
+            self.photoDelay = value
         default:
             DDLogWarn("Slider control tríed to update a non-slider setting \(key)")
         }
@@ -470,7 +497,8 @@ extension SettingsViewController : ButtonViewCellDelegate {
                 .NumberOfRows: self.rowCount,
                 .NadirCount: self.nadirCount,
                 .MaxPitchEnabled: self.maxPitchEnabled,
-                .PhotoMode: self.photoMode
+                .PhotoMode: self.photoMode,
+                .PhotoDelay: self.photoDelay
             ]
 
             ModelSettings.updateSettings(model, settings: settings)

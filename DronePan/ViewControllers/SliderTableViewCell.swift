@@ -32,12 +32,19 @@ class SliderTableViewCell: UITableViewCell {
     var min : Int = 0
     var max : Int = 0
     var step : Int = 1
+    var divider: Int = 1 // Used for division of integers in case decimal is needed
     var helpText : String?
     var key : SettingsViewKey?
 
     func setTitleText(value : Int) {
         if let title = self.title {
-            self.titleLabel.text = "\(title) \(value)"
+            if divider != 1 {
+                let divided = Double(Double(value) / Double(divider))
+                self.titleLabel.text = "\(title) \(divided)"
+            }
+            else {
+                self.titleLabel.text = "\(title) \(value)"
+            }
         }
     }
     

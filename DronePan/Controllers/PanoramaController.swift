@@ -318,7 +318,8 @@ extension PanoramaController {
 
             let yaws = self.yawAngles(count: ModelSettings.photosPerRow(model), heading: self.headingTo360(self.currentHeading))
             let nadirYaws = self.yawAngles(count: ModelSettings.nadirCount(model), heading:  self.headingTo360(self.currentHeading))
-
+            let photoDelayTime: Double = Double(ModelSettings.photoDelay(model)) / 10
+            
             self.totalCount = ModelSettings.numberOfImagesForCurrentSettings(model)
             self.currentCount = 0
 
@@ -359,7 +360,8 @@ extension PanoramaController {
                         self.setPitch(pitch)
 
                         DDLogDebug("PanoLoop: YawLoop: \(yaw), PitchLoop: \(pitch)- take photo")
-                        self.takeASnap()
+                        self.takeASnap(photoDelayTime)
+
                     }
                     // End the gimbal pitch loop
 
@@ -422,7 +424,7 @@ extension PanoramaController {
                         }
 
                         DDLogDebug("PanoLoop: NadirYawLoop: \(yaw) - take photo")
-                        self.takeASnap()
+                        self.takeASnap(photoDelayTime)
                     }
 
                     self.currentPanorama?.finish()
@@ -514,13 +516,13 @@ extension PanoramaController {
         }
     }
 
-    func takeASnap() {
+    func takeASnap(photoDelayTime: Double) {
         DDLogDebug("Take a snap");
 
         if let c = self.cameraController {
             self.cameraDispatchGroup.enter()
             DDLogDebug("Take a snap - send")
-            c.takeASnap()
+            c.takeASnap(photoDelayTime)
             self.cameraDispatchGroup.wait()
             DDLogDebug("Take a snap - done")
         }

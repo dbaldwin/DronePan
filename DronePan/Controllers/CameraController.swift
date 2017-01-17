@@ -82,14 +82,14 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
 
-    func takeASnap() {
+    func takeASnap(photoDelayTime: Double) {
         DDLogInfo("Camera Controller takeASnap")
 
         self.status = .Normal
 
         self.tookShot = false
         dispatch_async(self.cameraWorkQueue) {
-            self.takeASnap(0)
+            self.takeASnap(0, photoDelayTime: photoDelayTime)
         }
     }
 
@@ -192,7 +192,7 @@ class CameraController: NSObject, DJICameraDelegate {
         }
     }
 
-    private func takeASnap(counter: Int) {
+    private func takeASnap(counter: Int, photoDelayTime: Double) {
         if (status != .Normal) {
             DDLogDebug("Camera Controller takeASnap - status was \(status) - returning")
 
@@ -228,25 +228,31 @@ class CameraController: NSObject, DJICameraDelegate {
             // photoMode == 2 -> djiPhotoMode = .HDR but this takes too long to process and we timeout
         }
         
+        if(counter == 0){
+            // Only sleep on first attempt at taking photo
+            DDLogDebug("Sleep for \(photoDelayTime) second(s) before taking photo")
+            NSThread.sleepForTimeInterval(photoDelayTime)
+        }
+        
         self.camera.startShootPhoto(djiPhotoMode) {
             (error) in
-            if let e = error {
+                if let e = error {
                 DDLogWarn("Camera Controller takeASnap - error seen - \(e)")
-
+                
                 errorSeen = true
-
-                self.takeASnap(nextCount)
+                self.takeASnap(nextCount, photoDelayTime: photoDelayTime)
             }
         }
+        
 
         if errorSeen {
             return
         }
 
-        self.checkTakeASnap(0, counter: counter)
+        self.checkTakeASnap(0, counter: counter, photoDelayTime: photoDelayTime)
     }
 
-    private func checkTakeASnap(checkCounter: Int, counter: Int) {
+    private func checkTakeASnap(checkCounter: Int, counter: Int, photoDelayTime: Double) {
         if (status != .Normal) {
             DDLogDebug("Camera Controller checkTakeASnap - status was \(status) - returning")
 
@@ -273,11 +279,11 @@ class CameraController: NSObject, DJICameraDelegate {
                 } else if (self.isShooting || self.isStoring) {
                     DDLogDebug("Camera Controller checkTakeASnap - busy - retry")
 
-                    self.checkTakeASnap(checkCounter + 1, counter: counter)
+                    self.checkTakeASnap(checkCounter + 1, counter: counter, photoDelayTime: photoDelayTime)
                 } else {
                     DDLogWarn("Camera Controller checkTakeASnap hasn't completed yet count: \(counter)")
 
-                    self.takeASnap(counter + 1)
+                    self.takeASnap(counter + 1, photoDelayTime: photoDelayTime)
                 }
             } else {
                 DDLogDebug("Status changed to \(self.status) while waiting for photo")
