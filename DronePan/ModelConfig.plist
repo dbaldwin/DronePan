@@ -18,11 +18,11 @@
 			<integer>1</integer>
 		</dict>
 	</dict>
-    <key>allowsAboveHorizon</key>
-    <dict>
-        <key>DJIAircraftModelNameMavicPro</key>
-        <false/>
-    </dict>
+	<key>allowsAboveHorizon</key>
+	<dict>
+		<key>DJIAircraftModelNameMavicPro</key>
+		<false/>
+	</dict>
 	<key>photosPerRow</key>
 	<dict>
 		<key>DJIAircraftModelNameMavicPro</key>
@@ -53,6 +53,13 @@
 	</dict>
 	<key>switchPosition</key>
 	<dict>
+		<key>DJIAircraftModelNameInspire2</key>
+		<dict>
+			<key>name</key>
+			<string>P</string>
+            <key>position</key>
+            <integer>3</integer>
+		</dict>
 		<key>DJIAircraftModelNameMavicPro</key>
 		<dict>
 			<key>name</key>
